@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto de Construcción</title>
+    <style>
+        body {
+        display: flex;
+        margin: 0;
+        flex-direction: column;
+        align-items: center;
+        }
+    
+        #toolbar {
+        display: flex;
+        justify-content: space-between;
+        width: 70%;
+        margin-top: 20px;
+        }
+    
+        #materialesRecomendados,
+        #areas {
+        width: 48%; /* Ajusta el ancho de las secciones para dejar espacio para la barra de herramientas */
+        padding: 10px;
+        box-sizing: border-box;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        margin-top: 20px;
+        }
+    
+        #areas {
+        margin-left: auto;
+        }
+    
+        .section {
+        width: 100%;
+        margin-top: 20px;
+        }
+    
+        .materialItem {
+        margin-bottom: 20px;
+        }
+    
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        }
+    
+        th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        }
+    
+        th {
+        background-color: #f2f2f2;
+        }
+    
+        #materialInput,
+        #areaInput,
+        #tareaInput,
+        #vehiculoInput {
+        width: 150px;
+        }
+    
+        .hidden {
+        display: none;
+        }
+    
+        #toggleMaterialesBtn,
+        #toggleAreasBtn {
+        cursor: pointer;
+        }
+    </style>
+    </head>
+<body>
+
+    <div id="toolbar">
+        <button id="toggleMaterialesBtn" onclick="toggleSection('materialesRecomendados')">Mostrar/Ocultar Materiales Recomendados</button>
+        <button id="toggleAreasBtn" onclick="toggleSection('areas')">Mostrar/Ocultar Áreas</button>
+      </div>
+    
+      <div class="section" id="materialesRecomendados">
+        <h2>Materiales Recomendados</h2>
+        <div class="materialItem">
+          <h3>Ladrillos</h3>
+          <img src="imagen_ladrillos.jpg" alt="Ladrillos">
+          <p>Descripción breve de los ladrillos.</p>
+          <button onclick="agregarMaterialPresupuesto('Ladrillos')">Agregar Ladrillos</button>
+        </div>
+        <div class="materialItem">
+          <h3>Cemento</h3>
+          <img src="imagen_cemento.jpg" alt="Cemento">
+          <p>Descripción breve del cemento.</p>
+          <button onclick="agregarMaterialPresupuesto('Cemento')">Agregar Cemento</button>
+        </div>
+        <div class="materialItem">
+          <h3>Madera</h3>
+          <img src="imagen_madera.jpg" alt="Madera">
+          <p>Descripción breve de la madera.</p>
+          <button onclick="agregarMaterialPresupuesto('Madera')">Agregar Madera</button>
+        </div>
+        <!-- Agrega más materiales recomendados según sea necesario -->
+      </div>
+    
+      <div class="section" id="areas">
+        <h2>Áreas</h2>
+        <ul>
+          <li>Cocina</li>
+          <li>Baño</li>
+          <li>Sala</li>
+      <!-- Agrega más áreas según sea necesario -->
+    </ul>
+  </div>
+
+  <div class="section">
+    <label for="materialInput">Material:</label>
+    <select id="materialInput">
+      <!-- Opciones de material aquí -->
+    </select>
+    <br><br>
+
+    <button onclick="agregarMaterial()">Agregar Material</button>
+
+    <table id="presupuestoTable">
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Cantidad</th>
+          <th>Precio unitario</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Las filas se agregarán dinámicamente aquí -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align: right;">Total</td>
+          <td id="total">0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <h2>Tareas de Obreros</h2>
+    <label for="tareaInput">Tarea:</label>
+    <select id="tareaInput">
+      <!-- Opciones de tarea aquí -->
+    </select>
+    <br><br>
+
+    <button onclick="agregarTarea()">Agregar Tarea</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tarea</th>
+          <th>Horas de Trabajo</th>
+          <th>Costo por Hora</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Las filas se agregarán dinámicamente aquí -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align: right;">Total</td>
+          <td id="obrerosTotal">0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <h2>Vehículos</h2>
+    <label for="vehiculoInput">Vehículo:</label>
+    <select id="vehiculoInput">
+      <!-- Opciones de vehículo aquí -->
+    </select>
+    <br><br>
+
+    <button onclick="agregarVehiculo()">Agregar Vehículo</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Vehículo</th>
+          <th>Horas de Uso</th>
+          <th>Costo por Hora</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Las filas se agregarán dinámicamente aquí -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align: right;">Total</td>
+          <td id="vehiculosTotal">0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <script>
+    function toggleSection(sectionId) {
+      var section = document.getElementById(sectionId);
+      section.classList.toggle("hidden");
+    }
+
+    function agregarMaterialPresupuesto(material) {
+      var cantidadInput = prompt("Ingrese la cantidad para " + material + ":", "1");
+      var precioUnitarioInput = prompt("Ingrese el precio unitario para " + material + ":", "0.00");
+
+      if (cantidadInput === null || precioUnitarioInput === null) {
+        return; // El usuario canceló la operación
+      }
+
+      var cantidad = parseFloat(cantidadInput);
+      var precioUnitario = parseFloat(precioUnitarioInput);
+      var total = cantidad * precioUnitario;
+
+      var table = document.getElementById("presupuestoTable").getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3);
+
+      cell1.innerHTML = material;
+      cell2.innerHTML = cantidad;
+      cell3.innerHTML = precioUnitario.toFixed(2);
+      cell4.innerHTML = total.toFixed(2);
+
+      actualizarTotal();
+    }
+
+    function agregarMaterial() {
+      var materialInput = document.getElementById("materialInput");
+      var cantidadInput = prompt("Ingrese la cantidad:", "1");
+      var precioUnitarioInput = prompt("Ingrese el precio unitario:", "0.00");
+
+      if (cantidadInput === null || precioUnitarioInput === null) {
+        return; // El usuario canceló la operación
+      }
+
+      var material = materialInput.value;
+      var cantidad = parseFloat(cantidadInput);
+      var precioUnitario = parseFloat(precioUnitarioInput);
+      var total = cantidad * precioUnitario;
+
+      var table = document.getElementById("presupuestoTable").getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3);
+
+      cell1.innerHTML = material;
+      cell2.innerHTML = cantidad;
+      cell3.innerHTML = precioUnitario.toFixed(2);
+      cell4.innerHTML = total.toFixed(2);
+
+      actualizarTotal();
+    }
+
+    function agregarTarea() {
+      var tareaInput = document.getElementById("tareaInput");
+      var horasInput = prompt("Ingrese las horas de trabajo:", "1");
+      var costoInput = prompt("Ingrese el costo por hora:", "0.00");
+
+      if (horasInput === null || costoInput === null) {
+        return; // El usuario canceló la operación
+      }
+
+      var tarea = tareaInput.value;
+      var horas = parseFloat(horasInput);
+      var costo = parseFloat(costoInput);
+      var total = horas * costo;
+
+      var table = document.getElementsByTagName("table")[1].getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3);
+
+      cell1.innerHTML = tarea;
+      cell2.innerHTML = horas;
+      cell3.innerHTML = costo.toFixed(2);
+      cell4.innerHTML = total.toFixed(2);
+
+      actualizarTotalObreros();
+    }
+
+    function agregarVehiculo() {
+      var vehiculoInput = document.getElementById("vehiculoInput");
+      var horasInput = prompt("Ingrese las horas de uso:", "1");
+      var costoInput = prompt("Ingrese el costo por hora:", "0.00");
+
+      if (horasInput === null || costoInput === null) {
+        return; // El usuario canceló la operación
+      }
+
+      var vehiculo = vehiculoInput.value;
+      var horas = parseFloat(horasInput);
+      var costo = parseFloat(costoInput);
+      var total = horas * costo;
+
+      var table = document.getElementsByTagName("table")[2].getElementsByTagName('tbody')[0];
+      var newRow = table.insertRow(table.rows.length);
+
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3);
+
+      cell1.innerHTML = vehiculo;
+      cell2.innerHTML = horas;
+      cell3.innerHTML = costo.toFixed(2);
+      cell4.innerHTML = total.toFixed(2);
+
+      actualizarTotalVehiculos();
+    }
+
+    function actualizarTotal() {
+      var table = document.getElementById("presupuestoTable");
+      var total = 0;
+
+      for (var i = 1; i < table.rows.length - 1; i++) {
+        total += parseFloat(table.rows[i].cells[3].innerHTML);
+      }
+
+      document.getElementById("total").innerHTML = total.toFixed(2);
+    }
+
+    function actualizarTotalObreros() {
+      var table = document.getElementsByTagName("table")[1];
+      var total = 0;
+
+      for (var i = 1; i < table.rows.length - 1; i++) {
+        total += parseFloat(table.rows[i].cells[3].innerHTML);
+      }
+
+      document.getElementById("obrerosTotal").innerHTML = total.toFixed(2);
+    }
+
+    function actualizarTotalVehiculos() {
+      var table = document.getElementsByTagName("table")[2];
+      var total = 0;
+
+      for (var i = 1; i < table.rows.length - 1; i++) {
+        total += parseFloat(table.rows[i].cells[3].innerHTML);
+      }
+
+      document.getElementById("vehiculosTotal").innerHTML = total.toFixed(2);
+    }
+  </script>
+
+</body>
+</html>
