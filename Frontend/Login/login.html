@@ -6,7 +6,7 @@
     <title>Iniciar sesión</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             display: flex;
@@ -21,11 +21,13 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
+            text-align: center;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
+            font-weight: bold;
         }
 
         input {
@@ -33,6 +35,8 @@
             padding: 8px;
             margin-bottom: 16px;
             box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
 
         button {
@@ -44,6 +48,7 @@
             cursor: pointer;
             width: 100%;
             margin-bottom: 10px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
@@ -52,15 +57,23 @@
 
         .forgot-password,
         .register {
-            text-align: center;
             color: #3498db;
             text-decoration: underline;
             cursor: pointer;
+            margin-top: 10px;
+            display: block;
         }
 
         #forgotPasswordForm,
         #registrationForm {
             display: none;
+            margin-top: 10px;
+        }
+
+        #successMessage {
+            color: #4caf50;
+            font-weight: bold;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -82,6 +95,7 @@
             <label for="email">Correo electrónico:</label>
             <input type="email" id="email" name="email" required>
             <button type="button" onclick="submitForgotPasswordForm()">Enviar correo de recuperación</button>
+            <div id="successMessage"></div>
         </div>
 
         <div id="registrationForm">
@@ -106,8 +120,8 @@
 
             // Aquí puedes agregar la lógica de autenticación con JavaScript o enviar los datos a un servidor
             // Para este ejemplo, solo mostraremos los datos en la consola
-            if(username === "franco" && password ==="navarro"){
-                var authenticationSuccessful = true;
+            if(username === "franco" && password === "navarro") {
+                authenticationSuccessful = true;
             }
 
             if (authenticationSuccessful) {
@@ -118,26 +132,18 @@
                 console.log("Error de autenticación. Verifica tus credenciales.");
             }
         }
-        function forgotPassword() {
-            // Lógica para el enlace "Olvidé mi contraseña"
-            console.log("Olvidé mi contraseña");
-        }
 
         function showForgotPasswordForm() {
             var forgotPasswordForm = document.getElementById("forgotPasswordForm");
 
             // Cambiar la visibilidad del formulario de "Olvidé mi contraseña"
-            if (forgotPasswordForm.style.display === "none") {
-                forgotPasswordForm.style.display = "block";
-            } else {
-                forgotPasswordForm.style.display = "none";
-            }
+            forgotPasswordForm.style.display = (forgotPasswordForm.style.display === "none") ? "block" : "none";
         }
 
         function submitForgotPasswordForm() {
             var email = document.getElementById("email").value;
             // Aquí puedes agregar la lógica para enviar un correo de recuperación
-            console.log("Enviando correo de recuperación a: " + email);
+            document.getElementById("successMessage").innerHTML = "Correo de recuperación enviado a: " + email;
         }
 
         function showRegistrationForm() {
@@ -148,11 +154,7 @@
             forgotPasswordForm.style.display = "none";
 
             // Cambiar la visibilidad del formulario de registro
-            if (registrationForm.style.display === "none") {
-                registrationForm.style.display = "block";
-            } else {
-                registrationForm.style.display = "none";
-            }
+            registrationForm.style.display = (registrationForm.style.display === "none") ? "block" : "none";
         }
 
         function submitRegistrationForm() {

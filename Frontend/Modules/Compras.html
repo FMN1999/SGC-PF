@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de Compras</title>
+    <!-- Agrega los enlaces a los estilos de Bootstrap si es necesario -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Módulo de Compras de Materiales de Construcción</h2>
+
+    <!-- Formulario para generar órdenes de compra -->
+    <form>
+        <h3>Generar Orden de Compra</h3>
+        <label for="materialSelect">Material:</label>
+        <select id="materialSelect" required></select>
+        <label for="cantidadOrden">Cantidad:</label>
+        <input type="number" id="cantidadOrden" required>
+        <label for="proveedorSelect">Proveedor:</label>
+        <select id="proveedorSelect" required></select>
+        <button type="button" onclick="agregarCompra()">Agregar Compra</button>
+    </form>
+
+    <!-- Tabla para mostrar las compras -->
+    <h3>Compras Realizadas</h3>
+    <table id="tablaCompras">
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Cantidad</th>
+                <th>Proveedor</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    // Funciones JavaScript para manipular los datos y actualizar la interfaz de usuario
+    const compras = [];
+
+    function agregarCompra() {
+        const material = document.getElementById("materialSelect").value;
+        const cantidad = document.getElementById("cantidadOrden").value;
+        const proveedor = document.getElementById("proveedorSelect").value;
+
+        // Validar que se haya seleccionado un material y proveedor
+        if (material === "" || cantidad === "" || proveedor === "") {
+            alert("Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Agregar la compra al array
+        compras.push({ material, cantidad, proveedor });
+
+        // Limpiar los campos del formulario
+        document.getElementById("materialSelect").value = "";
+        document.getElementById("cantidadOrden").value = "";
+        document.getElementById("proveedorSelect").value = "";
+
+        // Actualizar la tabla de compras
+        actualizarTablaCompras();
+    }
+
+    // Puedes cargar dinámicamente los datos de materiales y proveedores desde tu backend
+    // por ahora, vamos a usar datos de ejemplo
+
+    // Datos de ejemplo
+    const materiales = ["Ladrillos", "Cemento", "Arena"];
+    const proveedores = ["Proveedor A", "Proveedor B", "Proveedor C"];
+
+    // Actualizar las listas desplegables de materiales y proveedores
+    const materialSelect = document.getElementById("materialSelect");
+    const proveedorSelect = document.getElementById("proveedorSelect");
+
+    materiales.forEach(material => {
+        const option = document.createElement("option");
+        option.text = material;
+        materialSelect.add(option);
+    });
+
+    proveedores.forEach(proveedor => {
+        const option = document.createElement("option");
+        option.text = proveedor;
+        proveedorSelect.add(option);
+    });
+
+    // Actualizar la tabla de compras
+    function actualizarTablaCompras() {
+        const tablaCompras = document.getElementById("tablaCompras");
+        const tbody = tablaCompras.getElementsByTagName("tbody")[0];
+
+        // Limpiar el contenido actual de la tabla
+        tbody.innerHTML = "";
+
+        // Llenar la tabla con las compras actuales
+        compras.forEach(compra => {
+            const fila = tbody.insertRow();
+            const celdaMaterial = fila.insertCell(0);
+            const celdaCantidad = fila.insertCell(1);
+            const celdaProveedor = fila.insertCell(2);
+
+            celdaMaterial.textContent = compra.material;
+            celdaCantidad.textContent = compra.cantidad;
+            celdaProveedor.textContent = compra.proveedor;
+        });
+    }
+</script>
+
+</body>
+</html>
