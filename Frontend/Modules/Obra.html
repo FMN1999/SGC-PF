@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Obras</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        .obra-section {
+            width: 70%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .area-section {
+            margin-top: 20px;
+        }
+
+        .area {
+            margin-top: 20px;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .file-list-item {
+            margin: 10px 0;
+        }
+
+        .file-input {
+            margin-top: 10px;
+        }
+
+        .presupuestos-section {
+            margin-top: 20px;
+        }
+
+        .presupuesto-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .presupuesto-list-item {
+            margin: 10px 0;
+            cursor: pointer;
+            color: #007BFF;
+        }
+
+        .presupuesto-list-item:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="obra-section">
+        <h2>Datos de la Obra</h2>
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" placeholder="Ingrese la dirección">
+
+        <label for="dueno">Dueño:</label>
+        <input type="text" id="dueno" placeholder="Ingrese el nombre del dueño">
+
+        <label for="telefono">Teléfono de contacto:</label>
+        <input type="tel" id="telefono" placeholder="Ingrese el teléfono de contacto">
+
+        <div class="area-section">
+            <h2>Áreas</h2>
+
+            <div class="area">
+                <h3>Área de Cocina</h3>
+                <label for="caracteristicasCocina">Características:</label>
+                <textarea id="caracteristicasCocina" placeholder="Ingrese las características"></textarea>
+
+                <ul class="file-list">
+                    <li class="file-list-item">
+                        <a href="#" download>Documento_1.pdf</a>
+                    </li>
+                    <!-- Agregar más elementos de la lista según sea necesario -->
+                </ul>
+                <input type="file" class="file-input" accept=".pdf, .doc, .docx">
+                <button onclick="uploadFile('Cocina')">Subir Archivo</button>
+            </div>
+
+            <!-- Agregar más áreas según sea necesario -->
+
+        </div>
+    </div>
+
+    <div class="presupuestos-section">
+        <h2>Presupuestos</h2>
+        <ul class="presupuesto-list">
+            <li class="presupuesto-list-item" onclick="verPresupuesto('Presupuesto_V1')">Presupuesto Versión 1</li>
+            <li class="presupuesto-list-item" onclick="verPresupuesto('Presupuesto_V2')">Presupuesto Versión 2</li>
+            <!-- Agregar más elementos de la lista según sea necesario -->
+        </ul>
+    </div>
+
+    <script>
+        function uploadFile(area) {
+            var fileInput = document.querySelector('.file-input');
+            var fileList = document.querySelector('.file-list');
+
+            // Verificar si se seleccionó un archivo
+            if (fileInput.files.length > 0) {
+                var fileName = fileInput.files[0].name;
+                var listItem = document.createElement('li');
+                listItem.className = 'file-list-item';
+                listItem.innerHTML = '<a href="#" download>' + fileName + '</a>';
+                fileList.appendChild(listItem);
+            } else {
+                alert('Por favor, selecciona un archivo.');
+            }
+        }
+
+        function verPresupuesto(version) {
+            // Implementar la visualización del presupuesto según la versión
+            alert('Ver presupuesto ' + version);
+        }
+    </script>
+
+</body>
+</html>
+
+
