@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Horas de Trabajo</title>
+    <!-- Incluir las librerías FullCalendar y Flatpickr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        #calendar {
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        #horasForm {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="calendar"></div>
+
+    <div id="horasForm">
+        <h2>Cargar Horas de Trabajo</h2>
+        <label for="trabajadorInput">Trabajador:</label>
+        <input type="text" id="trabajadorInput" placeholder="Nombre del Trabajador" required>
+        <label for="obraInput">Obra:</label>
+        <input type="text" id="obraInput" placeholder="Nombre de la Obra" required>
+        <label for="fechaInput">Fecha y Hora:</label>
+        <input type="text" id="fechaInput" placeholder="Selecciona Fecha y Hora" required>
+        <button onclick="cargarHoras()">Cargar Horas</button>
+    </div>
+
+    <script>
+        // Inicializar Flatpickr para el campo de fecha y hora
+        flatpickr("#fechaInput", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        // Inicializar FullCalendar
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                selectable: true,
+                selectHelper: true,
+                eventClick: function (calEvent, jsEvent, view) {
+                    // Mostrar formulario para cargar horas al hacer clic en un evento del calendario
+                    mostrarFormulario(calEvent.start.format(), calEvent.end.format());
+                },
+                events: [
+                    // Aquí puedes cargar eventos desde tu base de datos o sistema backend
+                    // Ejemplo:
+                    {
+                        title: 'Hora Cargada',
+                        start: '2023-01-15T12:00:00',
+                        end: '2023-01-15T14:00:00'
+                    },
+                    {
+                        title: 'Otra Hora Cargada',
+                        start: '2023-01-17T09:00:00',
+                        end: '2023-01-17T12:00:00'
+                    }
+                ]
+            });
+        });
+
+        function cargarHoras() {
+            var trabajador = document.getElementById("trabajadorInput").value;
+            var obra = document.getElementById("obraInput").value;
+            var fecha = document.getElementById("fechaInput").value;
+
+            // Aquí puedes enviar los datos a tu sistema backend o hacer lo que necesites con ellos
+            console.log("Trabajador:", trabajador);
+            console.log("Obra:", obra);
+            console.log("Fecha y Hora:", fecha);
+
+            // Puedes añadir lógica adicional, como enviar los datos a un servidor o actualizar una base de datos
+            alert("Horas cargadas exitosamente.");
+
+            // Recargar el calendario después de cargar horas
+            $('#calendar').fullCalendar('refetchEvents');
+
+            // Ocultar el formulario después de cargar horas
+            ocultarFormulario();
+        }
+
+        function mostrarFormulario(start, end) {
+            // Mostrar el formulario para cargar horas en la posición del evento clicado
+            document.getElementById("fechaInput").value = start + " - " + end;
+            document.getElementById("horasForm").style.display = "block";
+        }
+
+        function ocultarFormulario() {
+            // Ocultar el formulario
+            document.getElementById("horasForm").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
+
+
