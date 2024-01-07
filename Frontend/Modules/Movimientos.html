@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de Movimientos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        .movimientos-section {
+            width: 70%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .solapas {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .solapa {
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .solapa:hover {
+            background-color: #45a049;
+        }
+
+        .solapa-activo {
+            background-color: #45a049;
+        }
+
+        .contenido-solapa {
+            display: none;
+        }
+
+        .contenido-solapa-activo {
+            display: block;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="movimientos-section">
+        <div class="solapas">
+            <button class="solapa solapa-activo" onclick="mostrarSolapa('compras')">Pagos de Compras</button>
+            <button class="solapa" onclick="mostrarSolapa('ingresos')">Ingresos</button>
+            <button class="solapa" onclick="mostrarSolapa('salarios')">Pagos de Salarios</button>
+        </div>
+
+        <div id="solapaCompras" class="contenido-solapa contenido-solapa-activo">
+            <h2>Pagos de Compras</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Proveedor</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se agregarán las filas dinámicamente -->
+                </tbody>
+            </table>
+            <button onclick="agregarPago('compras')">Agregar Pago de Compra</button>
+        </div>
+
+        <div id="solapaIngresos" class="contenido-solapa">
+            <h2>Ingresos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se agregarán las filas dinámicamente -->
+                </tbody>
+            </table>
+            <button onclick="agregarIngreso()">Agregar Ingreso</button>
+        </div>
+
+        <div id="solapaSalarios" class="contenido-solapa">
+            <h2>Pagos de Salarios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Empleado</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se agregarán las filas dinámicamente -->
+                </tbody>
+            </table>
+            <button onclick="agregarPago('salarios')">Agregar Pago de Salario</button>
+        </div>
+    </div>
+
+    <script>
+        function mostrarSolapa(solapa) {
+            // Ocultar todas las solapas
+            document.querySelectorAll('.contenido-solapa').forEach(function(elemento) {
+                elemento.classList.remove('contenido-solapa-activo');
+            });
+
+            // Activar la solapa seleccionada
+            document.getElementById('solapa' + solapa.charAt(0).toUpperCase() + solapa.slice(1)).classList.add('contenido-solapa-activo');
+
+            // Actualizar estado de las solapas
+            document.querySelectorAll('.solapa').forEach(function(elemento) {
+                elemento.classList.remove('solapa-activo');
+            });
+
+            document.querySelector('.solapa[onclick="mostrarSolapa(\'' + solapa + '\')"]').classList.add('solapa-activo');
+        }
+
+        function agregarPago(tipo) {
+            var fecha = prompt('Ingrese la fecha:');
+            var beneficiario = prompt('Ingrese el beneficiario:');
+            var monto = prompt('Ingrese el monto:');
+
+            if (fecha && beneficiario && monto) {
+                // Agregar la fila a la tabla correspondiente
+                var table = document.querySelector('#solapa' + tipo.charAt(0).toUpperCase() + tipo.slice(1) + ' table tbody');
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = fecha;
+                cell2.innerHTML = beneficiario;
+                cell3.innerHTML = monto;
+            } else {
+                alert('Por favor, complete todos los campos.');
+            }
+        }
+
+        function agregarIngreso() {
+            var fecha = prompt('Ingrese la fecha:');
+            var concepto = prompt('Ingrese el concepto:');
+            var monto = prompt('Ingrese el monto:');
+
+            if (fecha && concepto && monto) {
+                // Agregar la fila a la tabla correspondiente
+                var table = document.querySelector('#solapaIngresos table tbody');
+                var newRow = table.insertRow(table.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = fecha;
+                cell2.innerHTML = concepto;
+                cell3.innerHTML = monto;
+            } else {
+                alert('Por favor, complete todos los campos.');
+            }
+        }
+    </script>
+
+</body>
+</html>

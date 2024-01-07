@@ -3,170 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <title>Iniciar Sesión</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
+            background-color: #f4f4f4;
         }
 
-        form {
+        #login-container {
             background-color: #fff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+            margin: 15px 0 5px;
+            text-align: left;
         }
 
         input {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
+            padding: 10px;
+            margin-bottom: 15px;
             box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 4px;
         }
 
         button {
             background-color: #4caf50;
             color: #fff;
-            padding: 10px;
+            padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 100%;
-            margin-bottom: 10px;
             transition: background-color 0.3s;
+            font-size: 16px;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        .forgot-password,
-        .register {
+        #register-link,
+        #forgot-password-link {
             color: #3498db;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 10px;
+            text-decoration: none;
             display: block;
+            margin-top: 20px;
+            cursor: pointer;
         }
 
-        #forgotPasswordForm,
-        #registrationForm {
+        #register-link:hover,
+        #forgot-password-link:hover {
+            text-decoration: underline;
+        }
+
+        #floating-form-container {
             display: none;
-            margin-top: 10px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
 
-        #successMessage {
-            color: #4caf50;
-            font-weight: bold;
-            margin-top: 10px;
+        #close-floating-form {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <form id="loginForm">
-        <label for="username">Nombre de usuario:</label>
-        <input type="text" id="username" name="username" required>
+    <div id="login-container">
+        <h1>Iniciar Sesión</h1>
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
+        <form>
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
 
-        <button type="button" onclick="login()">Iniciar sesión</button>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
 
-        <div class="forgot-password" onclick="showForgotPasswordForm()">¿Olvidaste tu contraseña?</div>
+            <button type="button" onclick="login()">Iniciar Sesión</button>
+        </form>
 
-        <div class="register" onclick="showRegistrationForm()">Registrarse</div>
+        <a href="#" id="forgot-password-link" onclick="showFloatingForm('forgot-password-form')">¿Olvidaste tu contraseña?</a>
+        <a href="#" id="register-link" onclick="showFloatingForm('register-form')">Registrarse</a>
+    </div>
 
-        <div id="forgotPasswordForm">
-            <label for="email">Correo electrónico:</label>
-            <input type="email" id="email" name="email" required>
-            <button type="button" onclick="submitForgotPasswordForm()">Enviar correo de recuperación</button>
-            <div id="successMessage"></div>
-        </div>
+    <div id="floating-form-container">
+        <div id="close-floating-form" onclick="closeFloatingForm()">X</div>
+        <form id="forgot-password-form" style="display: none;">
+            <h2>Recuperar Contraseña</h2>
+            <label for="email-forgot">Correo Electrónico:</label>
+            <input type="email" id="email-forgot" name="email-forgot" required>
+            <button type="button" onclick="sendRecoveryCode()">Recuperar Contraseña</button>
+        </form>
 
-        <div id="registrationForm">
-            <label for="newUsername">Nuevo nombre de usuario:</label>
-            <input type="text" id="newUsername" name="newUsername" required>
+        <form id="register-form" style="display: none;">
+            <h2>Registro de Usuario</h2>
+            <label for="new-username">Nuevo Usuario:</label>
+            <input type="text" id="new-username" name="new-username" required>
 
-            <label for="newEmail">Correo electrónico:</label>
-            <input type="email" id="newEmail" name="newEmail" required>
+            <label for="new-password">Nueva Contraseña:</label>
+            <input type="password" id="new-password" name="new-password" required>
 
-            <label for="newPassword">Contraseña:</label>
-            <input type="password" id="newPassword" name="newPassword" required>
+            <label for="confirm-password">Confirmar Contraseña:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
 
-            <button type="button" onclick="submitRegistrationForm()">Registrarse</button>
-        </div>
-    </form>
+            <button type="button" onclick="registerUser()">Registrar Usuario</button>
+        </form>
+
+        <form id="recovery-code-form" style="display: none;">
+            <h2>Ingresar Código de Recuperación</h2>
+            <label for="recovery-code">Código de Recuperación:</label>
+            <input type="text" id="recovery-code" name="recovery-code" required>
+            <button type="button" onclick="showFloatingForm('new-password-form')">Continuar</button>
+        </form>
+
+        <form id="new-password-form" style="display: none;">
+            <h2>Nueva Contraseña</h2>
+            <label for="new-password">Nueva Contraseña:</label>
+            <input type="password" id="new-password" name="new-password" required>
+            <button type="button" onclick="resetPassword()">Restablecer Contraseña</button>
+        </form>
+    </div>
 
     <script>
         function login() {
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
-            var authenticationSuccessful = false;
 
-            // Aquí puedes agregar la lógica de autenticación con JavaScript o enviar los datos a un servidor
-            // Para este ejemplo, solo mostraremos los datos en la consola
-            if(username === "franco" && password === "navarro") {
-                authenticationSuccessful = true;
-            }
-
-            if (authenticationSuccessful) {
-                // Redirigir al usuario a la página de inicio (home.html en este caso)
+            // Verificar credenciales (Esto es un prototipo, agregar validación real)
+            if (username === "franco" && password === "navarro") {
                 window.location.href = "C:/Users/franc/Documents/Repos/SGC-PF/Frontend/Home/home.html";
             } else {
-                // Mostrar un mensaje de error o realizar otras acciones si la autenticación falla
-                console.log("Error de autenticación. Verifica tus credenciales.");
+                alert("Credenciales incorrectas. Inténtalo de nuevo.");
             }
         }
 
-        function showForgotPasswordForm() {
-            var forgotPasswordForm = document.getElementById("forgotPasswordForm");
+        function sendRecoveryCode() {
+            var email = document.getElementById("email-forgot").value;
 
-            // Cambiar la visibilidad del formulario de "Olvidé mi contraseña"
-            forgotPasswordForm.style.display = (forgotPasswordForm.style.display === "none") ? "block" : "none";
+            // Simulamos el envío de un código al correo electrónico
+            alert("Se ha enviado un código de recuperación a: " + email);
+            showFloatingForm('recovery-code-form');
         }
 
-        function submitForgotPasswordForm() {
-            var email = document.getElementById("email").value;
-            // Aquí puedes agregar la lógica para enviar un correo de recuperación
-            document.getElementById("successMessage").innerHTML = "Correo de recuperación enviado a: " + email;
+        function resetPassword() {
+            // Simulamos el restablecimiento de la contraseña
+            alert("Contraseña restablecida con éxito. Inicia sesión con la nueva contraseña.");
+            closeFloatingForm();
         }
 
-        function showRegistrationForm() {
-            var registrationForm = document.getElementById("registrationForm");
-            var forgotPasswordForm = document.getElementById("forgotPasswordForm");
+        function registerUser() {
+            var newUsername = document.getElementById("new-username").value;
+            var newPassword = document.getElementById("new-password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
 
-            // Ocultar el formulario de "Olvidé mi contraseña" (si está visible)
-            forgotPasswordForm.style.display = "none";
+            // Validar que las contraseñas coincidan (Esto es un prototipo, agregar validación real)
+            if (newPassword !== confirmPassword) {
+                alert("Las contraseñas no coinciden. Inténtalo de nuevo.");
+                return;
+            }
 
-            // Cambiar la visibilidad del formulario de registro
-            registrationForm.style.display = (registrationForm.style.display === "none") ? "block" : "none";
+            // Simulamos el registro del nuevo usuario
+            alert("Usuario registrado con éxito. Ahora puedes iniciar sesión.");
+            closeFloatingForm();
         }
 
-        function submitRegistrationForm() {
-            var newUsername = document.getElementById("newUsername").value;
-            var newEmail = document.getElementById("newEmail").value;
-            var newPassword = document.getElementById("newPassword").value;
+        function showFloatingForm(formId) {
+            var floatingForm = document.getElementById("floating-form-container");
+            var forms = floatingForm.getElementsByTagName("form");
 
-            // Aquí puedes agregar la lógica para procesar el registro
-            console.log("Nuevo nombre de usuario: " + newUsername);
-            console.log("Nuevo correo electrónico: " + newEmail);
-            console.log("Nueva contraseña: " + newPassword);
+            for (var i = 0; i < forms.length; i++) {
+                forms[i].style.display = forms[i].id === formId ? "block" : "none";
+            }
+
+            floatingForm.style.display = "block";
+        }
+
+        function closeFloatingForm() {
+            document.getElementById("floating-form-container").style.display = "none";
         }
     </script>
 </body>
 </html>
+
+
+
+
