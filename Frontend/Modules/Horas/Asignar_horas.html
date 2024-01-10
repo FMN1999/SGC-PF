@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto de Construcción</title>
+    <title>Asignar horas</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -12,6 +12,27 @@
             flex-direction: column;
             align-items: center;
             background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
         }
 
         #toolbar {
@@ -79,15 +100,30 @@
         #trabajadorInput:focus + #trabajadoresList {
             display: block;
         }
+        
+        #content {
+            padding: 20px;
+            text-align: center;
+        }
     </style>
 </head>
+
+
 <body>
 
-    <div id="toolbar">
-        <button id="toggleMaterialesBtn" onclick="toggleSection('materialesRecomendados')">Mostrar/Ocultar Materiales Recomendados</button>
-        <button id="toggleAreasBtn" onclick="toggleSection('areas')">Mostrar/Ocultar Áreas</button>
-    </div>
-
+    <header>
+        <div>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Home\home.html">Inicio</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Asignar_horas.html">Asignar horas</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Cargar_horas.html">Cargas horas</a>
+            <a href="#">Obras</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Movimientos.html">Movimientos</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Compras.html">Compras</a>
+        </div>
+        <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Login\login.html">
+            <button id="login-button">Iniciar Sesión</button>
+        </a>
+    </header>
     <div class="section" id="obras">
         <h2>Obras</h2>
         <label for="trabajadorInput">Buscar Trabajador:</label>

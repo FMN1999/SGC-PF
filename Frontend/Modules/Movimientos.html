@@ -14,6 +14,27 @@
             background-color: #f4f4f4;
         }
 
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
         .movimientos-section {
             width: 70%;
             padding: 20px;
@@ -85,9 +106,28 @@
         th {
             background-color: #f2f2f2;
         }
+
+        #content {
+            padding: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+
+    <header>
+        <div>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Home\home.html">Inicio</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Asignar_horas.html">Asignar horas</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Cargar_horas.html">Cargas horas</a>
+            <a href="#">Obras</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Movimientos.html">Movimientos</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Compras.html">Compras</a>
+        </div>
+        <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Login\login.html">
+            <button id="login-button">Iniciar Sesión</button>
+        </a>
+    </header>
 
     <div class="movimientos-section">
         <div class="solapas">

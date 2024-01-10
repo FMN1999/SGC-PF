@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Obras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header a {
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #login-button, #new-obra-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #login-button:hover {
+            background-color: #0056b3;
+        }
+
+        #search-box {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Home\home.html">Inicio</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Asignar_horas.html">Asignar horas</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Cargar_horas.html">Cargas horas</a>
+            <a href="#">Obras</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Movimientos.html">Movimientos</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Compras.html">Compras</a>
+        </div>
+        <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Login\login.html">
+            <button id="login-button">Iniciar Sesión</button>
+        </a>
+    </header>
+    <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Obras\Obra.html">
+        <button id="new-obra-button">Nueva Obra</button>
+    </a>
+    <div>
+        <input type="text" id="search-box" placeholder="Buscar obra...">
+        
+    </div>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Obra</th>
+                    <th>Ubicación</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Finalización</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Obras\Obra.html">Obra 1</a></td>
+                    <td>Ciudad A</td>
+                    <td>01/01/2024</td>
+                    <td>31/12/2024</td>
+                </tr>
+                <tr>
+                    <td><a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Obras\Obra.html">Obra 2</a></td>
+                    <td>Ciudad B</td>
+                    <td>15/02/2024</td>
+                    <td>30/11/2024</td>
+                </tr>
+                <tr>
+                    <td><a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Obras\Obra.html">Obra 3</a></td>
+                    <td>Ciudad C</td>
+                    <td>10/03/2024</td>
+                    <td>25/09/2024</td>
+                </tr>
+                <!-- Agrega más obras según sea necesario -->
+            </tbody>
+        </table>
+    </main>
+
+</body>
+</html>
