@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +53,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        select, input {
+        select,
+        input {
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 15px;
@@ -79,7 +81,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
@@ -97,17 +100,16 @@
             display: none;
         }
 
-        #trabajadorInput:focus + #trabajadoresList {
+        #trabajadorInput:focus+#trabajadoresList {
             display: block;
         }
-        
+
         #content {
             padding: 20px;
             text-align: center;
         }
     </style>
 </head>
-
 
 <body>
 
@@ -170,11 +172,55 @@
     </div>
 
     <script>
-        // Funciones anteriores ...
+        function agregarHorasObreros() {
+            // Obtener los valores de los campos
+            var trabajadorInput = document.getElementById("trabajadorInput").value;
+            var obraInput = document.getElementById("obraInput").value;
+            var horasObrerosInput = parseInt(document.getElementById("horasObrerosInput").value);
+
+            // Validar que las horas sean un número positivo
+            if (isNaN(horasObrerosInput) || horasObrerosInput <= 0) {
+                alert("Por favor, ingrese un número válido de horas.");
+                return;
+            }
+
+            // Crear una fila en la tabla
+            var tableBody = document.querySelector("tbody");
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+
+            // Agregar celdas a la fila
+            var cellObra = newRow.insertCell(0);
+            var cellTrabajador = newRow.insertCell(1);
+            var cellHoras = newRow.insertCell(2);
+            var cellTotal = newRow.insertCell(3);
+
+            // Asignar valores a las celdas
+            cellObra.innerHTML = obraInput;
+            cellTrabajador.innerHTML = trabajadorInput;
+            cellHoras.innerHTML = horasObrerosInput;
+            var totalHoras = parseFloat(document.getElementById("obrasTotal").innerHTML);
+            cellTotal.innerHTML = horasObrerosInput + totalHoras;
+
+            // Actualizar el total de horas
+            document.getElementById("obrasTotal").innerHTML = cellTotal.innerHTML;
+
+            // Limpiar los campos de entrada
+            document.getElementById("trabajadorInput").value = "";
+            document.getElementById("obraInput").value = "";
+            document.getElementById("horasObrerosInput").value = "";
+        }
+
+        // Ejemplos de obras (puedes agregar más según sea necesario)
+        var obrasSelect = document.getElementById("obraInput");
+        var obrasEjemplos = ["Obra1", "Obra2", "Obra3"];
+
+        obrasEjemplos.forEach(function (obra) {
+            var option = document.createElement("option");
+            option.value = obra;
+            obrasSelect.appendChild(option);
+        });
     </script>
 
 </body>
+
 </html>
-
-
-

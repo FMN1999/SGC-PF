@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario de Horas de Trabajo</title>
-    <!-- Incluir las librerías FullCalendar y Flatpickr -->
+    <!-- Incluir las librerías FullCalendar y SweetAlert2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -28,6 +28,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
         }
 
         header a {
@@ -46,41 +47,9 @@
             width: 80%;
             margin-top: 20px;
         }
-
-        #horasForm {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #content {
-            padding: 20px;
-            text-align: center;
-        }
     </style>
 </head>
+
 <body>
     <header>
         <div>
@@ -91,32 +60,11 @@
             <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Movimientos.html">Movimientos</a>
             <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Compras.html">Compras</a>
         </div>
-        <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Login\login.html">
-            <button id="login-button">Iniciar Sesión</button>
-        </a>
     </header>
 
     <div id="calendar"></div>
 
-    <div id="horasForm">
-        <h2>Cargar Horas de Trabajo</h2>
-        <label for="trabajadorInput">Trabajador:</label>
-        <input type="text" id="trabajadorInput" placeholder="Nombre del Trabajador" required>
-        <label for="obraInput">Obra:</label>
-        <input type="text" id="obraInput" placeholder="Nombre de la Obra" required>
-        <label for="fechaInput">Fecha y Hora:</label>
-        <input type="text" id="fechaInput" placeholder="Selecciona Fecha y Hora" required>
-        <button onclick="cargarHoras()">Cargar Horas</button>
-    </div>
-
     <script>
-        // Inicializar Flatpickr para el campo de fecha y hora
-        flatpickr("#fechaInput", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-        });
-
-        // Inicializar FullCalendar
         $(document).ready(function () {
             $('#calendar').fullCalendar({
                 header: {
@@ -126,60 +74,59 @@
                 },
                 selectable: true,
                 selectHelper: true,
-                eventClick: function (calEvent, jsEvent, view) {
-                    // Mostrar formulario para cargar horas al hacer clic en un evento del calendario
-                    mostrarFormulario(calEvent.start.format(), calEvent.end.format());
+                select: function (start, end) {
+                    // Mostrar formulario para asignar horas al hacer clic en un día del calendario
+                    mostrarFormulario(start, end);
                 },
                 events: [
-                    // Aquí puedes cargar eventos desde tu base de datos o sistema backend
+                    // Puedes cargar eventos desde tu base de datos o sistema backend aquí
                     // Ejemplo:
                     {
-                        title: 'Hora Cargada',
-                        start: '2023-01-15T12:00:00',
-                        end: '2023-01-15T14:00:00'
-                    },
-                    {
-                        title: 'Otra Hora Cargada',
-                        start: '2023-01-17T09:00:00',
-                        end: '2023-01-17T12:00:00'
+                        title: 'Asignación de Horas',
+                        start: '2023-01-15T09:00:00',
+                        end: '2023-01-15T17:00:00'
                     }
                 ]
             });
         });
 
-        function cargarHoras() {
-            var trabajador = document.getElementById("trabajadorInput").value;
-            var obra = document.getElementById("obraInput").value;
-            var fecha = document.getElementById("fechaInput").value;
-
-            // Aquí puedes enviar los datos a tu sistema backend o hacer lo que necesites con ellos
-            console.log("Trabajador:", trabajador);
-            console.log("Obra:", obra);
-            console.log("Fecha y Hora:", fecha);
-
-            // Puedes añadir lógica adicional, como enviar los datos a un servidor o actualizar una base de datos
-            alert("Horas cargadas exitosamente.");
-
-            // Recargar el calendario después de cargar horas
-            $('#calendar').fullCalendar('refetchEvents');
-
-            // Ocultar el formulario después de cargar horas
-            ocultarFormulario();
-        }
-
         function mostrarFormulario(start, end) {
-            // Mostrar el formulario para cargar horas en la posición del evento clicado
-            document.getElementById("fechaInput").value = start + " - " + end;
-            document.getElementById("horasForm").style.display = "block";
-        }
+            // Mostrar SweetAlert2 para asignar horas
+            Swal.fire({
+                title: 'Asignar Horas',
+                html: `<label for="obraInput">Obra:</label>
+                       <input type="text" id="obraInput" placeholder="Nombre de la Obra" required>
+                       <label for="horasInput">Horas:</label>
+                       <input type="number" id="horasInput" placeholder="Cantidad de Horas" min="1" max="8" required>`,
+                focusConfirm: false,
+                preConfirm: () => {
+                    const obra = Swal.getPopup().querySelector('#obraInput').value;
+                    const horas = Swal.getPopup().querySelector('#horasInput').value;
 
-        function ocultarFormulario() {
-            // Ocultar el formulario
-            document.getElementById("horasForm").style.display = "none";
+                    // Validar que las horas sean un número entre 1 y 8
+                    if (isNaN(horas) || horas < 1 || horas > 8) {
+                        Swal.showValidationMessage('Por favor, ingrese una cantidad válida de horas (1-8).');
+                        return false;
+                    }
+
+                    // Crear evento para el calendario
+                    const evento = {
+                        title: obra + ' - ' + horas + 'h',
+                        start: start.format(),
+                        end: end.format(),
+                        allDay: false
+                    };
+
+                    // Añadir el evento al calendario
+                    $('#calendar').fullCalendar('renderEvent', evento, true);
+
+                    // Mostrar mensaje de éxito
+                    Swal.fire('¡Horas asignadas exitosamente!', '', 'success');
+                }
+            });
         }
     </script>
 
 </body>
+
 </html>
-
-
