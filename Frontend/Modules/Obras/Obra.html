@@ -8,10 +8,7 @@
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f4;
+            padding: 0;
         }
 
         header {
@@ -45,29 +42,20 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
+        h2, h3 {
             color: #333;
         }
 
-        .area-section {
-            margin-top: 20px;
-        }
-
-        .area {
-            margin-top: 20px;
-        }
-
-        .file-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .file-list-item {
-            margin: 10px 0;
-        }
-
-        .file-input {
+        label {
             margin-top: 10px;
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
         }
 
         .presupuestos-section {
@@ -103,6 +91,37 @@
             background-color: #45a049;
         }
 
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .file-list-item {
+            margin: 10px;
+            width: 150px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .file-list-item a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        .file-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .file-input {
+            margin-top: 10px;
+        }
+
         #content {
             padding: 20px;
             text-align: center;
@@ -134,7 +153,8 @@
         <input type="text" id="dueno" placeholder="Ingrese el nombre del dueño">
 
         <label for="telefono">Teléfono de contacto:</label>
-        <input type="tel" id="telefono" placeholder="Ingrese el teléfono de contacto">
+        <input type="text" id="telefono" placeholder="Ingrese el teléfono de contacto">
+
 
         <div class="area-section">
             <h2>Áreas</h2>
@@ -151,7 +171,6 @@
                     <!-- Agregar más elementos de la lista según sea necesario -->
                 </ul>
                 <input type="file" class="file-input" accept=".pdf, .doc, .docx">
-                <button onclick="uploadFile('Cocina')">Subir Archivo</button>
             </div>
 
             <!-- Agregar más áreas según sea necesario -->
@@ -162,8 +181,8 @@
     <div class="presupuestos-section">
         <h2>Presupuestos</h2>
         <ul class="presupuesto-list">
-            <li class="presupuesto-list-item" onclick="verPresupuesto('Presupuesto_V1')">Presupuesto Versión 1</li>
-            <li class="presupuesto-list-item" onclick="verPresupuesto('Presupuesto_V2')">Presupuesto Versión 2</li>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Presupuesto.html"> <li class="presupuesto-list-item">Presupuesto Versión 1</li></a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Presupuesto.html"> <li class="presupuesto-list-item">Presupuesto Versión 2</li></a>
             <!-- Agregar más elementos de la lista según sea necesario -->
         </ul>
     </div>
@@ -185,10 +204,7 @@
             }
         }
 
-        function verPresupuesto(version) {
-            // Implementar la visualización del presupuesto según la versión
-            alert('Ver presupuesto ' + version);
-        }
+        
     </script>
 
 </body>
