@@ -3,374 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto de Construcción</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
         }
 
-        #toolbar {
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
             display: flex;
             justify-content: space-between;
-            width: 70%;
-            margin-top: 20px;
+            align-items: center;
         }
 
-        #materialesRecomendados,
-        #areas,
-        .section {
-            width: 100%;
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: #fff;
+            overflow-x: hidden;
+            transition: 0.5s;
+        }
+
+        .sidebar-content {
             padding: 20px;
-            box-sizing: border-box;
-            background-color: #fff;
-            margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
         }
 
-        .materialItem {
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .toggle-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
             margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .selected {
+            background-color: #555;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #333;
+            color: white;
         }
 
-        select, input {
-            width: 150px;
-            padding: 10px;
-            margin-bottom: 15px;
+        /* Estilo para el cuadro de búsqueda */
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px;
             box-sizing: border-box;
         }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        #toggleMaterialesBtn,
-        #toggleAreasBtn {
-            cursor: pointer;
-        }
     </style>
+    <title>Panel Lateral Desplegable</title>
 </head>
 <body>
-
-    <div id="toolbar">
-        <button id="toggleMaterialesBtn" onclick="toggleSection('materialesRecomendados')">Mostrar/Ocultar Materiales Recomendados</button>
-        <button id="toggleAreasBtn" onclick="toggleSection('areas')">Mostrar/Ocultar Áreas</button>
-    </div>
-
-    <div class="section" id="materialesRecomendados">
-        <h2>Materiales Recomendados</h2>
-        <div class="materialItem">
-            <h3>Ladrillos</h3>
-            <img src="imagen_ladrillos.jpg" alt="Ladrillos">
-            <p>Descripción breve de los ladrillos.</p>
-            <button onclick="agregarMaterialPresupuesto('Ladrillos')">Agregar Ladrillos</button>
+    <header>
+        <div>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Home\home.html">Inicio</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Asignar_horas.html">Asignar horas</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Horas\Cargar_horas.html">Cargas horas</a>
+            <a href="#">Obras</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Movimientos.html">Movimientos</a>
+            <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Modules\Compras.html">Compras</a>
         </div>
-        <div class="materialItem">
-            <h3>Cemento</h3>
-            <img src="imagen_cemento.jpg" alt="Cemento">
-            <p>Descripción breve del cemento.</p>
-            <button onclick="agregarMaterialPresupuesto('Cemento')">Agregar Cemento</button>
+        <a href="C:\Users\franc\Documents\Repos\SGC-PF\Frontend\Login\login.html">
+            <button id="login-button">Iniciar Sesión</button>
+        </a>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <button class="toggle-btn" onclick="toggleSidebar('sidebar-content')">☰ Materiales y Áreas</button>
+            <div class="sidebar-content">
+                <h3>Materiales Recomendados</h3>
+                <!-- Lista de materiales recomendados con imágenes y descripciones -->
+                <ul>
+                    <li onclick="selectItem(this)">
+                        <img src="imagen_material1.jpg" alt="Material 1">
+                        <p>Descripción del Material 1.</p>
+                    </li>
+                    <li onclick="selectItem(this)">
+                        <img src="imagen_material2.jpg" alt="Material 2">
+                        <p>Descripción del Material 2.</p>
+                    </li>
+                    <li onclick="selectItem(this)">
+                        <img src="imagen_material3.jpg" alt="Material 3">
+                        <p>Descripción del Material 3.</p>
+                    </li>
+                </ul>
+
+                <h3>Áreas de la Obra</h3>
+                <ul>
+                    <li onclick="selectItem(this)">
+                        <h4>Área 1</h4>
+                        <p>Descripción del Área 1.</p>
+                    </li>
+                    <li onclick="selectItem(this)">
+                        <h4>Área 2</h4>
+                        <p>Descripción del Área 2.</p>
+                    </li>
+                    <li onclick="selectItem(this)">
+                        <h4>Área 3</h4>
+                        <p>Descripción del Área 3.</p>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="materialItem">
-            <h3>Madera</h3>
-            <img src="imagen_madera.jpg" alt="Madera">
-            <p>Descripción breve de la madera.</p>
-            <button onclick="agregarMaterialPresupuesto('Madera')">Agregar Madera</button>
+
+        <div class="main-content">
+            <h1>Bienvenido a mi página web</h1>
+
+            <!-- Cuadro de búsqueda -->
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Buscar materiales, trabajadores o vehículos" oninput="searchItems(this.value)">
+            </div>
+
+            <!-- Tabla para materiales -->
+            <h2>Presupuesto de Materiales</h2>
+            <table id="materialesTable">
+                <!-- Encabezado de la tabla -->
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <!-- Cuerpo de la tabla (contenido dinámico) -->
+                <tbody>
+                    <tr>
+                        <td>Material 1</td>
+                        <td>10</td>
+                        <td>$20.00</td>
+                        <td>$200.00</td>
+                    </tr>
+                    <tr>
+                        <td>Material 2</td>
+                        <td>5</td>
+                        <td>$15.00</td>
+                        <td>$75.00</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+
+            <!-- Tabla para trabajadores -->
+            <h2>Presupuesto de Trabajadores</h2>
+            <table id="trabajadoresTable">
+                <thead>
+                    <tr>
+                        <th>Trabajador</th>
+                        <th>Horas Trabajadas</th>
+                        <th>Salario por Hora</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trabajador 1</td>
+                        <td>40</td>
+                        <td>$15.00</td>
+                        <td>$600.00</td>
+                    </tr>
+                    <tr>
+                        <td>Trabajador 2</td>
+                        <td>30</td>
+                        <td>$20.00</td>
+                        <td>$600.00</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+
+            <!-- Tabla para vehículos -->
+            <h2>Presupuesto de Vehículos</h2>
+            <table id="vehiculosTable">
+                <thead>
+                    <tr>
+                        <th>Vehículo</th>
+                        <th>Horas de Uso</th>
+                        <th>Costo por Hora</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vehículo 1</td>
+                        <td>20</td>
+                        <td>$50.00</td>
+                        <td>$1,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Vehículo 2</td>
+                        <td>15</td>
+                        <td>$40.00</td>
+                        <td>$600.00</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
         </div>
-        <!-- Agrega más materiales recomendados según sea necesario -->
-    </div>
-
-    <div class="section" id="areas">
-        <h2>Áreas</h2>
-        <ul>
-            <li>Cocina</li>
-            <li>Baño</li>
-            <li>Sala</li>
-            <!-- Agrega más áreas según sea necesario -->
-        </ul>
-    </div>
-
-    <div class="section">
-        <label for="materialInput">Material:</label>
-        <select id="materialInput">
-            <!-- Opciones de material aquí -->
-        </select>
-        <br><br>
-
-        <button onclick="agregarMaterial()">Agregar Material</button>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Material</th>
-                    <th>Cantidad</th>
-                    <th>Precio unitario</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Las filas se agregarán dinámicamente aquí -->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3" style="text-align: right;">Total</td>
-                    <td id="total">0.00</td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <h2>Tareas de Obreros</h2>
-        <label for="tareaInput">Tarea:</label>
-        <select id="tareaInput">
-            <!-- Opciones de tarea aquí -->
-        </select>
-        <br><br>
-
-        <button onclick="agregarTarea()">Agregar Tarea</button>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Tarea</th>
-                    <th>Horas de Trabajo</th>
-                    <th>Costo por Hora</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Las filas se agregarán dinámicamente aquí -->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3" style="text-align: right;">Total</td>
-                    <td id="obrerosTotal">0.00</td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <h2>Vehículos</h2>
-        <label for="vehiculoInput">Vehículo:</label>
-        <select id="vehiculoInput">
-            <!-- Opciones de vehículo aquí -->
-        </select>
-        <br><br>
-
-        <button onclick="agregarVehiculo()">Agregar Vehículo</button>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Vehículo</th>
-                    <th>Horas de Uso</th>
-                    <th>Costo por Hora</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Las filas se agregarán dinámicamente aquí -->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3" style="text-align: right;">Total</td>
-                    <td id="vehiculosTotal">0.00</td>
-                </tr>
-            </tfoot>
-        </table>
     </div>
 
     <script>
-        function toggleSection(sectionId) {
-            var section = document.getElementById(sectionId);
-            section.classList.toggle("hidden");
+        function toggleSidebar(sidebarClassName) {
+            var sidebarContent = document.querySelector('.' + sidebarClassName);
+            sidebarContent.style.display = (sidebarContent.style.display === 'block') ? 'none' : 'block';
         }
 
-        function agregarMaterialPresupuesto(material) {
-            var cantidadInput = prompt("Ingrese la cantidad para " + material + ":", "1");
-            var precioUnitarioInput = prompt("Ingrese el precio unitario para " + material + ":", "0.00");
+        function selectItem(item) {
+            var allItems = document.querySelectorAll('.sidebar-content li');
+            allItems.forEach(function (el) {
+                el.classList.remove('selected');
+            });
 
-            if (cantidadInput === null || precioUnitarioInput === null) {
-                return; // El usuario canceló la operación
-            }
-
-            var cantidad = parseFloat(cantidadInput);
-            var precioUnitario = parseFloat(precioUnitarioInput);
-            var total = cantidad * precioUnitario;
-
-            var table = document.getElementById("presupuestoTable").getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-
-            cell1.innerHTML = material;
-            cell2.innerHTML = cantidad;
-            cell3.innerHTML = precioUnitario.toFixed(2);
-            cell4.innerHTML = total.toFixed(2);
-
-            actualizarTotal();
+            item.classList.add('selected');
         }
 
-        function agregarMaterial() {
-            var materialInput = document.getElementById("materialInput");
-            var cantidadInput = prompt("Ingrese la cantidad:", "1");
-            var precioUnitarioInput = prompt("Ingrese el precio unitario:", "0.00");
+        function searchItems(query) {
+            query = query.toLowerCase();
 
-            if (cantidadInput === null || precioUnitarioInput === null) {
-                return; // El usuario canceló la operación
-            }
+            // Filtrar materiales
+            filterTable('materialesTable', query, 0);
 
-            var material = materialInput.value;
-            var cantidad = parseFloat(cantidadInput);
-            var precioUnitario = parseFloat(precioUnitarioInput);
-            var total = cantidad * precioUnitario;
+            // Filtrar trabajadores
+            filterTable('trabajadoresTable', query, 0);
 
-            var table = document.getElementById("presupuestoTable").getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-
-            cell1.innerHTML = material;
-            cell2.innerHTML = cantidad;
-            cell3.innerHTML = precioUnitario.toFixed(2);
-            cell4.innerHTML = total.toFixed(2);
-
-            actualizarTotal();
+            // Filtrar vehículos
+            filterTable('vehiculosTable', query, 0);
         }
 
-        function agregarTarea() {
-            var tareaInput = document.getElementById("tareaInput");
-            var horasInput = prompt("Ingrese las horas de trabajo:", "1");
-            var costoInput = prompt("Ingrese el costo por hora:", "0.00");
-
-            if (horasInput === null || costoInput === null) {
-                return; // El usuario canceló la operación
+        function filterTable(tableId, query, columnIndex) {
+            var table = document.getElementById(tableId);
+            var rows = table.getElementsByTagName('tr');
+            
+            for (var i = 0; i < rows.length; i++) {
+                var cell = rows[i].getElementsByTagName('td')[columnIndex];
+                
+                if (cell) {
+                    var cellText = cell.textContent || cell.innerText;
+                    if (cellText.toLowerCase().indexOf(query) > -1) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
             }
-
-            var tarea = tareaInput.value;
-            var horas = parseFloat(horasInput);
-            var costo = parseFloat(costoInput);
-            var total = horas * costo;
-
-            var table = document.getElementsByTagName("table")[1].getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-
-            cell1.innerHTML = tarea;
-            cell2.innerHTML = horas;
-            cell3.innerHTML = costo.toFixed(2);
-            cell4.innerHTML = total.toFixed(2);
-
-            actualizarTotalObreros();
-        }
-
-        function agregarVehiculo() {
-            var vehiculoInput = document.getElementById("vehiculoInput");
-            var horasInput = prompt("Ingrese las horas de uso:", "1");
-            var costoInput = prompt("Ingrese el costo por hora:", "0.00");
-
-            if (horasInput === null || costoInput === null) {
-                return; // El usuario canceló la operación
-            }
-
-            var vehiculo = vehiculoInput.value;
-            var horas = parseFloat(horasInput);
-            var costo = parseFloat(costoInput);
-            var total = horas * costo;
-
-            var table = document.getElementsByTagName("table")[2].getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.rows.length);
-
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
-            var cell4 = newRow.insertCell(3);
-
-            cell1.innerHTML = vehiculo;
-            cell2.innerHTML = horas;
-            cell3.innerHTML = costo.toFixed(2);
-            cell4.innerHTML = total.toFixed(2);
-
-            actualizarTotalVehiculos();
-        }
-
-        function actualizarTotal() {
-            var table = document.getElementById("presupuestoTable");
-            var total = 0;
-
-            for (var i = 1; i < table.rows.length - 1; i++) {
-                total += parseFloat(table.rows[i].cells[3].innerHTML);
-            }
-
-            document.getElementById("total").innerHTML = total.toFixed(2);
-        }
-
-        function actualizarTotalObreros() {
-            var table = document.getElementsByTagName("table")[1];
-            var total = 0;
-
-            for (var i = 1; i < table.rows.length - 1; i++) {
-                total += parseFloat(table.rows[i].cells[3].innerHTML);
-            }
-
-            document.getElementById("obrerosTotal").innerHTML = total.toFixed(2);
-        }
-
-        function actualizarTotalVehiculos() {
-            var table = document.getElementsByTagName("table")[2];
-            var total = 0;
-
-            for (var i = 1; i < table.rows.length - 1; i++)
-            {
-                total += parseFloat(table.rows[i].cells[3].innerHTML);
-            }
-
-            document.getElementById("vehiculosTotal").innerHTML = total.toFixed(2);
         }
     </script>
-
 </body>
 </html>
-
