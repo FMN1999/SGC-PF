@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Presupuestos</title>
     <style>
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            font-family: 'Arial', sans-serif;
         }
 
         header {
@@ -35,84 +36,84 @@
         }
 
         .sidebar {
-            width: 250px;
-            height: 100%;
+            width: 25%;
+            padding: 20px;
             background-color: #333;
             color: #fff;
-            overflow-x: hidden;
-            transition: 0.5s;
         }
 
-        .sidebar-content {
-            padding: 20px;
-            display: none;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 20px;
-        }
-
-        .toggle-btn {
-            font-size: 20px;
-            background: none;
-            border: none;
-            color: #fff;
-            cursor: pointer;
+        .sidebar h2 {
+            color: #ffd700; /* Amarillo */
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
             margin-bottom: 10px;
         }
 
-        ul {
+        .sidebar ul {
             list-style-type: none;
             padding: 0;
         }
 
-        li {
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .sidebar li {
+            margin-bottom: 8px;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
+        .main-content {
+            width: 75%;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
 
-        .selected {
-            background-color: #555;
+        h1, h2 {
+            color: #333;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: left;
         }
 
         th {
             background-color: #333;
-            color: white;
+            color: #fff;
         }
 
-        /* Estilo para el cuadro de búsqueda */
+        .totals-summary {
+            margin-top: 20px;
+        }
+
+        .totals-summary h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .totals-summary p {
+            margin: 10px 0;
+        }
+
+        .totals-summary span {
+            font-weight: bold;
+            color: #333;
+        }
+
         .search-box {
             margin-bottom: 20px;
         }
 
-        .search-input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
     </style>
-    <title>Panel Lateral Desplegable</title>
 </head>
+
 <body>
     <header>
         <div>
@@ -129,55 +130,37 @@
     </header>
     <div class="container">
         <div class="sidebar">
-            <button class="toggle-btn" onclick="toggleSidebar('sidebar-content')">☰ Materiales y Áreas</button>
-            <div class="sidebar-content">
-                <h3>Materiales Recomendados</h3>
-                <!-- Lista de materiales recomendados con imágenes y descripciones -->
+            <!-- Panel de Materiales Recomendados y Áreas -->
+            <details open>
+                <summary>Materiales Recomendados</summary>
                 <ul>
-                    <li onclick="selectItem(this)">
-                        <img src="imagen_material1.jpg" alt="Material 1">
-                        <p>Descripción del Material 1.</p>
-                    </li>
-                    <li onclick="selectItem(this)">
-                        <img src="imagen_material2.jpg" alt="Material 2">
-                        <p>Descripción del Material 2.</p>
-                    </li>
-                    <li onclick="selectItem(this)">
-                        <img src="imagen_material3.jpg" alt="Material 3">
-                        <p>Descripción del Material 3.</p>
-                    </li>
+                    <li>Material 1</li>
+                    <li>Material 2</li>
+                    <li>Material 3</li>
+                    <!-- Agrega más materiales según sea necesario -->
                 </ul>
+            </details>
 
-                <h3>Áreas de la Obra</h3>
+            <details open>
+                <summary>Áreas</summary>
                 <ul>
-                    <li onclick="selectItem(this)">
-                        <h4>Área 1</h4>
-                        <p>Descripción del Área 1.</p>
-                    </li>
-                    <li onclick="selectItem(this)">
-                        <h4>Área 2</h4>
-                        <p>Descripción del Área 2.</p>
-                    </li>
-                    <li onclick="selectItem(this)">
-                        <h4>Área 3</h4>
-                        <p>Descripción del Área 3.</p>
-                    </li>
+                    <li>Área 1</li>
+                    <li>Área 2</li>
+                    <li>Área 3</li>
+                    <!-- Agrega más áreas según sea necesario -->
                 </ul>
-            </div>
+            </details>
         </div>
 
         <div class="main-content">
-            <h1>Bienvenido a mi página web</h1>
-
-            <!-- Cuadro de búsqueda -->
+            <!-- Sección de Tabla de Materiales -->
+            <h1>Buscar</h1>
             <div class="search-box">
-                <input type="text" class="search-input" placeholder="Buscar materiales, trabajadores o vehículos" oninput="searchItems(this.value)">
+                <input type="text" class="search-input" placeholder="Buscar materiales, trabajadores o vehículos">
             </div>
-
-            <!-- Tabla para materiales -->
-            <h2>Presupuesto de Materiales</h2>
-            <table id="materialesTable">
-                <!-- Encabezado de la tabla -->
+            <h1>Tabla de Materiales</h1>
+            <table>
+                <!-- Aquí debes generar dinámicamente las filas de la tabla con JavaScript según tus necesidades -->
                 <thead>
                     <tr>
                         <th>Material</th>
@@ -186,7 +169,6 @@
                         <th>Total</th>
                     </tr>
                 </thead>
-                <!-- Cuerpo de la tabla (contenido dinámico) -->
                 <tbody>
                     <tr>
                         <td>Material 1</td>
@@ -204,9 +186,11 @@
                 </tbody>
             </table>
 
+            <h3>Porcentaje de inflación(%):<input type="text"></h3>
+
             <!-- Tabla para trabajadores -->
             <h2>Presupuesto de Trabajadores</h2>
-            <table id="trabajadoresTable">
+            <table>
                 <thead>
                     <tr>
                         <th>Trabajador</th>
@@ -231,10 +215,11 @@
                     <!-- Agrega más filas según sea necesario -->
                 </tbody>
             </table>
+            <h3>Porcentaje de inflación(%):<input type="text"></h3>
 
             <!-- Tabla para vehículos -->
             <h2>Presupuesto de Vehículos</h2>
-            <table id="vehiculosTable">
+            <table>
                 <thead>
                     <tr>
                         <th>Vehículo</th>
@@ -259,54 +244,18 @@
                     <!-- Agrega más filas según sea necesario -->
                 </tbody>
             </table>
+            <h3>Porcentaje de inflación(%):<input type="text"></input></h3>
+
+            <!-- Sección de Resúmenes de Totales -->
+            <div class="totals-summary">
+                <h2>Resúmen de Totales</h2>
+                <p>Total Materiales: <span id="total-materials">0</span></p>
+                <p>Total Áreas: <span id="total-areas">0</span></p>
+                <p>Total General: <span id="total-general">0</span></p>
+            </div>
         </div>
     </div>
 
-    <script>
-        function toggleSidebar(sidebarClassName) {
-            var sidebarContent = document.querySelector('.' + sidebarClassName);
-            sidebarContent.style.display = (sidebarContent.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function selectItem(item) {
-            var allItems = document.querySelectorAll('.sidebar-content li');
-            allItems.forEach(function (el) {
-                el.classList.remove('selected');
-            });
-
-            item.classList.add('selected');
-        }
-
-        function searchItems(query) {
-            query = query.toLowerCase();
-
-            // Filtrar materiales
-            filterTable('materialesTable', query, 0);
-
-            // Filtrar trabajadores
-            filterTable('trabajadoresTable', query, 0);
-
-            // Filtrar vehículos
-            filterTable('vehiculosTable', query, 0);
-        }
-
-        function filterTable(tableId, query, columnIndex) {
-            var table = document.getElementById(tableId);
-            var rows = table.getElementsByTagName('tr');
-            
-            for (var i = 0; i < rows.length; i++) {
-                var cell = rows[i].getElementsByTagName('td')[columnIndex];
-                
-                if (cell) {
-                    var cellText = cell.textContent || cell.innerText;
-                    if (cellText.toLowerCase().indexOf(query) > -1) {
-                        rows[i].style.display = '';
-                    } else {
-                        rows[i].style.display = 'none';
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
