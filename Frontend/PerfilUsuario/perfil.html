@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Agregar la referencia a Bootstrap (si aún no lo has hecho) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- Resto del encabezado -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Construcción</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        #content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        #profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        #profile-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        #profile-form button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../Home/home.html">Inicio</a>
+        <a href="../Modules/Horas/Asignar_horas.html">Asignar horas</a>
+        <a href="../Modules/Horas/Cargar_horas.html">Cargas horas</a>
+        <a href="../Modules/Obras/Listado_obras.html">Obras</a>
+        <a href="../Modules/Movimientos.html">Movimientos</a>
+        <a href="../Modules/Compras.html">Compras</a>
+        <a href="../PerfilUsuario/perfil.html" id="login-button">
+            <button type="button" class="btn btn-primary">Mi perfil</button>
+        </a>
+    </header>
+
+    <div id="content">
+        <h1>Mi Perfil</h1>
+
+        <div class="row">
+            <div class="col-md-4">
+                <img id="profile-img" src="path/to/default-profile-image.jpg" alt="Foto de perfil">
+                <label for="profile-picture">Cambiar foto de perfil:</label>
+                <input type="file" id="profile-picture" accept="image/*">
+            </div>
+
+            <div class="col-md-8">
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="phone">Teléfono:</label>
+                        <input type="text" class="form-control" id="phone" value="123456789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment">Formas de pago:</label>
+                        <input type="text" class="form-control" id="payment" value="Tarjeta de crédito">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-type">Tipo de usuario:</label>
+                        <select class="form-control" id="user-type">
+                            <option value="cliente">Cliente</option>
+                            <option value="contratista">Contratista</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="saveProfile()">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agregar la referencia a Bootstrap (si aún no lo has hecho) -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        function saveProfile() {
+            // Aquí puedes implementar la lógica para guardar los cambios del perfil en la base de datos o en algún almacenamiento local.
+            alert("Cambios guardados correctamente.");
+        }
+    </script>
+</body>
+</html>

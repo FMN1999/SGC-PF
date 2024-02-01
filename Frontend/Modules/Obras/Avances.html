@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avances de Obra</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        #avances-content {
+            width: 70%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h2, h3, h4 {
+            color: #333;
+        }
+
+        p {
+            margin-top: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .material-section, .personal-section {
+            margin-top: 20px;
+        }
+
+        .material-list, .personal-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .material-item, .personal-item {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <a href="../../Home/home.html">Inicio</a>
+            <a href="../../Modules/Horas/Asignar_horas.html">Asignar horas</a>
+            <a href="../../Modules/Horas/Cargar_horas.html">Cargas horas</a>
+            <a href="../../Modules/Obras/Listado_obras.html">Obras</a>
+            <a href="../../Modules/Movimientos.html">Movimientos</a>
+            <a href="../../Modules/Compras.html">Compras</a>
+        </div>
+        <a href="../PerfilUsuario/perfil.html" id="login-button">
+            <button type="button" class="btn btn-primary">Mi perfil</button>
+        </a>
+    </header>
+
+    <div id="avances-content">
+        <h2>Avances Recientes</h2>
+
+        <h3>Fase 1: Excavación</h3>
+        <p>Se ha completado la excavación del terreno. Se han removido los escombros y preparado el terreno para la siguiente fase.</p>
+        <img src="imagen_excavacion.jpg" alt="Excavación">
+
+        <div class="material-section">
+            <h4>Materiales Utilizados</h4>
+            <ul class="material-list">
+                <li class="material-item">Concreto: 50 metros cúbicos</li>
+                <li class="material-item">Arena: 20 toneladas</li>
+                <!-- Agrega más elementos de la lista según sea necesario -->
+            </ul>
+        </div>
+
+        <div class="personal-section">
+            <h4>Personal en la Obra</h4>
+            <ul class="personal-list">
+                <li class="personal-item">Obreros: 10 personas</li>
+                <li class="personal-item">Supervisores: 2 personas</li>
+                <!-- Agrega más elementos de la lista según sea necesario -->
+            </ul>
+        </div>
+
+        <h3>Fase 2: Cimentación</h3>
+        <p>La cimentación ha sido construida con éxito. Se ha verificado la solidez y se procederá con la siguiente etapa del proyecto.</p>
+        <img src="imagen_cimentacion.jpg" alt="Cimentación">
+
+        <div class="material-section">
+            <h4>Materiales Utilizados</h4>
+            <ul class="material-list">
+                <li class="material-item">Hormigón armado: 80 metros cúbicos</li>
+                <li class="material-item">Acero estructural: 5 toneladas</li>
+                <!-- Agrega más elementos de la lista según sea necesario -->
+            </ul>
+        </div>
+
+        <div class="personal-section">
+            <h4>Personal en la Obra</h4>
+            <ul class="personal-list">
+                <li class="personal-item">Obreros: 15 personas</li>
+                <li class="personal-item">Ingenieros: 3 personas</li>
+                <!-- Agrega más elementos de la lista según sea necesario -->
+            </ul>
+        </div>
+
+        <!-- Agrega más fases según sea necesario -->
+
+    </div>
+
+</body>
+</html>
+
