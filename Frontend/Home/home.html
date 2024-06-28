@@ -1,127 +1,161 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal - Construcción</title>
+    <title>Página Principal</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f4;
+            padding: 0;
         }
 
         header {
-            background-color: #333;
-            padding: 10px 0;
-            text-align: center;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: #333;
+            color: white;
         }
 
-        header a {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            font-size: 16px;
+        .header-left {
+            display: flex;
+            gap: 10px;
         }
 
-        header a:hover {
-            background-color: #555;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 20px;
+        .btn {
+            background-color: #444;
+            color: white;
             border: none;
-            border-radius: 4px;
+            padding: 10px 20px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #carousel {
-            width: 100%;
-            height: 400px; /* Ajustar la altura según sea necesario */
-            overflow: hidden;
-        }
-
-        #carousel img {
-            width: 100%;
-            height: auto;
-            display: none;
-        }
-
-        #content {
+        main {
             padding: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            display: block;
+        }
+
+        .obras {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .obra-item {
+            flex: 1 1 calc(33% - 10px);
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            padding: 10px;
             text-align: center;
+        }
+
+        .obra-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: row;
+            }
+
+            .header-left {
+                justify-content: space-between;
+                width: 100%;
+            }   
+
+            .carousel-item {
+                min-width: 100%;
+            }
+
+            .obras {
+                flex-direction: column;
+            }
+
+            .obra-item {
+                flex: 1 1 100%;
+            }
+            
+            .btn {
+                flex: 1;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <a href="../Home/home.html">Inicio</a>
-            <a href="../Modules/Horas/Asignar_horas.html">Asignar horas</a>
-            <a href="../Modules/Horas/Cargar_horas.html">Cargas horas</a>
-            <a href="../Modules/Obras/Listado_obras.html">Obras</a>
-            <a href="../Modules/Movimientos.html">Movimientos</a>
-            <a href="../Modules/Compras.html">Compras</a>
+        <div class="header-left">
+            <button class="btn">Registrarse</button>
+            <button class="btn">Iniciar Sesión</button>
         </div>
-        <a href="../Login/login.html">
-            <button id="login-button">Iniciar Sesión</button>
-        </a>
     </header>
 
-    <div id="carousel">
-        <img src="../../Imagenes/imagen1.avif" alt="Imagen 1">
-        <img src="../../Imagenes/imagen2.avif" alt="Imagen 2">
-        <img src="../../Imagenes/imagen3.avif" alt="Imagen 3">
-        <!-- Agregar más imágenes según sea necesario -->
-    </div>
+    <main>
+        <section class="carousel">
+            <div class="carousel-item">
+                <img src="../Imagenes/imagen1.avif" alt="Imagen 1">
+            </div>
+            <div class="carousel-item">
+                <img src="../Imagenes/imagen2.avif" alt="Imagen 2">
+            </div>
+            <div class="carousel-item">
+                <img src="../Imagenes/imagen3.avif" alt="Imagen 3">
+            </div>
+        </section>
 
-    <div id="content">
-        <h1>Bienvenido a nuestra Plataforma de Construcción</h1>
-        <p>Encuentra todo lo que necesitas para tus proyectos de construcción.</p>
-    </div>
+        <section class="obras">
+            <div class="obra-item">
+                <img src="obra1.jpg" alt="Obra 1">
+                <p>Fecha Inicio: 01/01/2024</p>
+                <p>Fecha Fin: 31/01/2024</p>
+            </div>
+            <div class="obra-item">
+                <img src="obra2.jpg" alt="Obra 2">
+                <p>Fecha Inicio: 01/02/2024</p>
+                <p>Fecha Fin: 28/02/2024</p>
+            </div>
+            <div class="obra-item">
+                <img src="obra3.jpg" alt="Obra 3">
+                <p>Fecha Inicio: 01/03/2024</p>
+                <p>Fecha Fin: 31/03/2024</p>
+            </div>
+        </section>
+    </main>
 
     <script>
-        let currentImage = 0;
-        const images = document.querySelectorAll('#carousel img');
-        const totalImages = images.length;
+        let currentIndex = 0;
+        const items = document.querySelectorAll('.carousel-item');
 
-        function showImage(index) {
-            images.forEach((img, i) => {
-                img.style.display = i === index ? 'block' : 'none';
-            });
+        function showNextItem() {
+            items[currentIndex].style.transform = 'translateX(-100%)';
+            currentIndex = (currentIndex + 1) % items.length;
+            items[currentIndex].style.transform = 'translateX(0)';
         }
 
-        function nextImage() {
-            currentImage = (currentImage + 1) % totalImages;
-            showImage(currentImage);
-        }
-
-        function prevImage() {
-            currentImage = (currentImage - 1 + totalImages) % totalImages;
-            showImage(currentImage);
-        }
-
-        // Mostrar la primera imagen al cargar la página
-        showImage(currentImage);
-
-        // Cambiar de imagen cada 5 segundos (ajustar según sea necesario)
-        setInterval(nextImage, 5000);
+        setInterval(showNextItem, 3000);
     </script>
 </body>
 </html>

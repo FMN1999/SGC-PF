@@ -114,13 +114,7 @@
     <div class="section" id="obras">
         <h2>Obras</h2>
         <label for="trabajadorInput">Buscar Trabajador:</label>
-        <input type="text" id="trabajadorInput" list="trabajadoresList">
-        <datalist id="trabajadoresList">
-            <!-- Lista de trabajadores aquí -->
-            <option value="Trabajador1">
-            <option value="Trabajador2">
-            <!-- Agrega más opciones según sea necesario -->
-        </datalist>
+        <input type="text" id="trabajadorInput">
         <br>
 
         <label for="obraInput">Obra:</label>
@@ -133,6 +127,12 @@
         <input type="number" id="horasObrerosInput" required>
         <br><br>
 
+        <label for="vehiculoInput">Vehículo:</label>
+        <select id="vehiculoInput">
+            <!-- Opciones de vehículos aquí -->
+        </select>
+        <br><br>
+
         <button onclick="agregarHorasObreros()">Agregar Horas</button>
 
         <table>
@@ -141,6 +141,7 @@
                     <th>Obra</th>
                     <th>Trabajador</th>
                     <th>Horas de Trabajo</th>
+                    <th>Vehículo</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -149,7 +150,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" style="text-align: right;">Total</td>
+                    <td colspan="4" style="text-align: right;">Total</td>
                     <td id="obrasTotal">0.00</td>
                 </tr>
             </tfoot>
@@ -161,6 +162,7 @@
             // Obtener los valores de los campos
             var trabajadorInput = document.getElementById("trabajadorInput").value;
             var obraInput = document.getElementById("obraInput").value;
+            var vehiculoInput = document.getElementById("vehiculoInput").value;
             var horasObrerosInput = parseInt(document.getElementById("horasObrerosInput").value);
 
             // Validar que las horas sean un número positivo
@@ -181,6 +183,7 @@
 
             // Asignar valores a las celdas
             cellObra.innerHTML = obraInput;
+            cellVehiculo.innerHTML = vehiculoInput;
             cellTrabajador.innerHTML = trabajadorInput;
             cellHoras.innerHTML = horasObrerosInput;
             var totalHoras = parseFloat(document.getElementById("obrasTotal").innerHTML);
@@ -192,12 +195,16 @@
             // Limpiar los campos de entrada
             document.getElementById("trabajadorInput").value = "";
             document.getElementById("obraInput").value = "";
+            document.getElementById("vehiculoInput").value = "";
             document.getElementById("horasObrerosInput").value = "";
         }
 
         // Ejemplos de obras (puedes agregar más según sea necesario)
         var obrasSelect = document.getElementById("obraInput");
         var obrasEjemplos = ["Obra1", "Obra2", "Obra3"];
+
+        var vehiculoSelect = document.getElementById("vehiculoInput");
+        var vehiculoEjemplos = ["v1", "v2", "v3"];
 
         obrasEjemplos.forEach(function (obra) {
             var option = document.createElement("option");
