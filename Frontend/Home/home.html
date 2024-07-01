@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
+    <title>Pantalla de Módulos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,22 +13,26 @@
 
         header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px;
             background-color: #333;
             color: white;
         }
 
-        .header-left {
-            display: flex;
-            gap: 10px;
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
         }
 
-        .btn {
-            background-color: #444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+        .user-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
 
@@ -36,126 +40,60 @@
             padding: 20px;
         }
 
-        .carousel {
-            display: flex;
-            overflow: hidden;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            position: relative;
-        }
-
-        .carousel-item {
-            min-width: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-item img {
-            width: 100%;
-            display: block;
-        }
-
-        .obras {
+        .modules {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: space-between;
-            margin-top: 20px;
         }
 
-        .obra-item {
-            flex: 1 1 calc(33% - 10px);
+        .module {
+            flex: 1 1 calc(25% - 10px); /* 4 módulos por línea en monitor */
             box-sizing: border-box;
             background-color: #f9f9f9;
-            padding: 10px;
+            padding: 40px 20px; /* Incrementa la altura del módulo */
             text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
         }
 
-        .obra-item img {
-            max-width: 100%;
-            height: auto;
+        .module:hover {
+            transform: translateY(-5px);
+            background-color: #e9e9e9;
         }
 
         @media (max-width: 768px) {
-            header {
-                flex-direction: row;
+            .modules {
+                justify-content: space-around;
             }
 
-            .header-left {
-                justify-content: space-between;
-                width: 100%;
-            }   
-
-            .carousel-item {
-                min-width: 100%;
-            }
-
-            .obras {
-                flex-direction: column;
-            }
-
-            .obra-item {
-                flex: 1 1 100%;
-            }
-            
-            .btn {
-                flex: 1;
-                text-align: center;
+            .module {
+                flex: 1 1 calc(50% - 10px); /* 2 módulos por línea en móviles */
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="header-left">
-            <button class="btn">Registrarse</button>
-            <button class="btn">Iniciar Sesión</button>
+        <div class="logo">Baker</div>
+        <div class="user-icon" onclick="location.href='user-profile.html';">
+            <img src="user-icon.png" alt="User Icon" style="width: 100%; height: 100%; border-radius: 50%;">
         </div>
     </header>
 
     <main>
-        <section class="carousel">
-            <div class="carousel-item">
-                <img src="../Imagenes/imagen1.avif" alt="Imagen 1">
-            </div>
-            <div class="carousel-item">
-                <img src="../Imagenes/imagen2.avif" alt="Imagen 2">
-            </div>
-            <div class="carousel-item">
-                <img src="../Imagenes/imagen3.avif" alt="Imagen 3">
-            </div>
-        </section>
-
-        <section class="obras">
-            <div class="obra-item">
-                <img src="obra1.jpg" alt="Obra 1">
-                <p>Fecha Inicio: 01/01/2024</p>
-                <p>Fecha Fin: 31/01/2024</p>
-            </div>
-            <div class="obra-item">
-                <img src="obra2.jpg" alt="Obra 2">
-                <p>Fecha Inicio: 01/02/2024</p>
-                <p>Fecha Fin: 28/02/2024</p>
-            </div>
-            <div class="obra-item">
-                <img src="obra3.jpg" alt="Obra 3">
-                <p>Fecha Inicio: 01/03/2024</p>
-                <p>Fecha Fin: 31/03/2024</p>
-            </div>
-        </section>
+        <div class="modules">
+            <div class="module" onclick="location.href='modulo1.html';">Módulo 1</div>
+            <div class="module" onclick="location.href='modulo2.html';">Módulo 2</div>
+            <div class="module" onclick="location.href='modulo3.html';">Módulo 3</div>
+            <div class="module" onclick="location.href='modulo4.html';">Módulo 4</div>
+            <div class="module" onclick="location.href='modulo5.html';">Módulo 5</div>
+            <div class="module" onclick="location.href='modulo6.html';">Módulo 6</div>
+            <div class="module" onclick="location.href='modulo7.html';">Módulo 7</div>
+            <div class="module" onclick="location.href='modulo8.html';">Módulo 8</div>
+        </div>
     </main>
-
-    <script>
-        let currentIndex = 0;
-        const items = document.querySelectorAll('.carousel-item');
-
-        function showNextItem() {
-            items[currentIndex].style.transform = 'translateX(-100%)';
-            currentIndex = (currentIndex + 1) % items.length;
-            items[currentIndex].style.transform = 'translateX(0)';
-        }
-
-        setInterval(showNextItem, 3000);
-    </script>
 </body>
 </html>
