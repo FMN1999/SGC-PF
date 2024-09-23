@@ -1,0 +1,39 @@
+/* Estilos para el sidebar */
+.sidebar {
+  width: 180px;  /* Hacemos el sidebar más angosto */
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;  /* Asegura que el sidebar ocupe toda la altura */
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav ul li {
+  margin-bottom: 15px;
+}
+
+.sidebar-nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.sidebar-nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos responsivos para ocultar el sidebar en móviles */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;  /* El sidebar no se muestra en pantallas pequeñas */
+  }
+}
