@@ -5,17 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9fd334b5-a9b5-4ca2-bed4-783819bcce2b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Frontend/Home/home.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Login/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Compras.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Horas/Asignar_horas.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Horas/Cargar_horas.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Movimientos.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Obras/Avances.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Obras/Listado_obras.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Obras/Obra.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/Modules/Presupuesto.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/PerfilUsuario/perfil.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Imagenes/imagen1.avif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Imagenes/imagen2.avif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Imagenes/imagen3.avif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/sidebar/sidebar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/sidebar/sidebar.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/sidebar/sidebar.component.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/sidebar/sidebar.component.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,15 +42,22 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;frontend&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/franc/Documents/Repos/SGC-PF/frontend/src/assets/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\franc\Documents\Repos\SGC-PF\frontend\src\assets\images" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -69,6 +79,10 @@
       <workItem from="1726795022242" duration="1269000" />
       <workItem from="1726868594181" duration="2458000" />
       <workItem from="1726942091340" duration="3730000" />
+      <workItem from="1727136387466" duration="2426000" />
+      <workItem from="1727216636731" duration="4304000" />
+      <workItem from="1727225970744" duration="1839000" />
+      <workItem from="1727310859908" duration="690000" />
     </task>
     <servers />
   </component>

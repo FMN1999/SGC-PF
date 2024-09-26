@@ -5,7 +5,7 @@ $background-color: #ecf0f1; // Gris claro para fondos
 $text-color: #333; // Texto oscuro para buena legibilidad
 $white-color: #ffffff;
 $hover-color: darken($secondary-color, 10%);
-$header-height: 50px;  /* Reducimos la altura del header */
+$header-height: 50px; /* Reducimos la altura del header */
 
 /* Tipografía */
 body {
@@ -21,33 +21,35 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0px;/* Reducimos el padding para que el header sea más compacto */
+  padding: 10px 0px; /* Reducimos el padding para que el header sea más compacto */
   background-color: $primary-color;
   color: $white-color;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   height: $header-height;
-  position: fixed;  /* El header sigue fijo */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;  /* Aseguramos que el header ocupe todo el ancho */
-  z-index: 1000;  /* Aseguramos que el header esté por encima del contenido */
+  width: 100%; /* Aseguramos que el header ocupe todo el ancho */
+  z-index: 1000; /* Aseguramos que el header esté por encima del contenido */
 
   .logo {
-    font-size: 1.2em;  /* Reducimos el tamaño de la fuente del logo */
+    padding-left: 10px; /* Espacio a la izquierda del logo */
+    font-size: 1.2em; /* Reducimos el tamaño de la fuente del logo */
     font-weight: bold;
   }
 
   .nav ul {
     list-style: none;
     display: flex;
-    gap: 10px;  /* Reducimos el espacio entre los elementos del menú */
+    gap: 10px; /* Reducimos el espacio entre los elementos del menú */
   }
 
   .nav ul li a {
+    padding-right: 10px; /* Espacio a la derecha de cada enlace en el menú */
     color: $white-color;
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.9em;  /* Reducimos el tamaño de la fuente en los enlaces del menú */
+    font-size: 0.9em; /* Reducimos el tamaño de la fuente en los enlaces del menú */
 
     &:hover {
       color: $secondary-color;
@@ -71,21 +73,21 @@ body {
 .layout {
   display: flex;
   min-height: 100vh;
-  padding-top: $header-height;  /* Damos espacio para el header fijo */
+  padding-top: $header-height; /* Damos espacio para el header fijo */
 }
 
 /* Sidebar en la izquierda */
 .nav-left, .sidebar {
-  width: 180px;  /* Sidebar más angosto */
+  width: 180px; /* Sidebar más angosto */
   background-color: $primary-color;
   padding: 15px;
   color: $white-color;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  height: calc(100vh - $header-height);  /* Aseguramos que el sidebar no toque el header */
+  height: calc(100vh - $header-height); /* Aseguramos que el sidebar no toque el header */
   position: fixed;
-  top: $header-height;  /* El sidebar comienza justo debajo del header */
+  top: $header-height; /* El sidebar comienza justo debajo del header */
   left: 0;
-  overflow-y: auto;  /* Habilitamos scroll si el contenido es largo */
+  overflow-y: auto; /* Habilitamos scroll si el contenido es largo */
 
   ul {
     list-style: none;
@@ -112,13 +114,13 @@ body {
 /* Contenido principal */
 .main-content {
   flex-grow: 1;
-  margin-left: 180px;  /* Ajusta el contenido al ancho del sidebar */
-  padding: 30px;  /* Reducimos el padding para evitar que el contenido se desborde */
+  margin-left: 180px; /* Ajusta el contenido al ancho del sidebar */
+  padding: 30px; /* Padding para el contenido */
   background-color: $white-color;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  min-height: calc(100vh - $header-height);  /* Asegura que el contenido no se superponga con el header */
-  padding-top: $header-height;  /* Asegura que el contenido no se oculte debajo del header fijo */
+  min-height: calc(100vh - $header-height); /* Asegura que el contenido no se superponga con el header */
+  padding-top: 20px; /* Asegura que el contenido no se oculte debajo del header fijo */
 
   h1 {
     font-size: 2em;
@@ -133,35 +135,61 @@ body {
   }
 }
 
-/* Hero Section */
-.hero {
-  background-color: $secondary-color;
-  padding: 40px 20px;  /* Reducimos el padding */
-  color: $white-color;
-  text-align: center;
-  border-radius: 10px;
-  margin-bottom: 40px;
+.carousel {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  height: 400px; /* Ajusta la altura según sea necesario */
 
-  h1 {
-    font-size: 2.2em;
-    margin-bottom: 10px;
-  }
+  .slide {
+    min-width: 100%; /* Cada slide ocupa el 100% del ancho */
+    position: relative;
 
-  p {
-    font-size: 1.2em;
-  }
-
-  .cta-button {
-    background-color: $white-color;
-    color: $secondary-color;
-    padding: 10px 20px;  /* Botón más pequeño */
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-
-    &:hover {
-      background-color: $hover-color;
+    .carousel-caption {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
       color: $white-color;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px;
+      border-radius: 5px;
+
+      h3 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1em;
+      }
+    }
+  }
+}
+
+
+
+/* Servicios */
+.services {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  .service {
+    background-color: $white-color;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      font-size: 1.5em;
+      color: $primary-color;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: $text-color;
     }
   }
 }
@@ -169,7 +197,7 @@ body {
 /* Estilos para móvil */
 @media (max-width: 768px) {
   .nav-left {
-    display: none;  /* Oculta el sidebar en pantallas pequeñas */
+    display: none; /* Oculta el sidebar en pantallas pequeñas */
   }
 
   .menu-btn {
@@ -178,10 +206,11 @@ body {
 
   .main-content {
     padding: 20px;
-    margin-left: 0;
+    margin-left: 0; /* Elimina el margen para que ocupe todo el ancho */
   }
 
   .services {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Una sola columna para servicios en móvil */
   }
 }
+

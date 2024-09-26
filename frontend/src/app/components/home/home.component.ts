@@ -1,18 +1,19 @@
 import { Component, HostListener } from '@angular/core';
-import { NgIf } from '@angular/common';  // Importa solo NgIf
-import { SidebarComponent } from '../sidebar/sidebar.component';
+import { NgIf } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, RouterOutlet, NgIf, SidebarComponent],
+  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   isLoggedIn: boolean = true; // Suponemos que el usuario está logueado
-  isDesktop: boolean = true;  // Verifica si la pantalla es de escritorio
+  isDesktop: boolean = true;
+  sidebarVisible: boolean = true; // Controla la visibilidad del sidebar
 
   constructor() {
     this.checkScreenSize(); // Revisa el tamaño de la pantalla cuando el componente se carga
@@ -28,8 +29,9 @@ export class HomeComponent {
   checkScreenSize() {
     this.isDesktop = window.innerWidth > 768; // Pantallas mayores a 768px se consideran escritorio
   }
+
   toggleSidebar() {
-    // Lógica para mostrar/ocultar el sidebar en móviles
+    this.sidebarVisible = !this.sidebarVisible; // Alternar visibilidad del sidebar
   }
 
   logout() {
@@ -37,4 +39,3 @@ export class HomeComponent {
     // Redirigir a home
   }
 }
-
