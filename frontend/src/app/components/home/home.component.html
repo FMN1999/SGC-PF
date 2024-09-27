@@ -1,21 +1,25 @@
 <header class="header">
+  <button class="menu-toggle-btn" (click)="toggleSidebar()" aria-label="Toggle Sidebar">☰</button> <!-- Botón para mostrar el sidebar -->
   <div class="logo">[Logo]</div>
-  <button class="menu-btn" aria-label="Menu">☰</button> <!-- Para móvil -->
 </header>
 
 <section class="layout">
   <!-- Sidebar de navegación siempre visible en la izquierda -->
-  <nav class="nav-left">
+  <nav class="nav-left" *ngIf=sidebarVisible [ngClass]="{ 'visible': sidebarVisible }">
     <ul>
-      <li></li>
-      <li><a href="/projects">Proyectos</a></li>
-      <li><a href="/materials">Materiales</a></li>
-      <li><a href="/settings">Configuración</a></li>
+      <li *ngIf="!isLoggedIn"><a href="/login">Iniciar sesión</a></li>
+      <li *ngIf="!isLoggedIn"><a href="/register">Registrarse</a></li>
+
+      <!-- Opciones que se muestran solo cuando el usuario está logueado -->
+      <li *ngIf="isLoggedIn"><a href="/projects">Proyectos</a></li>
+      <li *ngIf="isLoggedIn"><a href="/materials">Materiales</a></li>
+      <li *ngIf="isLoggedIn"><a href="/settings">Configuración</a></li>
+      <li *ngIf="isLoggedIn"><a href="#" (click)="logout()">Cerrar sesión</a></li>
     </ul>
   </nav>
 
   <!-- Contenido principal -->
-  <div class="main-content">
+  <div class="main-content" [ngClass]="getMainContentClass()">
     <section class="hero">
       <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">

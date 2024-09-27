@@ -114,6 +114,7 @@ body {
 /* Contenido principal */
 .main-content {
   flex-grow: 1;
+  transition: margin-left 0.3s ease; // Añade una animación suave para el ajuste
   margin-left: 180px; /* Ajusta el contenido al ancho del sidebar */
   padding: 30px; /* Padding para el contenido */
   background-color: $white-color;
@@ -132,6 +133,14 @@ body {
     font-size: 1em;
     line-height: 1.6;
     color: $text-color;
+  }
+
+  &.with-sidebar {
+    margin-left: 180px; // Ajuste cuando el sidebar está visible
+  }
+
+  &.without-sidebar {
+    margin-left: 0; // Ajuste cuando el sidebar está oculto
   }
 }
 
@@ -167,8 +176,6 @@ body {
   }
 }
 
-
-
 /* Servicios */
 .services {
   display: grid;
@@ -194,10 +201,41 @@ body {
   }
 }
 
+.menu-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: $white-color;
+  margin-right: 20px;
+
+  &:hover {
+    color: $secondary-color;
+  }
+}
+
+.close-sidebar-btn {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  color: $white-color;
+  margin-bottom: 10px;
+
+  &:hover {
+    color: $secondary-color;
+  }
+}
+
 /* Estilos para móvil */
 @media (max-width: 768px) {
   .nav-left {
-    display: none; /* Oculta el sidebar en pantallas pequeñas */
+    position: fixed;
+    left: -180px; /* Desplazar fuera de la pantalla inicialmente */
+    transition: left 0.3s ease-in-out; /* Animación suave */
+    z-index: 1000; /* Asegurar que esté por encima del contenido */
+  }
+
+  .nav-left.visible {
+    left: 0; /* Mostrar el sidebar cuando se haga visible */
   }
 
   .menu-btn {
@@ -205,8 +243,26 @@ body {
   }
 
   .main-content {
-    padding: 20px;
-    margin-left: 0; /* Elimina el margen para que ocupe todo el ancho */
+    margin-left: 0; /* Elimina el margen cuando el sidebar esté oculto */
+    transition: margin-left 0.3s ease-in-out;
+  }
+
+  .main-content.with-sidebar {
+    margin-left: 180px; /* Ajusta el contenido cuando el sidebar esté visible */
+  }
+
+  .menu-toggle-btn {
+    display: block; /* Mostrar el botón para dispositivos móviles */
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    color: $white-color;
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: $secondary-color;
+    }
   }
 
   .services {

@@ -1,22 +1,24 @@
 import { Component, HostListener } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { NgIf, NgClass  } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule],
+  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  isLoggedIn: boolean = true; // Suponemos que el usuario está logueado
+  isLoggedIn: boolean = false; // Suponemos que el usuario está logueado
   isDesktop: boolean = true;
   sidebarVisible: boolean = true; // Controla la visibilidad del sidebar
 
   constructor() {
     this.checkScreenSize(); // Revisa el tamaño de la pantalla cuando el componente se carga
+    const token = localStorage.getItem('token');
+    this.isLoggedIn = !token; // Actualiza el estado según la existencia de un token
   }
 
   // Detectar el cambio de tamaño de pantalla
@@ -36,6 +38,11 @@ export class HomeComponent {
 
   logout() {
     localStorage.removeItem('token');
-    // Redirigir a home
+    this.isLoggedIn = false; // Actualizamos el estado
+    // Redirigir o realizar cualquier otra acción post logout
+  }
+
+  getMainContentClass() {
+    return this.sidebarVisible ? 'with-sidebar' : 'without-sidebar';
   }
 }
