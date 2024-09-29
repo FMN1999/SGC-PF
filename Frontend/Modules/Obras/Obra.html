@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Obras</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        .obra-section {
+            width: 70%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        label {
+            margin-top: 10px;
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .avances-button {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .avances-button button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .avances-button button:hover {
+            background-color: #0056b3;
+        }
+
+        .presupuestos-section {
+            margin-top: 20px;
+        }
+
+        .presupuesto-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .presupuesto-list-item {
+            margin: 10px 0;
+            cursor: pointer;
+            color: #007BFF;
+        }
+
+        .presupuesto-list-item:hover {
+            text-decoration: underline;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .file-list-item {
+            margin: 10px;
+            width: 150px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .file-list-item a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        .file-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .file-input {
+            margin-top: 10px;
+        }
+
+        #content {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="../../Home/home.html">Inicio</a>
+            <a href="../../Modules/Horas/Asignar_horas.html">Asignar horas</a>
+            <a href="../../Modules/Horas/Cargar_horas.html">Cargas horas</a>
+            <a href="../../Modules/Obras/Listado_obras.html">Obras</a>
+            <a href="../../Modules/Movimientos.html">Movimientos</a>
+            <a href="../../Modules/Compras.html">Compras</a>
+        </div>
+        <a href="../PerfilUsuario/perfil.html" id="login-button">
+            <button type="button" class="btn btn-primary">Mi perfil</button>
+        </a>
+    </header>
+
+    <div class="obra-section">
+        <h2>Datos de la Obra</h2>
+        <a href="../../Modules/Avances.html" class="avances-button">
+            <button>Avances</button>
+        </a>
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" placeholder="Ingrese la dirección">
+
+        <label for="dueno">Dueño:</label>
+        <input type="text" id="dueno" placeholder="Ingrese el nombre del dueño">
+
+        <label for="telefono">Teléfono de contacto:</label>
+        <input type="text" id="telefono" placeholder="Ingrese el teléfono de contacto">
+
+
+        <div class="area-section">
+            <h2>Áreas</h2>
+
+            <div class="area">
+                <h3>Área de Cocina</h3>
+                <label for="caracteristicasCocina">Características:</label>
+                <textarea id="caracteristicasCocina" placeholder="Ingrese las características"></textarea>
+
+                <ul class="file-list">
+                    <li class="file-list-item">
+                        <a href="#" download>Documento_1.pdf</a>
+                    </li>
+                    <!-- Agregar más elementos de la lista según sea necesario -->
+                </ul>
+                <input type="file" class="file-input" accept=".pdf, .doc, .docx">
+            </div>
+
+            <!-- Agregar más áreas según sea necesario -->
+
+        </div>
+    </div>
+
+    <div class="presupuestos-section">
+        <h2>Presupuestos</h2>
+        <ul class="presupuesto-list">
+            <a href="../../Modules/Presupuesto.html"> <li class="presupuesto-list-item">Presupuesto Versión 1</li></a>
+            <a href="../../Modules/Presupuesto.html"> <li class="presupuesto-list-item">Presupuesto Versión 2</li></a>
+            <!-- Agregar más elementos de la lista según sea necesario -->
+        </ul>
+    </div>
+
+    <script>
+        function uploadFile(area) {
+            var fileInput = document.querySelector('.file-input');
+            var fileList = document.querySelector('.file-list');
+
+            // Verificar si se seleccionó un archivo
+            if (fileInput.files.length > 0) {
+                var fileName = fileInput.files[0].name;
+                var listItem = document.createElement('li');
+                listItem.className = 'file-list-item';
+                listItem.innerHTML = '<a href="#" download>' + fileName + '</a>';
+                fileList.appendChild(listItem);
+            } else {
+                alert('Por favor, selecciona un archivo.');
+            }
+        }
+
+        
+    </script>
+
+</body>
+</html>
+
+

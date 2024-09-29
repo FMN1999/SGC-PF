@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar horas</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        #toolbar {
+            display: flex;
+            justify-content: space-between;
+            width: 70%;
+            margin-top: 20px;
+        }
+
+        .section {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        select,
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #trabajadorInput {
+            width: calc(100% - 30px);
+        }
+
+        #trabajadoresList {
+            display: none;
+        }
+
+        #trabajadorInput:focus+#trabajadoresList {
+            display: block;
+        }
+
+        #content {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>
+            <a href="../../Home/home.html">Inicio</a>
+            <a href="../../Modules/Horas/Asignar_horas.html">Asignar horas</a>
+            <a href="../../Modules/Horas/Cargar_horas.html">Cargas horas</a>
+            <a href="../../Modules/Obras/Listado_obras.html">Obras</a>
+            <a href="../../Modules/Movimientos.html">Movimientos</a>
+            <a href="../../Modules/Compras.html">Compras</a>
+        </div>
+        <a href="../PerfilUsuario/perfil.html" id="login-button">
+            <button type="button" class="btn btn-primary">Mi perfil</button>
+        </a>
+    </header>
+    <div class="section" id="obras">
+        <h2>Obras</h2>
+        <label for="trabajadorInput">Buscar Trabajador:</label>
+        <input type="text" id="trabajadorInput" list="trabajadoresList">
+        <datalist id="trabajadoresList">
+            <!-- Lista de trabajadores aquí -->
+            <option value="Trabajador1">
+            <option value="Trabajador2">
+            <!-- Agrega más opciones según sea necesario -->
+        </datalist>
+        <br>
+
+        <label for="obraInput">Obra:</label>
+        <select id="obraInput">
+            <!-- Opciones de obra aquí -->
+        </select>
+        <br><br>
+
+        <label for="horasObrerosInput">Horas de Trabajo:</label>
+        <input type="number" id="horasObrerosInput" required>
+        <br><br>
+
+        <button onclick="agregarHorasObreros()">Agregar Horas</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Obra</th>
+                    <th>Trabajador</th>
+                    <th>Horas de Trabajo</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas se agregarán dinámicamente aquí -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;">Total</td>
+                    <td id="obrasTotal">0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script>
+        function agregarHorasObreros() {
+            // Obtener los valores de los campos
+            var trabajadorInput = document.getElementById("trabajadorInput").value;
+            var obraInput = document.getElementById("obraInput").value;
+            var horasObrerosInput = parseInt(document.getElementById("horasObrerosInput").value);
+
+            // Validar que las horas sean un número positivo
+            if (isNaN(horasObrerosInput) || horasObrerosInput <= 0) {
+                alert("Por favor, ingrese un número válido de horas.");
+                return;
+            }
+
+            // Crear una fila en la tabla
+            var tableBody = document.querySelector("tbody");
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+
+            // Agregar celdas a la fila
+            var cellObra = newRow.insertCell(0);
+            var cellTrabajador = newRow.insertCell(1);
+            var cellHoras = newRow.insertCell(2);
+            var cellTotal = newRow.insertCell(3);
+
+            // Asignar valores a las celdas
+            cellObra.innerHTML = obraInput;
+            cellTrabajador.innerHTML = trabajadorInput;
+            cellHoras.innerHTML = horasObrerosInput;
+            var totalHoras = parseFloat(document.getElementById("obrasTotal").innerHTML);
+            cellTotal.innerHTML = horasObrerosInput + totalHoras;
+
+            // Actualizar el total de horas
+            document.getElementById("obrasTotal").innerHTML = cellTotal.innerHTML;
+
+            // Limpiar los campos de entrada
+            document.getElementById("trabajadorInput").value = "";
+            document.getElementById("obraInput").value = "";
+            document.getElementById("horasObrerosInput").value = "";
+        }
+
+        // Ejemplos de obras (puedes agregar más según sea necesario)
+        var obrasSelect = document.getElementById("obraInput");
+        var obrasEjemplos = ["Obra1", "Obra2", "Obra3"];
+
+        obrasEjemplos.forEach(function (obra) {
+            var option = document.createElement("option");
+            option.value = obra;
+            obrasSelect.appendChild(option);
+        });
+    </script>
+</body>
+
+</html>

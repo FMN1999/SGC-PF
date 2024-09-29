@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Presupuestos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 25%;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .sidebar h2 {
+            color: #ffd700; /* Amarillo */
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .main-content {
+            width: 75%;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .totals-summary {
+            margin-top: 20px;
+        }
+
+        .totals-summary h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .totals-summary p {
+            margin: 10px 0;
+        }
+
+        .totals-summary span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>
+            <a href="../Home/home.html">Inicio</a>
+            <a href="../Modules/Horas/Asignar_horas.html">Asignar horas</a>
+            <a href="../Modules/Horas/Cargar_horas.html">Cargas horas</a>
+            <a href="../Modules/Obras/Listado_obras.html">Obras</a>
+            <a href="../Modules/Movimientos.html">Movimientos</a>
+            <a href="../Modules/Compras.html">Compras</a>
+        </div>
+        <a href="../PerfilUsuario/perfil.html" id="login-button">
+            <button type="button" class="btn btn-primary">Mi perfil</button>
+        </a>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <!-- Panel de Materiales Recomendados y Áreas -->
+            <details open>
+                <summary>Materiales Recomendados</summary>
+                <ul>
+                    <li>Material 1</li>
+                    <li>Material 2</li>
+                    <li>Material 3</li>
+                    <!-- Agrega más materiales según sea necesario -->
+                </ul>
+            </details>
+
+            <details open>
+                <summary>Áreas</summary>
+                <ul>
+                    <li>Área 1</li>
+                    <li>Área 2</li>
+                    <li>Área 3</li>
+                    <!-- Agrega más áreas según sea necesario -->
+                </ul>
+            </details>
+        </div>
+
+        <div class="main-content">
+            <!-- Sección de Tabla de Materiales -->
+            <h1>Buscar</h1>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Buscar materiales, trabajadores o vehículos">
+            </div>
+            <h1>Tabla de Materiales</h1>
+            <table>
+                <!-- Aquí debes generar dinámicamente las filas de la tabla con JavaScript según tus necesidades -->
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Material 1</td>
+                        <td>10</td>
+                        <td>$20.00</td>
+                        <td>$200.00</td>
+                    </tr>
+                    <tr>
+                        <td>Material 2</td>
+                        <td>5</td>
+                        <td>$15.00</td>
+                        <td>$75.00</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+
+            <h3>Porcentaje de inflación(%):<input type="text"></h3>
+
+            <!-- Tabla para trabajadores -->
+            <h2>Presupuesto de Trabajadores</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trabajador</th>
+                        <th>Horas Trabajadas</th>
+                        <th>Salario por Hora</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trabajador 1</td>
+                        <td>40</td>
+                        <td>$15.00</td>
+                        <td>$600.00</td>
+                    </tr>
+                    <tr>
+                        <td>Trabajador 2</td>
+                        <td>30</td>
+                        <td>$20.00</td>
+                        <td>$600.00</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+            <h3>Porcentaje de inflación(%):<input type="text"></h3>
+
+            <!-- Tabla para vehículos -->
+            <h2>Presupuesto de Vehículos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vehículo</th>
+                        <th>Horas de Uso</th>
+                        <th>Costo por Hora</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vehículo 1</td>
+                        <td>20</td>
+                        <td>$50.00</td>
+                        <td>$1,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Vehículo 2</td>
+                        <td>15</td>
+                        <td>$40.00</td>
+                        <td>$600.00</td>
+                    </tr>
+                    <!-- Agrega más filas según sea necesario -->
+                </tbody>
+            </table>
+            <h3>Porcentaje de inflación(%):<input type="text"></input></h3>
+
+            <!-- Sección de Resúmenes de Totales -->
+            <div class="totals-summary">
+                <h2>Resúmen de Totales</h2>
+                <p>Total Materiales: <span id="total-materials">0</span></p>
+                <p>Total Áreas: <span id="total-areas">0</span></p>
+                <p>Total General: <span id="total-general">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
