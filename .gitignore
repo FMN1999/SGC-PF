@@ -1,0 +1,65 @@
+# General
+*.log
+*.pot
+*.pyc
+*.pyo
+__pycache__/
+*.so
+*.zip
+*.tar.gz
+*.db
+
+# Python virtual environment
+env/
+venv/
+ENV/
+ENV*/
+venv*/
+env*/
+
+# Django specific
+*.sqlite3
+/media
+/staticfiles
+/static
+/local_settings.py
+db.sqlite3
+
+# Ignore the file that contains secret keys
+.env
+
+# VSCode settings (if using VSCode)
+.vscode/
+
+# pyenv
+.python-version
+
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.pnpm-debug.log
+/dist/
+.angular/cache/
+
+# Build directories
+build/
+dist/
+.eslintcache
+
+# Angular specific
+/src/environments/environment.prod.ts
+/src/environments/environment.ts
+
+# JetBrains (PyCharm, WebStorm)
+.idea/
+*.iml
+out/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
