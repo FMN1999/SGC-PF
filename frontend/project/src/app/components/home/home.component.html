@@ -1,0 +1,66 @@
+<header class="header">
+  <button class="menu-toggle-btn" (click)="toggleSidebar()" aria-label="Toggle Sidebar">☰</button> <!-- Botón para mostrar el sidebar -->
+  <div class="logo">[Logo]</div>
+</header>
+
+<section class="layout">
+  <!-- Sidebar de navegación siempre visible en la izquierda -->
+  <nav class="nav-left" *ngIf=sidebarVisible [ngClass]="{ 'visible': sidebarVisible }">
+    <ul>
+      <li *ngIf="!isLoggedIn"><a [routerLink]="['/login']">Iniciar sesión</a></li>
+      <li *ngIf="!isLoggedIn"><a href="/register">Registrarse</a></li>
+
+      <!-- Opciones que se muestran solo cuando el usuario está logueado -->
+      <li *ngIf="isLoggedIn"><a href="/projects">Proyectos</a></li>
+      <li *ngIf="isLoggedIn"><a href="/materials">Materiales</a></li>
+      <li *ngIf="isLoggedIn"><a href="/settings">Configuración</a></li>
+      <li *ngIf="isLoggedIn"><a href="#" (click)="logout()">Cerrar sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="main-content" [ngClass]="getMainContentClass()">
+    <section class="hero">
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img ngSrc="assets/images/imagen1.avif" class="d-block w-100" alt="..." height="408" width="612">
+          </div>
+          <div class="carousel-item">
+            <img ngSrc="assets/images/imagen2.avif" class="d-block w-100" alt="..." height="408" width="612">
+          </div>
+          <div class="carousel-item">
+            <img ngSrc="assets/images/imagen3.avif" class="d-block w-100" alt="..." height="408" width="612">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Otros contenidos del Home -->
+    <section class="services">
+      <div class="service">
+        <h3>Gestión de Proyectos</h3>
+        <p>Controla tus proyectos en tiempo real.</p>
+      </div>
+      <div class="service">
+        <h3>Control de Materiales</h3>
+        <p>Administra materiales y recursos fácilmente.</p>
+      </div>
+    </section>
+  </div>
+</section>
+
