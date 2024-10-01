@@ -23,15 +23,12 @@ export class LoginComponent {
 
   login() {
     this.authService.login(this.username, this.password).subscribe({
-      next: (response:any) => {
-        // Almacena el token o lo que sea necesario para saber que el usuario está autenticado
-        localStorage.setItem('token', response.token);
+      next: () => {
         // Redirigir al usuario después del login exitoso
-        this.router.navigate(['/home']); // Ajusta la ruta según tu aplicación
+        this.router.navigate(['/home']);
       },
-      error: (error:any) => {
+      error: () => {
         this.errorMessage = 'Credenciales incorrectas. Inténtalo de nuevo.';
-        console.error('Error de login:', error);
       }
     });
   }
