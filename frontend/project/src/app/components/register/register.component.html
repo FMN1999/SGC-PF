@@ -45,38 +45,10 @@
   </div>
 
   <div>
-    <label>Tipo de Usuario:</label>
-    <select formControlName="tipo_usuario" (change)="onUserTypeChange()">
-      <option value="Colaborador">Colaborador</option>
-      <option value="Cliente">Cliente</option>
+    <label for="empresa">Empresa:</label>
+    <select id="empresa" formControlName="empresa">
+      <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.descripcion }}</option>
     </select>
-  </div>
-
-  <!-- Campos adicionales para Colaborador -->
-  <div *ngIf="isColaborador">
-    <label>Tipo de Colaborador:</label>
-    <select formControlName="tipo_colaborador" (change)="onColaboradorTypeChange()">
-      <option value="Arquitecto">Arquitecto</option>
-      <option value="Ingeniero">Ingeniero</option>
-      <option value="Obrero">Obrero</option>
-      <option value="RespCompras">Responsable de Compras</option>
-    </select>
-
-    <div>
-      <label for="fecha_alta">Fecha de Alta:</label>
-      <input id="fecha_alta" formControlName="fecha_alta" type="date" />
-    </div>
-
-    <div>
-      <label for="fecha_baja">Fecha de Baja:</label>
-      <input id="fecha_baja" formControlName="fecha_baja" type="date" />
-    </div>
-
-    <!-- Campo Legajo para los tipos de Colaborador -->
-    <div *ngIf="showLegajo">
-      <label for="legajo">Legajo:</label>
-      <input id="legajo" formControlName="legajo" type="text" />
-    </div>
   </div>
 
   <button type="submit">Registrar</button>

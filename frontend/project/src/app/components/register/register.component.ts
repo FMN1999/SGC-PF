@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';  // Para *ngIf
-import { NgFor } from '@angular/common';  // Para *ngFor
+import { HttpClient } from '@angular/common/http';  // Para hacer la petición HTTP
+import { NgIf, NgFor } from '@angular/common';  // Para *ngIf y *ngFor
 
 @Component({
   selector: 'app-register',
@@ -10,12 +10,11 @@ import { NgFor } from '@angular/common';  // Para *ngFor
   styleUrls: ['./register.component.scss'],
   imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor]  // Importamos los módulos que necesitamos
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
-  isColaborador: boolean = false;
-  showLegajo: boolean = false;
+  empresas: any[] = [];  // Para almacenar la lista de empresas
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.registerForm = this.fb.group({
       nombre_usuario: ['', Validators.required],
       password: ['', Validators.required],
@@ -26,36 +25,27 @@ export class RegisterComponent {
       celular: ['', Validators.required],
       telefono: ['', Validators.required],
       direccion: ['', Validators.required],
-      tipo_usuario: ['', Validators.required],
-      tipo_colaborador: [''],
-      fecha_alta: [''],
-      fecha_baja: [''],
-      legajo: ['']
+      empresa: ['', Validators.required]  // Campo para la empresa seleccionada
     });
   }
 
-  onUserTypeChange() {
-    const tipoUsuario = this.registerForm.get('tipo_usuario')?.value;
-    this.isColaborador = tipoUsuario === 'Colaborador';
-
-    if (!this.isColaborador) {
-      this.registerForm.get('tipo_colaborador')?.reset();
-      this.registerForm.get('fecha_alta')?.reset();
-      this.registerForm.get('fecha_baja')?.reset();
-      this.registerForm.get('legajo')?.reset();
-      this.showLegajo = false;
-    }
-  }
-
-  onColaboradorTypeChange() {
-    const tipoColaborador = this.registerForm.get('tipo_colaborador')?.value;
-    this.showLegajo = ['Arquitecto', 'Ingeniero', 'Obrero', 'RespCompras'].includes(tipoColaborador);
+  ngOnInit() {
+    // Hacer la petición al backend para obtener la lista de empresas
+    this.http.get('http://localhost:8000/api/empresas').subscribe({
+      next: (response: any) => {
+        this.empresas = response;
+      },
+      error: (error) => {
+        console.error('Error al obtener las empresas:', error);
+      }
+    });
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
-      // Lógica de registro
+      const formData = this.registerForm.value;
+      console.log(formData); 
     }
   }
 }
+
