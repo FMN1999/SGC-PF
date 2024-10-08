@@ -45,9 +45,24 @@
   </div>
 
   <div>
+    <label for="ciudad">Ciudad:</label>
+    <input id="ciudad" formControlName="ciudad" type="text" />
+  </div>
+
+  <div>
+    <label for="provincia">Provincia:</label>
+    <input id="provincia" formControlName="provincia" type="text" />
+  </div>
+
+  <div>
+    <label for="cuit">CUIT:</label>
+    <input id="cuit" formControlName="cuit" type="text" />
+  </div>
+
+  <div>
     <label for="empresa">Empresa:</label>
     <select id="empresa" formControlName="empresa">
-      <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.descripcion }}</option>
+      <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.denominacion }}</option>
     </select>
   </div>
 

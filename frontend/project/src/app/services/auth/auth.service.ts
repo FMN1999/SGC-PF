@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   register(user: any): Observable<any> {
-    const url = `${this.apiUrl}/register`;
+    const url = `${this.apiUrl}/register/`;  // Asegúrate de que coincida con el endpoint en el backend
     return this.http.post(url, user);
   }
 
