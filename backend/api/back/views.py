@@ -14,10 +14,17 @@ class LoginView(View):
             data = json.loads(request.body)
             usuario = data.get('usuario')
             contrasenia = data.get('contrasenia')
+
             usuario_obj = UsuarioController.login(usuario, contrasenia)
+            print('Recuperé usuario')
+            colaborador = ColaboradorController.get_by_user(usuario_obj)
+            cliente = ClienteController.get_by_user(usuario_obj)
+            print('Recuperé hijos')
             if usuario_obj:
                 response_data = {
-                    'user_id': usuario_obj.id  # Devolver el ID del usuario
+                    'user_id': usuario_obj.id,  # Devolver el ID del usuario
+                    'rol': colaborador.rol if colaborador else None,
+                    'id_emp': colaborador.id_empresa.id if colaborador else cliente.id_empresa.id
                 }
                 return JsonResponse(response_data)
             else:
@@ -83,3 +90,47 @@ class RegistroClienteView(View):
 
         except Exception as e:
             return JsonResponse({'error': 'Error inesperado: ' + str(e)}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PerfilView(View):
+    def get(self, request, userId):
+        try:
+            usuario = UsuarioController.get_by_id(userId)
+            # Verificar si es colaborador
+            colaborador = ColaboradorController.get_by_user(usuario)
+            # Verificar si es cliente
+            cliente = ClienteController.get_by_user(usuario)
+
+            # Datos generales del usuario
+            datos_usuario = {
+                'id': usuario.id,
+                'nombre': usuario.nombre,
+                'apellido': usuario.apellido,
+                'email': usuario.email,
+                'sexo': usuario.sexo,
+                'celular': usuario.celular,
+                'telefono': usuario.telefono,
+                'direccion': usuario.direccion,
+                'fecha_alta': colaborador.fecha_alta if colaborador else cliente.fecha_alta,
+                'puesto': colaborador.puesto if colaborador else None,
+                'rol': colaborador.rol if colaborador else None,
+                'id_empresa': colaborador.id_empresa.id if colaborador else cliente.id_empresa.id,
+                'empresa_col': colaborador.id_empresa.denominacion if colaborador else cliente.id_empresa.denominacion,
+                'ciudad': cliente.ciudad if cliente else None,
+                'provincia': cliente.provincia if cliente else None,
+                'cuit': cliente.cuit if cliente else None,
+                'monto_deuda': cliente.monto_deuda if cliente else None,
+                'moneda_deuda': cliente.moneda_deuda if cliente else None,
+            }
+
+            return JsonResponse(datos_usuario, safe=False)
+        except Usuario.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+
+    def put(self, request, userId):
+        data = json.loads(request.body)
+        usuario = UsuarioController.actualizar_datos_perfil(userId, data)
+        if usuario:
+            return JsonResponse({'message': 'Perfil actualizado correctamente'})
+        return JsonResponse({'error': 'No se pudo actualizar el perfil'}, status=400)

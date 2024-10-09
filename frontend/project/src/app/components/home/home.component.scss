@@ -32,10 +32,17 @@ body {
   width: 100%; /* Aseguramos que el header ocupe todo el ancho */
   z-index: 1000; /* Aseguramos que el header esté por encima del contenido */
 
-  .logo {
-    padding-left: 10px; /* Espacio a la izquierda del logo */
-    font-size: 1.2em; /* Reducimos el tamaño de la fuente del logo */
-    font-weight: bold;
+  .logo a {
+    color: #000; /* Color del ícono */
+    text-decoration: none;
+  }
+
+  .logo i {
+    cursor: pointer;
+  }
+
+  .logo i:hover {
+    color: #007bff; /* Cambiar el color al hacer hover */
   }
 
   .nav ul {

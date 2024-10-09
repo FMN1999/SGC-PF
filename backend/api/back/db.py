@@ -28,12 +28,33 @@ class UsuarioData:
         return usuario
 
     @staticmethod
+    def get_by_id(user_id):
+        return Usuario.objects.get(id=user_id)
+
+    @staticmethod
     def valida_usuario_email(email):
         return Usuario.objects.filter(email=email).exists()
-    
+
     @staticmethod
     def valida_usuario_user(user):
         Usuario.objects.filter(usuario=user).exists()
+
+    @staticmethod
+    def guardar_cambios(usuario):
+        usuario.save()
+
+
+class ColaboradorData:
+    @staticmethod
+    def get_by_user(user: Usuario):
+        try:
+            return Colaborador.objects.get(id_usuario=user)
+        except Colaborador.DoesNotExist:
+            return None
+
+    @staticmethod
+    def guardar_cambios(colaborador):
+        colaborador.save()
 
 
 class EmpresaData:
@@ -74,4 +95,13 @@ class ClienteData:
             print(f"Error al cargar las emrpesas: {e}")
             raise
 
+    @staticmethod
+    def get_by_user(user: Usuario):
+        try:
+            return Cliente.objects.get(id_usuario=user)
+        except Cliente.DoesNotExist:
+            return None
 
+    @staticmethod
+    def guardar_cambios(cliente):
+        cliente.save()

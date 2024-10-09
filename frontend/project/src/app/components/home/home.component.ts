@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service'; // Importa el servicio de autenticación
 import { NgIf, NgClass, NgOptimizedImage } from '@angular/common';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import {Router, RouterModule, RouterOutlet} from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
@@ -16,7 +16,7 @@ export class HomeComponent {
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.checkScreenSize();
 
     // Suscribirse al estado de autenticación
@@ -40,6 +40,7 @@ export class HomeComponent {
 
   logout() {
     this.authService.logout(); // Llama al método de logout del servicio
+    this.router.navigate(['/home']);
   }
 
   getMainContentClass() {

@@ -15,7 +15,7 @@ export class AuthService {
 
   // Verificar si hay un token en localStorage
   private hasToken(): boolean {
-    return !!localStorage.getItem('token');
+    return !!sessionStorage.getItem('token');
   }
 
   // Observable para saber si el usuario está logueado
@@ -27,7 +27,10 @@ export class AuthService {
   login(usuario: string, contrasenia: string) {
     return this.http.post('http://localhost:8000/api/login/', { usuario, contrasenia }).pipe(
       tap((response: any) => {
-        localStorage.setItem('token', response.token);
+        sessionStorage.setItem('token', response.token);
+        sessionStorage.setItem('id_user',response.user_id);
+        sessionStorage.setItem('rol', response.rol);
+        sessionStorage.setItem('id_empresa', response.id_emp)
         this.loggedIn.next(true); // Notifica que el usuario se ha logueado
       })
     );
@@ -35,7 +38,10 @@ export class AuthService {
 
   // Función de logout
   logout() {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('rol');
+    sessionStorage.removeItem('id_empresa');
+    sessionStorage.removeItem('id_usuario');
     this.loggedIn.next(false); // Notifica que el usuario se ha deslogueado
   }
 

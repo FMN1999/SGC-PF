@@ -1,0 +1,81 @@
+<div *ngIf="perfil && !editMode">
+  <h1>Perfil de {{ perfil.nombre }} {{ perfil.apellido }}</h1>
+  <p>Email: {{ perfil.email }}</p>
+  <p>Teléfono: {{ perfil.telefono }}</p>
+  <p>Dirección: {{ perfil.direccion }}</p>
+
+  <!-- Datos adicionales si es colaborador -->
+  <div *ngIf="perfil.puesto!==null">
+    <p>Puesto: {{ perfil.puesto }}</p>
+    <p>Rol: {{ perfil.rol }}</p>
+    <p>Fecha de alta: {{ perfil.fecha_alta }}</p>
+    <p>Empresa: {{perfil.empresa_col}}</p>
+  </div>
+
+  <!-- Datos adicionales si es cliente -->
+  <div *ngIf="perfil.cuit!==null">
+    <p>CUIT: {{ perfil.cuit }}</p>
+    <p>Ciudad: {{ perfil.ciudad }}</p>
+    <p>Provincia: {{ perfil.provincia }}</p>
+    <p>Deuda: {{ perfil.monto_deuda }} {{ perfil.moneda_deuda }}</p>
+    <p>Empresa: {{perfil.empresa_cl}}</p>
+  </div>
+
+  <!-- Mostrar botón de edición solo si es el usuario actual -->
+  <button *ngIf="esUsuarioActual()" (click)="activarEdicion()">Editar Perfil</button>
+</div>
+
+<!-- Formulario para editar el perfil -->
+<div *ngIf="editMode">
+  <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" type="text" formControlName="nombre">
+
+    <label for="apellido">Apellido</label>
+    <input id="apellido" type="text" formControlName="apellido">
+
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email">
+
+    <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+    <input id="fecha_nacimiento" type="date" formControlName="fecha_nacimiento">
+
+    <label for="sexo">Sexo</label>
+    <input id="sexo" type="text" formControlName="sexo">
+
+    <div *ngIf="perfil.puesto!==null">
+
+      <label for="puesto">Puesto</label>
+      <input id="puesto" type="text" formControlName="puesto">
+
+      <label for="rol">Rol</label>
+      <input id="rol" type="text" formControlName="rol">
+
+    </div>
+
+    <div *ngIf="perfil.cuit!==null">
+
+      <label for="ciudad">Ciudad</label>
+      <input id="ciudad" type="text" formControlName="ciudad">
+
+      <label for="provincia">Provincia</label>
+      <input id="provincia" type="text" formControlName="provincia">
+
+      <label for="cuit">CUIT</label>
+      <input id="cuit" type="text" formControlName="cuit">
+
+      <label for="deuda">Deuda</label>
+      <input id="deuda" type="text" formControlName="deuda">
+
+    </div>
+
+    <!-- Botones para guardar o cancelar -->
+    <button type="submit" [disabled]="perfilForm.invalid">Guardar Cambios</button>
+    <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+  </form>
+</div>
+
+<!-- Mensaje mientras se carga el perfil -->
+<div *ngIf="!perfil && !editMode">
+  Cargando perfil...
+</div>
