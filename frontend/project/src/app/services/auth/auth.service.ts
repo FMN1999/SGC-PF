@@ -54,4 +54,9 @@ export class AuthService {
     const url = `${this.apiUrl}/recover-password`;
     return this.http.post(url, { email });
   }
+
+  crearColaborador(datos: any): Observable<any> {
+    const url = `${this.apiUrl}/crear-usuario-colaborador/`;
+    return this.http.post(url, datos);
+  }
 }

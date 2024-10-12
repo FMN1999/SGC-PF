@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import {CrearColaboradorComponent} from "./components/crear-colaborador/crear-colaborador.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'perfil', component: PerfilComponent },
+  { path: 'crear-colaborador', component: CrearColaboradorComponent },
 ];
 
 @NgModule({

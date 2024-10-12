@@ -56,6 +56,22 @@ class ColaboradorData:
     def guardar_cambios(colaborador):
         colaborador.save()
 
+    @staticmethod
+    def crear_colaborador(colaborador_data, usuario_id, empresa_id):
+        usuario = Usuario.objects.get(id=usuario_id)
+        empresa = Empresa.objects.get(id=empresa_id)
+
+        colaborador = Colaborador(
+            usuario=usuario,
+            empresa=empresa,
+            rol=colaborador_data.get('rol'),
+            puesto=colaborador_data.get('puesto'),
+            fecha_alta=colaborador_data.get('fecha_alta'),
+        )
+        colaborador.save()
+        return colaborador
+
+
 
 class EmpresaData:
     @staticmethod

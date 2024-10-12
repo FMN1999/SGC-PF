@@ -47,6 +47,19 @@ class ColaboradorController:
     def get_by_user(user):
         return ColaboradorData.get_by_user(user)
 
+    @staticmethod
+    def crearcolaborador(usuario_data, colaborador_data):
+        # Crear usuario
+        usuario = UsuarioData.crear_usuario(usuario_data)
+
+        # Crear colaborador con el ID del usuario recién creado y un ID de empresa
+        colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario.id, colaborador_data.get('empresa_id'))
+
+        return {
+            'usuario': usuario,
+            'colaborador': colaborador
+        }
+
 
 class ClienteController:
     @staticmethod

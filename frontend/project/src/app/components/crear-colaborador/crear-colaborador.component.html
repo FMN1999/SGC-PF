@@ -1,0 +1,69 @@
+<div class="container">
+  <h2>Crear Colaborador</h2>
+  <form [formGroup]="colaboradorForm" (ngSubmit)="onSubmit()">
+    <!-- Datos del Usuario -->
+    <h3>Datos del Usuario</h3>
+    <div>
+      <label>Nombre</label>
+      <input formControlName="nombre" type="text" />
+    </div>
+    <div>
+      <label>Apellido</label>
+      <input formControlName="apellido" type="text" />
+    </div>
+    <div>
+      <label>Email</label>
+      <input formControlName="email" type="email" />
+    </div>
+    <div>
+      <label>Usuario</label>
+      <input formControlName="usuario" type="text" />
+    </div>
+    <div>
+      <label>Contraseña</label>
+      <input formControlName="contrasenia" type="password" />
+    </div>
+    <div>
+      <label>Fecha de Nacimiento</label>
+      <input formControlName="fecha_nacimiento" type="date" />
+    </div>
+    <div>
+      <label>Sexo</label>
+      <input formControlName="sexo" type="text" />
+    </div>
+    <div>
+      <label>Celular</label>
+      <input formControlName="celular" type="text" />
+    </div>
+    <div>
+      <label>Teléfono</label>
+      <input formControlName="telefono" type="text" />
+    </div>
+    <div>
+      <label>Dirección</label>
+      <input formControlName="direccion" type="text" />
+    </div>
+
+    <!-- Datos del Colaborador -->
+    <h3>Datos del Colaborador</h3>
+    <div>
+      <label>Puesto</label>
+      <input formControlName="puesto" type="text" />
+    </div>
+    <div>
+      <label>Rol</label>
+      <input formControlName="rol" type="text" />
+    </div>
+    <div>
+    <label for="empresa_id">Empresa:</label>
+    <select id="empresa_id" formControlName="empresa_id">
+      <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.denominacion }}</option>
+    </select>
+  </div>
+
+    <button type="submit" [disabled]="colaboradorForm.invalid">Crear Colaborador</button>
+  </form>
+
+  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+</div>
+
