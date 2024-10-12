@@ -55,8 +55,8 @@
       <input formControlName="rol" type="text" />
     </div>
     <div>
-    <label for="empresa_id">Empresa:</label>
-    <select id="empresa_id" formControlName="empresa_id">
+    <label for="id_empresa">Empresa:</label>
+    <select id="id_empresa" formControlName="id_empresa">
       <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.denominacion }}</option>
     </select>
   </div>

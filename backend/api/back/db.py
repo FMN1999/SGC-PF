@@ -57,20 +57,21 @@ class ColaboradorData:
         colaborador.save()
 
     @staticmethod
-    def crear_colaborador(colaborador_data, usuario_id, empresa_id):
-        usuario = Usuario.objects.get(id=usuario_id)
-        empresa = Empresa.objects.get(id=empresa_id)
+    def crear_colaborador(colaborador_data, usuario, empresa):
+        try:
 
-        colaborador = Colaborador(
-            usuario=usuario,
-            empresa=empresa,
-            rol=colaborador_data.get('rol'),
-            puesto=colaborador_data.get('puesto'),
-            fecha_alta=colaborador_data.get('fecha_alta'),
-        )
-        colaborador.save()
-        return colaborador
-
+            colaborador = Colaborador(
+                id_usuario=usuario,
+                id_empresa=empresa,
+                rol=colaborador_data.get('rol'),
+                puesto=colaborador_data.get('puesto'),
+                fecha_alta=datetime.now().date(),
+            )
+            colaborador.save()
+            return colaborador
+        except Exception as e:
+            print(f"Error al cargar el colaborador: {e}")
+            raise
 
 
 class EmpresaData:
@@ -78,8 +79,9 @@ class EmpresaData:
     def obtener_empresa_por_id(empresa_id):
         try:
             return Empresa.objects.get(id=empresa_id)
-        except Empresa.DoesNotExist:
-            return None
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
 
     @staticmethod
     def get_all():

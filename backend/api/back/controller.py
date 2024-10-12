@@ -48,17 +48,27 @@ class ColaboradorController:
         return ColaboradorData.get_by_user(user)
 
     @staticmethod
-    def crearcolaborador(usuario_data, colaborador_data):
-        # Crear usuario
-        usuario = UsuarioData.crear_usuario(usuario_data)
+    def crear_colaborador(usuario_data, colaborador_data):
+        print(colaborador_data)
+        empresa = EmpresaData.obtener_empresa_por_id(int(colaborador_data.get('id_empresa')))
+        if not empresa:
+            raise ValidationError("La empresa seleccionada no existe")
+        print(empresa)
 
-        # Crear colaborador con el ID del usuario recién creado y un ID de empresa
-        colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario.id, colaborador_data.get('empresa_id'))
+        # Validar datos de usuario (por ejemplo, si el email ya está registrado)
+        if UsuarioData.valida_usuario_email(usuario_data.get('email')):
+            raise ValidationError("El email ya está en uso")
 
-        return {
-            'usuario': usuario,
-            'colaborador': colaborador
-        }
+        if UsuarioData.valida_usuario_user(usuario_data.get('usuario')):
+            raise ValidationError("El nombre de usuario ya está en uso")
+
+        # Crear el usuario y el cliente dentro de una transacción
+        try:
+            usuario = UsuarioData.crear_usuario(usuario_data)
+            colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario, empresa)
+            return colaborador
+        except Exception as e:
+            raise ValidationError(f"Error al registrar el cliente: {str(e)}")
 
 
 class ClienteController:

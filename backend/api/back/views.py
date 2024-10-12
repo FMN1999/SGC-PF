@@ -136,31 +136,21 @@ class PerfilView(View):
         return JsonResponse({'error': 'No se pudo actualizar el perfil'}, status=400)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ColaboradorView(View):
     def post(self, request):
         try:
             # Parsear los datos del request
             data = json.loads(request.body)
+            print(data)
             usuario_data = data.get('usuario')
             colaborador_data = data.get('colaborador')
+            print('Ingreso a crear')
 
             # Llamar al controlador para crear usuario y colaborador
-            resultado = ColaboradorController.crear_usuario_y_colaborador(usuario_data, colaborador_data)
-
-            return JsonResponse({
-                'status': 'success',
-                'usuario': {
-                    'id': resultado['usuario'].id,
-                    'nombre': resultado['usuario'].nombre,
-                    'apellido': resultado['usuario'].apellido,
-                    'email': resultado['usuario'].email,
-                },
-                'colaborador': {
-                    'id': resultado['colaborador'].id,
-                    'rol': resultado['colaborador'].rol,
-                    'puesto': resultado['colaborador'].puesto,
-                }
-            }, status=201)
+            resultado = ColaboradorController.crear_colaborador(usuario_data, colaborador_data)
+            print('hecho')
+            return JsonResponse({'message': 'Colaborador Creado'}, status=201)
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

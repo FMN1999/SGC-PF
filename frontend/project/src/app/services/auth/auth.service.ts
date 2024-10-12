@@ -55,8 +55,8 @@ export class AuthService {
     return this.http.post(url, { email });
   }
 
-  crearColaborador(datos: any): Observable<any> {
+  crearColaborador(request: any): Observable<any> {
     const url = `${this.apiUrl}/crear-usuario-colaborador/`;
-    return this.http.post(url, datos);
+    return this.http.post(url, request);
   }
 }
