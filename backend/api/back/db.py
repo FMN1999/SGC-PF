@@ -123,3 +123,28 @@ class ClienteData:
     @staticmethod
     def guardar_cambios(cliente):
         cliente.save()
+
+
+class ProveedorData:
+    @staticmethod
+    def crear_proveedor(prov, emp):
+        try:
+            proveedor = Proveedor(
+                denominacion=prov.get('denominacion'),
+                telefono=prov.get('telefono'),
+                direccion=prov.get('direccion'),
+                email=prov.get('email'),
+                cuil=prov.get('cuil'),
+                ciudad=prov.get('ciudad'),
+                provincia=prov.get('provincia'),
+                id_empresa=emp
+            )
+            proveedor.save()
+            return proveedor
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
+    @staticmethod
+    def get_by_id(prov_id):
+        return Proveedor.objects.get(id=prov_id)

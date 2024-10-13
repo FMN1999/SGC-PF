@@ -49,11 +49,9 @@ class ColaboradorController:
 
     @staticmethod
     def crear_colaborador(usuario_data, colaborador_data):
-        print(colaborador_data)
         empresa = EmpresaData.obtener_empresa_por_id(int(colaborador_data.get('id_empresa')))
         if not empresa:
             raise ValidationError("La empresa seleccionada no existe")
-        print(empresa)
 
         # Validar datos de usuario (por ejemplo, si el email ya está registrado)
         if UsuarioData.valida_usuario_email(usuario_data.get('email')):
@@ -103,3 +101,20 @@ class EmpresaController:
     @staticmethod
     def get_all():
         return EmpresaData.get_all()
+
+
+class ProveedorController:
+    @staticmethod
+    def crear_proveedor(proveedor_data):
+        print(proveedor_data)
+        empresa = EmpresaData.obtener_empresa_por_id(int(proveedor_data.get('id_empresa')))
+        if not empresa:
+            raise ValidationError("La empresa seleccionada no existe")
+        print('encontré empresa')
+        proveedor = ProveedorData.crear_proveedor(proveedor_data, empresa)
+
+        return proveedor
+
+    @staticmethod
+    def get_by_id(prov_id):
+        return ProveedorData.get_by_id(prov_id)

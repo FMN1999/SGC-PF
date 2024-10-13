@@ -1,0 +1,15 @@
+<div *ngIf="proveedor; else noProveedor">
+  <h1>Perfil del Proveedor</h1>
+  <p><strong>Denominación:</strong> {{ proveedor.denominacion }}</p>
+  <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
+  <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+  <p><strong>Email:</strong> {{ proveedor.email }}</p>
+  <p><strong>CUIL:</strong> {{ proveedor.cuil }}</p>
+  <p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
+  <p><strong>Provincia:</strong> {{ proveedor.provincia }}</p>
+</div>
+
+<ng-template #noProveedor>
+  <p>Cargando Proveedor...</p>
+</ng-template>
+

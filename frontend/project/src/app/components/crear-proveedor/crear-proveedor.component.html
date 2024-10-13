@@ -1,0 +1,27 @@
+<form [formGroup]="proveedorForm" (ngSubmit)="onSubmit()">
+  <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
+
+  <label>Denominación</label>
+  <input formControlName="denominacion" type="text" required />
+
+  <label>Teléfono</label>
+  <input formControlName="telefono" type="text" required />
+
+  <label>Dirección</label>
+  <input formControlName="direccion" type="text" required />
+
+  <label>Email</label>
+  <input formControlName="email" type="email" required />
+
+  <label>CUIL</label>
+  <input formControlName="cuil" type="text" required />
+
+  <label>Ciudad</label>
+  <input formControlName="ciudad" type="text" required />
+
+  <label>Provincia</label>
+  <input formControlName="provincia" type="text" required />
+
+  <button type="submit">Crear Proveedor</button>
+</form>
+

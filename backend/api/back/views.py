@@ -154,3 +154,46 @@ class ColaboradorView(View):
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ProveedorView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            proveedor_data = data.get('proveedor')
+
+            # Llamar al controlador para crear el proveedor
+            proveedor = ProveedorController.crear_proveedor(proveedor_data)
+
+            return JsonResponse({
+                'status': 'success',
+                'proveedor': {
+                    'id': proveedor.id,
+                    'denominacion': proveedor.denominacion,
+                    'email': proveedor.email
+                }
+            }, status=201)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    def get(self, request, proveedor_id):
+        try:
+            # Buscar el proveedor por ID
+            proveedor = ProveedorController.get_by_id(proveedor_id)
+            # Formatear la respuesta
+            proveedor_data = {
+                'id': proveedor.id,
+                'denominacion': proveedor.denominacion,
+                'telefono': proveedor.telefono,
+                'direccion': proveedor.direccion,
+                'email': proveedor.email,
+                'cuil': proveedor.cuil,
+                'ciudad': proveedor.ciudad,
+                'provincia': proveedor.provincia,
+                'id_empresa': proveedor.id_empresa.id
+            }
+            return JsonResponse({'status': 'success', 'proveedor': proveedor_data}, status=200)
+        except Proveedor.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Proveedor no encontrado'}, status=404)

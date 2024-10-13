@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf } from "@angular/common";
-import { EmpresaService } from '../../services/empresa/empresa.service';
 
 @Component({
   selector: 'app-crear-colaborador',
@@ -19,12 +18,10 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 export class CrearColaboradorComponent implements OnInit {
   colaboradorForm: FormGroup;
   mensajeError: string = '';
-  protected empresas: any;
 
   constructor(
     private fb: FormBuilder,
     private colaboradorService: AuthService,
-    private empresaService: EmpresaService,
     private router: Router
   ) {
     this.colaboradorForm = this.fb.group({
@@ -43,20 +40,11 @@ export class CrearColaboradorComponent implements OnInit {
       // Datos del Colaborador
       puesto: ['', Validators.required],
       rol: ['', Validators.required],
-      id_empresa: ['', Validators.required],
+      id_empresa: [''],
     });
   }
 
-  ngOnInit(): void {
-    this.empresaService.obtenerEmpresas().subscribe({
-      next: (response: any) => {
-        this.empresas = response;
-      },
-      error: (error: any) => {
-        console.error('Error al obtener las empresas:', error);
-      }
-    });
-  }
+  ngOnInit(): void {}
 
   onSubmit() {
     if (this.colaboradorForm.valid) {
@@ -77,7 +65,7 @@ export class CrearColaboradorComponent implements OnInit {
         colaborador: {
           puesto: this.colaboradorForm.get('puesto')?.value,
           rol: this.colaboradorForm.get('rol')?.value,
-          id_empresa: this.colaboradorForm.get('id_empresa')?.value
+          id_empresa: sessionStorage.getItem('id_empresa')
         }
       };
 

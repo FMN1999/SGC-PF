@@ -6,6 +6,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import {CrearColaboradorComponent} from "./components/crear-colaborador/crear-colaborador.component";
+import {CrearProveedorComponent} from "./components/crear-proveedor/crear-proveedor.component";
+import {PerfilProveedorComponent} from "./components/perfil-proveedor/perfil-proveedor.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,6 +17,8 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'perfil', component: PerfilComponent },
   { path: 'crear-colaborador', component: CrearColaboradorComponent },
+  { path: 'crear-proveedor', component: CrearProveedorComponent },
+  { path: 'proveedor/:id', component: PerfilProveedorComponent },
 ];
 
 @NgModule({
