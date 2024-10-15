@@ -117,4 +117,89 @@ class ProveedorController:
 
     @staticmethod
     def get_by_id(prov_id):
-        return ProveedorData.get_by_id(prov_id)
+        try:
+            # Obtener el proveedor
+            proveedor = ProveedorData.get_by_id(prov_id)
+
+            # Obtener los materiales, servicios y ofertas relacionados
+            materiales = ProveedorData.get_material_by_prov(proveedor)
+            servicios = ProveedorData.get_servicio_by_prov(proveedor)
+            ofertas = ProveedorData.get_oferta_by_prov(proveedor)
+
+            # Convertir los objetos a diccionarios
+            materiales_list = [
+                {
+                    'id': material.id,
+                    'fecha_caducidad': material.fecha_caducidad,
+                    'tipo_material': material.tipo_material,
+                    'unidad_medida': material.unidad_medida,
+                    'descripcion': material.descripcion,
+                    'marca': material.marca,
+                    'precio': material.precio,
+                    'moneda': material.moneda,
+                    'fecha_desde_precio': material.fecha_desde_precio,
+                } for material in materiales
+            ]
+
+            servicios_list = [
+                {
+                    'id': servicio.id,
+                    'descripcion': servicio.descripcion,
+                    'precio_x_unidad': servicio.precio_x_unidad,
+                    'unidad_medida': servicio.unidad_medida,
+                    'monto_x_frecuencia': servicio.monto_x_frecuencia,
+                    'frecuencia_pago': servicio.frecuencia_pago,
+                } for servicio in servicios
+            ]
+
+            ofertas_list = [
+                {
+                    'id': oferta.id,
+                    'descripcion': oferta.descripcion,
+                    'monto_total': oferta.monto_total,
+                    'moneda': oferta.moneda,
+                    'fecha_desde': oferta.fecha_desde,
+                    'fecha_hasta': oferta.fecha_hasta,
+                } for oferta in ofertas
+            ]
+
+            # Estructurar los datos en un solo diccionario
+            proveedor_detalle = {
+                'proveedor': {
+                    'denominacion': proveedor.denominacion,
+                    'telefono': proveedor.telefono,
+                    'direccion': proveedor.direccion,
+                    'email': proveedor.email,
+                    'cuil': proveedor.cuil,
+                    'ciudad': proveedor.ciudad,
+                    'provincia': proveedor.provincia,
+                },
+                'materiales': materiales_list,
+                'servicios': servicios_list,
+                'ofertas': ofertas_list,
+            }
+            return proveedor_detalle
+
+        except Proveedor.DoesNotExist:
+            raise ValidationError("El proveedor no existe")
+        except Exception as e:
+            raise ValidationError(f"Error al obtener el proveedor: {str(e)}")
+
+
+class OfertaController:
+    @staticmethod
+    def obtener_oferta_con_datos(oferta_id):
+        # Validar que la oferta exista
+        oferta = OfertaData.get_by_id(oferta_id)
+        if not oferta:
+            raise ValidationError("Oferta no encontrada")
+
+        # Obtener los materiales y servicios asociados a la oferta
+        materiales = OfertaData.get_materiales(oferta)
+        servicios = OfertaData.get_servicios(oferta)
+
+        return {
+            'oferta': oferta,
+            'materiales': materiales,
+            'servicios': servicios
+        }

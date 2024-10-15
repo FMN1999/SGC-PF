@@ -148,3 +148,29 @@ class ProveedorData:
     @staticmethod
     def get_by_id(prov_id):
         return Proveedor.objects.get(id=prov_id)
+
+    @staticmethod
+    def get_material_by_prov(prov: Proveedor):
+        return Material.objects.filter(id_proveedor=prov)
+
+    @staticmethod
+    def get_servicio_by_prov(prov: Proveedor):
+        return Servicio.objects.filter(id_proveedor=prov)
+
+    @staticmethod
+    def get_oferta_by_prov(prov: Proveedor):
+        return Oferta.objects.filter(id_proveedor=prov)
+
+
+class OfertaData:
+    @staticmethod
+    def get_materiales(oferta: Oferta):
+        return Oferta_Material.objects.filter(id_oferta=oferta)
+
+    @staticmethod
+    def get_servicios(oferta: Oferta):
+        return Oferta_Servicio.objects.filter(id_oferta=oferta)
+
+    @staticmethod
+    def get_by_id(oferta_id):
+        return Oferta.objects.get(id=oferta_id)

@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 import json
 from .controller import *
-from datetime import datetime
+from django.core.exceptions import ValidationError
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -180,20 +180,22 @@ class ProveedorView(View):
 
     def get(self, request, proveedor_id):
         try:
-            # Buscar el proveedor por ID
-            proveedor = ProveedorController.get_by_id(proveedor_id)
-            # Formatear la respuesta
-            proveedor_data = {
-                'id': proveedor.id,
-                'denominacion': proveedor.denominacion,
-                'telefono': proveedor.telefono,
-                'direccion': proveedor.direccion,
-                'email': proveedor.email,
-                'cuil': proveedor.cuil,
-                'ciudad': proveedor.ciudad,
-                'provincia': proveedor.provincia,
-                'id_empresa': proveedor.id_empresa.id
-            }
-            return JsonResponse({'status': 'success', 'proveedor': proveedor_data}, status=200)
-        except Proveedor.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Proveedor no encontrado'}, status=404)
+            # Llamar al controlador para obtener el proveedor y sus datos
+            datos_proveedor = ProveedorController.get_by_id(proveedor_id)
+
+            return JsonResponse(datos_proveedor, status=200, safe=False)
+
+        except ValidationError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': 'Error interno del servidor'}, status=500)
+
+
+class OfertaView(View):
+    def get(self, request, proveedor_id):
+        try:
+            # Llamar al controlador para obtener los detalles del proveedor
+            proveedor_detalle = ProveedorController.get_by_id(proveedor_id)
+            return JsonResponse(proveedor_detalle, status=200)
+        except ValidationError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
