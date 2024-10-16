@@ -9,6 +9,7 @@
   <p><strong>Provincia:</strong> {{ proveedor.provincia }}</p>
 
   <h2>Materiales</h2>
+  <button (click)="navigateToCreateMaterial()">Agregar Material</button>
   <ul>
     <li *ngFor="let material of materiales">
       {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
@@ -16,6 +17,7 @@
   </ul>
 
   <h2>Servicios</h2>
+  <button (click)="navigateToCreateServicio()">Agregar Servicio</button>
   <ul>
     <li *ngFor="let servicio of servicios">
       {{ servicio.descripcion }} - {{ servicio.precio_x_unidad }} {{ servicio.moneda }} por {{ servicio.unidad_medida }}
@@ -23,6 +25,7 @@
   </ul>
 
   <h2>Ofertas</h2>
+  <button (click)="navigateToCreateOferta()">Agregar Oferta</button>
   <ul>
     <li *ngFor="let oferta of ofertas">
       {{ oferta.descripcion }} - {{ oferta.monto_total }} {{ oferta.moneda }} (Desde: {{ oferta.fecha_desde }} Hasta: {{ oferta.fecha_hasta }})

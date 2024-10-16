@@ -18,4 +18,8 @@ export class ProveedorService {
   obtenerProveedor(proveedor_id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/proveedor/${proveedor_id}/`);
   }
+
+  crearMaterial(materialData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/material/crear/`, materialData);
+  }
 }

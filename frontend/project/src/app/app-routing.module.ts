@@ -8,6 +8,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import {CrearColaboradorComponent} from "./components/crear-colaborador/crear-colaborador.component";
 import {CrearProveedorComponent} from "./components/crear-proveedor/crear-proveedor.component";
 import {PerfilProveedorComponent} from "./components/perfil-proveedor/perfil-proveedor.component";
+import {CrearMaterialComponent} from "./components/crear-material/crear-material.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'crear-colaborador', component: CrearColaboradorComponent },
   { path: 'crear-proveedor', component: CrearProveedorComponent },
   { path: 'proveedor/:id', component: PerfilProveedorComponent },
+  { path: 'crear-material/:id', component: CrearMaterialComponent },
 ];
 
 @NgModule({

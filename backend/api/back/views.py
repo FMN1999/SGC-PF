@@ -199,3 +199,22 @@ class OfertaView(View):
             return JsonResponse(proveedor_detalle, status=200)
         except ValidationError as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class MaterialView(View):
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            proveedor_id = data.get('id_proveedor')
+            print(proveedor_id)
+
+            # Validar y crear material
+            material = MaterialController.crear_material(data, proveedor_id)
+
+            return JsonResponse({'message': 'Material creado con éxito', 'material': material.id}, status=201)
+        except ValidationError as ve:
+            return JsonResponse({'error': str(ve)}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al crear material: {str(e)}"}, status=500)

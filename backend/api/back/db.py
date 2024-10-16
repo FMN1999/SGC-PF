@@ -174,3 +174,25 @@ class OfertaData:
     @staticmethod
     def get_by_id(oferta_id):
         return Oferta.objects.get(id=oferta_id)
+
+
+class MaterialData:
+    @staticmethod
+    def crear_material(material_data, proveedor):
+        try:
+            material = Material(
+                fecha_caducidad=material_data.get('fecha_caducidad'),
+                tipo_material=material_data.get('tipo_material'),
+                unidad_medida=material_data.get('unidad_medida'),
+                descripcion=material_data.get('descripcion'),
+                marca=material_data.get('marca'),
+                precio=material_data.get('precio'),
+                moneda=material_data.get('moneda'),
+                fecha_desde_precio=material_data.get('fecha_desde_precio'),
+                id_proveedor=proveedor
+            )
+            material.save()
+            return material
+        except Exception as e:
+            print(f"Error al crear el material: {e}")
+            raise

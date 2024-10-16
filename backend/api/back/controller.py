@@ -203,3 +203,17 @@ class OfertaController:
             'materiales': materiales,
             'servicios': servicios
         }
+
+
+class MaterialController:
+    @staticmethod
+    def crear_material(material_data, proveedor_id):
+        try:
+            proveedor = ProveedorData.get_by_id(proveedor_id)
+            material = MaterialData.crear_material(material_data, proveedor)
+
+            return material
+        except Proveedor.DoesNotExist:
+            raise ValidationError("El proveedor no existe")
+        except Exception as e:
+            raise ValidationError(f"Error al crear el material: {str(e)}")

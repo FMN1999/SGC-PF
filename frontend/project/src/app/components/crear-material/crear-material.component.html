@@ -1,0 +1,32 @@
+<h1>Crear Material</h1>
+<form (ngSubmit)="crearMaterial()">
+  <label for="fecha_caducidad">Fecha de Caducidad:</label>
+  <input id="fecha_caducidad" [(ngModel)]="materialData.fecha_caducidad" name="fecha_caducidad" required type="date">
+
+  <label for="tipo_material">Tipo de Material:</label>
+  <input id="tipo_material" [(ngModel)]="materialData.tipo_material" name="tipo_material" required>
+
+  <label for="unidad_medida">Unidad de Medida:</label>
+  <input id="unidad_medida" [(ngModel)]="materialData.unidad_medida" name="unidad_medida" required>
+
+  <label for="descripcion">Descripción:</label>
+  <input id="descripcion" [(ngModel)]="materialData.descripcion" name="descripcion" required>
+
+  <label for="marca">Marca:</label>
+  <input id="marca" [(ngModel)]="materialData.marca" name="marca" required>
+
+  <label for="precio">Precio:</label>
+  <input id="precio" [(ngModel)]="materialData.precio" name="precio" required type="number" step="0.01">
+
+  <label for="moneda">Moneda:</label>
+  <input id="moneda" [(ngModel)]="materialData.moneda" name="moneda" required>
+
+  <label for="fecha_desde_precio">Fecha Desde Precio:</label>
+  <input id="fecha_desde_precio" [(ngModel)]="materialData.fecha_desde_precio" name="fecha_desde_precio" required type="date">
+
+  <button type="submit">Crear Material</button>
+</form>
+
+<p *ngIf="mensajeExito">{{ mensajeExito }}</p>
+<p *ngIf="mensajeError">{{ mensajeError }}</p>
+

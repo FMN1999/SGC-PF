@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import {NgForOf, NgIf} from "@angular/common";
 
@@ -22,7 +22,8 @@ export class PerfilProveedorComponent implements OnInit {
 
   constructor(
     private proveedorService: ProveedorService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +39,21 @@ export class PerfilProveedorComponent implements OnInit {
         this.mensajeError = 'No se pudo obtener la información del proveedor.';
       }
     });
+  }
+
+  navigateToCreateMaterial(): void {
+    const id = this.route.snapshot.params['id'];
+    this.router.navigate([`/crear-material/${id}`]);
+  }
+
+  navigateToCreateServicio(): void {
+    const id = this.route.snapshot.params['id'];
+    this.router.navigate([`/crear-servicio/${id}`]);
+  }
+
+  navigateToCreateOferta(): void {
+    const id = this.route.snapshot.params['id'];
+    this.router.navigate([`/crear-oferta/${id}`]);
   }
 }
 
