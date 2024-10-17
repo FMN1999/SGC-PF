@@ -9,6 +9,8 @@ import {CrearColaboradorComponent} from "./components/crear-colaborador/crear-co
 import {CrearProveedorComponent} from "./components/crear-proveedor/crear-proveedor.component";
 import {PerfilProveedorComponent} from "./components/perfil-proveedor/perfil-proveedor.component";
 import {CrearMaterialComponent} from "./components/crear-material/crear-material.component";
+import {CrearServicioComponent} from "./components/crear-servicio/crear-servicio.component";
+import {CrearOfertaComponent} from "./components/crear-oferta/crear-oferta.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +23,8 @@ const routes: Routes = [
   { path: 'crear-proveedor', component: CrearProveedorComponent },
   { path: 'proveedor/:id', component: PerfilProveedorComponent },
   { path: 'crear-material/:id', component: CrearMaterialComponent },
+  { path: 'crear-servicio/:id', component: CrearServicioComponent },
+  { path: 'crear-oferta/:id', component: CrearOfertaComponent },
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 from .models import *
 from datetime import datetime
+import random
 
 
 class UsuarioData:
@@ -175,8 +176,71 @@ class OfertaData:
     def get_by_id(oferta_id):
         return Oferta.objects.get(id=oferta_id)
 
+    @staticmethod
+    def crear_oferta(oferta_data, proveedor):
+        try:
+            oferta = Oferta(
+                id=random.randint(1000, 9999),
+                descripcion=oferta_data.get('descripcion'),
+                monto_total=oferta_data.get('monto_total'),
+                moneda=oferta_data.get('moneda'),
+                fecha_desde=oferta_data.get('fecha_desde'),
+                fecha_hasta=oferta_data.get('fecha_hasta'),
+                id_proveedor=proveedor
+            )
+            oferta.save()
+            return oferta
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
+    @staticmethod
+    def agregar_material_a_oferta(oferta, material_data):
+        try:
+            oferta_material = Oferta_Material(
+                id=random.randint(1000, 9999),
+                id_oferta=oferta,
+                id_material=MaterialData.get_by_id(material_data['id_material']),
+                cantidad_of=material_data.get('cantidad_of'),
+                unidad_of=material_data.get('unidad_of'),
+                monto=material_data.get('monto'),
+                moneda=material_data.get('moneda'),
+                porc_desc=material_data.get('porc_desc')
+            )
+            oferta_material.save()
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
+    @staticmethod
+    def agregar_servicio_a_oferta(oferta, servicio_data):
+        try:
+            oferta_servicio = Oferta_Servicio(
+                id=random.randint(1000, 9999),
+                id_oferta=oferta,
+                id_servicio=ServicioData.get_by_id(servicio_data['id_servicio']),
+                cantidad_of=servicio_data.get('cantidad_of'),
+                unidad_tiempo=servicio_data.get('unidad_tiempo'),
+                monto=servicio_data.get('monto'),
+                moneda=servicio_data.get('moneda'),
+                porc_desc=servicio_data.get('porc_desc')
+            )
+            oferta_servicio.save()
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
 
 class MaterialData:
+
+    @staticmethod
+    def get_by_id(id_mat):
+        try:
+            return Material.objects.get(id=id_mat)
+        except Exception as e:
+            print(f"Error al buscar material: {e}")
+            raise
+
     @staticmethod
     def crear_material(material_data, proveedor):
         try:
@@ -196,3 +260,31 @@ class MaterialData:
         except Exception as e:
             print(f"Error al crear el material: {e}")
             raise
+
+
+class ServicioData:
+    @staticmethod
+    def get_by_id(id_serv):
+        try:
+            return Servicio.objects.get(id=id_serv)
+        except Exception as e:
+            print(f"Error al buscar material: {e}")
+            raise
+    @staticmethod
+    def crear_servicio(servicio_data, proveedor):
+        try:
+            servicio = Servicio(
+                id=random.randint(1000, 9999),
+                descripcion=servicio_data.get('descripcion'),
+                precio_x_unidad=servicio_data.get('precio_x_unidad'),
+                unidad_medida=servicio_data.get('unidad_medida'),
+                monto_x_frecuencia=servicio_data.get('monto_x_frecuencia'),
+                frecuencia_pago=servicio_data.get('frecuencia_pago'),
+                id_proveedor=proveedor
+            )
+            servicio.save()
+            return servicio
+        except Exception as e:
+            print(f"Error al crear el servicio: {str(e)}")
+            raise
+

@@ -22,4 +22,21 @@ export class ProveedorService {
   crearMaterial(materialData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/material/crear/`, materialData);
   }
+
+  crearServicio(servicioData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/servicio/crear/`, servicioData);
+  }
+
+  crearOferta(ofertaData: any): Observable<any> {
+      return this.http.post(`${this.apiUrl}/oferta/crear/`, ofertaData);
+  }
+
+  obtenerMaterialesPorProveedor(proveedorId: number | undefined): Observable<any> {
+    return this.http.get(`${this.apiUrl}/materiales/${proveedorId}/`);
+  }
+
+  obtenerServiciosPorProveedor(proveedorId: number | undefined): Observable<any> {
+    return this.http.get(`${this.apiUrl}/servicios/${proveedorId}/`);
+  }
+
 }

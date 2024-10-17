@@ -1,0 +1,22 @@
+<form (ngSubmit)="crearServicio()">
+  <label for="descripcion">Descripción</label>
+  <input type="text" id="descripcion" [(ngModel)]="servicioData.descripcion" name="descripcion">
+
+  <label for="precio_x_unidad">Precio por Unidad</label>
+  <input type="number" id="precio_x_unidad" [(ngModel)]="servicioData.precio_x_unidad" name="precio_x_unidad">
+
+  <label for="unidad_medida">Unidad de Medida</label>
+  <input type="text" id="unidad_medida" [(ngModel)]="servicioData.unidad_medida" name="unidad_medida">
+
+  <label for="monto_x_frecuencia">Monto por Frecuencia</label>
+  <input type="number" id="monto_x_frecuencia" [(ngModel)]="servicioData.monto_x_frecuencia" name="monto_x_frecuencia">
+
+  <label for="frecuencia_pago">Frecuencia de Pago</label>
+  <input type="text" id="frecuencia_pago" [(ngModel)]="servicioData.frecuencia_pago" name="frecuencia_pago">
+
+  <button type="submit">Crear Servicio</button>
+</form>
+
+<p *ngIf="mensajeExito">{{ mensajeExito }}</p>
+<p *ngIf="mensajeError">{{ mensajeError }}</p>
+

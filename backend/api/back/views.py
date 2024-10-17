@@ -191,6 +191,7 @@ class ProveedorView(View):
             return JsonResponse({'status': 'error', 'message': 'Error interno del servidor'}, status=500)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class OfertaView(View):
     def get(self, request, proveedor_id):
         try:
@@ -199,6 +200,20 @@ class OfertaView(View):
             return JsonResponse(proveedor_detalle, status=200)
         except ValidationError as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            proveedor_id = data.get('id_proveedor')
+
+            # Crear oferta y asociar materiales y servicios
+            oferta = OfertaController.crear_oferta_con_materiales_y_servicios(data, proveedor_id)
+
+            return JsonResponse({'message': 'Oferta creada con éxito', 'oferta_id': oferta.id}, status=201)
+        except ValidationError as ve:
+            return JsonResponse({'error': str(ve)}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al crear la oferta: {str(e)}"}, status=500)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -218,3 +233,44 @@ class MaterialView(View):
             return JsonResponse({'error': str(ve)}, status=400)
         except Exception as e:
             return JsonResponse({'error': f"Error al crear material: {str(e)}"}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ServicioView(View):
+
+    def post(self, request):
+        try:
+            # Parsear el cuerpo de la petición a JSON
+            data = json.loads(request.body)
+
+            proveedor_id = data.get('id_proveedor')
+            print(f"Proveedor ID: {proveedor_id}")  # Debería imprimir el id del proveedor
+
+            # Validar y crear servicio
+            servicio = ServicioController.crear_servicio(data, proveedor_id)
+
+            return JsonResponse({'message': 'Servicio creado con éxito', 'servicio': servicio.id}, status=201)
+        except ValidationError as ve:
+            return JsonResponse({'error': str(ve)}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al crear servicio: {str(e)}"}, status=500)
+
+
+class MaterialesPorProveedorView(View):
+    def get(self, request, proveedor_id):
+        try:
+            materiales = ProveedorController.get_materiales_by_proveedor(proveedor_id)
+            materiales_list = list(materiales.values())
+            return JsonResponse({'materiales': materiales_list}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class ServiciosPorProveedorView(View):
+    def get(self, request, proveedor_id):
+        try:
+            servicios = ProveedorController.get_servicios_by_proveedor(proveedor_id)
+            servicios_list = list(servicios.values())
+            return JsonResponse({'servicios': servicios_list}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)

@@ -11,6 +11,8 @@ urlpatterns = [
     path('proveedor/<int:proveedor_id>/', views.ProveedorView.as_view(), name='proveedor-detail'),
     path('oferta/<int:oferta_id>/', views.OfertaView.as_view(), name='oferta-detalle'),
     path('material/crear/', views.MaterialView.as_view(), name='crear-material'),
-    #path('servicio/crear/', views.ServicioView.as_view(), name='crear-servicio'),
-    #path('oferta/crear/', views.OfertaView.as_view(), name='crear-oferta'),
+    path('servicio/crear/', views.ServicioView.as_view(), name='crear-servicio'),
+    path('oferta/crear/', views.OfertaView.as_view(), name='crear-oferta'),
+    path('materiales/<int:proveedor_id>/', views.MaterialesPorProveedorView.as_view(), name='materiales-por-proveedor'),
+    path('servicios/<int:proveedor_id>/', views.ServiciosPorProveedorView.as_view(), name='servicios-por-proveedor'),
 ]

@@ -1,0 +1,78 @@
+<form (submit)="agregarOferta()">
+  <div>
+    <label for="descripcion">Descripción</label>
+    <input id="descripcion" [(ngModel)]="ofertaData.descripcion" name="descripcion" required>
+  </div>
+
+  <div>
+    <label for="monto_total">Monto Total</label>
+    <input id="monto_total" type="number" [(ngModel)]="ofertaData.monto_total" name="monto_total" required>
+  </div>
+
+  <div>
+    <label for="moneda">Moneda</label>
+    <input id="moneda" [(ngModel)]="ofertaData.moneda" name="moneda" required>
+  </div>
+
+  <div>
+    <label for="fecha_desde">Fecha Desde</label>
+    <input id="fecha_desde" type="date" [(ngModel)]="ofertaData.fecha_desde" name="fecha_desde" required>
+  </div>
+
+  <div>
+    <label for="fecha_hasta">Fecha Hasta</label>
+    <input id="fecha_hasta" type="date" [(ngModel)]="ofertaData.fecha_hasta" name="fecha_hasta" required>
+  </div>
+
+  <h3>Seleccionar Materiales</h3>
+  <div *ngFor="let material of materiales">
+    <input type="checkbox" [(ngModel)]="material.selected" name="material_{{material.id}}">
+    {{ material.descripcion }} - {{ material.marca }}
+
+    <div *ngIf="material.selected">
+      <label>Cantidad</label>
+      <input type="number" [(ngModel)]="material.cantidad_of" name="cantidad_{{material.id}}">
+
+      <label>Unidad</label>
+      <input type="text" [(ngModel)]="material.unidad_of" name="unidad_{{material.id}}">
+
+      <label>Monto</label>
+      <input type="number" [(ngModel)]="material.monto" name="monto_{{material.id}}">
+
+      <label>Moneda</label>
+      <input type="text" [(ngModel)]="material.moneda" name="moneda_{{material.id}}">
+
+      <label>Porcentaje Descuento</label>
+      <input type="number" [(ngModel)]="material.porc_desc" name="desc_{{material.id}}">
+    </div>
+  </div>
+
+  <h3>Seleccionar Servicios</h3>
+  <div *ngFor="let servicio of servicios">
+    <input type="checkbox" [(ngModel)]="servicio.selected" name="servicio_{{servicio.id}}">
+    {{ servicio.descripcion }}
+
+    <div *ngIf="servicio.selected">
+      <label>Cantidad</label>
+      <input type="number" [(ngModel)]="servicio.cantidad_of" name="cantidad_{{servicio.id}}">
+
+      <label>Unidad de Tiempo</label>
+      <input type="text" [(ngModel)]="servicio.unidad_tiempo" name="unidad_tiempo_{{servicio.id}}">
+
+      <label>Monto</label>
+      <input type="number" [(ngModel)]="servicio.monto" name="monto_{{servicio.id}}">
+
+      <label>Moneda</label>
+      <input type="text" [(ngModel)]="servicio.moneda" name="moneda_{{servicio.id}}">
+
+      <label>Porcentaje Descuento</label>
+      <input type="number" [(ngModel)]="servicio.porc_desc" name="desc_{{servicio.id}}">
+    </div>
+  </div>
+
+  <button type="submit">Crear Oferta</button>
+
+  <div *ngIf="mensajeExito">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError">{{ mensajeError }}</div>
+</form>
+

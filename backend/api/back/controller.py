@@ -106,7 +106,6 @@ class EmpresaController:
 class ProveedorController:
     @staticmethod
     def crear_proveedor(proveedor_data):
-        print(proveedor_data)
         empresa = EmpresaData.obtener_empresa_por_id(int(proveedor_data.get('id_empresa')))
         if not empresa:
             raise ValidationError("La empresa seleccionada no existe")
@@ -185,6 +184,16 @@ class ProveedorController:
         except Exception as e:
             raise ValidationError(f"Error al obtener el proveedor: {str(e)}")
 
+    @staticmethod
+    def get_materiales_by_proveedor(proveedor_id):
+        prov = ProveedorData.get_by_id(proveedor_id)
+        return ProveedorData.get_material_by_prov(prov)
+
+    @staticmethod
+    def get_servicios_by_proveedor(proveedor_id):
+        prov = ProveedorData.get_by_id(proveedor_id)
+        return ProveedorData.get_servicio_by_prov(prov)
+
 
 class OfertaController:
     @staticmethod
@@ -204,6 +213,26 @@ class OfertaController:
             'servicios': servicios
         }
 
+    @staticmethod
+    def crear_oferta_con_materiales_y_servicios(oferta_data, proveedor_id):
+        try:
+            proveedor = ProveedorData.get_by_id(proveedor_id)
+            oferta = OfertaData.crear_oferta(oferta_data, proveedor)
+
+            # Agregar materiales con datos adicionales
+            materiales = oferta_data.get('materiales', [])
+            for material_data in materiales:
+                OfertaData.agregar_material_a_oferta(oferta, material_data)
+
+            # Agregar servicios con datos adicionales
+            servicios = oferta_data.get('servicios', [])
+            for servicio_data in servicios:
+                OfertaData.agregar_servicio_a_oferta(oferta, servicio_data)
+
+            return oferta
+        except Exception as e:
+            raise ValidationError(f"Error al crear la oferta: {str(e)}")
+
 
 class MaterialController:
     @staticmethod
@@ -217,3 +246,16 @@ class MaterialController:
             raise ValidationError("El proveedor no existe")
         except Exception as e:
             raise ValidationError(f"Error al crear el material: {str(e)}")
+
+
+class ServicioController:
+    @staticmethod
+    def crear_servicio(servicio_data, proveedor_id):
+        try:
+            proveedor = ProveedorData.get_by_id(proveedor_id)
+            servicio = ServicioData.crear_servicio(servicio_data, proveedor)
+            return servicio
+        except Proveedor.DoesNotExist:
+            raise ValidationError("El proveedor no existe")
+        except Exception as e:
+            raise ValidationError(f"Error al crear el servicio: {str(e)}")
