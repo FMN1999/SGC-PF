@@ -39,4 +39,40 @@ export class ProveedorService {
     return this.http.get(`${this.apiUrl}/servicios/${proveedorId}/`);
   }
 
+  getMaterialById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/material/${id}/`);
+  }
+
+  getServicioById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/servicio/${id}/`);
+  }
+
+  getOfertaById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/oferta-detalle/${id}/`);
+  }
+
+  eliminarMaterial(materialId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/material/eliminar/${materialId}/`);
+  }
+
+  eliminarServicio(servicioId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/servicio/eliminar/${servicioId}/`);
+  }
+
+  eliminarOferta(ofertaId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/oferta/eliminar/${ofertaId}/`);
+  }
+
+  updateMaterial(materialId: number, materialData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/material/actualizar/${materialId}/`, materialData);
+  }
+
+  updateServicio(servicioId: number, servicioData: any) {
+    return this.http.put(`${this.apiUrl}/servicio/actualizar/${servicioId}/`, servicioData);
+  }
+
+  actualizarProveedor(id: number, proveedor: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/proveedores/${id}/`, proveedor);
+  }
+
 }

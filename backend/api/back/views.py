@@ -190,6 +190,12 @@ class ProveedorView(View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': 'Error interno del servidor'}, status=500)
 
+    def put(self, request, id):
+        data = json.loads(request.body)
+        proveedor = ProveedorController.actualizar_proveedor(id, data)
+
+        return JsonResponse({'message': 'Proveedor actualizado correctamente'}, status=200)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class OfertaView(View):
@@ -215,6 +221,73 @@ class OfertaView(View):
         except Exception as e:
             return JsonResponse({'error': f"Error al crear la oferta: {str(e)}"}, status=500)
 
+    def delete(self, request, oferta_id):
+        try:
+            OfertaController.eliminar_oferta(oferta_id)
+            return JsonResponse({'message': 'Oferta eliminada con éxito'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al eliminar la oferta: {str(e)}"}, status=500)
+
+
+class OfertaDetalleView(View):
+    def get(self, request, oferta_id):
+        try:
+            # Llama al método del controlador que obtiene la oferta con los materiales y servicios
+            oferta_con_datos = OfertaController.obtener_oferta_con_datos(oferta_id)
+
+            # Serializa la oferta en el view
+            oferta = oferta_con_datos['oferta']
+            oferta_serializada = {
+                'id': oferta.id,
+                'descripcion': oferta.descripcion,
+                'monto_total': oferta.monto_total,
+                'moneda': oferta.moneda,
+                'fecha_desde': oferta.fecha_desde,
+                'fecha_hasta': oferta.fecha_hasta,
+                'id_proveedor': oferta.id_proveedor_id,
+            }
+
+            # Serializa los materiales
+            materiales = oferta_con_datos['materiales']
+            materiales_serializados = [
+                {
+                    'id': material.id,
+                    'descripcion': material.id_material.descripcion,
+                    'marca': material.id_material.marca,
+                    'cantidad_of': material.cantidad_of,
+                    'unidad_of': material.unidad_of,
+                    'monto': material.monto,
+                    'moneda': material.moneda,
+                    'porc_desc': material.porc_desc,
+                } for material in materiales
+            ]
+
+            # Serializa los servicios
+            servicios = oferta_con_datos['servicios']
+            servicios_serializados = [
+                {
+                    'id': servicio.id,
+                    'descripcion': servicio.id_servicio.descripcion,
+                    'cantidad_of': servicio.cantidad_of,
+                    'unidad_tiempo': servicio.unidad_tiempo,
+                    'monto': servicio.monto,
+                    'moneda': servicio.moneda,
+                    'porc_desc': servicio.porc_desc,
+                } for servicio in servicios
+            ]
+
+            # Devuelve la respuesta con los datos serializados
+            return JsonResponse({
+                'oferta': oferta_serializada,
+                'materiales': materiales_serializados,
+                'servicios': servicios_serializados,
+            }, status=200)
+
+        except ValidationError as ve:
+            return JsonResponse({'error': str(ve)}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al obtener la oferta: {str(e)}"}, status=500)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MaterialView(View):
@@ -233,6 +306,49 @@ class MaterialView(View):
             return JsonResponse({'error': str(ve)}, status=400)
         except Exception as e:
             return JsonResponse({'error': f"Error al crear material: {str(e)}"}, status=500)
+
+    def get(self, request, material_id):
+        try:
+            material = MaterialController.get_by_id(material_id)
+            material_data = {
+                'id': material.id,
+                'descripcion': material.descripcion,
+                'marca': material.marca,
+                'precio': material.precio,
+                'moneda': material.moneda,
+                'fecha_caducidad': material.fecha_caducidad,
+                'unidad_medida': material.unidad_medida
+            }
+            return JsonResponse(material_data, status=200)
+        except Material.DoesNotExist:
+            return JsonResponse({'error': 'Material no encontrado'}, status=404)
+
+    def delete(self, request, material_id):
+        try:
+            MaterialController.eliminar_material(material_id)
+            return JsonResponse({'message': 'Material eliminado con éxito'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al eliminar el material: {str(e)}"}, status=500)
+        
+    def put(self,request, material_id):
+        try:
+            # Obtener los datos enviados en el request
+            data = json.loads(request.body)
+
+            # Llamar al método estático de MaterialData para actualizar el material
+            updated_material = MaterialController.actualizar_material(material_id, data)
+
+            # Retornar una respuesta con los datos actualizados
+            return JsonResponse({
+                'message': 'Material actualizado con éxito',
+                'material': updated_material
+            }, status=200)
+
+        except ValidationError as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': 'Error al actualizar el material'}, status=500)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -254,6 +370,45 @@ class ServicioView(View):
             return JsonResponse({'error': str(ve)}, status=400)
         except Exception as e:
             return JsonResponse({'error': f"Error al crear servicio: {str(e)}"}, status=500)
+
+    def get(self, request, servicio_id):
+        try:
+            servicio = ServicioController.get_by_id(servicio_id)
+            servicio_data = {
+                'id': servicio.id,
+                'descripcion': servicio.descripcion,
+                'precio_x_unidad': servicio.precio_x_unidad,
+                'unidad_medida': servicio.unidad_medida,
+                'monto_x_frecuencia': servicio.monto_x_frecuencia,
+                'frecuencia_pago': servicio.frecuencia_pago
+            }
+            return JsonResponse(servicio_data, status=200)
+        except Servicio.DoesNotExist:
+            return JsonResponse({'error': 'Servicio no encontrado'}, status=404)
+
+    def delete(self, request, servicio_id):
+        try:
+            ServicioController.eliminar_servicio(servicio_id)
+            return JsonResponse({'message': 'Servicio eliminado con éxito'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f"Error al eliminar el servicio: {str(e)}"}, status=500)
+
+    def put(self, request, servicio_id):
+        try:
+            # Obtener los datos enviados en el request
+            data = json.loads(request.body)
+
+            # Llamar al método estático de ServicioData para actualizar el servicio
+            updated_servicio = ServicioController.actualizar_servicio(servicio_id, data)
+
+            # Retornar una respuesta con los datos actualizados
+            return JsonResponse({
+                'message': 'Servicio actualizado con éxito',
+                'servicio': updated_servicio
+            }, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': 'Error al actualizar el servicio'}, status=500)
 
 
 class MaterialesPorProveedorView(View):

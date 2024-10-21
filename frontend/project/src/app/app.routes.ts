@@ -9,6 +9,9 @@ import {PerfilProveedorComponent} from "./components/perfil-proveedor/perfil-pro
 import {CrearMaterialComponent} from "./components/crear-material/crear-material.component";
 import {CrearServicioComponent} from "./components/crear-servicio/crear-servicio.component";
 import {CrearOfertaComponent} from "./components/crear-oferta/crear-oferta.component";
+import {MaterialComponent} from "./components/material/material.component";
+import {ServicioComponent} from "./components/servicio/servicio.component";
+import {OfertaComponent} from "./components/oferta/oferta.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,6 +25,10 @@ export const routes: Routes = [
   { path: 'crear-material/:id', component: CrearMaterialComponent },
   { path: 'crear-servicio/:id', component: CrearServicioComponent },
   { path: 'crear-oferta/:id', component: CrearOfertaComponent },
+  { path: 'proveedor/:id', component: PerfilProveedorComponent },
+  { path: 'material/:id', component: MaterialComponent },
+  { path: 'servicio/:id', component: ServicioComponent },
+  { path: 'oferta/:id', component: OfertaComponent },
 ];
 
 export const routerProviders = [provideRouter(routes)];

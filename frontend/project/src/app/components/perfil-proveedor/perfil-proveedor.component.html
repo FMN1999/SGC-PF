@@ -1,18 +1,60 @@
 <div *ngIf="proveedor; else noProveedor">
   <h1>Perfil del Proveedor</h1>
-  <p><strong>Denominación:</strong> {{ proveedor.denominacion }}</p>
-  <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
-  <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
-  <p><strong>Email:</strong> {{ proveedor.email }}</p>
-  <p><strong>CUIL:</strong> {{ proveedor.cuil }}</p>
-  <p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
-  <p><strong>Provincia:</strong> {{ proveedor.provincia }}</p>
+
+  <!-- Información del proveedor -->
+  <div *ngIf="!isEditing">
+    <p><strong>Denominación:</strong> {{ proveedor.denominacion }}</p>
+    <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
+    <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+    <p><strong>Email:</strong> {{ proveedor.email }}</p>
+    <p><strong>CUIL:</strong> {{ proveedor.cuil }}</p>
+    <p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
+    <p><strong>Provincia:</strong> {{ proveedor.provincia }}</p>
+
+    <!-- Botón para habilitar la edición -->
+    <button (click)="enableEditing()">Editar</button>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="isEditing">
+    <h2>Editar Proveedor</h2>
+    <label for="denominacion">Denominación:</label>
+    <input id="denominacion" [(ngModel)]="proveedor.denominacion" />
+
+    <label for="telefono">Teléfono:</label>
+    <input id="telefono" [(ngModel)]="proveedor.telefono" />
+
+    <label for="direccion">Dirección:</label>
+    <input id="direccion" [(ngModel)]="proveedor.direccion" />
+
+    <label for="email">Email:</label>
+    <input id="email" [(ngModel)]="proveedor.email" />
+
+    <label for="cuil">CUIL:</label>
+    <input id="cuil" [(ngModel)]="proveedor.cuil" />
+
+    <label for="ciudad">Ciudad:</label>
+    <input id="ciudad" [(ngModel)]="proveedor.ciudad" />
+
+    <label for="provincia">Provincia:</label>
+    <input id="provincia" [(ngModel)]="proveedor.provincia" />
+
+    <!-- Botones para guardar y cancelar la edición -->
+    <button (click)="updateProveedor()">Guardar</button>
+    <button (click)="cancelEditing()">Cancelar</button>
+  </div>
+
+  <!-- Materiales, Servicios y Ofertas -->
+  <!-- (El resto del HTML se mantiene igual) -->
 
   <h2>Materiales</h2>
   <button (click)="navigateToCreateMaterial()">Agregar Material</button>
   <ul>
     <li *ngFor="let material of materiales">
-      {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
+      <a [routerLink]="['/material', material.id]">
+        {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
+      </a>
+      <button (click)="eliminarMaterial(material.id)">Eliminar</button>
     </li>
   </ul>
 
@@ -20,7 +62,10 @@
   <button (click)="navigateToCreateServicio()">Agregar Servicio</button>
   <ul>
     <li *ngFor="let servicio of servicios">
-      {{ servicio.descripcion }} - {{ servicio.precio_x_unidad }} {{ servicio.moneda }} por {{ servicio.unidad_medida }}
+      <a [routerLink]="['/servicio', servicio.id]">
+        {{ servicio.descripcion }} - {{ servicio.precio_x_unidad }} {{ servicio.moneda }} por {{ servicio.unidad_medida }}
+      </a>
+      <button (click)="eliminarServicio(servicio.id)">Eliminar</button>
     </li>
   </ul>
 
@@ -28,7 +73,10 @@
   <button (click)="navigateToCreateOferta()">Agregar Oferta</button>
   <ul>
     <li *ngFor="let oferta of ofertas">
-      {{ oferta.descripcion }} - {{ oferta.monto_total }} {{ oferta.moneda }} (Desde: {{ oferta.fecha_desde }} Hasta: {{ oferta.fecha_hasta }})
+      <a [routerLink]="['/oferta', oferta.id]">
+        {{ oferta.descripcion }} - {{ oferta.monto_total }} {{ oferta.moneda }} (Desde: {{ oferta.fecha_desde }} Hasta: {{ oferta.fecha_hasta }})
+      </a>
+      <button (click)="eliminarOferta(oferta.id)">Eliminar</button>
     </li>
   </ul>
 </div>
@@ -36,5 +84,6 @@
 <ng-template #noProveedor>
   <p>Cargando Proveedor...</p>
 </ng-template>
+
 
 

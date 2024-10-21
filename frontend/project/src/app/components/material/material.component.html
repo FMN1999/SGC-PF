@@ -1,0 +1,44 @@
+<div *ngIf="material; else loading">
+  <h2>Detalle del Material</h2>
+
+  <!-- Modo de visualización -->
+  <div *ngIf="!editMode">
+    <p><strong>Descripción:</strong> {{ material.descripcion }}</p>
+    <p><strong>Marca:</strong> {{ material.marca }}</p>
+    <p><strong>Precio:</strong> {{ material.precio }} {{ material.moneda }}</p>
+    <p><strong>Fecha de Caducidad:</strong> {{ material.fecha_caducidad | date }}</p>
+    <p><strong>Unidad de Medida:</strong> {{ material.unidad_medida }}</p>
+
+    <button (click)="navigateBack()">Volver al Perfil del Proveedor</button>
+    <button (click)="toggleEditMode()">Editar Material</button> <!-- Botón para activar la edición -->
+  </div>
+
+  <!-- Modo de edición -->
+  <form [formGroup]="materialForm" *ngIf="editMode" (ngSubmit)="onSubmit()">
+    <label for="descripcion">Descripción:</label>
+    <input id="descripcion" formControlName="descripcion" type="text">
+
+    <label for="marca">Marca:</label>
+    <input id="marca" formControlName="marca" type="text">
+
+    <label for="precio">Precio:</label>
+    <input id="precio" formControlName="precio" type="number">
+
+    <label for="moneda">Moneda:</label>
+    <input id="moneda" formControlName="moneda" type="text">
+
+    <label for="fecha_caducidad">Fecha de Caducidad:</label>
+    <input id="fecha_caducidad" formControlName="fecha_caducidad" type="date">
+
+    <label for="unidad_medida">Unidad de Medida:</label>
+    <input id="unidad_medida" formControlName="unidad_medida" type="text">
+
+    <button type="submit">Guardar Cambios</button>
+    <button type="button" (click)="toggleEditMode()">Cancelar</button>
+  </form>
+</div>
+
+<ng-template #loading>
+  <p>Cargando detalles del material...</p>
+</ng-template>
+

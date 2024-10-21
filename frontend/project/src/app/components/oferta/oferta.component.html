@@ -1,0 +1,36 @@
+<div *ngIf="oferta; else loading">
+  <h2>Detalle de la Oferta</h2>
+  <p><strong>Descripción:</strong> {{ oferta.descripcion }}</p>
+  <p><strong>Monto Total:</strong> {{ oferta.monto_total }} {{ oferta.moneda }}</p>
+  <p><strong>Vigencia:</strong> Desde {{ oferta.fecha_desde | date }} Hasta {{ oferta.fecha_hasta | date }}</p>
+
+  <h3>Materiales Incluidos</h3>
+  <ul *ngIf="materiales.length > 0; else noMateriales">
+    <li *ngFor="let material of materiales">
+      {{ material.descripcion }} ({{ material.marca }}), {{ material.cantidad_of }} {{ material.unidad_of }} -
+      {{ material.monto }} {{ material.moneda }} ({{ material.porc_desc }}% descuento)
+    </li>
+  </ul>
+  <ng-template #noMateriales>
+    <p>No hay materiales en esta oferta</p>
+  </ng-template>
+
+  <h3>Servicios Incluidos</h3>
+  <ul *ngIf="servicios.length > 0; else noServicios">
+    <li *ngFor="let servicio of servicios">
+      {{ servicio.descripcion }} - {{ servicio.cantidad_of }} {{ servicio.unidad_tiempo }} -
+      {{ servicio.monto }} {{ servicio.moneda }} ({{ servicio.porc_desc }}% descuento)
+    </li>
+  </ul>
+  <ng-template #noServicios>
+    <p>No hay servicios en esta oferta</p>
+  </ng-template>
+
+  <button (click)="navigateBack()">Volver al Perfil del Proveedor</button>
+</div>
+
+<ng-template #loading>
+  <p>Cargando detalles de la oferta...</p>
+</ng-template>
+
+

@@ -1,0 +1,46 @@
+<div *ngIf="servicio; else loading">
+  <h2>Detalle del Servicio</h2>
+
+  <!-- Mostrar detalles cuando no está en modo edición -->
+  <div *ngIf="!isEditing">
+    <p><strong>Descripción:</strong> {{ servicio.descripcion }}</p>
+    <p><strong>Precio por Unidad:</strong> {{ servicio.precio_x_unidad }} {{ servicio.moneda }}</p>
+    <p><strong>Unidad de Medida:</strong> {{ servicio.unidad_medida }}</p>
+    <p><strong>Frecuencia de Pago:</strong> {{ servicio.frecuencia_pago }}</p>
+    <p><strong>Monto por Frecuencia:</strong> {{ servicio.monto_x_frecuencia }} {{ servicio.moneda }}</p>
+
+    <button (click)="enableEditing()">Editar</button>
+    <button (click)="navigateBack()">Volver al Perfil del Proveedor</button>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="isEditing">
+    <h3>Editar Servicio</h3>
+
+    <label for="descripcion">Descripción:</label>
+    <input id="descripcion" [(ngModel)]="servicio.descripcion" />
+
+    <label for="precio">Precio por Unidad:</label>
+    <input id="precio" type="number" [(ngModel)]="servicio.precio_x_unidad" />
+
+    <label for="unidad">Unidad de Medida:</label>
+    <input id="unidad" [(ngModel)]="servicio.unidad_medida" />
+
+    <label for="frecuencia">Frecuencia de Pago:</label>
+    <input id="frecuencia" [(ngModel)]="servicio.frecuencia_pago" />
+
+    <label for="monto">Monto por Frecuencia:</label>
+    <input id="monto" type="number" [(ngModel)]="servicio.monto_x_frecuencia" />
+
+    <label for="moneda">Moneda:</label>
+    <input id="moneda" [(ngModel)]="servicio.moneda" />
+
+    <button (click)="updateServicio()">Guardar</button>
+    <button (click)="cancelEditing()">Cancelar</button>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p>Cargando detalles del servicio...</p>
+</ng-template>
+

@@ -194,6 +194,23 @@ class ProveedorController:
         prov = ProveedorData.get_by_id(proveedor_id)
         return ProveedorData.get_servicio_by_prov(prov)
 
+    @staticmethod
+    def actualizar_proveedor(id_prov, data):
+        try:
+            proveedor = ProveedorData.get_by_id(int(id_prov))
+
+            proveedor.denominacion = data.get('denominacion')
+            proveedor.telefono = data.get('telefono')
+            proveedor.direccion = data.get('direccion')
+            proveedor.email = data.get('email')
+            proveedor.cuil = data.get('cuil')
+            proveedor.ciudad = data.get('ciudad')
+            proveedor.provincia = data.get('provincia')
+            ProveedorData.actualizar_proveedor(proveedor)
+            return True
+        except Proveedor.DoesNotExist:
+            return False
+
 
 class OfertaController:
     @staticmethod
@@ -233,6 +250,10 @@ class OfertaController:
         except Exception as e:
             raise ValidationError(f"Error al crear la oferta: {str(e)}")
 
+    @staticmethod
+    def eliminar_oferta(id_of):
+        OfertaData.eliminar_oferta(id_of)
+
 
 class MaterialController:
     @staticmethod
@@ -247,6 +268,18 @@ class MaterialController:
         except Exception as e:
             raise ValidationError(f"Error al crear el material: {str(e)}")
 
+    @staticmethod
+    def get_by_id(mat_id):
+        return MaterialData.get_by_id(mat_id)
+
+    @staticmethod
+    def eliminar_material(material_id):
+        MaterialData.eliminar_material(material_id)
+
+    @staticmethod
+    def actualizar_material(id_mat, data):
+        return MaterialData.actualizar_material(id_mat, data)
+
 
 class ServicioController:
     @staticmethod
@@ -259,3 +292,15 @@ class ServicioController:
             raise ValidationError("El proveedor no existe")
         except Exception as e:
             raise ValidationError(f"Error al crear el servicio: {str(e)}")
+
+    @staticmethod
+    def get_by_id(serv_id):
+        return ServicioData.get_by_id(serv_id)
+
+    @staticmethod
+    def eliminar_servicio(id_serv):
+        ServicioData.eliminar_servicio(id_serv)
+        
+    @staticmethod
+    def actualizar_servicio(id_serv, data):
+        return ServicioData.actualizar_servicio(id_serv, data)

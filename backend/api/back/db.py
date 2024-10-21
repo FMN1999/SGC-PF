@@ -162,6 +162,14 @@ class ProveedorData:
     def get_oferta_by_prov(prov: Proveedor):
         return Oferta.objects.filter(id_proveedor=prov)
 
+    @staticmethod
+    def actualizar_proveedor(prov: Proveedor):
+        try:
+            prov.save()
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
 
 class OfertaData:
     @staticmethod
@@ -230,6 +238,11 @@ class OfertaData:
             print(f"Error al cargar las emrpesas: {e}")
             raise
 
+    @staticmethod
+    def eliminar_oferta(oferta_id):
+        oferta = Oferta.objects.get(id=oferta_id)
+        oferta.delete()
+
 
 class MaterialData:
 
@@ -261,6 +274,38 @@ class MaterialData:
             print(f"Error al crear el material: {e}")
             raise
 
+    @staticmethod
+    def eliminar_material(id_mat):
+        material = Material.objects.get(id=id_mat)
+        material.delete()
+
+    @staticmethod
+    def actualizar_material(material_id, data):
+        # Obtener el material desde la base de datos
+        material = Material.objects.get(id=material_id)
+
+        # Actualizar los campos del material con los datos proporcionados
+        material.descripcion = data.get('descripcion', material.descripcion)
+        material.marca = data.get('marca', material.marca)
+        material.precio = data.get('precio', material.precio)
+        material.moneda = data.get('moneda', material.moneda)
+        material.fecha_caducidad = data.get('fecha_caducidad', material.fecha_caducidad)
+        material.unidad_medida = data.get('unidad_medida', material.unidad_medida)
+
+        # Guardar los cambios en la base de datos
+        material.save()
+
+        # Retornar el material actualizado (puedes convertirlo a dict si es necesario)
+        return {
+            'id': material.id,
+            'descripcion': material.descripcion,
+            'marca': material.marca,
+            'precio': material.precio,
+            'moneda': material.moneda,
+            'fecha_caducidad': material.fecha_caducidad,
+            'unidad_medida': material.unidad_medida
+        }
+
 
 class ServicioData:
     @staticmethod
@@ -270,6 +315,7 @@ class ServicioData:
         except Exception as e:
             print(f"Error al buscar material: {e}")
             raise
+
     @staticmethod
     def crear_servicio(servicio_data, proveedor):
         try:
@@ -288,3 +334,34 @@ class ServicioData:
             print(f"Error al crear el servicio: {str(e)}")
             raise
 
+    @staticmethod
+    def eliminar_servicio(id_serv):
+        servicio = Servicio.objects.get(id=id_serv)
+        servicio.delete()
+
+    @staticmethod
+    def actualizar_servicio(servicio_id, data):
+        # Obtener el servicio desde la base de datos
+        servicio = Servicio.objects.get(id=servicio_id)
+
+        # Actualizar los campos del servicio con los datos proporcionados
+        servicio.descripcion = data.get('descripcion')
+        servicio.precio_x_unidad = data.get('precio_x_unidad')
+        servicio.moneda = data.get('moneda')
+        servicio.unidad_medida = data.get('unidad_medida')
+        servicio.frecuencia_pago = data.get('frecuencia_pago')
+        servicio.monto_x_frecuencia = data.get('monto_x_frecuencia')
+
+        # Guardar los cambios en la base de datos
+        servicio.save()
+
+        # Retornar el servicio actualizado
+        return {
+            'id': servicio.id,
+            'descripcion': servicio.descripcion,
+            'precio_x_unidad': servicio.precio_x_unidad,
+            'moneda': servicio.moneda,
+            'unidad_medida': servicio.unidad_medida,
+            'frecuencia_pago': servicio.frecuencia_pago,
+            'monto_x_frecuencia': servicio.monto_x_frecuencia
+        }
