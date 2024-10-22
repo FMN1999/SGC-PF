@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'perfil', component: PerfilComponent },
+  { path: 'perfil/:id', component: PerfilComponent },
   { path: 'crear-colaborador', component: CrearColaboradorComponent },
   { path: 'crear-proveedor', component: CrearProveedorComponent },
   { path: 'proveedor/:id', component: PerfilProveedorComponent },

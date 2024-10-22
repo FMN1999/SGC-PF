@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'perfil', component: PerfilComponent },
+  { path: 'perfil/:id', component: PerfilComponent },
   { path: 'crear-colaborador', component: CrearColaboradorComponent },
   { path: 'crear-proveedor', component: CrearProveedorComponent },
   { path: 'proveedor/:id', component: PerfilProveedorComponent },

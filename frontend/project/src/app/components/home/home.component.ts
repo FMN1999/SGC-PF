@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
-import { AuthService } from '../../services/auth/auth.service'; // Importa el servicio de autenticación
+import { AuthService } from '../../services/auth/auth.service';
 import { NgIf, NgClass, NgOptimizedImage } from '@angular/common';
-import {Router, RouterModule, RouterOutlet} from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
@@ -15,6 +15,7 @@ export class HomeComponent {
   isLoggedIn: boolean = false;
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;
+  usuarioActualId: string | null = sessionStorage.getItem('id_user');  // Obtener el ID del usuario
 
   constructor(private authService: AuthService, private router: Router) {
     this.checkScreenSize();
@@ -39,12 +40,20 @@ export class HomeComponent {
   }
 
   logout() {
-    this.authService.logout(); // Llama al método de logout del servicio
+    this.authService.logout();
     this.router.navigate(['/home']);
   }
 
   getMainContentClass() {
     return this.sidebarVisible ? 'with-sidebar' : 'without-sidebar';
   }
+
+  // Método para navegar al perfil del usuario actual
+  irAlPerfil() {
+    if (this.usuarioActualId) {
+      this.router.navigate([`/perfil/${this.usuarioActualId}`]);  // Redirigir al perfil con el ID del usuario actual
+    }
+  }
 }
+
 

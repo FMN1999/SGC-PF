@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../services/perfil/perfil.service';
 import {NgIf} from "@angular/common";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';  // Importar FormBuilder y FormGroup
-
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';  // Importar ActivatedRoute
 
 @Component({
   selector: 'app-perfil',
@@ -17,10 +17,15 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 export class PerfilComponent implements OnInit {
   perfil: any;
   usuarioActualId: string | null = sessionStorage.getItem('id_user');
-  editMode: boolean = false;  // Variable para manejar el modo edición
-  perfilForm: FormGroup;  // Formulario Reactivo
+  editMode: boolean = false;
+  perfilForm: FormGroup;
+  perfilIdUrl: string | null = '';  // Guardar el ID de la URL
 
-  constructor(private perfilService: PerfilService, private fb: FormBuilder ) {
+  constructor(
+    private perfilService: PerfilService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute  // Inyectar ActivatedRoute
+  ) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -31,17 +36,16 @@ export class PerfilComponent implements OnInit {
       rol: [''],
       ciudad: [''],
       provincia: [''],
-      cuit: ['', [Validators.pattern('[0-9]{11}')]], // Ejemplo de CUIT de 11 dígitos
+      cuit: ['', [Validators.pattern('[0-9]{11}')]],
       deuda: ['']
     });
   }
 
   ngOnInit(): void {
-    const userId = this.usuarioActualId;
-    if (userId) {
-      this.perfilService.obtenerPerfil(parseInt(userId)).subscribe((data: any) => {
+    this.perfilIdUrl = this.route.snapshot.paramMap.get('id');  // Obtener el ID de la URL
+    if (this.perfilIdUrl) {
+      this.perfilService.obtenerPerfil(parseInt(this.perfilIdUrl)).subscribe((data: any) => {
         this.perfil = data;
-        // Poner los datos del perfil en el formulario
         this.perfilForm.patchValue({
           nombre: this.perfil.nombre,
           apellido: this.perfil.apellido,
@@ -60,34 +64,26 @@ export class PerfilComponent implements OnInit {
   }
 
   esUsuarioActual(): boolean {
-    let b = 0
-    if (typeof this.usuarioActualId === "string") {
-      b = parseInt(this.usuarioActualId)
-    }
-    return b === this.perfil.id;
+    return this.perfilIdUrl === this.usuarioActualId;  // Comparar el ID de la URL con el de sessionStorage
   }
 
-  // Cambiar al modo de edición
   activarEdicion(): void {
     this.editMode = true;
   }
 
-  // Cancelar edición
   cancelarEdicion(): void {
     this.editMode = false;
   }
 
-  // Guardar los cambios
   guardarCambios(): void {
     if (this.perfilForm.valid) {
       const perfilActualizado = this.perfilForm.value;
-      const userId = this.usuarioActualId;
+      const userId = this.perfilIdUrl;
 
-      if (typeof userId === "string") {
+      if (userId) {
         this.perfilService.actualizarPerfil(parseInt(userId), perfilActualizado).subscribe((response: any) => {
-          // Actualiza el perfil con los nuevos datos
           this.perfil = response;
-          this.editMode = false;  // Salir del modo de edición
+          this.editMode = false;
         });
       }
     }
