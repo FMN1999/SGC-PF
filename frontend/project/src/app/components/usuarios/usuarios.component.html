@@ -1,0 +1,27 @@
+<div *ngIf="clientes && colaboradores && proveedores; else noData">
+  <h2>Clientes</h2>
+  <ul>
+    <li *ngFor="let cliente of clientes">
+      {{ cliente.nombre }} - {{ cliente.cuit }}
+    </li>
+  </ul>
+
+  <h2>Colaboradores</h2>
+  <ul>
+    <li *ngFor="let colaborador of colaboradores">
+      {{ colaborador.nombre }} - {{ colaborador.puesto }}
+    </li>
+  </ul>
+
+  <h2>Proveedores</h2>
+  <ul>
+    <li *ngFor="let proveedor of proveedores">
+      {{ proveedor.denominacion }} - {{ proveedor.cuil }}
+    </li>
+  </ul>
+</div>
+
+<ng-template #noData>
+  <p>Cargando datos...</p>
+</ng-template>
+

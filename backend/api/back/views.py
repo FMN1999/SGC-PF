@@ -429,3 +429,46 @@ class ServiciosPorProveedorView(View):
             return JsonResponse({'servicios': servicios_list}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+
+class UsuariosView(View):
+    def get(self, request, id_empresa):
+        clientes = ClienteController.get_by_empresa(id_empresa)
+        colaboradores = ColaboradorController.get_by_empresa(id_empresa)
+        proveedores = ProveedorController.get_by_empresa(id_empresa)
+        clientes_data = []
+
+        for cliente in clientes:
+            clientes_data.append({
+                'id': cliente.id,
+                'nombre': cliente.id_usuario.nombre,  # Accediendo al nombre del usuario
+                'apellido': cliente.id_usuario.apellido,  # Accediendo al apellido del usuario
+                'cuit': cliente.cuit,
+                'ciudad': cliente.ciudad,
+                'provincia': cliente.provincia,
+            })
+
+        colaboradores_data = []
+        for colaborador in colaboradores:
+            colaboradores_data.append({
+                'id': colaborador.id,
+                'nombre': colaborador.id_usuario.nombre,  # Accediendo al nombre del usuario
+                'apellido': colaborador.id_usuario.apellido,  # Accediendo al apellido del usuario
+                'puesto': colaborador.puesto,
+                'rol': colaborador.rol,
+            })
+
+        proveedores_data = []
+        for proveedor in proveedores:
+            proveedores_data.append({
+                'id': proveedor.id,
+                'denominacion': proveedor.denominacion,
+                'cuil': proveedor.cuil,
+                'ciudad': proveedor.ciudad,
+                'provincia': proveedor.provincia,
+            })
+        return JsonResponse({
+            'clientes': clientes_data,
+            'colaboradores': colaboradores_data,
+            'proveedores': proveedores_data
+        })

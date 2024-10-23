@@ -24,4 +24,5 @@ urlpatterns = [
     path('material/actualizar/<int:material_id>/', views.MaterialView.as_view(), name='actualizar_material'),
     path('servicio/actualizar/<int:servicio_id>/', views.ServicioView.as_view(), name='actualizar_servicio'),
     path('proveedores/<int:id>/', views.ProveedorView.as_view(), name='obtener_actualizar_proveedor'),
+    path('usuarios/empresa/<int:id_empresa>/', views.UsuariosView.as_view(), name='obtener_usuarios_por_empresa'),
 ]

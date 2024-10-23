@@ -68,6 +68,10 @@ class ColaboradorController:
         except Exception as e:
             raise ValidationError(f"Error al registrar el cliente: {str(e)}")
 
+    @staticmethod
+    def get_by_empresa(id_emp):
+        return ColaboradorData.get_by_empresa(id_emp)
+
 
 class ClienteController:
     @staticmethod
@@ -95,6 +99,10 @@ class ClienteController:
     @staticmethod
     def get_by_user(user):
         return ClienteData.get_by_user(user)
+
+    @staticmethod
+    def get_by_empresa(id_emp):
+        return ClienteData.get_by_empresa(id_emp)
 
 
 class EmpresaController:
@@ -210,6 +218,10 @@ class ProveedorController:
             return True
         except Proveedor.DoesNotExist:
             return False
+
+    @staticmethod
+    def get_by_empresa(id_emp):
+        return ProveedorData.get_by_empresa(id_emp)
 
 
 class OfertaController:

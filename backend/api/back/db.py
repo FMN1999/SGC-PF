@@ -74,6 +74,14 @@ class ColaboradorData:
             print(f"Error al cargar el colaborador: {e}")
             raise
 
+    @staticmethod
+    def get_by_empresa(empresa: Empresa):
+        try:
+            return Colaborador.objects.filter(id_empresa=empresa)
+        except Exception as e:
+            print(f"Error al cargar colaboradores: {e}")
+            raise
+
 
 class EmpresaData:
     @staticmethod
@@ -122,6 +130,14 @@ class ClienteData:
             return None
 
     @staticmethod
+    def get_by_empresa(id_emp: Empresa):
+        try:
+            return Cliente.objects.filter(id_empresa=id_emp)
+        except Exception as e:
+            print(f"Error al cargar los clientes: {e}")
+            raise
+
+    @staticmethod
     def guardar_cambios(cliente):
         cliente.save()
 
@@ -168,6 +184,14 @@ class ProveedorData:
             prov.save()
         except Exception as e:
             print(f"Error al cargar las emrpesas: {e}")
+            raise
+
+    @staticmethod
+    def get_by_empresa(id_empresa: Empresa):
+        try:
+            return Proveedor.objects.filter(id_empresa=id_empresa)
+        except Exception as e:
+            print(f"Error al cargar los prov: {e}")
             raise
 
 
