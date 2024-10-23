@@ -14,8 +14,8 @@
 
       <!-- Opciones que se muestran solo cuando el usuario está logueado -->
       <li *ngIf="isLoggedIn"><a href="/usuarios">Usuarios</a></li>
-      <li *ngIf="isLoggedIn"><a href="/materials">Materiales</a></li>
-      <li *ngIf="isLoggedIn"><a href="/settings">Configuración</a></li>
+      <li *ngIf="isLoggedIn"><a href="/materiales">Materiales</a></li>
+      <li *ngIf="isLoggedIn"><a href="/servicios">Servicios</a></li>
       <li *ngIf="isLoggedIn"><a href="#" (click)="logout()">Cerrar sesión</a></li>
     </ul>
   </nav>

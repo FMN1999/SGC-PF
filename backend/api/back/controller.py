@@ -72,6 +72,14 @@ class ColaboradorController:
     def get_by_empresa(id_emp):
         return ColaboradorData.get_by_empresa(id_emp)
 
+    @staticmethod
+    def get_by_id(id_col):
+        return ColaboradorData.get_by_id(id_col)
+
+    @staticmethod
+    def guardar_cambios(colaborador):
+        return ColaboradorData.guardar_cambios(colaborador)
+
 
 class ClienteController:
     @staticmethod
@@ -103,6 +111,14 @@ class ClienteController:
     @staticmethod
     def get_by_empresa(id_emp):
         return ClienteData.get_by_empresa(id_emp)
+
+    @staticmethod
+    def guardar_cambios(cliente):
+        return ClienteData.guardar_cambios(cliente)
+
+    @staticmethod
+    def get_by_id(id_cli):
+        return ClienteData.get_by_id(id_cli)
 
 
 class EmpresaController:
@@ -292,6 +308,10 @@ class MaterialController:
     def actualizar_material(id_mat, data):
         return MaterialData.actualizar_material(id_mat, data)
 
+    @staticmethod
+    def get_by_empresa(id_empresa):
+        return MaterialData.get_by_empresa(id_empresa)
+
 
 class ServicioController:
     @staticmethod
@@ -316,3 +336,7 @@ class ServicioController:
     @staticmethod
     def actualizar_servicio(id_serv, data):
         return ServicioData.actualizar_servicio(id_serv, data)
+
+    @staticmethod
+    def get_by_empresa(id_empresa):
+        return ServicioData.get_by_empresa(id_empresa)

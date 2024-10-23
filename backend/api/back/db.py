@@ -82,6 +82,10 @@ class ColaboradorData:
             print(f"Error al cargar colaboradores: {e}")
             raise
 
+    @staticmethod
+    def get_by_id(id_col):
+        return Colaborador.objects.get(id=id_col)
+
 
 class EmpresaData:
     @staticmethod
@@ -140,6 +144,14 @@ class ClienteData:
     @staticmethod
     def guardar_cambios(cliente):
         cliente.save()
+
+    @staticmethod
+    def get_by_id(id_cli):
+        try:
+            return Cliente.objects.get(id=id_cli)
+        except Exception as e:
+            print(f"Error al cargar los clientes: {e}")
+            raise
 
 
 class ProveedorData:
@@ -330,6 +342,10 @@ class MaterialData:
             'unidad_medida': material.unidad_medida
         }
 
+    @staticmethod
+    def get_by_empresa(id_emp):
+        return Material.objects.filter(id_proveedor__id_empresa=id_emp)
+
 
 class ServicioData:
     @staticmethod
@@ -389,3 +405,7 @@ class ServicioData:
             'frecuencia_pago': servicio.frecuencia_pago,
             'monto_x_frecuencia': servicio.monto_x_frecuencia
         }
+
+    @staticmethod
+    def get_by_empresa(id_emp):
+        return Servicio.objects.filter(id_proveedor__id_empresa=id_emp)

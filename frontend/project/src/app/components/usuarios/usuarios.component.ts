@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
-import {NgForOf, NgIf} from "@angular/common";
+import {formatDate, NgForOf, NgIf} from "@angular/common";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-usuarios',
@@ -8,7 +9,8 @@ import {NgForOf, NgIf} from "@angular/common";
   standalone: true,
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
+    RouterLink
   ],
   styleUrls: ['./usuarios.component.scss']
 })
@@ -35,6 +37,22 @@ export class UsuariosComponent implements OnInit {
         }
       });
     }
+  }
+
+  darDeBajaCliente(id: number): void {
+    const fechaBaja = formatDate(new Date(), 'yyyy-MM-dd', 'en');
+    this.usuarioService.darDeBajaCliente(id, fechaBaja).subscribe((response: any) => {
+      console.log('Cliente dado de baja:', response);
+      window.location.reload();
+    });
+  }
+
+  darDeBajaColaborador(id: number): void {
+    const fechaBaja = formatDate(new Date(), 'yyyy-MM-dd', 'en');
+    this.usuarioService.darDeBajaColaborador(id, fechaBaja).subscribe((response: any) => {
+      console.log('Colaborador dado de baja:', response);
+      window.location.reload();
+    });
   }
 }
 

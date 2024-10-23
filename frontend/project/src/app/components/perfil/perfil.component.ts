@@ -43,6 +43,7 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.perfilIdUrl = this.route.snapshot.paramMap.get('id');  // Obtener el ID de la URL
+    console.log(this.perfilIdUrl)
     if (this.perfilIdUrl) {
       this.perfilService.obtenerPerfil(parseInt(this.perfilIdUrl)).subscribe((data: any) => {
         this.perfil = data;

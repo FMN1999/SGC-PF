@@ -6,13 +6,21 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EmpresaService {
-  private apiUrl = 'http://localhost:8000/api/empresas/';  // Ajusta la URL según tu backend
+  private apiUrl = 'http://localhost:8000/api';  // Ajusta la URL según tu backend
 
   constructor(private http: HttpClient) {}
 
   // Método para obtener la lista de empresas
   obtenerEmpresas(): Observable<any> {
-    return this.http.get(this.apiUrl);
+    return this.http.get(`${this.apiUrl}/empresas/`)
+  }
+
+  listarMaterialesPorEmpresa(idEmpresa: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/materiales/empresa/${idEmpresa}/`);
+  }
+
+  obtenerServiciosPorEmpresa(idEmpresa: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/empresa/${idEmpresa}/servicios/`);
   }
 }
 

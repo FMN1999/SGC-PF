@@ -25,4 +25,8 @@ urlpatterns = [
     path('servicio/actualizar/<int:servicio_id>/', views.ServicioView.as_view(), name='actualizar_servicio'),
     path('proveedores/<int:id>/', views.ProveedorView.as_view(), name='obtener_actualizar_proveedor'),
     path('usuarios/empresa/<int:id_empresa>/', views.UsuariosView.as_view(), name='obtener_usuarios_por_empresa'),
+    path('clientes/<int:id>/baja/', views.RegistroClienteView.as_view(), name='dar_de_baja_cliente'),
+    path('colaboradores/<int:id>/baja/', views.ColaboradorView.as_view(), name='dar_de_baja_colaborador'),
+    path('materiales/empresa/<int:id_empresa>/', views.MaterialesPorEmpresa.as_view(), name='listar_materiales_por_empresa'),
+    path('empresa/<int:id_empresa>/servicios/', views.ServiciosPorEmpresa.as_view(), name='listar_servicios_por_empresa'),
 ]

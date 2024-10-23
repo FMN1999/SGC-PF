@@ -13,6 +13,8 @@ import {MaterialComponent} from "./components/material/material.component";
 import {ServicioComponent} from "./components/servicio/servicio.component";
 import {OfertaComponent} from "./components/oferta/oferta.component";
 import {UsuariosComponent} from "./components/usuarios/usuarios.component";
+import {MaterialesComponent} from "./components/materiales/materiales.component";
+import {ServiciosComponent} from "./components/servicios/servicios.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -31,6 +33,8 @@ export const routes: Routes = [
   { path: 'servicio/:id', component: ServicioComponent },
   { path: 'oferta/:id', component: OfertaComponent },
   { path: 'usuarios', component: UsuariosComponent },
+  { path: 'materiales', component: MaterialesComponent },
+  { path: 'servicios', component: ServiciosComponent },
 ];
 
 export const routerProviders = [provideRouter(routes)];

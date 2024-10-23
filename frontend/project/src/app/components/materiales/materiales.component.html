@@ -1,0 +1,13 @@
+<div *ngIf="materiales.length > 0; else noMateriales">
+  <h2>Lista de Materiales</h2>
+  <ul>
+    <li *ngFor="let material of materiales">
+      <a [routerLink]="['/material', material.id]">{{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})</a>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noMateriales>
+  <p>No se encontraron materiales para esta empresa.</p>
+</ng-template>
+

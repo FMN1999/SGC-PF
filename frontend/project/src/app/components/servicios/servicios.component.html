@@ -1,0 +1,13 @@
+<div *ngIf="servicios.length > 0; else noServicios">
+  <h2>Lista de Servicios</h2>
+  <ul>
+    <li *ngFor="let servicio of servicios">
+      <a [routerLink]="['/servicio', servicio.id]">{{ servicio.descripcion }}</a>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noServicios>
+  <p>No se encontraron servicios para esta empresa.</p>
+</ng-template>
+

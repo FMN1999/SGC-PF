@@ -5,6 +5,7 @@ from django.views import View
 import json
 from .controller import *
 from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -91,6 +92,17 @@ class RegistroClienteView(View):
         except Exception as e:
             return JsonResponse({'error': 'Error inesperado: ' + str(e)}, status=500)
 
+    def patch(self, request, id):
+        try:
+            cliente = ClienteController.get_by_id(id)
+            data = json.loads(request.body)
+            fecha_baja = parse_date(data.get('fecha_baja'))
+            cliente.fecha_baja = fecha_baja
+            ClienteController.guardar_cambios(cliente)
+            return JsonResponse({'status': 'Cliente dado de baja'})
+        except Cliente.DoesNotExist:
+            return JsonResponse({'error': 'Cliente no encontrado'}, status=404)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PerfilView(View):
@@ -154,6 +166,17 @@ class ColaboradorView(View):
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    def patch(self, request, id):
+        try:
+            colaborador = ColaboradorController.get_by_id(id)
+            data = json.loads(request.body)
+            fecha_baja = parse_date(data.get('fecha_baja'))
+            colaborador.fecha_baja = fecha_baja
+            ColaboradorController.guardar_cambios(colaborador)
+            return JsonResponse({'status': 'Cliente dado de baja'})
+        except Cliente.DoesNotExist:
+            return JsonResponse({'error': 'Cliente no encontrado'}, status=404)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -446,6 +469,8 @@ class UsuariosView(View):
                 'cuit': cliente.cuit,
                 'ciudad': cliente.ciudad,
                 'provincia': cliente.provincia,
+                'id_usuario': cliente.id_usuario.id,
+                'fecha_baja': cliente.fecha_baja
             })
 
         colaboradores_data = []
@@ -456,6 +481,8 @@ class UsuariosView(View):
                 'apellido': colaborador.id_usuario.apellido,  # Accediendo al apellido del usuario
                 'puesto': colaborador.puesto,
                 'rol': colaborador.rol,
+                'id_usuario': colaborador.id_usuario.id,
+                'fecha_baja': colaborador.fecha_baja
             })
 
         proveedores_data = []
@@ -472,3 +499,36 @@ class UsuariosView(View):
             'colaboradores': colaboradores_data,
             'proveedores': proveedores_data
         })
+
+
+class MaterialesPorEmpresa(View):
+    def get(self, request, id_empresa):
+        materiales = MaterialController.get_by_empresa(id_empresa)
+        data = []
+
+        for material in materiales:
+            data.append({
+                'id': material.id,
+                'descripcion': material.descripcion,
+                'marca': material.marca,
+                'precio': material.precio,
+                'moneda': material.moneda
+            })
+
+        return JsonResponse(data, safe=False)
+
+
+class ServiciosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        servicios = ServicioController.get_by_empresa(id_empresa)
+        data = []
+
+        for servicio in servicios:
+            data.append({
+                'id': servicio.id,
+                'descripcion': servicio.descripcion,
+                'precio': servicio.precio_x_unidad,
+                'unidad_medida': servicio.unidad_medida
+            })
+
+        return JsonResponse(data, safe=False)
