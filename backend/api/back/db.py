@@ -409,3 +409,14 @@ class ServicioData:
     @staticmethod
     def get_by_empresa(id_emp):
         return Servicio.objects.filter(id_proveedor__id_empresa=id_emp)
+
+
+class ObraData:
+    @staticmethod
+    def guardar(obra: Obra):
+        try:
+            obra.save()
+            return obra
+        except Exception as e:
+            print(f"Error al crear obra: {str(e)}")
+            raise

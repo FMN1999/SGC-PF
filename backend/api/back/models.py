@@ -141,3 +141,26 @@ class Oferta_Servicio(models.Model):
 
     class Meta:
         db_table = 'Oferta_Servicio'
+
+
+class Obra(models.Model):
+    id = models.AutoField(primary_key=True)
+    direccion = models.CharField()
+    id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, db_column='id_cliente')
+    telefono_contacto = models.CharField()
+    fecha_inicio_est = models.DateField()
+    fecha_fin_est = models.DateField()
+    fecha_inicio_real = models.DateField()
+    fecha_fin_real = models.DateField()
+    monto_total_est = models.FloatField()
+    monto_total_real = models.FloatField()
+    moneda = models.CharField()
+    pisos = models.IntegerField()
+    dimensiones = models.CharField()
+    estado = models.CharField()
+    ganancias = models.FloatField()
+    perdidas = models.FloatField()
+    id_empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, db_column='id_empresa')
+
+    class Meta:
+        db_table = 'Obra'

@@ -1,0 +1,33 @@
+<form [formGroup]="obraForm" (ngSubmit)="onSubmit()">
+  <label>Dirección:</label>
+  <input formControlName="direccion" type="text">
+
+  <label>Cliente:</label>
+  <select formControlName="id_cliente">
+    <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }} {{ cliente.apellido }}</option>
+  </select>
+
+  <label>Teléfono de Contacto:</label>
+  <input formControlName="telefono_contacto" type="text">
+
+  <label>Fecha de Inicio Estimada:</label>
+  <input formControlName="fecha_inicio_est" type="date">
+
+  <label>Fecha de Fin Estimada:</label>
+  <input formControlName="fecha_fin_est" type="date">
+
+  <label>Monto Total Estimado:</label>
+  <input formControlName="monto_total_est" type="number">
+
+  <label>Moneda:</label>
+  <input formControlName="moneda" type="text">
+
+  <label>Pisos:</label>
+  <input formControlName="pisos" type="number">
+
+  <label>Dimensiones:</label>
+  <input formControlName="dimensiones" type="text">
+
+  <button type="submit">Crear Obra</button>
+</form>
+

@@ -532,3 +532,32 @@ class ServiciosPorEmpresa(View):
             })
 
         return JsonResponse(data, safe=False)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ObraView(View):
+    def post(self,request):
+        data = json.loads(request.body)
+        nueva_obra = ObraController.create(data)
+        return JsonResponse({'message': 'Obra creada exitosamente.'}, status=201)
+
+
+class ClientesView(View):
+    def get(self, request, id_empresa):
+        clientes = ClienteController.get_by_empresa(id_empresa)
+        clientes_data = []
+
+        for cliente in clientes:
+            if cliente.fecha_baja is None:
+                clientes_data.append({
+                    'id': cliente.id,
+                    'nombre': cliente.id_usuario.nombre,  # Accediendo al nombre del usuario
+                    'apellido': cliente.id_usuario.apellido,  # Accediendo al apellido del usuario
+                    'cuit': cliente.cuit,
+                    'ciudad': cliente.ciudad,
+                    'provincia': cliente.provincia,
+                    'id_usuario': cliente.id_usuario.id,
+                    'fecha_baja': cliente.fecha_baja
+                })
+
+        return JsonResponse(clientes_data, safe=False)

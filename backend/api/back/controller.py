@@ -340,3 +340,37 @@ class ServicioController:
     @staticmethod
     def get_by_empresa(id_empresa):
         return ServicioData.get_by_empresa(id_empresa)
+
+
+class ObraController:
+    @staticmethod
+    def create(data):
+        direccion = data.get('direccion')
+        id_cliente = data.get('id_cliente')
+        telefono_contacto = data.get('telefono_contacto')
+        fecha_inicio_est = data.get('fecha_inicio_est')
+        fecha_fin_est = data.get('fecha_fin_est')
+        monto_total_est = data.get('monto_total_est')
+        moneda = data.get('moneda')
+        pisos = data.get('pisos')
+        dimensiones = data.get('dimensiones')
+        estado = 'Nuevo'
+        id_empresa = data.get('id_empresa')  # Viene del sessionStorage
+
+        cliente = ClienteData.get_by_id(id_cliente)
+        empresa = EmpresaData.obtener_empresa_por_id(id_empresa)
+
+        nueva_obra = Obra.objects.create(
+            direccion=direccion,
+            id_cliente=cliente,
+            telefono_contacto=telefono_contacto,
+            fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d'),
+            fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d'),
+            monto_total_est= 0 if monto_total_est is '' else monto_total_est,
+            moneda=moneda,
+            pisos=pisos,
+            dimensiones=dimensiones,
+            estado=estado,
+            id_empresa=empresa
+        )
+        return ObraData.guardar(nueva_obra)

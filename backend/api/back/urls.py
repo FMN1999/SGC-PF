@@ -29,4 +29,6 @@ urlpatterns = [
     path('colaboradores/<int:id>/baja/', views.ColaboradorView.as_view(), name='dar_de_baja_colaborador'),
     path('materiales/empresa/<int:id_empresa>/', views.MaterialesPorEmpresa.as_view(), name='listar_materiales_por_empresa'),
     path('empresa/<int:id_empresa>/servicios/', views.ServiciosPorEmpresa.as_view(), name='listar_servicios_por_empresa'),
+    path('crear-obra/', views.ObraView.as_view(), name='crear-obra'),
+    path('clientes/<int:id_empresa>/', views.ClientesView.as_view(), name='crear-obra'),
 ]

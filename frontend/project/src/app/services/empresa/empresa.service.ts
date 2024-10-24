@@ -22,5 +22,9 @@ export class EmpresaService {
   obtenerServiciosPorEmpresa(idEmpresa: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/empresa/${idEmpresa}/servicios/`);
   }
+
+  obtenerClientes(id_empresa: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/clientes/${id_empresa}/`);
+  }
 }
 
