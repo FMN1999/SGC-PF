@@ -541,6 +541,25 @@ class ObraView(View):
         nueva_obra = ObraController.create(data)
         return JsonResponse({'message': 'Obra creada exitosamente.'}, status=201)
 
+    def get(self, request, id_obra):
+        try:
+            obra = ObraController.get_by_id(id_obra)
+            return JsonResponse(obra, status=200)
+        except Servicio.DoesNotExist:
+            return JsonResponse({'error': 'Servicio no encontrado'}, status=404)
+
+    def put(self, request, id_obra):
+        try:
+            obra = Obra.objects.get(id=id_obra)
+            data = json.loads(request.body)
+
+            obra_final = ObraController.actualizar(obra, data)
+
+            return JsonResponse({'message': 'Obra actualizada correctamente'}, status=200)
+
+        except Obra.DoesNotExist:
+            return JsonResponse({'error': 'Obra no encontrada'}, status=404)
+
 
 class ClientesView(View):
     def get(self, request, id_empresa):

@@ -18,6 +18,7 @@ import {UsuariosComponent} from "./components/usuarios/usuarios.component";
 import {MaterialesComponent} from "./components/materiales/materiales.component";
 import {ServiciosComponent} from "./components/servicios/servicios.component";
 import {CrearObraComponent} from "./components/crear-obra/crear-obra.component";
+import {ObraComponent} from "./components/obra/obra.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'materiales', component: MaterialesComponent },
   { path: 'servicios', component: ServiciosComponent },
   { path: 'crear-obra', component: CrearObraComponent },
+  { path: 'obra/:id', component: ObraComponent },
 ];
 
 @NgModule({

@@ -420,3 +420,11 @@ class ObraData:
         except Exception as e:
             print(f"Error al crear obra: {str(e)}")
             raise
+
+    @staticmethod
+    def get_by_id(id_obra):
+        try:
+            return Obra.objects.get(id=id_obra)
+        except Exception as e:
+            print(f"Error al obtener obra: {str(e)}")
+            raise

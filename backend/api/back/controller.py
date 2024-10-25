@@ -366,7 +366,7 @@ class ObraController:
             telefono_contacto=telefono_contacto,
             fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d'),
             fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d'),
-            monto_total_est= 0 if monto_total_est is '' else monto_total_est,
+            monto_total_est= 0 if monto_total_est == '' else monto_total_est,
             moneda=moneda,
             pisos=pisos,
             dimensiones=dimensiones,
@@ -374,3 +374,49 @@ class ObraController:
             id_empresa=empresa
         )
         return ObraData.guardar(nueva_obra)
+
+    @staticmethod
+    def get_by_id(id_obra):
+        obra = ObraData.get_by_id(id_obra)
+        data = {
+            'id': obra.id,
+            'direccion': obra.direccion,
+            'cliente': {
+                'id': obra.id_cliente.id,
+                'nombre': f'{obra.id_cliente.id_usuario.nombre} {obra.id_cliente.id_usuario.apellido}'
+            },
+            'telefono_contacto': obra.telefono_contacto,
+            'fecha_inicio_est': obra.fecha_inicio_est,
+            'fecha_fin_est': obra.fecha_fin_est,
+            'fecha_inicio_real': obra.fecha_inicio_real,
+            'fecha_fin_real': obra.fecha_fin_real,
+            'monto_total_est': obra.monto_total_est,
+            'monto_total_real': obra.monto_total_real,
+            'moneda': obra.moneda,
+            'pisos': obra.pisos,
+            'dimensiones': obra.dimensiones,
+            'estado': obra.estado,
+            'ganancias': obra.ganancias,
+            'perdidas': obra.perdidas,
+            'empresa': {
+                'id': obra.id_empresa.id,
+                'denominacion': obra.id_empresa.denominacion
+            }
+        }
+        return data
+
+    @staticmethod
+    def actualizar(obra: Obra, data):
+        obra.direccion = data.get('direccion')
+        obra.telefono_contacto = data.get('telefono_contacto')
+        obra.fecha_inicio_real = data.get('fecha_inicio_real')
+        obra.fecha_fin_real = data.get('fecha_fin_real')
+        obra.monto_total_est = data.get('monto_total_est')
+        obra.monto_total_real = data.get('monto_total_real')
+        obra.moneda = data.get('moneda')
+        obra.pisos = data.get('pisos')
+        obra.dimensiones = data.get('dimensiones')
+        obra.estado = data.get('estado')
+        obra.ganancias = data.get('ganancias')
+        obra.perdidas = data.get('perdidas')
+        return ObraData.guardar(obra)
