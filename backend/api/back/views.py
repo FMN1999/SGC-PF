@@ -17,10 +17,8 @@ class LoginView(View):
             contrasenia = data.get('contrasenia')
 
             usuario_obj = UsuarioController.login(usuario, contrasenia)
-            print('Recuperé usuario')
             colaborador = ColaboradorController.get_by_user(usuario_obj)
             cliente = ClienteController.get_by_user(usuario_obj)
-            print('Recuperé hijos')
             if usuario_obj:
                 response_data = {
                     'user_id': usuario_obj.id,  # Devolver el ID del usuario
@@ -580,3 +578,65 @@ class ClientesView(View):
                 })
 
         return JsonResponse(clientes_data, safe=False)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AreaView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        nueva_area = AreaController.crear_area(data)
+        return JsonResponse({"area_id": nueva_area.id, "message": "Área creada exitosamente"})
+
+    def get(self, request, obra_id):
+        areas = AreaController.get_by_obra(obra_id)
+        return JsonResponse(list(areas), safe=False)
+
+    def delete(self, request, area_id):
+        try:
+            area = AreaController.get_by_id(area_id)
+            AreaController.delete(area)
+            return JsonResponse({"message": "Área eliminada correctamente"}, status=200)
+        except Area.DoesNotExist:
+            return JsonResponse({"error": "Área no encontrada"}, status=404)
+        
+
+@method_decorator(csrf_exempt, name='dispatch')
+class NotaView(View):
+    def post(self,request):
+        data = json.loads(request.body)
+        nota = ObraController.agregar_nota(data)
+        return JsonResponse({'id': nota.id, 'descripcion': nota.descripcion, 'fecha': nota.fecha}, status=201)
+
+    def get(self, request, id_obra):
+        notas = ObraController.obtener_notas(int(id_obra))
+        print(notas)
+
+        # Crear una lista con las notas y sus fotos
+        notas_data = []
+        for nota in notas:
+            fotos = FotoAvances.objects.filter(id_avance=nota.id)
+            fotos_data = [{'url': foto.url} for foto in fotos]
+
+            notas_data.append({
+                'id': nota.id,
+                'descripcion': nota.descripcion,
+                'fecha': nota.fecha,
+                'fotos': fotos_data
+            })
+
+        return JsonResponse(notas_data, safe=False)
+
+    def delete(self,request, nota_id):
+        try:
+            # Intentar obtener la nota por ID y eliminarla
+            ObraController.delete_nota(nota_id)
+            return JsonResponse({'message': 'Nota eliminada correctamente'}, status=200)
+        except Nota.DoesNotExist:
+            return JsonResponse({'error': 'Nota no encontrada'}, status=404)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class FotoAvancesView(View):
+    def post(self, request, nota_id):
+        data = json.loads(request.body)
+        foto = ObraController.agregar_foto(nota_id, data.get('url'))
+        return JsonResponse({'id': foto.id, 'url': foto.url}, status=201)

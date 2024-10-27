@@ -89,6 +89,78 @@
       </button>
     </div>
   </form>
+
+  <h3>Registrar Nueva Área</h3>
+  <form [formGroup]="areaForm" (ngSubmit)="crearArea()">
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <input id="descripcion" formControlName="descripcion" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="dimensiones">Dimensiones:</label>
+      <input id="dimensiones" formControlName="dimensiones" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="estado">Estado:</label>
+      <input id="area-estado" formControlName="estado" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="porcentaje">Porcentaje:</label>
+      <input id="porcentaje" type="number" formControlName="porcentaje" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Área</button>
+  </form>
+
+  <h3>Áreas de la Obra</h3>
+  <div *ngIf="areas.length > 0; else noAreas">
+    <ul>
+      <li *ngFor="let area of areas">
+        <strong>Descripción:</strong> {{ area.descripcion }}<br />
+        <strong>Dimensiones:</strong> {{ area.dimensiones }}<br />
+        <strong>Estado:</strong> {{ area.estado }}<br />
+        <strong>Porcentaje:</strong> {{ area.porcentaje }}%
+        <button (click)="eliminarArea(area.id)" class="btn btn-danger btn-sm mt-2">
+          Eliminar Área
+        </button>
+      </li>
+    </ul>
+
+
+  </div>
+  <ng-template #noAreas>
+    <p>No hay áreas registradas para esta obra.</p>
+  </ng-template>
+
+  <div *ngIf="notas.length > 0">
+    <h3>Notas de la Obra</h3>
+    <div *ngFor="let nota of notas">
+      <p>{{ nota.descripcion }} - {{ nota.fecha | date }}</p>
+      <div *ngFor="let foto of nota.fotos">
+        <img [src]="foto.url" alt="Foto de Avance" width="100">
+      </div>
+      <!-- Botón para eliminar la nota -->
+      <button (click)="eliminarNota(nota.id)" class="btn btn-danger">Eliminar Nota</button>
+    </div>
+  </div>
+
+  <div class="nota-section">
+    <h3>Agregar Nota</h3>
+    <form [formGroup]="notaForm" (ngSubmit)="guardarNota()">
+      <label for="descripcion">Descripción:</label>
+      <textarea formControlName="descripcion"></textarea>
+
+      <div formArrayName="fotos">
+        <div *ngFor="let foto of fotos.controls; let i = index">
+          <input [formControlName]="i" placeholder="URL de la foto">
+          <button type="button" (click)="eliminarFoto(i)">Eliminar</button>
+        </div>
+        <button type="button" (click)="agregarFoto()">Agregar Foto</button>
+      </div>
+
+      <button type="submit" [disabled]="!notaForm.valid">Guardar Nota</button>
+    </form>
+  </div>
+
 </div>
 
 

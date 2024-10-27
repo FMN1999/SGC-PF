@@ -33,4 +33,12 @@ urlpatterns = [
     path('clientes/<int:id_empresa>/', views.ClientesView.as_view(), name='crear-obra'),
     path('obra/<int:id_obra>/', views.ObraView.as_view(), name='obtener_obra'),
     path('obra/<int:id_obra>/actualizar/', views.ObraView.as_view(), name='actualizar_obra'),
+    path('areas/crear/', views.AreaView.as_view(), name='crear_area'),
+    path('areas/obra/<int:obra_id>/', views.AreaView.as_view(), name='obtener_areas_por_obra'),
+    path('areas/eliminar/<int:area_id>/', views.AreaView.as_view(), name='eliminar_area'),
+    path('nota/', views.NotaView.as_view(), name='nueva-nota'),
+    path('nota/<int:nota_id>/foto/', views.FotoAvancesView.as_view(), name='nueva-foto'),
+    path('notas/<int:id_obra>/', views.NotaView.as_view(), name='obtener_notas_por_obra'),
+    path('notas/eliminar/<int:nota_id>/', views.NotaView.as_view(), name='eliminar_nota'),
+
 ]

@@ -164,3 +164,35 @@ class Obra(models.Model):
 
     class Meta:
         db_table = 'Obra'
+
+
+class Area(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+    descripcion = models.CharField()
+    dimensiones = models.CharField()
+    estado = models.CharField()
+    porcentaje = models.FloatField()
+
+    class Meta:
+        db_table = 'Area'
+
+
+class Nota(models.Model):
+    id = models.AutoField(primary_key=True)
+    descripcion = models.CharField()
+    id_usuario= models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    fecha = models.DateField()
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+
+    class Meta:
+        db_table = 'Nota'
+
+
+class FotoAvances(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_avance = models.ForeignKey(Nota, on_delete=models.CASCADE, db_column='id_avance')
+    url = models.CharField()
+
+    class Meta:
+        db_table = 'FotoAvances'

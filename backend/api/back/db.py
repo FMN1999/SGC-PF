@@ -428,3 +428,51 @@ class ObraData:
         except Exception as e:
             print(f"Error al obtener obra: {str(e)}")
             raise
+
+    @staticmethod
+    def obtener_notas(id_obra):
+        try:
+            return Nota.objects.filter(id_obra=id_obra)
+        except Exception as e:
+            print(f"Error al obtener notas: {str(e)}")
+            raise
+
+    @staticmethod
+    def delete_nota(nota_id):
+        try:
+            nota = Nota.objects.get(id=nota_id)
+            nota.delete()
+        except Exception as e:
+            print(f"Error al eliminar nota: {str(e)}")
+            raise
+
+class AreaData:
+    @staticmethod
+    def guardar(area: Area):
+        try:
+            area.save()
+            return area
+        except Exception as e:
+            print(f"Error al guardar área: {str(e)}")
+            raise
+
+    @staticmethod
+    def get_by_obra(obra_id):
+        try:
+            return Area.objects.filter(id_obra=obra_id)
+        except Exception as e:
+            print(f"Error al guardar área: {str(e)}")
+            raise
+
+    @staticmethod
+    def get_by_id(area_id):
+        try:
+            return Area.objects.get(id=area_id)
+        except Exception as e:
+            print(f"Error al obtener área: {str(e)}")
+            raise
+
+    @staticmethod
+    def delete(area: Area):
+        area.delete()
+

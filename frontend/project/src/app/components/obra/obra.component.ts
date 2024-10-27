@@ -1,27 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
+import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'app-obra',
   standalone: true,
   templateUrl: './obra.component.html',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf,
+    NgForOf,
+    NgOptimizedImage,
+    DatePipe
   ],
   styleUrls: ['./obra.component.scss']
 })
 export class ObraComponent implements OnInit {
   obraForm: FormGroup;
+  areaForm: FormGroup; // Formulario para el alta de área
   obra_id: number = 0;
   editMode = false;  // Nuevo: Modo de edición desactivado por defecto
+  areas: any[] = [];  // Array para almacenar las áreas
+  notaForm: FormGroup;
+  notas: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private obraService: ObraService,
     private route: ActivatedRoute,
-    private router: Router
   ) {
     this.obraForm = this.fb.group({
       direccion: [{ value: '', disabled: true }, Validators.required],
@@ -40,11 +48,27 @@ export class ObraComponent implements OnInit {
       ganancias: [{ value: '', disabled: true }],
       perdidas: [{ value: '', disabled: true }]
     });
+
+    this.notaForm = this.fb.group({
+      descripcion: ['', Validators.required],
+      fotos: this.fb.array([]),
+    });
+
+    this.areaForm = this.fb.group({
+      descripcion: ['', Validators.required],
+      dimensiones: ['', Validators.required],
+      estado: ['', Validators.required],
+      porcentaje: [0, Validators.required]
+    });
+
+
   }
 
   ngOnInit(): void {
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     this.cargarObra();
+    this.cargarAreas();
+    this.cargarNotas();  // Cargar las notas de la obra
   }
 
   cargarObra(): void {
@@ -105,5 +129,92 @@ export class ObraComponent implements OnInit {
         }
       );
     }
+  }
+
+  cargarAreas(): void {
+    this.obraService.obtenerAreasPorObra(this.obra_id).subscribe((areas: any[]) => {
+      this.areas = areas;
+    });
+  }
+
+  crearArea(): void {
+    if (this.areaForm.valid) {
+      const areaData = {
+        ...this.areaForm.value,
+        id_obra: this.obra_id // Relacionar área con la obra actual
+      };
+      this.obraService.crearArea(areaData).subscribe(
+          (response: any) => {
+          console.log('Área creada:', response);
+          this.areaForm.reset(); // Resetear formulario
+        },
+          (error: any) => {
+          console.error('Error al crear el área:', error);
+        }
+      );
+    }
+
+  }
+
+  eliminarArea(areaId: number): void {
+    if (confirm('¿Estás seguro de que deseas eliminar esta área?')) {
+      this.obraService.eliminarArea(areaId).subscribe(
+        (response) => {
+          console.log(response.message);
+          this.areas = this.areas.filter(area => area.id !== areaId);  // Actualiza la lista de áreas en la vista
+        },
+        (error) => {
+          console.error('Error al eliminar el área:', error);
+        }
+      );
+    }
+  }
+
+  // Método para agregar un control de foto al formulario de notas
+  get fotos(): FormArray {
+    return this.notaForm.get('fotos') as FormArray;
+  }
+
+  agregarFoto(): void {
+    this.fotos.push(this.fb.control(''));
+  }
+
+  eliminarFoto(index: number): void {
+    this.fotos.removeAt(index);
+  }
+
+  // Método para guardar la nota y sus fotos
+  guardarNota() {
+    const id_usuario = Number(sessionStorage.getItem('id_usuario'));
+    const descripcion = this.notaForm.get('descripcion')?.value;
+    const id_obra = this.obra_id;  // Agrega el id_obra
+
+    this.obraService.agregarNota(id_usuario, descripcion, id_obra).subscribe((nota) => {
+        const fotos = this.notaForm.get('fotos')?.value;
+        // @ts-ignore
+        fotos.forEach((url: string) => {
+            this.obraService.agregarFoto(nota.id, url).subscribe();
+        });
+        this.notaForm.reset();
+    });
+  }
+
+  cargarNotas(): void {
+    this.obraService.obtenerNotasPorObra(this.obra_id).subscribe((notas) => {
+        this.notas = notas;
+    });
+  }
+
+  eliminarNota(notaId: number): void {
+    this.obraService.eliminarNota(notaId).subscribe(
+      () => {
+        console.log(`Nota ${notaId} eliminada correctamente`);
+        // Actualiza la lista de notas después de la eliminación
+        this.notas = this.notas.filter(nota => nota.id !== notaId);
+      },
+      (error) => {
+        console.error('Error al eliminar la nota:', error);
+      }
+    );
   }
 }

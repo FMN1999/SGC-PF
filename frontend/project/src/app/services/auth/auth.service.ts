@@ -28,7 +28,7 @@ export class AuthService {
     return this.http.post('http://localhost:8000/api/login/', { usuario, contrasenia }).pipe(
       tap((response: any) => {
         sessionStorage.setItem('token', response.token);
-        sessionStorage.setItem('id_user',response.user_id);
+        sessionStorage.setItem('id_usuario',response.user_id);
         sessionStorage.setItem('rol', response.rol);
         sessionStorage.setItem('id_empresa', response.id_emp)
         this.loggedIn.next(true); // Notifica que el usuario se ha logueado

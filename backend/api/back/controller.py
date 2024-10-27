@@ -420,3 +420,75 @@ class ObraController:
         obra.ganancias = data.get('ganancias')
         obra.perdidas = data.get('perdidas')
         return ObraData.guardar(obra)
+
+    @staticmethod
+    def agregar_nota(data):
+        user = UsuarioData.get_by_id(data.get('id_usuario'))
+        obra = ObraData.get_by_id(data.get('id_obra'))
+        nota = Nota(
+            id=random.randint(0000, 9999),
+            descripcion=data.get('descripcion'),
+            id_usuario= user,  # id_usuario desde el frontend
+            fecha=datetime.now().date(),
+            id_obra=obra
+        )
+        nota.save()
+        return nota
+
+    @staticmethod
+    def agregar_foto(nota_id, url):
+        foto = FotoAvances(
+            id= random.randint(0000, 9999),
+            id_avance_id=nota_id,
+            url=url
+        )
+        foto.save()
+        return foto
+
+    @staticmethod
+    def obtener_notas(id_obra):
+        return ObraData.obtener_notas(id_obra)
+
+    @staticmethod
+    def delete_nota(nota_id):
+        ObraData.delete_nota(nota_id)
+
+
+class AreaController:
+    @staticmethod
+    def crear_area(data):
+        obra = ObraData.get_by_id(data.get('id_obra'))
+        nueva_area = Area(
+            id_obra=obra,
+            descripcion=data.get('descripcion'),
+            dimensiones=data.get('dimensiones'),
+            estado=data.get('estado'),
+            porcentaje=data.get('porcentaje')
+        )
+        area = AreaData.guardar(nueva_area)
+        return area
+
+    @staticmethod
+    def get_by_obra(id_obra):
+        areas = AreaData.get_by_obra(id_obra)
+        areas_list = [
+            {
+                'id': area.id,
+                'descripcion': area.descripcion,
+                'dimensiones': area.dimensiones,
+                'estado': area.estado,
+                'porcentaje': area.porcentaje,
+                'id_obra': area.id_obra.id,
+            } for area in areas
+        ]
+        return areas_list
+
+    @staticmethod
+    def get_by_id(area_id):
+        return AreaData.get_by_id(area_id)
+
+    @staticmethod
+    def delete(area):
+        AreaData.delete(area)
+
+
