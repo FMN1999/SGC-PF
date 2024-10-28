@@ -131,6 +131,43 @@
     <p>No hay áreas registradas para esta obra.</p>
   </ng-template>
 
+  <h3>Documentos de la Obra</h3>
+  <div *ngIf="documentos.length > 0; else noDocumentos">
+    <ul>
+      <li *ngFor="let documento of documentos">
+        <strong>Nombre:</strong> {{ documento.nombre }} <br />
+        <strong>Link:</strong> <a [href]="documento.link" target="_blank">{{ documento.link }}</a> <br />
+        <strong>Descripción:</strong> {{ documento.descripcion || 'N/A' }} <br />
+        <strong>Tipo de Archivo:</strong> {{ documento.tipo_archivo || 'N/A' }} <br />
+        <button (click)="eliminarDocumento(documento.id)">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noDocumentos>
+    <p>No hay documentos asociados a esta obra.</p>
+  </ng-template>
+
+
+  <form [formGroup]="documentoForm" (ngSubmit)="guardarDocumento()">
+    <div>
+      <label>Nombre:</label>
+      <input formControlName="nombre" required />
+    </div>
+    <div>
+      <label>Link:</label>
+      <input formControlName="link" required />
+    </div>
+    <div>
+      <label>Descripción (Opcional):</label>
+      <input formControlName="descripcion" />
+    </div>
+    <div>
+      <label>Tipo de Archivo (Opcional):</label>
+      <input formControlName="tipo_archivo" />
+    </div>
+    <button type="submit">Guardar Documento</button>
+  </form>
+
   <div *ngIf="notas.length > 0">
     <h3>Notas de la Obra</h3>
     <div *ngFor="let nota of notas">

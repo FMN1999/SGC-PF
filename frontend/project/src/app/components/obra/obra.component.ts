@@ -25,6 +25,8 @@ export class ObraComponent implements OnInit {
   areas: any[] = [];  // Array para almacenar las áreas
   notaForm: FormGroup;
   notas: any[] = [];
+  documentoForm!: FormGroup;
+  documentos: any[] = []; // Lista de documentos para mostrar
 
   constructor(
     private fb: FormBuilder,
@@ -68,7 +70,15 @@ export class ObraComponent implements OnInit {
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     this.cargarObra();
     this.cargarAreas();
+    this.documentoForm = this.fb.group({
+      nombre: [''],
+      link: [''],
+      descripcion: [''],
+      tipo_archivo: [''],
+      id_obra:this.obra_id
+    });
     this.cargarNotas();  // Cargar las notas de la obra
+    this.cargarDocumentos();
   }
 
   cargarObra(): void {
@@ -214,6 +224,44 @@ export class ObraComponent implements OnInit {
       },
       (error) => {
         console.error('Error al eliminar la nota:', error);
+      }
+    );
+  }
+
+  guardarDocumento(): void {
+    const id_usuario = Number(sessionStorage.getItem('id_usuario')); // id_usuario del sessionStorage
+    const documento = { id_usuario, ...this.documentoForm.value };
+
+    this.obraService.agregarDocumento(documento).subscribe(
+      (response) => {
+        console.log('Documento guardado:', response);
+        this.documentoForm.reset();
+      },
+      (error) => {
+        console.error('Error al guardar el documento:', error);
+      }
+    );
+  }
+
+  cargarDocumentos(): void {
+    this.obraService.obtenerDocumentosPorObra(this.obra_id).subscribe(
+      (documentos) => {
+        this.documentos = documentos;
+      },
+      (error) => {
+        console.error('Error al obtener documentos:', error);
+      }
+    );
+  }
+
+  eliminarDocumento(id_documento: number): void {
+    this.obraService.eliminarDocumento(id_documento).subscribe(
+      () => {
+        // Filtrar el documento eliminado de la lista de documentos
+        this.documentos = this.documentos.filter(doc => doc.id !== id_documento);
+      },
+      (error) => {
+        console.error('Error al eliminar el documento:', error);
       }
     );
   }

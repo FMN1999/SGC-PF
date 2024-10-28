@@ -196,3 +196,16 @@ class FotoAvances(models.Model):
 
     class Meta:
         db_table = 'FotoAvances'
+
+
+class Documento(models.Model):
+    id = models.AutoField(primary_key=True)
+    descripcion = models.CharField()
+    nombre = models.CharField()
+    tipo_archivo = models.CharField()
+    link = models.CharField()
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+
+    class Meta:
+        db_table = 'Documento'

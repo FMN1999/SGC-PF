@@ -446,6 +446,7 @@ class ObraData:
             print(f"Error al eliminar nota: {str(e)}")
             raise
 
+
 class AreaData:
     @staticmethod
     def guardar(area: Area):

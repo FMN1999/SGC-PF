@@ -634,9 +634,65 @@ class NotaView(View):
         except Nota.DoesNotExist:
             return JsonResponse({'error': 'Nota no encontrada'}, status=404)
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class FotoAvancesView(View):
     def post(self, request, nota_id):
         data = json.loads(request.body)
         foto = ObraController.agregar_foto(nota_id, data.get('url'))
         return JsonResponse({'id': foto.id, 'url': foto.url}, status=201)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DocumentoView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        try:
+            usuario = UsuarioController.get_by_id(data['id_usuario'])
+            obra = ObraController.get_by_id(data.get('id_obra'))
+
+            documento = Documento(
+                descripcion=data.get('descripcion'),
+                nombre=data['nombre'],
+                tipo_archivo=data.get('tipo_archivo'),
+                link=data['link'],
+                id_usuario=usuario,
+                id_obra=obra
+            )
+            documento.save()
+            return JsonResponse({'message': 'Documento creado correctamente', 'documento_id': documento.id}, status=201)
+
+        except Usuario.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+        except Area.DoesNotExist:
+            return JsonResponse({'error': 'Área no encontrada'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    def get(self, request, id_obra):
+        try:
+            documentos = Documento.objects.filter(id_obra=id_obra)
+            documentos_data = [
+                {
+                    "id": doc.id,
+                    "nombre": doc.nombre,
+                    "link": doc.link,
+                    "descripcion": doc.descripcion,
+                    "tipo_archivo": doc.tipo_archivo,
+                    "id_usuario": doc.id_usuario.id
+                } for doc in documentos
+            ]
+            return JsonResponse(documentos_data, safe=False)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    def delete(self, request, id_documento):
+        try:
+            documento = Documento.objects.get(id=id_documento)
+            documento.delete()
+            return JsonResponse({"message": "Documento eliminado correctamente"}, status=200)
+        except Documento.DoesNotExist:
+            return JsonResponse({"error": "Documento no encontrado"}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)

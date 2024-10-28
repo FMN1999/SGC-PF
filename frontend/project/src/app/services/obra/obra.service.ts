@@ -58,5 +58,17 @@ export class ObraService {
   eliminarNota(notaId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}notas/eliminar/${notaId}/`);
   }
+
+  agregarDocumento(documento: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}documentos/agregar/`, documento);
+  }
+
+  obtenerDocumentosPorObra(id_obra: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}documentos/obra/${id_obra}/`);
+  }
+
+  eliminarDocumento(id_documento: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}documentos/${id_documento}/eliminar/`);
+  }
 }
 
