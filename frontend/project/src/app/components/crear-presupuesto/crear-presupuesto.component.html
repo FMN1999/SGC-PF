@@ -1,0 +1,106 @@
+<form [formGroup]="presupuestoForm" (ngSubmit)="guardarPresupuesto()">
+  <h2>Crear Presupuesto</h2>
+
+  <!-- Datos del presupuesto -->
+  <label>Total</label>
+  <input formControlName="total" type="number" required />
+
+  <label>Moneda</label>
+  <input formControlName="moneda" type="text" required />
+
+  <label>Observaciones</label>
+  <textarea formControlName="observaciones"></textarea>
+
+  <!-- Materiales -->
+  <h3>Materiales</h3>
+  <button type="button" (click)="agregarMaterial()">Agregar Material</button>
+  <div formArrayName="materiales">
+    <div *ngFor="let material of materialesFormArray.controls; let i = index" [formGroupName]="i">
+      <label>Material</label>
+      <select formControlName="id_material">
+        <option *ngFor="let mat of materiales" [value]="mat.id">{{ mat.descripcion }}</option>
+      </select>
+
+      <label>Cantidad</label>
+      <input formControlName="cantidad" type="number" />
+
+      <label>Precio por Unidad</label>
+      <input formControlName="precio_x_unidad_medida" type="number" />
+
+      <label>Unidad de Medida</label>
+      <input formControlName="unidad_medida" type="text" />
+
+      <label>Área (Opcional)</label>
+      <select formControlName="id_area">
+        <option *ngFor="let area of areas" [value]="area.id">{{ area.descripcion }}</option>
+      </select>
+
+      <label>Monto Línea</label>
+      <input formControlName="monto_linea" type="number" />
+    </div>
+  </div>
+
+  <!-- Servicios -->
+  <h3>Servicios</h3>
+  <button type="button" (click)="agregarServicio()">Agregar Servicio</button>
+  <div formArrayName="servicios">
+    <div *ngFor="let servicio of serviciosFormArray.controls; let i = index" [formGroupName]="i">
+      <label>Servicio</label>
+      <select formControlName="id_servicio">
+        <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.descripcion }}</option>
+      </select>
+
+      <label>Precio por Hora</label>
+      <input formControlName="precio_x_hora" type="number" />
+
+      <label>Horas</label>
+      <input formControlName="horas" type="number" />
+
+      <label>Moneda</label>
+      <input formControlName="moneda" type="text" />
+
+      <label>Área (Opcional)</label>
+      <select formControlName="id_area">
+        <option *ngFor="let area of areas" [value]="area.id">{{ area.descripcion }}</option>
+      </select>
+
+      <label>Monto Línea</label>
+      <input formControlName="monto_linea" type="number" />
+    </div>
+  </div>
+
+  <!-- Trabajadores -->
+  <h3>Trabajadores</h3>
+  <button type="button" (click)="agregarTrabajador()">Agregar Trabajador</button>
+  <div formArrayName="trabajadores">
+    <div *ngFor="let trabajador of trabajadoresFormArray.controls; let i = index" [formGroupName]="i">
+      <label>Puesto</label>
+      <input formControlName="puesto" type="text" />
+
+      <label>Horas</label>
+      <input formControlName="horas" type="number" />
+
+      <label>Precio por Hora</label>
+      <input formControlName="precio_x_hora" type="number" />
+
+      <label>Moneda</label>
+      <input formControlName="moneda" type="text" />
+
+      <label>Colaborador</label>
+      <select formControlName="id_usuario">
+        <option *ngFor="let colab of colaboradores" [value]="colab.id_usuario">{{ colab.nombre }}</option>
+      </select>
+
+      <label>Área (Opcional)</label>
+      <select formControlName="id_area">
+        <option *ngFor="let area of areas" [value]="area.id">{{ area.descripcion }}</option>
+      </select>
+
+      <label>Monto Línea</label>
+      <input formControlName="monto_linea" type="number" />
+    </div>
+  </div>
+
+  <button type="submit">Guardar Presupuesto</button>
+</form>
+

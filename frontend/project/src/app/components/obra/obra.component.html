@@ -131,6 +131,8 @@
     <p>No hay áreas registradas para esta obra.</p>
   </ng-template>
 
+  <button class="btn btn-primary mt-3" (click)="crearPresupuesto()">Crear presupuesto</button>
+
   <h3>Documentos de la Obra</h3>
   <div *ngIf="documentos.length > 0; else noDocumentos">
     <ul>

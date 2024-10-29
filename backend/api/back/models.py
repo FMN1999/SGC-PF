@@ -209,3 +209,63 @@ class Documento(models.Model):
 
     class Meta:
         db_table = 'Documento'
+
+
+class Presupuesto(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    total = models.FloatField()
+    moneda = models.CharField()
+    fecha_creacion = models.DateField()
+    observaciones = models.CharField()
+    estado = models.CharField()
+    aprobado = models.BooleanField()
+
+    class Meta:
+        db_table = 'Presupuesto'
+
+
+class Presupuesto_Material(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')
+    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
+    cantidad = models.FloatField()
+    precio_x_unidad_medida = models.FloatField()
+    unidad_medida = models.CharField()
+    id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column="id_area")
+    monto_linea = models.FloatField()
+
+    class Meta:
+        db_table = 'Presupuesto_Material'
+
+
+class Presupuesto_Servicio(models.Model):
+    id = models.AutoField(primary_key=True)
+    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, db_column='servicio')
+    precio_x_hora = models.FloatField()
+    horas = models.FloatField()
+    moneda = models.CharField()
+    id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column="id_area")
+    monto_linea = models.FloatField()
+    id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')
+
+    class Meta:
+        db_table = 'Presupuesto_Servicio'
+
+
+class Presupuesto_Trabajador(models.Model):
+    id = models.AutoField(primary_key=True)
+    puesto = models.CharField()
+    horas = models.FloatField()
+    precio_x_hora = models.FloatField()
+    moneda = models.CharField()
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column="id_area")
+    monto_linea = models.FloatField()
+    id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')
+
+
+    class Meta:
+        db_table = 'Presupuesto_Trabajador'
+

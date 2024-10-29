@@ -1,0 +1,149 @@
+import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
+import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
+import { EmpresaService } from '../../services/empresa/empresa.service';
+import { UsuarioService } from '../../services/usuarios/usuario.service';
+import { ObraService } from '../../services/obra/obra.service';
+import {ActivatedRoute} from "@angular/router";
+import {NgForOf} from "@angular/common";
+
+@Component({
+  selector: 'app-crear-presupuesto',
+  templateUrl: './crear-presupuesto.component.html',
+  imports: [
+    ReactiveFormsModule,
+    NgForOf
+  ],
+  standalone: true
+})
+export class CrearPresupuestoComponent implements OnInit {
+  presupuestoForm!: FormGroup;
+  materiales: any[] = [];
+  servicios: any[] = [];
+  colaboradores: any[] = [];
+  id_empresa: number=0;
+  obraId!: number;
+  areas: any[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private presupuestoService: PresupuestoService,
+    private empresaService: EmpresaService,
+    private usuarioService: UsuarioService,
+    private obraService: ObraService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    // @ts-ignore
+    this.id_empresa = parseInt(sessionStorage.getItem('id_empresa'))
+
+    this.route.queryParams.subscribe(params => {
+      this.obraId = +params['obra_id'];
+      console.log(this.obraId)
+    });
+
+
+    this.inicializarFormulario();
+
+    // Obtener materiales, servicios y colaboradores según id_empresa de sessionStorage
+    this.empresaService.listarMaterialesPorEmpresa(this.id_empresa).subscribe((data: any[]) => {
+      this.materiales = data;
+    });
+    this.empresaService.obtenerServiciosPorEmpresa(this.id_empresa).subscribe((data: any[]) => {
+      this.servicios = data;
+    });
+    this.usuarioService.obtenerUsuariosPorEmpresa(this.id_empresa).subscribe((data: any[]) => {
+      console.log(data)
+      // @ts-ignore
+      this.colaboradores = data.colaboradores;
+    });
+
+    this.obraService.obtenerAreasPorObra(this.obraId).subscribe((data:any[]) =>{
+      this.areas = data
+    });
+  }
+
+  inicializarFormulario() {
+    this.presupuestoForm = this.fb.group({
+      total: [null, Validators.required],
+      moneda: ['', Validators.required],
+      fecha_creacion: [new Date().toISOString().split('T')[0]], // Fecha actual
+      observaciones: [''],
+      estado: ['Nuevo'],  // Estado inicial
+      aprobado: [false],
+      materiales: this.fb.array([]),
+      servicios: this.fb.array([]),
+      trabajadores: this.fb.array([])
+    });
+  }
+
+  // Agregar un material al presupuesto
+  agregarMaterial() {
+    const materialGroup = this.fb.group({
+      id_material: ['', Validators.required],
+      cantidad: [null, Validators.required],
+      precio_x_unidad_medida: [null, Validators.required],
+      unidad_medida: ['', Validators.required],
+      id_area: [''],
+      monto_linea: [0]
+    });
+    this.materialesFormArray.push(materialGroup);
+  }
+
+  get materialesFormArray(): FormArray {
+    return this.presupuestoForm.get('materiales') as FormArray;
+  }
+
+  // Agregar un servicio al presupuesto
+  agregarServicio() {
+    const servicioGroup = this.fb.group({
+      id_servicio: ['', Validators.required],
+      precio_x_hora: [null, Validators.required],
+      horas: [null, Validators.required],
+      moneda: ['', Validators.required],
+      id_area: [''],
+      monto_linea: [0]
+    });
+    this.serviciosFormArray.push(servicioGroup);
+  }
+
+  get serviciosFormArray(): FormArray {
+    return this.presupuestoForm.get('servicios') as FormArray;
+  }
+
+  // Agregar un colaborador al presupuesto
+  agregarTrabajador() {
+    const trabajadorGroup = this.fb.group({
+      puesto: ['', Validators.required],
+      horas: [null, Validators.required],
+      precio_x_hora: [null, Validators.required],
+      moneda: ['', Validators.required],
+      id_usuario: ['', Validators.required],
+      id_area: [''],
+      monto_linea: [0]
+    });
+    this.trabajadoresFormArray.push(trabajadorGroup);
+  }
+
+  get trabajadoresFormArray(): FormArray {
+    return this.presupuestoForm.get('trabajadores') as FormArray;
+  }
+
+  // Guardar el presupuesto completo
+  guardarPresupuesto() {
+    const id_usuario = Number(sessionStorage.getItem('id_usuario'));
+    const id_obra = this.obraId;
+
+    const presupuestoData = {
+      ...this.presupuestoForm.value,
+      id_usuario,
+      id_obra
+    };
+
+    this.presupuestoService.crearPresupuesto(presupuestoData).subscribe((response: any) => {
+      console.log('Presupuesto guardado:', response);
+      this.presupuestoForm.reset();
+    });
+  }
+}

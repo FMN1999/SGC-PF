@@ -1,3 +1,5 @@
+from datetime import date
+
 from .db import *
 from django.core.exceptions import ValidationError
 
@@ -492,3 +494,78 @@ class AreaController:
         AreaData.delete(area)
 
 
+class PresupuestoController:
+    @staticmethod
+    def crear_presupuesto(data):
+        # Extraer datos del presupuesto
+        id_obra = data.get('id_obra')
+        id_usuario = data.get('id_usuario')
+        total = data.get('total')
+        moneda = data.get('moneda')
+        observaciones = data.get('observaciones', '')
+
+        # Crear el presupuesto principal
+        presupuesto = Presupuesto.objects.create(
+            id_obra_id=id_obra,
+            id_usuario_id=id_usuario,
+            total=total,
+            moneda=moneda,
+            fecha_creacion=date.today(),
+            observaciones=observaciones,
+            estado='Nuevo',
+            aprobado=False
+        )
+
+        # Procesar materiales
+        for material in data.get('materiales', []):
+            mat = MaterialData.get_by_id(material['id_material'])
+            area = AreaData.get_by_id(material.get('id_area')) if material.get('id_area') is not '' else None
+            Presupuesto_Material.objects.create(
+                id_presupuesto=presupuesto,
+                id_material=mat,
+                cantidad=material['cantidad'],
+                precio_x_unidad_medida=material['precio_x_unidad_medida'],
+                unidad_medida=material['unidad_medida'],
+                id_area=area,
+                monto_linea=material['monto_linea']
+            )
+
+        # Procesar servicios
+        for serv in data.get('servicios', []):
+            servicio = ServicioData.get_by_id(serv.get('id_servicio'))
+            area = AreaData.get_by_id(serv.get('id_area')) if serv.get('id_area') is not '' else None
+            try:
+                Presupuesto_Servicio.objects.create(
+                    id=random.randint(0000000, 9999999),
+                    id_presupuesto=presupuesto,
+                    servicio=servicio,
+                    precio_x_hora=serv['precio_x_hora'],
+                    horas=serv['horas'],
+                    moneda=serv['moneda'],
+                    id_area=area,
+                    monto_linea=serv['monto_linea']
+                )
+            except Exception as e:
+                print(f"Error al obtener área: {str(e)}")
+                raise
+        # Procesar trabajadores
+        for trabajador in data.get('trabajadores', []):
+            usuario = UsuarioData.get_by_id(trabajador.get('id_usuario'))
+            area = AreaData.get_by_id(trabajador.get('id_area')) if trabajador.get('id_area') is not '' else None
+            try:
+                Presupuesto_Trabajador.objects.create(
+                    id=random.randint(0000000, 9999999),
+                    id_presupuesto=presupuesto,
+                    puesto=trabajador['puesto'],
+                    horas=trabajador['horas'],
+                    precio_x_hora=trabajador['precio_x_hora'],
+                    moneda=trabajador['moneda'],
+                    id_usuario=usuario,
+                    id_area=area,
+                    monto_linea=trabajador['monto_linea']
+                )
+            except Exception as e:
+                print(f"Error al obtener área: {str(e)}")
+                raise
+
+        return presupuesto

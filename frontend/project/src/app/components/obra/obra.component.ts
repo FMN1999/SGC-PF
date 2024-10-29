@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
 import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 
@@ -32,6 +32,7 @@ export class ObraComponent implements OnInit {
     private fb: FormBuilder,
     private obraService: ObraService,
     private route: ActivatedRoute,
+    private router: Router
   ) {
     this.obraForm = this.fb.group({
       direccion: [{ value: '', disabled: true }, Validators.required],
@@ -265,4 +266,8 @@ export class ObraComponent implements OnInit {
       }
     );
   }
+
+  crearPresupuesto(): void {
+    this.router.navigate(['/crear-presupuesto'], {queryParams: {obra_id: this.obra_id}}).then(r =>{});
+   }
 }

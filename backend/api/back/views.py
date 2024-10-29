@@ -696,3 +696,11 @@ class DocumentoView(View):
             return JsonResponse({"error": "Documento no encontrado"}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PresupuestoView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        presupuesto = PresupuestoController.crear_presupuesto(data)
+        return JsonResponse({'message': 'Presupuesto creado exitosamente', 'presupuesto_id': presupuesto.id})
