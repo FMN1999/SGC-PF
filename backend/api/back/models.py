@@ -75,15 +75,20 @@ class Proveedor(models.Model):
 
 class Material(models.Model):
     id = models.AutoField(primary_key=True)
-    fecha_caducidad = models.DateField()
+    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, db_column='id_proveedor')
     tipo_material = models.CharField()
     unidad_medida = models.CharField()
     descripcion = models.CharField()
     marca = models.CharField()
     precio = models.FloatField()
     moneda = models.CharField()
+    impuestos_total = models.FloatField()
+    moneda_impuestos = models.CharField()
+    descripcion_impuestos = models.CharField()
+    otros_gastos = models.FloatField()
+    moneda_otros_gastos = models.CharField()
+    descripcion_otros_gastos = models.CharField()
     fecha_desde_precio = models.DateField()
-    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, db_column='id_proveedor')
 
     class Meta:
         db_table = 'Material'
@@ -91,12 +96,19 @@ class Material(models.Model):
 
 class Servicio(models.Model):
     id = models.AutoField(primary_key=True)
-    descripcion = models.CharField()
-    precio_x_unidad = models.FloatField()
-    unidad_medida = models.CharField()
     id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, db_column='id_proveedor')
+    descripcion = models.CharField()
+    unidad_medida = models.CharField()
+    precio_x_unidad = models.FloatField()
+    moneda = models.CharField()
     monto_x_frecuencia = models.FloatField()
     frecuencia_pago = models.CharField()
+    impuestos_total = models.FloatField()
+    moneda_impuestos = models.CharField()
+    descripcion_impuestos = models.CharField()
+    otros_gastos = models.FloatField()
+    moneda_otros_gastos = models.CharField()
+    descripcion_otros_gastos = models.CharField()
 
     class Meta:
         db_table = 'Servicio'
@@ -235,6 +247,7 @@ class Presupuesto_Material(models.Model):
     unidad_medida = models.CharField()
     id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column="id_area")
     monto_linea = models.FloatField()
+    desc_material = models.CharField()
 
     class Meta:
         db_table = 'Presupuesto_Material'
@@ -249,6 +262,7 @@ class Presupuesto_Servicio(models.Model):
     id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column="id_area")
     monto_linea = models.FloatField()
     id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')
+    desc_servicio = models.CharField()
 
     class Meta:
         db_table = 'Presupuesto_Servicio'

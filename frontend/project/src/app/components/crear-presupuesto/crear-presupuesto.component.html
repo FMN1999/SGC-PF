@@ -17,9 +17,7 @@
   <div formArrayName="materiales">
     <div *ngFor="let material of materialesFormArray.controls; let i = index" [formGroupName]="i">
       <label>Material</label>
-      <select formControlName="id_material">
-        <option *ngFor="let mat of materiales" [value]="mat.id">{{ mat.descripcion }}</option>
-      </select>
+      <input formControlName="desc_material" type="text" />
 
       <label>Cantidad</label>
       <input formControlName="cantidad" type="number" />
@@ -46,9 +44,7 @@
   <div formArrayName="servicios">
     <div *ngFor="let servicio of serviciosFormArray.controls; let i = index" [formGroupName]="i">
       <label>Servicio</label>
-      <select formControlName="id_servicio">
-        <option *ngFor="let serv of servicios" [value]="serv.id">{{ serv.descripcion }}</option>
-      </select>
+      <input formControlName="desc_servicio" type="text" />
 
       <label>Precio por Hora</label>
       <input formControlName="precio_x_hora" type="number" />
@@ -85,11 +81,6 @@
 
       <label>Moneda</label>
       <input formControlName="moneda" type="text" />
-
-      <label>Colaborador</label>
-      <select formControlName="id_usuario">
-        <option *ngFor="let colab of colaboradores" [value]="colab.id_usuario">{{ colab.nombre }}</option>
-      </select>
 
       <label>Área (Opcional)</label>
       <select formControlName="id_area">

@@ -46,19 +46,6 @@ export class CrearPresupuestoComponent implements OnInit {
 
     this.inicializarFormulario();
 
-    // Obtener materiales, servicios y colaboradores según id_empresa de sessionStorage
-    this.empresaService.listarMaterialesPorEmpresa(this.id_empresa).subscribe((data: any[]) => {
-      this.materiales = data;
-    });
-    this.empresaService.obtenerServiciosPorEmpresa(this.id_empresa).subscribe((data: any[]) => {
-      this.servicios = data;
-    });
-    this.usuarioService.obtenerUsuariosPorEmpresa(this.id_empresa).subscribe((data: any[]) => {
-      console.log(data)
-      // @ts-ignore
-      this.colaboradores = data.colaboradores;
-    });
-
     this.obraService.obtenerAreasPorObra(this.obraId).subscribe((data:any[]) =>{
       this.areas = data
     });
@@ -81,7 +68,7 @@ export class CrearPresupuestoComponent implements OnInit {
   // Agregar un material al presupuesto
   agregarMaterial() {
     const materialGroup = this.fb.group({
-      id_material: ['', Validators.required],
+      desc_material: ['', Validators.required],
       cantidad: [null, Validators.required],
       precio_x_unidad_medida: [null, Validators.required],
       unidad_medida: ['', Validators.required],
@@ -98,7 +85,7 @@ export class CrearPresupuestoComponent implements OnInit {
   // Agregar un servicio al presupuesto
   agregarServicio() {
     const servicioGroup = this.fb.group({
-      id_servicio: ['', Validators.required],
+      desc_servicio: ['', Validators.required],
       precio_x_hora: [null, Validators.required],
       horas: [null, Validators.required],
       moneda: ['', Validators.required],
@@ -119,7 +106,6 @@ export class CrearPresupuestoComponent implements OnInit {
       horas: [null, Validators.required],
       precio_x_hora: [null, Validators.required],
       moneda: ['', Validators.required],
-      id_usuario: ['', Validators.required],
       id_area: [''],
       monto_linea: [0]
     });

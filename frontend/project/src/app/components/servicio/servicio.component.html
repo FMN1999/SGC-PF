@@ -35,6 +35,25 @@
     <label for="moneda">Moneda:</label>
     <input id="moneda" [(ngModel)]="servicio.moneda" />
 
+    <label for="impuestos_total">Impuestos</label>
+    <input type="number" id="impuestos_total" [(ngModel)]="servicio.impuestos_total" name="impuestos_total">
+
+    <label for="moneda_impuestos">Moneda Impuestos</label>
+    <input type="text" id="moneda_impuestos" [(ngModel)]="servicio.moneda_impuestos" name="moneda_impuestos">
+
+    <label for="descripcion_impuestos">Descripción Impuestos</label>
+    <input type="text" id="descripcion_impuestos" [(ngModel)]="servicio.descripcion_impuestos" name="descripcion_impuestos">
+
+    <label for="otros_gastos">Otros Gastos</label>
+    <input type="number" id="otros_gastos" [(ngModel)]="servicio.otros_gastos" name="otros_gastos">
+
+    <label for="moneda_otros_gastos">Moneda Otros Gastos</label>
+    <input type="text" id="moneda_otros_gastos" [(ngModel)]="servicio.moneda_otros_gastos" name="moneda_otros_gastos">
+
+    <label for="descripcion_otros_gastos">Descripción Otros Gastos</label>
+    <input type="text" id="descripcion_otros_gastos" [(ngModel)]="servicio.descripcion_otros_gastos" name="descripcion_otros_gastos">
+
+
     <button (click)="updateServicio()">Guardar</button>
     <button (click)="cancelEditing()">Cancelar</button>
   </div>

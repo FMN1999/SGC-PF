@@ -14,6 +14,28 @@
   <label for="frecuencia_pago">Frecuencia de Pago</label>
   <input type="text" id="frecuencia_pago" [(ngModel)]="servicioData.frecuencia_pago" name="frecuencia_pago">
 
+  <label for="moneda">Moneda</label>
+  <input type="text" id="moneda" [(ngModel)]="servicioData.moneda" name="moneda">
+
+  <label for="impuestos_total">Impuestos</label>
+  <input type="number" id="impuestos_total" [(ngModel)]="servicioData.impuestos_total" name="impuestos_total">
+
+  <label for="moneda_impuestos">Moneda Impuestos</label>
+  <input type="text" id="moneda_impuestos" [(ngModel)]="servicioData.moneda_impuestos" name="moneda_impuestos">
+
+  <label for="descripcion_impuestos">Descripción Impuestos</label>
+  <input type="text" id="descripcion_impuestos" [(ngModel)]="servicioData.descripcion_impuestos" name="descripcion_impuestos">
+
+  <label for="otros_gastos">Otros Gastos</label>
+  <input type="number" id="otros_gastos" [(ngModel)]="servicioData.otros_gastos" name="otros_gastos">
+
+  <label for="moneda_otros_gastos">Moneda Otros Gastos</label>
+  <input type="text" id="moneda_otros_gastos" [(ngModel)]="servicioData.moneda_otros_gastos" name="moneda_otros_gastos">
+
+  <label for="descripcion_otros_gastos">Descripción Otros Gastos</label>
+  <input type="text" id="descripcion_otros_gastos" [(ngModel)]="servicioData.descripcion_otros_gastos" name="descripcion_otros_gastos">
+
+
   <button type="submit">Crear Servicio</button>
 </form>
 

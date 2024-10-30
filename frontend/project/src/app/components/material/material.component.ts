@@ -33,7 +33,13 @@ export class MaterialComponent implements OnInit {
       precio: [''],
       moneda: ['', Validators.required],
       fecha_caducidad: [''],
-      unidad_medida: ['']
+      unidad_medida: [''],
+      impuestos_total:[''],
+      moneda_impuestos: [''],
+      descripcion_impuestos: [''],
+      otros_gastos:[''],
+      moneda_otros_gastos:[''],
+      descripcion_otros_gastos: ['']
     });
   }
 
@@ -59,6 +65,7 @@ export class MaterialComponent implements OnInit {
     if (this.materialForm.valid) {
       const updatedMaterial = this.materialForm.value;
       const materialId = this.material.id;
+      console.log(updatedMaterial);
       this.proveedorService.updateMaterial(materialId, updatedMaterial).subscribe({
         next: () => {
           this.material = { ...this.material, ...updatedMaterial };  // Actualizar los datos en la vista

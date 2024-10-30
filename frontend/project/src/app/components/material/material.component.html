@@ -33,8 +33,26 @@
     <label for="unidad_medida">Unidad de Medida:</label>
     <input id="unidad_medida" formControlName="unidad_medida" type="text">
 
-    <button type="submit">Guardar Cambios</button>
-    <button type="button" (click)="toggleEditMode()">Cancelar</button>
+    <label for="impuestos_total">Impuestos:</label>
+  <input id="impuestos_total" formControlName="impuestos_total" name="impuestos_total" required type="number">
+
+  <label for="moneda_impuestos">Moneda Impuestos:</label>
+  <input id="moneda_impuestos" formControlName="moneda_impuestos" name="moneda_impuestos" required>
+
+  <label for="descripcion_impuestos">Descripción de Impuestos:</label>
+  <input id="descripcion_impuestos" formControlName="descripcion_impuestos" name="descripcion_impuestos" required>
+
+  <label for="otros_gastos">Otros gastos:</label>
+  <input id="otros_gastos" formControlName="otros_gastos" name="otros_gastos" required type="number">
+
+  <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
+  <input id="moneda_otros_gastos" formControlName="moneda_otros_gastos" name="moneda_otros_gastos" required>
+
+  <label for="descripcion_otros_gastos">Descripción de Otros Gastos:</label>
+  <input id="descripcion_otros_gastos" formControlName="descripcion_otros_gastos" name="descripcion_otros_gastos" required>
+
+  <button type="submit">Guardar Cambios</button>
+  <button type="button" (click)="toggleEditMode()">Cancelar</button>
   </form>
 </div>
 

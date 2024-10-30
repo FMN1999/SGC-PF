@@ -337,7 +337,6 @@ class MaterialView(View):
                 'marca': material.marca,
                 'precio': material.precio,
                 'moneda': material.moneda,
-                'fecha_caducidad': material.fecha_caducidad,
                 'unidad_medida': material.unidad_medida
             }
             return JsonResponse(material_data, status=200)
@@ -355,6 +354,7 @@ class MaterialView(View):
         try:
             # Obtener los datos enviados en el request
             data = json.loads(request.body)
+            print(data)
 
             # Llamar al método estático de MaterialData para actualizar el material
             updated_material = MaterialController.actualizar_material(material_id, data)

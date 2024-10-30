@@ -24,7 +24,13 @@ export class CrearMaterialComponent {
     marca: '',
     precio: 0,
     moneda: '',
-    fecha_desde_precio: ''
+    fecha_desde_precio: '',
+    impuestos_total: '',
+    moneda_impuestos: '',
+    descripcion_impuestos: '',
+    otros_gastos :'',
+    moneda_otros_gastos:'',
+    descripcion_otros_gastos: ''
   };
   mensajeExito = '';
   mensajeError = '';

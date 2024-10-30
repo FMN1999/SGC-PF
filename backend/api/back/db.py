@@ -176,15 +176,27 @@ class ProveedorData:
 
     @staticmethod
     def get_by_id(prov_id):
-        return Proveedor.objects.get(id=prov_id)
+        try:
+            return Proveedor.objects.get(id=prov_id)
+        except Exception as e:
+            print(f"Error al cargar proveedor: {e}")
+            raise
 
     @staticmethod
     def get_material_by_prov(prov: Proveedor):
-        return Material.objects.filter(id_proveedor=prov)
+        try:
+            return Material.objects.filter(id_proveedor=prov)
+        except Exception as e:
+            print(f"Error al cargar materiales: {e}")
+            raise
 
     @staticmethod
     def get_servicio_by_prov(prov: Proveedor):
-        return Servicio.objects.filter(id_proveedor=prov)
+        try:
+            return Servicio.objects.filter(id_proveedor=prov)
+        except Exception as e:
+            print(f"Error al cargar servicios: {e}")
+            raise
 
     @staticmethod
     def get_oferta_by_prov(prov: Proveedor):
@@ -294,7 +306,6 @@ class MaterialData:
     def crear_material(material_data, proveedor):
         try:
             material = Material(
-                fecha_caducidad=material_data.get('fecha_caducidad'),
                 tipo_material=material_data.get('tipo_material'),
                 unidad_medida=material_data.get('unidad_medida'),
                 descripcion=material_data.get('descripcion'),
@@ -302,7 +313,13 @@ class MaterialData:
                 precio=material_data.get('precio'),
                 moneda=material_data.get('moneda'),
                 fecha_desde_precio=material_data.get('fecha_desde_precio'),
-                id_proveedor=proveedor
+                id_proveedor=proveedor,
+                impuestos_total = material_data.get('impuestos_total'),
+                moneda_impuestos = material_data.get('moneda_impuestos'),
+                descripcion_impuestos = material_data.get('descripcion_impuestos'),
+                otros_gastos = material_data.get('otros_gastos'),
+                moneda_otros_gastos = material_data.get('moneda_otros_gastos'),
+                descripcion_otros_gastos = material_data.get('descripcion_otros_gastos')
             )
             material.save()
             return material
@@ -325,12 +342,22 @@ class MaterialData:
         material.marca = data.get('marca', material.marca)
         material.precio = data.get('precio', material.precio)
         material.moneda = data.get('moneda', material.moneda)
-        material.fecha_caducidad = data.get('fecha_caducidad', material.fecha_caducidad)
         material.unidad_medida = data.get('unidad_medida', material.unidad_medida)
+        material.impuestos_total = data.get('impuestos_total', material.impuestos_total)  # Quitando la coma
+        material.moneda_impuestos = data.get('moneda_impuestos', material.moneda_impuestos)  # Quitando la coma
+        material.descripcion_impuestos = data.get('descripcion_impuestos',
+                                                  material.descripcion_impuestos)  # Quitando la coma
+        material.otros_gastos = data.get('otros_gastos', material.otros_gastos)  # Quitando la coma
+        material.moneda_otros_gastos = data.get('moneda_otros_gastos', material.moneda_otros_gastos)  # Quitando la coma
+        material.descripcion_otros_gastos = data.get('descripcion_otros_gastos',
+                                                     material.descripcion_otros_gastos)  # Quitando la coma
 
         # Guardar los cambios en la base de datos
-        material.save()
-
+        try:
+            material.save()
+        except Exception as e:
+            print(f"Error al buscar material: {e}")
+            raise
         # Retornar el material actualizado (puedes convertirlo a dict si es necesario)
         return {
             'id': material.id,
@@ -338,7 +365,6 @@ class MaterialData:
             'marca': material.marca,
             'precio': material.precio,
             'moneda': material.moneda,
-            'fecha_caducidad': material.fecha_caducidad,
             'unidad_medida': material.unidad_medida
         }
 
@@ -366,7 +392,15 @@ class ServicioData:
                 unidad_medida=servicio_data.get('unidad_medida'),
                 monto_x_frecuencia=servicio_data.get('monto_x_frecuencia'),
                 frecuencia_pago=servicio_data.get('frecuencia_pago'),
-                id_proveedor=proveedor
+                id_proveedor=proveedor,
+                moneda=servicio_data.get('moneda'),
+                impuestos_total = servicio_data.get('impuestos_total'),
+                moneda_impuestos = servicio_data.get('moneda_impuestos'),
+                descripcion_impuestos = servicio_data.get('descripcion_impuestos'),
+                otros_gastos = servicio_data.get('otros_gastos'),
+                moneda_otros_gastos = servicio_data.get('moneda_otros_gastos'),
+                descripcion_otros_gastos = servicio_data.get('descripcion_otros_gastos')
+
             )
             servicio.save()
             return servicio
@@ -391,10 +425,20 @@ class ServicioData:
         servicio.unidad_medida = data.get('unidad_medida')
         servicio.frecuencia_pago = data.get('frecuencia_pago')
         servicio.monto_x_frecuencia = data.get('monto_x_frecuencia')
+        servicio.moneda = data.get('moneda')
+        servicio.impuestos_total = data.get('impuestos_total')
+        servicio.moneda_impuestos = data.get('moneda_impuestos')
+        servicio.descripcion_impuestos = data.get('descripcion_impuestos')
+        servicio.otros_gastos = data.get('otros_gastos')
+        servicio.moneda_otros_gastos = data.get('moneda_otros_gastos')
+        servicio.descripcion_otros_gastos = data.get('descripcion_otros_gastos')
 
         # Guardar los cambios en la base de datos
-        servicio.save()
-
+        try:
+            servicio.save()
+        except Exception as e:
+            print(f"Error al buscar servicio: {e}")
+            raise
         # Retornar el servicio actualizado
         return {
             'id': servicio.id,

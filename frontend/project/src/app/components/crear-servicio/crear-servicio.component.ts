@@ -26,7 +26,14 @@ export class CrearServicioComponent implements OnInit {
     precio_x_unidad: 0,
     unidad_medida: '',
     monto_x_frecuencia: 0,
-    frecuencia_pago: ''
+    frecuencia_pago: '',
+    moneda:'',
+    impuestos_total: 0,
+    moneda_impuestos:'',
+    descripcion_impuestos:'',
+    otros_gastos:0,
+    moneda_otros_gastos:'',
+    descripcion_otros_gastos:''
   };
 
   constructor(

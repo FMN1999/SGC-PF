@@ -150,12 +150,14 @@ class ProveedorController:
             materiales = ProveedorData.get_material_by_prov(proveedor)
             servicios = ProveedorData.get_servicio_by_prov(proveedor)
             ofertas = ProveedorData.get_oferta_by_prov(proveedor)
+            print(materiales)
+            print(servicios)
+            print(ofertas)
 
             # Convertir los objetos a diccionarios
             materiales_list = [
                 {
                     'id': material.id,
-                    'fecha_caducidad': material.fecha_caducidad,
                     'tipo_material': material.tipo_material,
                     'unidad_medida': material.unidad_medida,
                     'descripcion': material.descripcion,
@@ -518,11 +520,10 @@ class PresupuestoController:
 
         # Procesar materiales
         for material in data.get('materiales', []):
-            mat = MaterialData.get_by_id(material['id_material'])
-            area = AreaData.get_by_id(material.get('id_area')) if material.get('id_area') is not '' else None
+            area = AreaData.get_by_id(material.get('id_area')) if material.get('id_area') != '' else None
             Presupuesto_Material.objects.create(
                 id_presupuesto=presupuesto,
-                id_material=mat,
+                desc_material=material['desc_material'],
                 cantidad=material['cantidad'],
                 precio_x_unidad_medida=material['precio_x_unidad_medida'],
                 unidad_medida=material['unidad_medida'],
@@ -532,13 +533,12 @@ class PresupuestoController:
 
         # Procesar servicios
         for serv in data.get('servicios', []):
-            servicio = ServicioData.get_by_id(serv.get('id_servicio'))
-            area = AreaData.get_by_id(serv.get('id_area')) if serv.get('id_area') is not '' else None
+            area = AreaData.get_by_id(serv.get('id_area')) if serv.get('id_area') != '' else None
             try:
                 Presupuesto_Servicio.objects.create(
                     id=random.randint(0000000, 9999999),
                     id_presupuesto=presupuesto,
-                    servicio=servicio,
+                    desc_servicio=serv.get('desc_servicio'),
                     precio_x_hora=serv['precio_x_hora'],
                     horas=serv['horas'],
                     moneda=serv['moneda'],
@@ -550,8 +550,7 @@ class PresupuestoController:
                 raise
         # Procesar trabajadores
         for trabajador in data.get('trabajadores', []):
-            usuario = UsuarioData.get_by_id(trabajador.get('id_usuario'))
-            area = AreaData.get_by_id(trabajador.get('id_area')) if trabajador.get('id_area') is not '' else None
+            area = AreaData.get_by_id(trabajador.get('id_area')) if trabajador.get('id_area') != '' else None
             try:
                 Presupuesto_Trabajador.objects.create(
                     id=random.randint(0000000, 9999999),
@@ -560,7 +559,6 @@ class PresupuestoController:
                     horas=trabajador['horas'],
                     precio_x_hora=trabajador['precio_x_hora'],
                     moneda=trabajador['moneda'],
-                    id_usuario=usuario,
                     id_area=area,
                     monto_linea=trabajador['monto_linea']
                 )
