@@ -521,3 +521,59 @@ class AreaData:
     def delete(area: Area):
         area.delete()
 
+
+class PresupuestoData:
+    @staticmethod
+    def get_by_obra(id_obra):
+        try:
+            print('entre')
+            return Presupuesto.objects.filter(id_obra=id_obra)
+        except Exception as e:
+            print(f"Error al obtener presupuestos: {str(e)}")
+            raise
+
+    @staticmethod
+    def get_presupuesto_detalles(id_presupuesto):
+        try:
+            # Obtener el presupuesto
+            presupuesto = Presupuesto.objects.get(id=id_presupuesto)
+
+            # Obtener los materiales asociados al presupuesto
+            materiales = Presupuesto_Material.objects.filter(id_presupuesto=id_presupuesto).values(
+                'id', 'cantidad', 'precio_x_unidad_medida', 'unidad_medida',
+                'monto_linea', 'desc_material', 'id_area'
+            )
+
+            # Obtener los servicios asociados al presupuesto
+            servicios = Presupuesto_Servicio.objects.filter(id_presupuesto=id_presupuesto).values(
+                'id', 'precio_x_hora', 'horas', 'moneda',
+                'monto_linea', 'desc_servicio', 'id_area'
+            )
+
+            # Obtener los trabajadores asociados al presupuesto
+            trabajadores = Presupuesto_Trabajador.objects.filter(id_presupuesto=id_presupuesto).values(
+                'id', 'puesto', 'horas', 'precio_x_hora', 'moneda',
+                'monto_linea', 'id_area'
+            )
+
+            # Estructurar los datos en un diccionario para facilitar la conversión a JSON
+            presupuesto_data = {
+                "id": presupuesto.id,
+                "total": presupuesto.total,
+                "moneda": presupuesto.moneda,
+                "fecha_creacion": presupuesto.fecha_creacion,
+                "observaciones": presupuesto.observaciones,
+                "estado": presupuesto.estado,
+                "aprobado": presupuesto.aprobado,
+                "porc_inflacion": presupuesto.porc_inflacion,
+                "materiales": list(materiales),
+                "servicios": list(servicios),
+                "trabajadores": list(trabajadores)
+            }
+            return presupuesto_data
+
+        except Presupuesto.DoesNotExist:
+            raise ValueError("El presupuesto solicitado no existe.")
+        except Exception as e:
+            print(f"Error al obtener los detalles del presupuesto: {str(e)}")
+            raise

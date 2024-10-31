@@ -233,6 +233,7 @@ class Presupuesto(models.Model):
     observaciones = models.CharField()
     estado = models.CharField()
     aprobado = models.BooleanField()
+    porc_inflacion = models.FloatField()
 
     class Meta:
         db_table = 'Presupuesto'
@@ -241,7 +242,6 @@ class Presupuesto(models.Model):
 class Presupuesto_Material(models.Model):
     id = models.AutoField(primary_key=True)
     id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')
-    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
     cantidad = models.FloatField()
     precio_x_unidad_medida = models.FloatField()
     unidad_medida = models.CharField()
@@ -255,7 +255,6 @@ class Presupuesto_Material(models.Model):
 
 class Presupuesto_Servicio(models.Model):
     id = models.AutoField(primary_key=True)
-    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, db_column='servicio')
     precio_x_hora = models.FloatField()
     horas = models.FloatField()
     moneda = models.CharField()
@@ -274,7 +273,6 @@ class Presupuesto_Trabajador(models.Model):
     horas = models.FloatField()
     precio_x_hora = models.FloatField()
     moneda = models.CharField()
-    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
     id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column="id_area")
     monto_linea = models.FloatField()
     id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')

@@ -1,0 +1,50 @@
+<div *ngIf="presupuesto">
+  <h2>Detalles del Presupuesto</h2>
+
+  <!-- Información general del presupuesto -->
+  <div class="presupuesto-info">
+    <p><strong>Total:</strong> {{ presupuesto.total }} {{ presupuesto.moneda }}</p>
+    <p><strong>Fecha de Creación:</strong> {{ presupuesto.fecha_creacion }}</p>
+    <p><strong>Observaciones:</strong> {{ presupuesto.observaciones }}</p>
+    <p><strong>Estado:</strong> {{ presupuesto.estado }}</p>
+    <p><strong>Aprobado:</strong> {{ presupuesto.aprobado ? 'Sí' : 'No' }}</p>
+    <p><strong>Porcentaje de Inflación:</strong> {{ presupuesto.porc_inflacion }}%</p>
+  </div>
+
+  <!-- Sección de materiales -->
+  <h3>Materiales</h3>
+  <div *ngIf="materiales.length > 0; else noMateriales">
+    <ul>
+      <li *ngFor="let material of materiales">
+        {{ material.desc_material }} - {{ material.cantidad }} {{ material.unidad_medida }} a {{ material.precio_x_unidad_medida }} por unidad
+        <p><strong>Monto Línea:</strong> {{ material.monto_linea }}</p>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noMateriales><p>No hay materiales registrados.</p></ng-template>
+
+  <!-- Sección de servicios -->
+  <h3>Servicios</h3>
+  <div *ngIf="servicios.length > 0; else noServicios">
+    <ul>
+      <li *ngFor="let servicio of servicios">
+        {{ servicio.desc_servicio }} - {{ servicio.horas }} horas a {{ servicio.precio_x_hora }} {{ servicio.moneda }} por hora
+        <p><strong>Monto Línea:</strong> {{ servicio.monto_linea }}</p>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noServicios><p>No hay servicios registrados.</p></ng-template>
+
+  <!-- Sección de trabajadores -->
+  <h3>Trabajadores</h3>
+  <div *ngIf="trabajadores.length > 0; else noTrabajadores">
+    <ul>
+      <li *ngFor="let trabajador of trabajadores">
+        {{ trabajador.puesto }} - {{ trabajador.horas }} horas a {{ trabajador.precio_x_hora }} {{ trabajador.moneda }} por hora
+        <p><strong>Monto Línea:</strong> {{ trabajador.monto_linea }}</p>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noTrabajadores><p>No hay trabajadores registrados.</p></ng-template>
+</div>
+

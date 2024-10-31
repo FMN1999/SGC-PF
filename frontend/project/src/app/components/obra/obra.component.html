@@ -131,6 +131,24 @@
     <p>No hay áreas registradas para esta obra.</p>
   </ng-template>
 
+  <h3>Presupuestos de la Obra</h3>
+  <div *ngIf="presupuestos.length > 0; else noPresupuestos">
+    <ul>
+      <li *ngFor="let presupuesto of presupuestos">
+        <strong>Estado:</strong> {{ presupuesto.estado }} <br />
+        <strong>Observaciones:</strong> {{ presupuesto.observaciones }} <br />
+        <strong>Fecha Creación:</strong> {{ presupuesto.fecha_creacion | date }} <br />
+        <strong>Monto Total:</strong> {{ presupuesto.total }} {{ presupuesto.moneda }}
+        <a [routerLink]="['/presupuestos', presupuesto.id]">
+          Ver detalles
+        </a>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noPresupuestos>
+    <p>No hay presupuestos asociados a esta obra.</p>
+  </ng-template>
+
   <button class="btn btn-primary mt-3" (click)="crearPresupuesto()">Crear presupuesto</button>
 
   <h3>Documentos de la Obra</h3>

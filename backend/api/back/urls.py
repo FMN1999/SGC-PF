@@ -44,5 +44,6 @@ urlpatterns = [
     path('documentos/obra/<int:id_obra>/', views.DocumentoView.as_view(), name='obtener_documentos_por_obra'),
     path('documentos/<int:id_documento>/eliminar/', views.DocumentoView.as_view(), name='eliminar_documento'),
     path('crear-presupuesto/', views.PresupuestoView.as_view(), name='crear_presupuesto'),
-
+    path('obras/<int:id_obra>/presupuestos/', views.PresupuestosView.as_view(), name='presupuestos_por_obra'),
+    path('presupuesto/<int:id_presupuesto>/', views.PresupuestoView.as_view(), name='presupuestos_por_obra'),
 ]

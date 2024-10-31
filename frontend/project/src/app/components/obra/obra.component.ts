@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
 import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 
@@ -13,7 +13,8 @@ import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
     NgIf,
     NgForOf,
     NgOptimizedImage,
-    DatePipe
+    DatePipe,
+    RouterLink
   ],
   styleUrls: ['./obra.component.scss']
 })
@@ -27,6 +28,7 @@ export class ObraComponent implements OnInit {
   notas: any[] = [];
   documentoForm!: FormGroup;
   documentos: any[] = []; // Lista de documentos para mostrar
+  presupuestos: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -80,6 +82,14 @@ export class ObraComponent implements OnInit {
     });
     this.cargarNotas();  // Cargar las notas de la obra
     this.cargarDocumentos();
+    this.obraService.getPresupuestosPorObra(this.obra_id).subscribe(
+    (data) => {
+      this.presupuestos = data;
+    },
+    (error) => {
+      console.error('Error al obtener presupuestos:', error);
+    }
+  );
   }
 
   cargarObra(): void {

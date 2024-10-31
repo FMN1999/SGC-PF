@@ -704,3 +704,38 @@ class PresupuestoView(View):
         data = json.loads(request.body)
         presupuesto = PresupuestoController.crear_presupuesto(data)
         return JsonResponse({'message': 'Presupuesto creado exitosamente', 'presupuesto_id': presupuesto.id})
+
+    def get(self, request, id_presupuesto):
+        try:
+            presupuesto = PresupuestoController.get_by_id(id_presupuesto)
+            if presupuesto:
+                return JsonResponse(presupuesto, safe=False, status=200)
+            else:
+                return JsonResponse({'error': 'Presupuesto no encontrado'}, status=404)
+        except Exception as e:
+            print(f"Error al obtener detalles del presupuesto: {e}")
+            return JsonResponse({'error': 'Error al obtener detalles'}, status=500)
+
+
+class PresupuestosView(View):
+    def get(self, request, id_obra):
+        try:
+            print('entre')
+            print(id_obra)
+            presupuestos = PresupuestoController.get_by_obra(id_obra)
+            presupuestos_data = [
+                {
+                    "id": pres.id,
+                    "observaciones": pres.observaciones,
+                    "fecha_creacion": pres.fecha_creacion,
+                    "total": pres.total,
+                    "moneda": pres.moneda,
+                    "estado": pres.estado
+                } for pres in presupuestos
+            ]
+            # Convertir a lista y retornar como JSON
+            return JsonResponse(presupuestos_data, safe=False, status=200)
+
+        except Exception as e:
+            print(f"Error al obtener presupuestos: {e}")
+            return JsonResponse({'error': 'Error al obtener presupuestos'}, status=500)

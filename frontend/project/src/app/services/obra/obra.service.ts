@@ -70,5 +70,9 @@ export class ObraService {
   eliminarDocumento(id_documento: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}documentos/${id_documento}/eliminar/`);
   }
+
+  getPresupuestosPorObra(idObra: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}obras/${idObra}/presupuestos/`);
+  }
 }
 

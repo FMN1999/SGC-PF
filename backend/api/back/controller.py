@@ -505,6 +505,7 @@ class PresupuestoController:
         total = data.get('total')
         moneda = data.get('moneda')
         observaciones = data.get('observaciones', '')
+        porc_inflacion= data.get('porc_inflacion',0)
 
         # Crear el presupuesto principal
         presupuesto = Presupuesto.objects.create(
@@ -515,7 +516,8 @@ class PresupuestoController:
             fecha_creacion=date.today(),
             observaciones=observaciones,
             estado='Nuevo',
-            aprobado=False
+            aprobado=False,
+            porc_inflacion=porc_inflacion
         )
 
         # Procesar materiales
@@ -567,3 +569,11 @@ class PresupuestoController:
                 raise
 
         return presupuesto
+
+    @staticmethod
+    def get_by_obra(id_obra):
+        return PresupuestoData.get_by_obra(id_obra)
+
+    @staticmethod
+    def get_by_id(id_presupuesto):
+        return PresupuestoData.get_presupuesto_detalles(id_presupuesto)

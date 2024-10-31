@@ -59,6 +59,7 @@ export class CrearPresupuestoComponent implements OnInit {
       observaciones: [''],
       estado: ['Nuevo'],  // Estado inicial
       aprobado: [false],
+      porc_inflacion: [null, Validators.required],
       materiales: this.fb.array([]),
       servicios: this.fb.array([]),
       trabajadores: this.fb.array([])
