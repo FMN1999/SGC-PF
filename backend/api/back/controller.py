@@ -577,3 +577,67 @@ class PresupuestoController:
     @staticmethod
     def get_by_id(id_presupuesto):
         return PresupuestoData.get_presupuesto_detalles(id_presupuesto)
+
+    @staticmethod
+    def update_presupuesto(id_presupuesto, data):
+        try:
+            # Actualizar los datos del presupuesto
+            presupuesto_actualizado = PresupuestoData.update(id_presupuesto, data)
+
+            # Actualizar Materiales
+            materiales_data = data.get("materiales", [])
+            PresupuestoData.update_materiales(id_presupuesto, materiales_data)
+
+            # Actualizar Servicios
+            servicios_data = data.get("servicios", [])
+            PresupuestoData.update_servicios(id_presupuesto, servicios_data)
+
+            # Actualizar Trabajadores
+            trabajadores_data = data.get("trabajadores", [])
+            PresupuestoData.update_trabajadores(id_presupuesto, trabajadores_data)
+
+            return presupuesto_actualizado
+        except Exception as e:
+            print(f"Error al actualizar los detalles del presupuesto: {str(e)}")
+            raise
+
+    @staticmethod
+    def get_materiales_por_presupuesto(id_presupuesto):
+        presupuesto_materiales = Presupuesto_Material.objects.filter(id_presupuesto=id_presupuesto)
+        return [
+            {
+                "cantidad": pm.cantidad,
+                "precio_total": pm.precio_total,
+                "unidad_medida": pm.unidad_medida,
+                "id_material": pm.id_material.id
+            }
+            for pm in presupuesto_materiales
+        ]
+
+
+# controller.py
+class CompraController:
+    @staticmethod
+    def crear_solicitud_compra(data):
+        compra = Compra(
+            monto_total=data['monto_total'],
+            fecha_compra=data['fecha_compra'],
+            id_proveedor=data['id_proveedor'],
+            id_obra=data['id_obra'],
+            costo_transporte=data['costo_transporte'],
+            moneda_transporte=data['moneda_transporte'],
+            estado='Solicitado',
+            id_solicitante=data['id_solicitante'],
+        )
+        compra.save()
+
+        for linea_data in data['lineasCompra']:
+            LineaCompra.objects.create(
+                nr_posicion=linea_data['nr_posicion'],
+                cantidad=linea_data['cantidad'],
+                precio_total=linea_data['precio_total'],
+                id_material=linea_data['id_material'],
+                unidad_medida=linea_data['unidad_medida'],
+                id_compra=compra
+            )
+        return compra

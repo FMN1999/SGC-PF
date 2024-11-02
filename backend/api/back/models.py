@@ -281,3 +281,72 @@ class Presupuesto_Trabajador(models.Model):
     class Meta:
         db_table = 'Presupuesto_Trabajador'
 
+
+class Compra(models.Model):
+    id = models.AutoField(primary_key=True)
+    monto_total = models.FloatField()
+    fecha_compra = models.DateField()
+    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, db_column='id_proveedor')
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+    costo_transporte = models.FloatField()
+    moneda_transporte = models.CharField()
+    estado = models.CharField()
+    id_solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_solicitante', related_name='id_solicitante')
+    id_aprobador = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_aprobador', related_name='id_aprobador')
+
+    class Meta:
+        db_table = 'Compra'
+
+
+class Almacen(models.Model):
+    id = models.AutoField(primary_key=True)
+    descripcion = models.CharField()
+    id_empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, db_column='id_empresa')
+    contacto = models.CharField()
+
+    class Meta:
+        db_table = 'Almacen'
+
+
+class Herramienta(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
+    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
+    descripcion = models.CharField()
+    ubicacion = models.CharField()
+    marca = models.CharField()
+
+    class Meta:
+        db_table = 'Herramienta'
+
+
+class Vehiculo(models.Model):
+    id = models.AutoField(primary_key=True)
+    patente = models.CharField()
+    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
+    tipo = models.CharField()
+    marca = models.CharField()
+    modelo = models.CharField()
+    precio_x_hora = models.FloatField()
+    id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
+
+    class Meta:
+        db_table = 'Vehiculo'
+
+
+class LineaCompra(models.Model):
+    id = models.AutoField(primary_key=True)
+    nr_posicion = models.CharField()
+    cantidad = models.FloatField()
+    lote = models.CharField()
+    nro_serie = models.CharField()
+    precio_total = models.FloatField()
+    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
+    id_herramienta = models.ForeignKey(Herramienta, on_delete=models.CASCADE, db_column='id_herramienta')
+    unidad_medida = models.CharField()
+    id_presupuesto_material = models.ForeignKey(Presupuesto_Material, on_delete=models.CASCADE, db_column='id_presupuesto_material')
+    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
+    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
+
+    class Meta:
+        db_table = 'LineaCompra'

@@ -716,6 +716,15 @@ class PresupuestoView(View):
             print(f"Error al obtener detalles del presupuesto: {e}")
             return JsonResponse({'error': 'Error al obtener detalles'}, status=500)
 
+    def put(self, request, id_presupuesto):
+        try:
+            data = json.loads(request.body)
+            # Llamar al controlador para actualizar el presupuesto
+            resultado = PresupuestoController.update_presupuesto(id_presupuesto, data)
+            return JsonResponse({"mensaje": "Presupuesto actualizado correctamente"}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
 
 class PresupuestosView(View):
     def get(self, request, id_obra):
@@ -739,3 +748,51 @@ class PresupuestosView(View):
         except Exception as e:
             print(f"Error al obtener presupuestos: {e}")
             return JsonResponse({'error': 'Error al obtener presupuestos'}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PresupuestoMaterialView(View):
+    def delete(self, request, id):
+        try:
+            material = Presupuesto_Material.objects.get(id=id)
+            material.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Presupuesto_Material.DoesNotExist:
+            return JsonResponse({"error": "Material not found"}, status=404)
+
+    def get(self, request, id_presupuesto):
+        materiales = PresupuestoController.get_materiales_por_presupuesto(id_presupuesto)
+        return JsonResponse(materiales, safe=False)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PresupuestoServicioView(View):
+    def delete(self, request, id):
+        try:
+            servicio = Presupuesto_Servicio.objects.get(id=id)
+            servicio.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Presupuesto_Servicio.DoesNotExist:
+            return JsonResponse({"error": "Servicio not found"}, status=404)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PresupuestoTrabajadorView(View):
+    def delete(self, request, id):
+        try:
+            trabajador = Presupuesto_Trabajador.objects.get(id=id)
+            trabajador.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Presupuesto_Trabajador.DoesNotExist:
+            return JsonResponse({"error": "Trabajador not found"}, status=404)
+        
+
+@method_decorator(csrf_exempt, name='dispatch')
+
+class CompraView(View):
+    @staticmethod
+    def post(request):
+        data = json.loads(request.body)
+        compra = CompraController.crear_solicitud_compra(data)
+        return JsonResponse({'compra_id': compra.id}, status=201)
+

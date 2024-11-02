@@ -46,4 +46,10 @@ urlpatterns = [
     path('crear-presupuesto/', views.PresupuestoView.as_view(), name='crear_presupuesto'),
     path('obras/<int:id_obra>/presupuestos/', views.PresupuestosView.as_view(), name='presupuestos_por_obra'),
     path('presupuesto/<int:id_presupuesto>/', views.PresupuestoView.as_view(), name='presupuestos_por_obra'),
+    path('presupuestos/<int:id_presupuesto>/actualizar/', views.PresupuestoView.as_view(), name='presupuestos_por_obra'),
+    path('presupuesto-material/<int:id>/eliminar/', views.PresupuestoMaterialView.as_view(), name='eliminar_material'),
+    path('presupuesto-servicio/<int:id>/eliminar/', views.PresupuestoServicioView.as_view(), name='eliminar_servicio'),
+    path('presupuesto-trabajador/<int:id>/eliminar/', views.PresupuestoTrabajadorView.as_view(), name='eliminar_trabajador'),
+    path('presupuesto/<int:id_presupuesto>/materiales/', views.PresupuestoMaterialView.as_view(), name='materiales_por_presupuesto')
+
 ]

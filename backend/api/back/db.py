@@ -577,3 +577,99 @@ class PresupuestoData:
         except Exception as e:
             print(f"Error al obtener los detalles del presupuesto: {str(e)}")
             raise
+
+    @staticmethod
+    def update(id_presupuesto, data):
+        presupuesto = Presupuesto.objects.get(id=id_presupuesto)
+        presupuesto.total = data.get('total', presupuesto.total)
+        presupuesto.moneda = data.get('moneda', presupuesto.moneda)
+        presupuesto.observaciones = data.get('observaciones', presupuesto.observaciones)
+        presupuesto.porc_inflacion = data.get('porc_inflacion', presupuesto.porc_inflacion)
+        presupuesto.save()
+        return presupuesto
+
+    @staticmethod
+    def update_materiales(id_presupuesto, materiales_data):
+        try:
+            # Eliminar materiales que ya no están en el presupuesto
+            existing_material_ids = [m['id'] for m in materiales_data if 'id' in m]
+            Presupuesto_Material.objects.filter(id_presupuesto=id_presupuesto).exclude(
+                id__in=existing_material_ids).delete()
+
+            # Actualizar o crear materiales
+            for material in materiales_data:
+                if 'id' in material:
+                    # Actualizar material existente
+                    material_instance = Presupuesto_Material.objects.get(id=material['id'], id_presupuesto=id_presupuesto)
+                    material_instance.cantidad = material.get('cantidad', material_instance.cantidad)
+                    material_instance.precio_x_unidad_medida = material.get('precio_x_unidad_medida',
+                                                                            material_instance.precio_x_unidad_medida)
+                    material_instance.unidad_medida = material.get('unidad_medida', material_instance.unidad_medida)
+                    material_instance.monto_linea = material.get('monto_linea', material_instance.monto_linea)
+                    material_instance.desc_material = material.get('desc_material', material_instance.desc_material)
+                    material_instance.save()
+                else:
+                    monto_linea = material['precio_x_unidad_medida'] * material['cantidad']
+                    Presupuesto_Material.objects.create(
+                        id_presupuesto_id=id_presupuesto,
+                        cantidad=material['cantidad'],
+                        precio_x_unidad_medida=material['precio_x_unidad_medida'],
+                        unidad_medida=material['unidad_medida'],
+                        monto_linea=monto_linea,
+                        desc_material=material['desc_material']
+                    )
+        except Exception as e:
+            print(f"Error al actualizar los detalles del presupuesto_material: {str(e)}")
+            raise
+
+    @staticmethod
+    def update_servicios(id_presupuesto, servicios_data):
+        existing_service_ids = [s['id'] for s in servicios_data if 'id' in s]
+        Presupuesto_Servicio.objects.filter(id_presupuesto=id_presupuesto).exclude(id__in=existing_service_ids).delete()
+
+        for servicio in servicios_data:
+            if 'id' in servicio:
+                servicio_instance = Presupuesto_Servicio.objects.get(id=servicio['id'], id_presupuesto=id_presupuesto)
+                servicio_instance.precio_x_hora = servicio.get('precio_x_hora', servicio_instance.precio_x_hora)
+                servicio_instance.horas = servicio.get('horas', servicio_instance.horas)
+                servicio_instance.moneda = servicio.get('moneda', servicio_instance.moneda)
+                servicio_instance.monto_linea = servicio.get('monto_linea', servicio_instance.monto_linea)
+                servicio_instance.desc_servicio = servicio.get('desc_servicio', servicio_instance.desc_servicio)
+                servicio_instance.save()
+            else:
+                monto_linea = servicio['precio_x_hora'] * servicio['horas']
+                Presupuesto_Servicio.objects.create(
+                    id_presupuesto_id=id_presupuesto,
+                    precio_x_hora=servicio['precio_x_hora'],
+                    horas=servicio['horas'],
+                    moneda=servicio['moneda'],
+                    monto_linea=monto_linea,
+                    desc_servicio=servicio['desc_servicio']
+                )
+
+    @staticmethod
+    def update_trabajadores(id_presupuesto, trabajadores_data):
+        existing_worker_ids = [t['id'] for t in trabajadores_data if 'id' in t]
+        Presupuesto_Trabajador.objects.filter(id_presupuesto=id_presupuesto).exclude(
+            id__in=existing_worker_ids).delete()
+
+        for trabajador in trabajadores_data:
+            if 'id' in trabajador:
+                trabajador_instance = Presupuesto_Trabajador.objects.get(id=trabajador['id'],
+                                                                         id_presupuesto=id_presupuesto)
+                trabajador_instance.puesto = trabajador.get('puesto', trabajador_instance.puesto)
+                trabajador_instance.horas = trabajador.get('horas', trabajador_instance.horas)
+                trabajador_instance.precio_x_hora = trabajador.get('precio_x_hora', trabajador_instance.precio_x_hora)
+                trabajador_instance.moneda = trabajador.get('moneda', trabajador_instance.moneda)
+                trabajador_instance.monto_linea = trabajador.get('monto_linea', trabajador_instance.monto_linea)
+                trabajador_instance.save()
+            else:
+                monto_linea = trabajador['horas'] * trabajador['precio_x_hora']
+                Presupuesto_Trabajador.objects.create(
+                    id_presupuesto_id=id_presupuesto,
+                    puesto=trabajador['puesto'],
+                    horas=trabajador['horas'],
+                    precio_x_hora=trabajador['precio_x_hora'],
+                    moneda=trabajador['moneda'],
+                    monto_linea=monto_linea
+                )

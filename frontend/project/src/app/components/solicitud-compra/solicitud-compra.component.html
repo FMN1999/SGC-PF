@@ -1,0 +1,43 @@
+<div *ngIf="compraForm">
+  <h2>Solicitud de Compra</h2>
+
+  <form [formGroup]="compraForm" (ngSubmit)="onSubmit()">
+    <label for="monto_total">Monto Total:</label>
+    <input id="monto_total" formControlName="monto_total" type="number" />
+
+    <label for="fecha_compra">Fecha de Compra:</label>
+    <input id="fecha_compra" formControlName="fecha_compra" type="date" />
+
+    <label for="costo_transporte">Costo Transporte:</label>
+    <input id="costo_transporte" formControlName="costo_transporte" type="number" />
+
+    <label for="moneda_transporte">Moneda Transporte:</label>
+    <input id="moneda_transporte" formControlName="moneda_transporte" type="text" />
+
+    <label for="estado">Estado:</label>
+    <input id="estado" formControlName="estado" type="text" value="Solicitado" readonly />
+
+    <!-- Sección de Materiales -->
+    <h3>Materiales</h3>
+    <p *ngIf="idPresupuesto">Cargando materiales del presupuesto...</p>
+    <div formArrayName="lineasCompra">
+      <div *ngFor="let linea of lineasCompra.controls; let i = index" [formGroupName]="i" class="linea-compra">
+        <label>Cantidad:</label>
+        <input formControlName="cantidad" type="number" />
+
+        <label>Precio Total:</label>
+        <input formControlName="precio_total" type="number" />
+
+        <label>Unidad de Medida:</label>
+        <input formControlName="unidad_medida" type="text" />
+
+        <!-- Botón para eliminar línea de compra -->
+        <button type="button" (click)="eliminarLineaCompra(i)">Eliminar</button>
+      </div>
+    </div>
+
+    <!-- Botones para agregar y confirmar -->
+    <button type="button" (click)="agregarLineaCompra()">Agregar Material</button>
+    <button type="submit" [disabled]="compraForm.invalid">Confirmar Solicitud</button>
+  </form>
+</div>

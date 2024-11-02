@@ -1,7 +1,5 @@
 <div *ngIf="presupuesto">
   <h2>Detalles del Presupuesto</h2>
-
-  <!-- Información general del presupuesto -->
   <div class="presupuesto-info">
     <p><strong>Total:</strong> {{ presupuesto.total }} {{ presupuesto.moneda }}</p>
     <p><strong>Fecha de Creación:</strong> {{ presupuesto.fecha_creacion }}</p>
@@ -10,12 +8,16 @@
     <p><strong>Aprobado:</strong> {{ presupuesto.aprobado ? 'Sí' : 'No' }}</p>
     <p><strong>Porcentaje de Inflación:</strong> {{ presupuesto.porc_inflacion }}%</p>
   </div>
+  <button *ngIf="presupuesto.estado === 'Nuevo' && !idEditar" type="button" (click)="editar()">Editar</button>
+  <button *ngIf="presupuesto.estado === 'Nuevo' && idEditar " type="button" (click)="editar()">Cancelar</button>
+  <button (click)="solicitarMateriales()">Solicitar materiales</button>
+
 
   <!-- Sección de materiales -->
   <h3>Materiales</h3>
   <div *ngIf="materiales.length > 0; else noMateriales">
     <ul>
-      <li *ngFor="let material of materiales">
+      <li *ngFor="let material of materiales_data">
         {{ material.desc_material }} - {{ material.cantidad }} {{ material.unidad_medida }} a {{ material.precio_x_unidad_medida }} por unidad
         <p><strong>Monto Línea:</strong> {{ material.monto_linea }}</p>
       </li>
@@ -27,7 +29,7 @@
   <h3>Servicios</h3>
   <div *ngIf="servicios.length > 0; else noServicios">
     <ul>
-      <li *ngFor="let servicio of servicios">
+      <li *ngFor="let servicio of servicios_data">
         {{ servicio.desc_servicio }} - {{ servicio.horas }} horas a {{ servicio.precio_x_hora }} {{ servicio.moneda }} por hora
         <p><strong>Monto Línea:</strong> {{ servicio.monto_linea }}</p>
       </li>
@@ -39,12 +41,69 @@
   <h3>Trabajadores</h3>
   <div *ngIf="trabajadores.length > 0; else noTrabajadores">
     <ul>
-      <li *ngFor="let trabajador of trabajadores">
+      <li *ngFor="let trabajador of trabajadores_data">
         {{ trabajador.puesto }} - {{ trabajador.horas }} horas a {{ trabajador.precio_x_hora }} {{ trabajador.moneda }} por hora
         <p><strong>Monto Línea:</strong> {{ trabajador.monto_linea }}</p>
       </li>
     </ul>
   </div>
   <ng-template #noTrabajadores><p>No hay trabajadores registrados.</p></ng-template>
+
+  <div *ngIf="presupuesto.estado === 'Nuevo' && idEditar">
+    <h3>Editar Presupuesto</h3>
+    <form [formGroup]="presupuestoForm" (ngSubmit)="onSubmit()">
+      <!-- Campos generales del presupuesto -->
+      <label for="total">Total:</label>
+      <input id="total" formControlName="total" type="number" />
+
+      <label for="moneda">Moneda:</label>
+      <input id="moneda" formControlName="moneda" type="text" />
+
+      <label for="observaciones">Observaciones:</label>
+      <textarea id="observaciones" formControlName="observaciones"></textarea>
+
+      <label for="porc_inflacion">Porcentaje de Inflación:</label>
+      <input id="porc_inflacion" formControlName="porc_inflacion" type="number" />
+
+      <!-- Sección de Materiales -->
+      <h3>Materiales</h3>
+      <div formArrayName="materiales">
+        <div *ngFor="let material of materiales.controls; let i=index" [formGroupName]="i">
+          <input formControlName="desc_material" placeholder="Descripción del Material" />
+          <input formControlName="cantidad" type="number" placeholder="Cantidad" />
+          <input formControlName="unidad_medida" placeholder="Unidad de Medida" />
+          <input formControlName="precio_x_unidad_medida" type="number" placeholder="Precio por Unidad" />
+          <button type="button" (click)="eliminarMaterial(i, material.value.id)">Eliminar</button>
+        </div>
+      </div>
+      <button type="button" (click)="agregarMaterial()">Añadir Material</button>
+
+      <!-- Sección de Servicios -->
+      <h3>Servicios</h3>
+      <div formArrayName="servicios">
+        <div *ngFor="let servicio of servicios.controls; let i=index" [formGroupName]="i">
+          <input formControlName="desc_servicio" placeholder="Descripción del Servicio" />
+          <input formControlName="horas" type="number" placeholder="Horas" />
+          <input formControlName="precio_x_hora" type="number" placeholder="Precio por Hora" />
+          <button type="button" (click)="eliminarServicio(i, servicio.value.id)">Eliminar</button>
+        </div>
+      </div>
+      <button type="button" (click)="agregarServicio()">Añadir Servicio</button>
+
+      <!-- Sección de Trabajadores -->
+      <h3>Trabajadores</h3>
+      <div formArrayName="trabajadores">
+        <div *ngFor="let trabajador of trabajadores.controls; let i=index" [formGroupName]="i">
+          <input formControlName="puesto" placeholder="Puesto" />
+          <input formControlName="horas" type="number" placeholder="Horas" />
+          <input formControlName="precio_x_hora" type="number" placeholder="Precio por Hora" />
+          <button type="button" (click)="eliminarTrabajador(i, trabajador.value.id)">Eliminar</button>
+        </div>
+      </div>
+      <button type="button" (click)="agregarTrabajador()">Añadir Trabajador</button>
+
+      <button type="submit" [disabled]="presupuestoForm.invalid">Guardar Cambios</button>
+    </form>
+  </div>
 </div>
 
