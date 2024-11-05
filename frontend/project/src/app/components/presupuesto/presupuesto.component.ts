@@ -205,6 +205,7 @@ export class PresupuestoComponent implements OnInit {
       });
   }
   solicitarMateriales() {
-    this.router.navigate(['/solicitud-compra', { idPresupuesto: this.presupuesto.id }]);
+    this.router.navigate(['/solicitud-compra', { idPresupuesto: this.presupuesto.id, idObra: this.presupuesto.id_obra }]);
   }
+
 }

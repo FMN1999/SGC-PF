@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';  // Importar ActivatedRoute
 })
 export class PerfilComponent implements OnInit {
   perfil: any;
-  usuarioActualId: string | null = sessionStorage.getItem('id_user');
+  usuarioActualId: string | null = sessionStorage.getItem('id_usuario');
   editMode: boolean = false;
   perfilForm: FormGroup;
   perfilIdUrl: string | null = '';  // Guardar el ID de la URL
@@ -42,8 +42,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.perfilIdUrl = this.route.snapshot.paramMap.get('id');  // Obtener el ID de la URL
-    console.log(this.perfilIdUrl)
+    this.perfilIdUrl = this.route.snapshot.paramMap.get('id');
     if (this.perfilIdUrl) {
       this.perfilService.obtenerPerfil(parseInt(this.perfilIdUrl)).subscribe((data: any) => {
         this.perfil = data;

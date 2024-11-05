@@ -312,7 +312,7 @@ class Herramienta(models.Model):
     id = models.AutoField(primary_key=True)
     id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
     id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
-    descripcion = models.CharField()
+    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
     ubicacion = models.CharField()
     marca = models.CharField()
 
@@ -329,6 +329,7 @@ class Vehiculo(models.Model):
     modelo = models.CharField()
     precio_x_hora = models.FloatField()
     id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
+    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
 
     class Meta:
         db_table = 'Vehiculo'
@@ -339,14 +340,12 @@ class LineaCompra(models.Model):
     nr_posicion = models.CharField()
     cantidad = models.FloatField()
     lote = models.CharField()
-    nro_serie = models.CharField()
+    nro_serie = models.IntegerField()
     precio_total = models.FloatField()
     id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
-    id_herramienta = models.ForeignKey(Herramienta, on_delete=models.CASCADE, db_column='id_herramienta')
     unidad_medida = models.CharField()
     id_presupuesto_material = models.ForeignKey(Presupuesto_Material, on_delete=models.CASCADE, db_column='id_presupuesto_material')
     id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
-    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
 
     class Meta:
         db_table = 'LineaCompra'

@@ -510,7 +510,8 @@ class MaterialesPorEmpresa(View):
                 'descripcion': material.descripcion,
                 'marca': material.marca,
                 'precio': material.precio,
-                'moneda': material.moneda
+                'moneda': material.moneda,
+                'id_proveedor': material.id_proveedor.id
             })
 
         return JsonResponse(data, safe=False)
@@ -788,11 +789,13 @@ class PresupuestoTrabajadorView(View):
         
 
 @method_decorator(csrf_exempt, name='dispatch')
-
 class CompraView(View):
     @staticmethod
     def post(request):
         data = json.loads(request.body)
         compra = CompraController.crear_solicitud_compra(data)
-        return JsonResponse({'compra_id': compra.id}, status=201)
+        return JsonResponse({"Respuesta":"Compra creada"}, status=201)
+
+
+
 

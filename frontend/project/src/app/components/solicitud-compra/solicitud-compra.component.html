@@ -1,43 +1,41 @@
-<div *ngIf="compraForm">
-  <h2>Solicitud de Compra</h2>
+<form [formGroup]="compraForm" (ngSubmit)="onSubmit()">
+  <h3>Materiales</h3>
+  <p *ngIf="idPresupuesto">Cargando materiales del presupuesto...</p>
 
-  <form [formGroup]="compraForm" (ngSubmit)="onSubmit()">
-    <label for="monto_total">Monto Total:</label>
-    <input id="monto_total" formControlName="monto_total" type="number" />
+  <!-- Asegúrate de que el formArrayName esté dentro del formGroup -->
+  <div formArrayName="lineasCompra">
+    <div *ngFor="let linea of lineasCompra.controls; let i = index" [formGroupName]="i" class="linea-compra">
+      <label>Cantidad:</label>
+      <input formControlName="cantidad" type="number" />
 
-    <label for="fecha_compra">Fecha de Compra:</label>
-    <input id="fecha_compra" formControlName="fecha_compra" type="date" />
+      <label>Precio Total:</label>
+      <input formControlName="precio_total" type="number" />
 
-    <label for="costo_transporte">Costo Transporte:</label>
-    <input id="costo_transporte" formControlName="costo_transporte" type="number" />
+      <label>Unidad de Medida:</label>
+      <input formControlName="unidad_medida" type="text" />
 
-    <label for="moneda_transporte">Moneda Transporte:</label>
-    <input id="moneda_transporte" formControlName="moneda_transporte" type="text" />
+      <label>Material:</label>
+      <select formControlName="id_material">
+        <option *ngFor="let material of materiales_data" [value]="material.id">{{ material.descripcion }}</option>
+      </select>
 
-    <label for="estado">Estado:</label>
-    <input id="estado" formControlName="estado" type="text" value="Solicitado" readonly />
+      <label>ID Presupuesto Material:</label>
+      <input formControlName="id_presupuesto_material" type="number" />
 
-    <!-- Sección de Materiales -->
-    <h3>Materiales</h3>
-    <p *ngIf="idPresupuesto">Cargando materiales del presupuesto...</p>
-    <div formArrayName="lineasCompra">
-      <div *ngFor="let linea of lineasCompra.controls; let i = index" [formGroupName]="i" class="linea-compra">
-        <label>Cantidad:</label>
-        <input formControlName="cantidad" type="number" />
+      <!-- Campos opcionales -->
+      <label>Lote (opcional):</label>
+      <input formControlName="lote" type="text" />
 
-        <label>Precio Total:</label>
-        <input formControlName="precio_total" type="number" />
+      <label>Número de Serie (opcional):</label>
+      <input formControlName="nro_serie" type="text" />
 
-        <label>Unidad de Medida:</label>
-        <input formControlName="unidad_medida" type="text" />
-
-        <!-- Botón para eliminar línea de compra -->
-        <button type="button" (click)="eliminarLineaCompra(i)">Eliminar</button>
-      </div>
+      <!-- Botón para eliminar línea de compra -->
+      <button type="button" (click)="eliminarLineaCompra(i)">Eliminar</button>
     </div>
+  </div>
 
-    <!-- Botones para agregar y confirmar -->
-    <button type="button" (click)="agregarLineaCompra()">Agregar Material</button>
-    <button type="submit" [disabled]="compraForm.invalid">Confirmar Solicitud</button>
-  </form>
-</div>
+  <!-- Botón para agregar y confirmar -->
+  <button type="button" (click)="agregarLineaCompra()">Agregar Material</button>
+  <button type="submit" [disabled]="compraForm.invalid">Confirmar Solicitud</button>
+</form>
+

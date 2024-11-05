@@ -34,7 +34,7 @@ export class PresupuestoService {
   }
 
   getMaterialesPorPresupuesto(idPresupuesto: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}presupuesto/${idPresupuesto}/materiales`);
+    return this.http.get<any[]>(`${this.apiUrl}presupuesto/${idPresupuesto}/materiales/`);
   }
 
 }

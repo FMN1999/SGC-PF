@@ -559,6 +559,7 @@ class PresupuestoData:
             # Estructurar los datos en un diccionario para facilitar la conversión a JSON
             presupuesto_data = {
                 "id": presupuesto.id,
+                "id_obra": presupuesto.id_obra.id,
                 "total": presupuesto.total,
                 "moneda": presupuesto.moneda,
                 "fecha_creacion": presupuesto.fecha_creacion,

@@ -604,12 +604,13 @@ class PresupuestoController:
     @staticmethod
     def get_materiales_por_presupuesto(id_presupuesto):
         presupuesto_materiales = Presupuesto_Material.objects.filter(id_presupuesto=id_presupuesto)
+        print(presupuesto_materiales)
         return [
             {
                 "cantidad": pm.cantidad,
-                "precio_total": pm.precio_total,
+                "precio_total": pm.precio_x_unidad_medida,
                 "unidad_medida": pm.unidad_medida,
-                "id_material": pm.id_material.id
+                "id_material": pm.desc_material
             }
             for pm in presupuesto_materiales
         ]
@@ -619,25 +620,62 @@ class PresupuestoController:
 class CompraController:
     @staticmethod
     def crear_solicitud_compra(data):
-        compra = Compra(
-            monto_total=data['monto_total'],
-            fecha_compra=data['fecha_compra'],
-            id_proveedor=data['id_proveedor'],
-            id_obra=data['id_obra'],
-            costo_transporte=data['costo_transporte'],
-            moneda_transporte=data['moneda_transporte'],
-            estado='Solicitado',
-            id_solicitante=data['id_solicitante'],
-        )
-        compra.save()
+        compras_creadas = []
 
-        for linea_data in data['lineasCompra']:
-            LineaCompra.objects.create(
-                nr_posicion=linea_data['nr_posicion'],
-                cantidad=linea_data['cantidad'],
-                precio_total=linea_data['precio_total'],
-                id_material=linea_data['id_material'],
-                unidad_medida=linea_data['unidad_medida'],
-                id_compra=compra
+        # Dividir las líneas de compra por id_proveedor
+        lineas_por_proveedor = {}
+        for linea in data['lineas_compra']:
+            id_material = linea.get('id_material')
+            material = MaterialData.get_by_id(id_material)
+            id_proveedor = material.id_proveedor.id
+            if id_proveedor not in lineas_por_proveedor:
+                lineas_por_proveedor[id_proveedor] = []
+            lineas_por_proveedor[id_proveedor].append(linea)
+
+        print(lineas_por_proveedor)
+
+        # Crear una compra para cada proveedor con sus líneas correspondientes
+        for id_proveedor, lineas in lineas_por_proveedor.items():
+            proveedor = Proveedor.objects.get(id=id_proveedor)
+            obra = Obra.objects.get(id=data['id_obra'])
+            solicitante = Usuario.objects.get(id=data['id_solicitante'])
+            aprobador = Usuario.objects.get(id=data['id_aprobador']) if data.get('id_aprobador') else None
+
+            compra = Compra.objects.create(
+                monto_total=data['monto_total'],
+                fecha_compra=datetime.now(),
+                id_proveedor=proveedor,
+                id_obra=obra,
+                costo_transporte=data['costo_transporte'],
+                moneda_transporte=data['moneda_transporte'],
+                estado=data['estado'],
+                id_solicitante=solicitante,
+                id_aprobador=aprobador
             )
-        return compra
+            nro = 1
+
+            # Crear LineaCompra para cada material en la lista del proveedor
+            for linea_data in lineas:
+                material = Material.objects.get(id=linea_data['id_material'])
+                pres_mat = Presupuesto_Material.objects.get(id=linea_data.get('id_presupuesto_material')) if linea_data.get('id_presupuesto_material') is not None else None
+                try:
+                    LineaCompra.objects.create(
+                        nr_posicion=nro,
+                        cantidad=linea_data['cantidad'],
+                        lote=linea_data.get('lote', 0),
+                        nro_serie=linea_data.get('nro_serie') if linea_data.get('nro_serie') is not '' else 0,
+                        precio_total=linea_data.get('precio_total', 0),
+                        id_material=material,
+                        unidad_medida=linea_data['unidad_medida'],
+                        id_presupuesto_material=pres_mat,
+                        id_compra=compra
+                    )
+                except Exception as e:
+                    print(f"Error al obtener área: {str(e)}")
+                    raise
+                nro += 1
+
+            # Agregar la compra creada a la lista para la respuesta
+            compras_creadas.append(compra)
+
+        return compras_creadas
