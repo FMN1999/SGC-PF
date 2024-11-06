@@ -20,6 +20,7 @@ import {ObraComponent} from "./components/obra/obra.component";
 import {CrearPresupuestoComponent} from "./components/crear-presupuesto/crear-presupuesto.component";
 import {PresupuestoComponent} from "./components/presupuesto/presupuesto.component";
 import {SolicitudCompraComponent} from "./components/solicitud-compra/solicitud-compra.component";
+import {SolicitudesComponent} from "./components/solicitudes/solicitudes.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -45,7 +46,7 @@ export const routes: Routes = [
   { path: 'crear-presupuesto', component: CrearPresupuestoComponent },
   { path: 'presupuestos/:id', component: PresupuestoComponent },
   { path: 'solicitud-compra', component: SolicitudCompraComponent },
-
+  { path: 'solicitudes', component: SolicitudesComponent },
 ];
 
 export const routerProviders = [provideRouter(routes)];

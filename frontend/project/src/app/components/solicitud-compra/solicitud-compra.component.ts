@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from "@angular/common";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {PresupuestoService} from "../../services/presupuesto/presupuesto.service";
 import {CompraService} from "../../services/compra/compra.service";
 import {EmpresaService} from "../../services/empresa/empresa.service";
@@ -30,7 +30,8 @@ export class SolicitudCompraComponent implements OnInit {
     private route: ActivatedRoute,
     private presupuestoService: PresupuestoService,
     private compraService: CompraService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -97,6 +98,7 @@ export class SolicitudCompraComponent implements OnInit {
     const formValues = this.compraForm.value;
     const lineasCompra = formValues.lineasCompra;
     this.crearCompra(lineasCompra, formValues);
+    this.router.navigate(['/solicitudes'] ).then(r =>{});
 
   }
 

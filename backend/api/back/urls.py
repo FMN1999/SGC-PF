@@ -51,6 +51,7 @@ urlpatterns = [
     path('presupuesto-servicio/<int:id>/eliminar/', views.PresupuestoServicioView.as_view(), name='eliminar_servicio'),
     path('presupuesto-trabajador/<int:id>/eliminar/', views.PresupuestoTrabajadorView.as_view(), name='eliminar_trabajador'),
     path('presupuesto/<int:id_presupuesto>/materiales/', views.PresupuestoMaterialView.as_view(), name='materiales_presupuestos'),
-    path('solicitud-compra/', views.CompraView.as_view(), name='solicitud-compra')
+    path('solicitud-compra/', views.CompraView.as_view(), name='solicitud-compra'),
+    path('compras/pendientes/', views.SolicitudesView.as_view(), name='solicitudes_pendientes'),
 
 ]

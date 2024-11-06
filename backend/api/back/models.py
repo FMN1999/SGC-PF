@@ -349,3 +349,17 @@ class LineaCompra(models.Model):
 
     class Meta:
         db_table = 'LineaCompra'
+
+class Subcontratacion(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, db_column='id_servicio')
+    fecha_contrato = models.DateField()
+    nro_contrato = models.IntegerField()
+    fecha_contrato_hasta = models.DateField()
+    monto_contratacion = models.FloatField()
+    moneda_contratacion = models.CharField()
+    estado = models.CharField()
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+
+    class Meta:
+        db_table = 'Subcontratacion'

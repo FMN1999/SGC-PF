@@ -797,5 +797,13 @@ class CompraView(View):
         return JsonResponse({"Respuesta":"Compra creada"}, status=201)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class SolicitudesView(View):
+    def get(self, request):
+        id_empresa = request.GET.get('id_empresa')
+
+        compras_pendientes = Compra.objects.filter(estado="Pendiente", id_proveedor__id_empresa=id_empresa)
+        data = list(compras_pendientes.values())  # Convertir a formato JSON-friendly
+        return JsonResponse(data, safe=False)
 
 

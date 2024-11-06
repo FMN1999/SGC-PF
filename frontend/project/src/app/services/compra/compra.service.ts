@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -10,6 +10,14 @@ export class CompraService {
 
   constructor(private http: HttpClient) {}
   crearCompra(compraData: any): Observable<any> {
-      return this.http.post<any>(`${this.apiUrl}solicitud-compra/`, compraData);
-    }
+    return this.http.post<any>(`${this.apiUrl}solicitud-compra/`, compraData);
+  }
+
+  obtenerSolicitudesPendientes(): Observable<any> {
+    const id_empresa = sessionStorage.getItem('id_empresa'); // Obtener id_empresa del sessionStorage
+    // @ts-ignore
+    const params = new HttpParams().set('id_empresa', parseInt(id_empresa) || '');
+
+    return this.http.get<any>(`${this.apiUrl}compras/pendientes/`, { params });
+  }
 }
