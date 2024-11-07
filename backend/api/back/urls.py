@@ -53,5 +53,8 @@ urlpatterns = [
     path('presupuesto/<int:id_presupuesto>/materiales/', views.PresupuestoMaterialView.as_view(), name='materiales_presupuestos'),
     path('solicitud-compra/', views.CompraView.as_view(), name='solicitud-compra'),
     path('compras/pendientes/', views.SolicitudesView.as_view(), name='solicitudes_pendientes'),
+    path('presupuestos/<int:id_presupuesto>/servicios/', views.PresupuestoServicioView.as_view(),
+         name='servicios_por_presupuesto'),
+    path('subcontrataciones/', views.SubcontratacionView.as_view(), name='crear_subcontratacion'),
 
 ]

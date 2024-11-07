@@ -768,6 +768,10 @@ class PresupuestoMaterialView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PresupuestoServicioView(View):
+    def get(self, request, id_presupuesto):
+        servicios = PresupuestoController.get_servicios_por_presupuesto(id_presupuesto)
+        return JsonResponse(servicios, safe=False)
+
     def delete(self, request, id):
         try:
             servicio = Presupuesto_Servicio.objects.get(id=id)
@@ -807,3 +811,37 @@ class SolicitudesView(View):
         return JsonResponse(data, safe=False)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class SubcontratacionView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            id_obra = data.get('id_obra')
+            id_usuario = data.get('id_usuario')
+            estado = data.get('estado', 'Pendiente')
+
+            # Crear cada línea de subcontratación
+            for linea in data.get('lineas_subcontratacion', []):
+                id_servicio = linea.get('id_servicio')
+                id_presupuesto_servicio = linea.get('id_presupuesto_servicio')
+                servicio = Servicio.objects.get(id=id_servicio)
+                usuario = Usuario.objects.get(id=id_usuario)
+                obra = Obra.objects.get(id=id_obra)
+                presupuesto_servicio = Presupuesto_Servicio.objects.get(id=id_presupuesto_servicio) if id_presupuesto_servicio is not None else None  # Ajusta si el ID es diferente
+
+                Subcontratacion.objects.create(
+                    id_servicio=servicio,
+                    fecha_contrato=linea.get('fecha_contrato'),
+                    nro_contrato=linea.get('nro_contrato'),
+                    fecha_contrato_hasta=linea.get('fecha_contrato_hasta'),
+                    monto_contratacion=linea.get('monto_contratacion'),
+                    moneda_contratacion=linea.get('moneda'),
+                    estado=estado,
+                    id_usuario=usuario,
+                    id_obra=obra,
+                    id_presupuesto_servicio=presupuesto_servicio if presupuesto_servicio is not None else None,
+                )
+
+            return JsonResponse({"status": "success", "message": "Subcontratación creada con éxito."}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)

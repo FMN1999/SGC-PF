@@ -1,0 +1,45 @@
+<form [formGroup]="subcontratacionForm" (ngSubmit)="onSubmit()">
+  <h3>Servicios</h3>
+  <p *ngIf="idPresupuesto">Cargando servicios del presupuesto...</p>
+
+  <div formArrayName="lineasSubcontratacion">
+    <div *ngFor="let linea of lineasSubcontratacion.controls; let i = index" [formGroupName]="i" class="linea-subcontratacion">
+      <label>Servicio:</label>
+      <select formControlName="id_servicio">
+        <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
+      </select>
+
+      <label>Horas:</label>
+      <input formControlName="horas" type="number" />
+
+      <label>Precio por Hora:</label>
+      <input formControlName="precio_x_hora" type="number" />
+
+      <label>Moneda:</label>
+      <input formControlName="moneda" type="text" />
+
+      <label>Descripción del Servicio:</label>
+      <input formControlName="desc_servicio" type="text" />
+
+      <label>Número de Contrato:</label>
+      <input formControlName="nro_contrato" type="number" />
+
+      <label>Fecha de Contrato:</label>
+      <input formControlName="fecha_contrato" type="date" />
+
+      <label>Fecha de Vencimiento del Contrato:</label>
+      <input formControlName="fecha_contrato_hasta" type="date" />
+
+      <label>Monto de Contratación:</label>
+      <input formControlName="monto_contratacion" type="number" />
+
+      <!-- Botón para eliminar línea de subcontratación -->
+      <button type="button" (click)="eliminarLineaSubcontratacion(i)">Eliminar</button>
+    </div>
+  </div>
+
+  <!-- Botón para agregar y confirmar -->
+  <button type="button" (click)="agregarLineaSubcontratacion()">Agregar Servicio</button>
+  <button type="submit" [disabled]="subcontratacionForm.invalid">Confirmar Subcontratación</button>
+</form>
+

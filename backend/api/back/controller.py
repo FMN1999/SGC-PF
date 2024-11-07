@@ -615,6 +615,22 @@ class PresupuestoController:
             for pm in presupuesto_materiales
         ]
 
+    @staticmethod
+    def get_servicios_por_presupuesto(id_presupuesto):
+        presupuesto_servicios = Presupuesto_Servicio.objects.filter(id_presupuesto=id_presupuesto)
+        return [
+            {
+                "id_presupuesto_servicio": ps.id,
+                "precio_x_hora": ps.precio_x_hora,
+                "horas": ps.horas,
+                "moneda": ps.moneda,
+                "monto_linea": ps.monto_linea,
+                "id_area": ps.id_area.id,  # Suponiendo que deseas devolver el ID del área
+                "desc_servicio": ps.desc_servicio,
+            }
+            for ps in presupuesto_servicios
+        ]
+
 
 # controller.py
 class CompraController:

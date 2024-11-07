@@ -37,4 +37,8 @@ export class PresupuestoService {
     return this.http.get<any[]>(`${this.apiUrl}presupuesto/${idPresupuesto}/materiales/`);
   }
 
+  getServiciosPorPresupuesto(idPresupuesto: number) {
+    return this.http.get<any[]>(`${this.apiUrl}presupuestos/${idPresupuesto}/servicios/`);
+  }
+
 }

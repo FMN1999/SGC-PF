@@ -25,7 +25,7 @@
   </div>
   <ng-template #noMateriales><p>No hay materiales registrados.</p></ng-template>
 
-  <!-- Sección de servicios -->
+  <button (click)="solicitarServicios()">Solicitar servicios</button>
   <h3>Servicios</h3>
   <div *ngIf="servicios.length > 0; else noServicios">
     <ul>

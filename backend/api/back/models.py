@@ -350,6 +350,7 @@ class LineaCompra(models.Model):
     class Meta:
         db_table = 'LineaCompra'
 
+
 class Subcontratacion(models.Model):
     id = models.AutoField(primary_key=True)
     id_servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, db_column='id_servicio')
@@ -360,6 +361,8 @@ class Subcontratacion(models.Model):
     moneda_contratacion = models.CharField()
     estado = models.CharField()
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+    id_presupuesto_servicio = models.ForeignKey(Presupuesto_Servicio, on_delete=models.CASCADE, db_column='id_presupuesto_servicio')
 
     class Meta:
         db_table = 'Subcontratacion'

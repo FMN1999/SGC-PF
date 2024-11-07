@@ -208,4 +208,8 @@ export class PresupuestoComponent implements OnInit {
     this.router.navigate(['/solicitud-compra', { idPresupuesto: this.presupuesto.id, idObra: this.presupuesto.id_obra }]);
   }
 
+  solicitarServicios() {
+    this.router.navigate(['/solicitud-servicio', { idPresupuesto: this.presupuesto.id, idObra: this.presupuesto.id_obra }]);
+  }
+
 }
