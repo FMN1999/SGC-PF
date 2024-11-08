@@ -26,5 +26,9 @@ export class EmpresaService {
   obtenerClientes(id_empresa: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/clientes/${id_empresa}/`);
   }
+
+  obtenerVehiculosPorEmpresa(id_empresa: number):Observable<any> {
+    return this.http.get(`${this.apiUrl}/vehiculos/${id_empresa}/`);
+  }
 }
 

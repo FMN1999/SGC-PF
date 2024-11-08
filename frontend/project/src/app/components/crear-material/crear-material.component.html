@@ -39,9 +39,41 @@
 
   <label for="descripcion_otros_gastos">Descripción de Otros Gastos:</label>
   <input id="descripcion_otros_gastos" [(ngModel)]="materialData.descripcion_otros_gastos" name="descripcion_otros_gastos" required>
+
+  <!-- Campos adicionales -->
+  <label>Asociar con:</label>
+  <select [(ngModel)]="tipoAsociacion" name="tipoAsociacion">
+    <option value="">Ninguno</option>
+    <option value="vehiculo">Vehículo</option>
+    <option value="herramienta">Herramienta</option>
+  </select>
+
+  <!-- Formulario para Vehiculo -->
+  <div *ngIf="tipoAsociacion === 'vehiculo'">
+    <label for="patente">Patente:</label>
+    <input id="patente" [(ngModel)]="vehiculoData.patente" name="patente">
+
+    <label for="tipo">Tipo:</label>
+    <input id="tipo" [(ngModel)]="vehiculoData.tipo" name="tipo">
+
+    <label for="marca_vehiculo">Marca:</label>
+    <input id="marca_vehiculo" [(ngModel)]="vehiculoData.marca_vehiculo" name="marca_vehiculo">
+
+    <label for="modelo">Modelo:</label>
+    <input id="modelo" [(ngModel)]="vehiculoData.modelo" name="modelo">
+
+    <label for="precio_x_hora">Precio por Hora:</label>
+    <input id="precio_x_hora" [(ngModel)]="vehiculoData.precio_x_hora" name="precio_x_hora" type="number">
+  </div>
+
+  <!-- Formulario para Herramienta -->
+  <div *ngIf="tipoAsociacion === 'herramienta'">
+    <label for="ubicacion">Ubicación:</label>
+    <input id="ubicacion" [(ngModel)]="herramientaData.ubicacion" name="ubicacion">
+
+    <label for="marca_herramienta">Marca:</label>
+    <input id="marca_herramienta" [(ngModel)]="herramientaData.marca_herramienta" name="marca_herramienta">
+  </div>
+
   <button type="submit">Crear Material</button>
 </form>
-
-<p *ngIf="mensajeExito">{{ mensajeExito }}</p>
-<p *ngIf="mensajeError">{{ mensajeError }}</p>
-

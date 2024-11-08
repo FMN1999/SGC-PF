@@ -6,6 +6,7 @@ import json
 from .controller import *
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
+from django.shortcuts import get_object_or_404
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -314,19 +315,47 @@ class OfertaDetalleView(View):
 class MaterialView(View):
 
     def post(self, request):
-        try:
-            data = json.loads(request.body)
-            proveedor_id = data.get('id_proveedor')
-            print(proveedor_id)
+        data = json.loads(request.body)
 
-            # Validar y crear material
-            material = MaterialController.crear_material(data, proveedor_id)
+        # Crear el material
+        proveedor = get_object_or_404(Proveedor, id=data.get('id_proveedor'))
+        material = Material.objects.create(
+            id_proveedor=proveedor,
+            tipo_material=data.get('tipo_material'),
+            unidad_medida=data.get('unidad_medida'),
+            descripcion=data.get('descripcion'),
+            marca=data.get('marca'),
+            precio=data.get('precio'),
+            moneda=data.get('moneda'),
+            impuestos_total=data.get('impuestos_total'),
+            moneda_impuestos=data.get('moneda_impuestos'),
+            descripcion_impuestos=data.get('descripcion_impuestos'),
+            otros_gastos=data.get('otros_gastos'),
+            moneda_otros_gastos=data.get('moneda_otros_gastos'),
+            descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
+            fecha_desde_precio=data.get('fecha_desde_precio')
+        )
 
-            return JsonResponse({'message': 'Material creado con éxito', 'material': material.id}, status=201)
-        except ValidationError as ve:
-            return JsonResponse({'error': str(ve)}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': f"Error al crear material: {str(e)}"}, status=500)
+        # Asociación opcional con Vehículo o Herramienta
+        if data.get('tipo_asociacion') == 'vehiculo':
+            Vehiculo.objects.create(
+                id_material=material,
+                patente=data.get('patente'),
+                tipo=data.get('tipo'),
+                marca=data.get('marca_vehiculo'),
+                modelo=data.get('modelo'),
+                precio_x_hora=data.get('precio_x_hora'),
+                id_almacen_id=data.get('id_almacen')
+            )
+        elif data.get('tipo_asociacion') == 'herramienta':
+            Herramienta.objects.create(
+                id_material=material,
+                id_almacen_id=data.get('id_almacen'),
+                ubicacion=data.get('ubicacion'),
+                marca=data.get('marca_herramienta')
+            )
+
+        return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
 
     def get(self, request, material_id):
         try:
@@ -845,3 +874,41 @@ class SubcontratacionView(View):
             return JsonResponse({"status": "success", "message": "Subcontratación creada con éxito."}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
+
+class VehiculosView(View):
+    def get(self, request, id_empresa):
+        def get(self, request, *args, **kwargs):
+            try:
+                vehiculos = EmpresaController.get_vehiculos(id_empresa)
+                empresas_list = list(vehiculos)
+                # Devolver la lista de empresas como JSON
+                return JsonResponse(empresas_list, safe=False)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+
+
+class TareaView(View):
+    def post(self, request):
+        data = request.data
+        presupuesto_servicio = None
+        if data.get("id_presupuesto_servicio"):
+            presupuesto_servicio = get_object_or_404(Presupuesto_Servicio, id=data["id_presupuesto_servicio"])
+
+        area = get_object_or_404(Area, id=data["id_area"])
+        vehiculo = get_object_or_404(Vehiculo, id=data["id_vehiculo"])
+
+        try:
+            tarea = Tarea.objects.create(
+                titulo=data["titulo"],
+                descripcion=data["descripcion"],
+                id_area=area,
+                fecha_inicio=data["fecha_inicio"],
+                fecha_fin=data["fecha_fin"],
+                precio_total=data["precio_total"],
+                id_presupuesto_servicio=presupuesto_servicio,
+                id_vehiculo=vehiculo
+            )
+            return JsonResponse({"message": "Tarea creada"}, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)

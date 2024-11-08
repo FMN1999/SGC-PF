@@ -128,6 +128,10 @@ class EmpresaController:
     def get_all():
         return EmpresaData.get_all()
 
+    @staticmethod
+    def get_vehiculos(id_empresa):
+        return EmpresaData.get_vehiculos(id_empresa)
+
 
 class ProveedorController:
     @staticmethod
@@ -679,7 +683,7 @@ class CompraController:
                         nr_posicion=nro,
                         cantidad=linea_data['cantidad'],
                         lote=linea_data.get('lote', 0),
-                        nro_serie=linea_data.get('nro_serie') if linea_data.get('nro_serie') is not '' else 0,
+                        nro_serie=linea_data.get('nro_serie') if linea_data.get('nro_serie') != '' else 0,
                         precio_total=linea_data.get('precio_total', 0),
                         id_material=material,
                         unidad_medida=linea_data['unidad_medida'],

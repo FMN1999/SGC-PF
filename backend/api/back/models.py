@@ -366,3 +366,18 @@ class Subcontratacion(models.Model):
 
     class Meta:
         db_table = 'Subcontratacion'
+
+
+class Tarea(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column='id_area')
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    precio_total = models.FloatField()
+    id_presupuesto_servicio = models.ForeignKey(Presupuesto_Servicio, on_delete=models.CASCADE, db_column='id_presupuesto_servicio')
+    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
+    descripcion = models.CharField()
+    titulo = models.CharField()
+
+    class Meta:
+        db_table = 'Tarea'

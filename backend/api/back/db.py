@@ -104,6 +104,28 @@ class EmpresaData:
             print(f"Error al cargar las emrpesas: {e}")
             raise
 
+    @staticmethod
+    def get_vehiculos(id_empresa):
+        try:
+            vehiculos = Vehiculo.objects.filter(id_material__id_empresa=id_empresa)
+            vehiculos_return = [
+                {
+                    'id':v.id,
+                    'descripcion': v.id_material.descripcion,
+                    'tipo':v.tipo,
+                    'marca':v.marca,
+                    'modelo': v.modelo,
+                    'precio_x_hora': v.precio_x_hora,
+                    'id_almacen': v.id_almacen.id,
+                    'id_material': v.id_material.id,
+                } for v in vehiculos
+            ]
+
+            return vehiculos_return
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
 
 class ClienteData:
     @staticmethod
