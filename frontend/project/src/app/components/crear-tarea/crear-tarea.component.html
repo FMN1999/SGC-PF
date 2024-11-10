@@ -14,7 +14,7 @@
     <label for="id_presupuesto_servicio">Presupuesto Servicio</label>
     <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio">
       <option value="">Seleccione un presupuesto</option>
-      <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id">
+      <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio">
         {{ presupuesto.desc_servicio }}
       </option>
     </select>

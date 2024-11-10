@@ -878,21 +878,21 @@ class SubcontratacionView(View):
 
 class VehiculosView(View):
     def get(self, request, id_empresa):
-        def get(self, request, *args, **kwargs):
-            try:
-                vehiculos = EmpresaController.get_vehiculos(id_empresa)
-                empresas_list = list(vehiculos)
-                # Devolver la lista de empresas como JSON
-                return JsonResponse(empresas_list, safe=False)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
+        try:
+            vehiculos = EmpresaController.get_vehiculos(id_empresa)
+            # Devolver la lista de empresas como JSON
+            return JsonResponse(vehiculos, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class TareaView(View):
     def post(self, request):
-        data = request.data
+        data = json.loads(request.body)
+        print(data)
         presupuesto_servicio = None
-        if data.get("id_presupuesto_servicio"):
+        if data.get('id_presupuesto_servicio'):
             presupuesto_servicio = get_object_or_404(Presupuesto_Servicio, id=data["id_presupuesto_servicio"])
 
         area = get_object_or_404(Area, id=data["id_area"])
