@@ -292,7 +292,7 @@ class Compra(models.Model):
     moneda_transporte = models.CharField()
     estado = models.CharField()
     id_solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_solicitante', related_name='id_solicitante')
-    id_aprobador = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_aprobador', related_name='id_aprobador')
+    id_aprobador = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_aprobador', related_name='id_aprobador', null=True, blank=True)
 
     class Meta:
         db_table = 'Compra'

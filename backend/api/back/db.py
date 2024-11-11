@@ -695,3 +695,24 @@ class PresupuestoData:
                     moneda=trabajador['moneda'],
                     monto_linea=monto_linea
                 )
+
+
+class CompraData:
+    @staticmethod
+    def obtener_compra_y_lineas(compra_id):
+        try:
+            compra = Compra.objects.get(id=compra_id)
+            lineas = LineaCompra.objects.filter(id_compra=compra)
+            return compra, list(lineas)
+        except Compra.DoesNotExist:
+            return None, []
+
+    @staticmethod
+    def actualizar_estado_compra(compra_id, nuevo_estado):
+        try:
+            compra = Compra.objects.get(id=compra_id)
+            compra.estado = nuevo_estado
+            compra.save()
+            return compra
+        except Compra.DoesNotExist:
+            return None

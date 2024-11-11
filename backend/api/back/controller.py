@@ -699,3 +699,36 @@ class CompraController:
             compras_creadas.append(compra)
 
         return compras_creadas
+
+    @staticmethod
+    def obtener_compra_con_lineas(compra_id):
+        compra, lineas = CompraData.obtener_compra_y_lineas(compra_id)
+        compra_data = {
+            'id': compra.id,
+            'monto_total': compra.monto_total,
+            'fecha_compra': compra.fecha_compra,
+            'id_proveedor': compra.id_proveedor.id,
+            'id_obra': compra.id_obra.id,
+            'costo_transporte': compra.costo_transporte,
+            'moneda_transporte': compra.moneda_transporte,
+            'estado': compra.estado,
+            'id_solicitante': compra.id_solicitante.id,
+            'id_aprobador': compra.id_aprobador.id if compra.id_aprobador else None,
+            'lineas_compra': [
+                {
+                    'nr_posicion': linea.nr_posicion,
+                    'cantidad': linea.cantidad,
+                    'lote': linea.lote,
+                    'nro_serie': linea.nro_serie,
+                    'precio_total': linea.precio_total,
+                    'id_material': linea.id_material.id,
+                    'unidad_medida': linea.unidad_medida
+                } for linea in lineas
+            ]
+        }
+        return compra_data
+
+    @staticmethod
+    def cambiar_estado_compra(compra_id, nuevo_estado):
+        compra = CompraData.actualizar_estado_compra(compra_id, nuevo_estado)
+        return compra is not None

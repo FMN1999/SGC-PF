@@ -20,4 +20,13 @@ export class CompraService {
 
     return this.http.get<any>(`${this.apiUrl}compras/pendientes/`, { params });
   }
+
+  cambiarEstadoCompra(compraId: number, nuevoEstado: string): Observable<any> {
+      const body = { nuevo_estado: nuevoEstado };  // Enviar como JSON
+      return this.http.put(`${this.apiUrl}compra/${compraId}/cambiar_estado/`, body);
+  }
+
+  obtenerCompra(compraId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}compra/${compraId}/`);
+  }
 }

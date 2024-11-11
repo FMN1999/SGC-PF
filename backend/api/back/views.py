@@ -829,6 +829,20 @@ class CompraView(View):
         compra = CompraController.crear_solicitud_compra(data)
         return JsonResponse({"Respuesta":"Compra creada"}, status=201)
 
+    def put(self, request, compra_id):
+        compra = get_object_or_404(Compra, id=compra_id)
+        data = json.loads(request.body)
+        print(data)
+        compra.estado = data.get('nuevo_estado')
+        compra.save()
+        return JsonResponse({'message': 'Estado actualizado correctamente'})
+
+    def get(self, request, compra_id):
+        compra_data = CompraController.obtener_compra_con_lineas(compra_id)
+        if compra_data is None:
+            return JsonResponse({'error': 'Compra no encontrada'}, status=404)
+        return JsonResponse(compra_data, safe=False)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SolicitudesView(View):

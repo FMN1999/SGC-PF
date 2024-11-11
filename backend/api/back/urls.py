@@ -58,4 +58,6 @@ urlpatterns = [
     path('subcontrataciones/', views.SubcontratacionView.as_view(), name='crear_subcontratacion'),
     path('vehiculos/<int:id_empresa>/', views.VehiculosView.as_view(), name='vehiculos'),
     path('tarea/', views.TareaView.as_view(), name='crear_tarea'),
+    path('compra/<int:compra_id>/cambiar_estado/', views.CompraView.as_view(), name='cambiar_estado_compra'),
+    path('compra/<int:compra_id>/', views.CompraView.as_view(), name='detalle_compra'),
 ]

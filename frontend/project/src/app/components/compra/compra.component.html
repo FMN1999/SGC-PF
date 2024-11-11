@@ -1,0 +1,29 @@
+<div *ngIf="compra">
+  <h2>Detalles de Compra #{{ compra.id }}</h2>
+  <p><strong>Proveedor:</strong> {{ compra.id_proveedor }}</p>
+  <p><strong>Obra:</strong> {{ compra.id_obra }}</p>
+  <p><strong>Monto Total:</strong> {{ compra.monto_total }}</p>
+  <p><strong>Fecha de Compra:</strong> {{ compra.fecha_compra | date }}</p>
+  <p><strong>Costo Transporte:</strong> {{ compra.costo_transporte }}</p>
+  <p><strong>Moneda Transporte:</strong> {{ compra.moneda_transporte }}</p>
+  <p><strong>Solicitante:</strong> {{ compra.id_solicitante }}</p>
+  <p><strong>Aprobador:</strong> {{ compra.id_aprobador }}</p>
+  <p><strong>Estado Actual:</strong> {{ estadoActual }}</p>
+
+  <h3>Cambiar Estado</h3>
+  <div *ngFor="let estado of obtenerBotones()">
+    <button (click)="cambiarEstado(estado)">{{ estado }}</button>
+  </div>
+
+  <h3>Líneas de Compra</h3>
+  <div *ngFor="let linea of compra.lineas_compra">
+    <p><strong>Posición:</strong> {{ linea.nr_posicion }}</p>
+    <p><strong>Cantidad:</strong> {{ linea.cantidad }}</p>
+    <p><strong>Lote:</strong> {{ linea.lote }}</p>
+    <p><strong>Nro Serie:</strong> {{ linea.nro_serie }}</p>
+    <p><strong>Precio Total:</strong> {{ linea.precio_total }}</p>
+    <p><strong>Material:</strong> {{ linea.id_material }}</p>
+    <p><strong>Unidad de Medida:</strong> {{ linea.unidad_medida }}</p>
+    <hr />
+  </div>
+</div>
