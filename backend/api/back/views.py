@@ -834,6 +834,7 @@ class CompraView(View):
         data = json.loads(request.body)
         print(data)
         compra.estado = data.get('nuevo_estado')
+        compra.id_aprobador = Usuario.objects.get(id=data.get('id_usuario'))
         compra.save()
         return JsonResponse({'message': 'Estado actualizado correctamente'})
 
@@ -952,6 +953,7 @@ class IngresoView(View):
             # Manejo de errores para fallos en el procesamiento
             return JsonResponse({'error': str(e)}, status=500)
 
+
 class AlmacenesView(View):
     def get(self, request, id_empresa):
         try:
@@ -960,3 +962,32 @@ class AlmacenesView(View):
             return JsonResponse(almacenes, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PagoView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            monto = data.get('monto')
+            moneda = data.get('moneda')
+            cuota = data.get('cuota')
+            id_proveedor = data.get('id_proveedor')
+            id_compra = data.get('id_compra')
+            id_subcontratacion = data.get('id_subcontratacion')
+            fecha_pago = data.get('fecha_pago')
+
+            # Validar que solo uno de id_compra o id_subcontratacion esté presente
+            if (id_compra and id_subcontratacion) or (not id_compra and not id_subcontratacion):
+                return JsonResponse({'error': 'Debe especificar solo una compra o una subcontratación, no ambas o ninguna.'}, status=400)
+
+            # Llamada al controlador para crear el pago
+            resultado = PagoController.crear_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion, fecha_pago)
+
+            if resultado['status'] == 'success':
+                return JsonResponse({'message': 'Pago registrado exitosamente', 'pago_id': resultado['pago_id']}, status=201)
+            else:
+                return JsonResponse({'error': resultado['error']}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'JSON inválido'}, status=400)

@@ -1,6 +1,6 @@
 <div *ngIf="compra">
   <h2>Detalles de Compra #{{ compra.id }}</h2>
-  <p><strong>Proveedor:</strong> {{ compra.id_proveedor }}</p>
+  <p><strong>Proveedor:</strong> {{ compra.denominacion }}</p>
   <p><strong>Obra:</strong> {{ compra.id_obra }}</p>
   <p><strong>Monto Total:</strong> {{ compra.monto_total }}</p>
   <p><strong>Fecha de Compra:</strong> {{ compra.fecha_compra | date }}</p>
@@ -16,6 +16,7 @@
   </div>
 
   <button (click)="abrirFormularioIngreso()">Generar Ingreso</button>
+   <button (click)="registrarPagoCompra(compra.id, compra.id_proveedor)">Registrar Pago</button>
 
   <h3>Líneas de Compra</h3>
   <div *ngFor="let linea of compra.lineas_compra">
@@ -28,4 +29,5 @@
     <p><strong>Unidad de Medida:</strong> {{ linea.unidad_medida }}</p>
     <hr />
   </div>
+
 </div>

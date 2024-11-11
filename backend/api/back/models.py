@@ -401,3 +401,48 @@ class Ingreso(models.Model):
     class Meta:
         db_table = 'Ingreso'
 
+
+class Pago(models.Model):
+    id = models.AutoField(primary_key=True)
+    monto = models.FloatField()
+    moneda = models.CharField()
+    cuota = models.IntegerField()
+    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, db_column='id_proveedor')
+    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
+    id_subcontratacion = models.ForeignKey(Subcontratacion, on_delete=models.CASCADE, db_column='id_subcontratacion')
+    fecha_pago = models.DateField()
+
+    class Meta:
+        db_table = 'Pago'
+
+
+class Tarea_Colaborador(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE, db_column='id_tarea')
+    estado = models.CharField()
+    id_colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE, db_column='id_colaborador')
+
+    class Meta:
+        db_table = 'Tarea_Colaborador'
+
+
+class Tarea_Herramienta(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE, db_column='id_tarea')
+    id_herramienta = models.ForeignKey(Herramienta, on_delete=models.CASCADE, db_column='id_herramienta')
+    uso_desde = models.DateField()
+    uso_hasta = models.DateField()
+
+    class Meta:
+        db_table = 'Tarea_Herramienta'
+
+
+class Tarea_Material(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE, db_column='id_tarea')
+    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
+    cant_utilizada = models.FloatField()
+    cant_no_utilizada = models.FloatField()
+
+    class Meta:
+        db_table = 'Tarea_Material'

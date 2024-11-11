@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
+import { PagoService } from '../../services/pago/pago.service'
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
@@ -17,14 +18,18 @@ import {DatePipe, NgForOf, NgIf} from "@angular/common";
 export class CompraComponent implements OnInit {
   compra: any;
   estadoActual: string = '';
+  id_usuario:string='';
 
   constructor(
     private route: ActivatedRoute,
     private compraService: CompraService,
+    private pagoService: PagoService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // @ts-ignore
+    this.id_usuario = sessionStorage.getItem('id_usuario');
     const compraId = Number(this.route.snapshot.paramMap.get('id'));
     this.obtenerCompra(compraId);
   }
@@ -50,7 +55,7 @@ export class CompraComponent implements OnInit {
 
   cambiarEstado(nuevoEstado: string): void {
     const compraId = this.compra.id;
-    this.compraService.cambiarEstadoCompra(compraId, nuevoEstado).subscribe(
+    this.compraService.cambiarEstadoCompra(compraId, nuevoEstado, Number(this.id_usuario)).subscribe(
       (response) => {
         this.estadoActual = nuevoEstado;
         this.obtenerCompra(compraId); // Recarga los datos para reflejar el nuevo estado
@@ -65,4 +70,15 @@ export class CompraComponent implements OnInit {
     // Navegar a un componente de ingreso o abrir un formulario/modal de ingreso
     this.router.navigate(['/ingreso', this.compra.id]);  // Ejemplo de navegación a un componente de ingreso
   }
+
+  registrarPagoCompra(compraId: number, proveedorId: number): void {
+    this.pagoService.setDatosPago({
+      tipo_pago: 'compra',
+      id_proveedor: proveedorId,
+      id_compra: compraId
+    });
+    this.router.navigate(['/registrar-pago']);
+  }
+
+
 }

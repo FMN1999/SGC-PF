@@ -62,5 +62,5 @@ urlpatterns = [
     path('compra/<int:compra_id>/', views.CompraView.as_view(), name='detalle_compra'),
     path('ingreso/', views.IngresoView.as_view(), name='crear_ingreso'),
     path('almacenes/<int:id_empresa>/', views.AlmacenesView.as_view(), name='almacenes'),
-
+    path('pago/', views.PagoView.as_view(), name='registrar_pago'),
 ]

@@ -25,6 +25,7 @@ import {PresupuestoServicioComponent} from "./components/presupuesto-servicio/pr
 import {CrearTareaComponent} from "./components/crear-tarea/crear-tarea.component";
 import {CompraComponent} from "./components/compra/compra.component";
 import {IngresoComponent} from "./components/ingreso/ingreso.component";
+import {PagoComponent} from "./components/pago/pago.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -55,6 +56,7 @@ export const routes: Routes = [
   { path: 'crear-tarea', component: CrearTareaComponent },
   { path: 'compra/:id', component: CompraComponent },
   { path: 'ingreso/:id', component: IngresoComponent },
+  { path: 'registrar-pago', component: PagoComponent },
 ];
 
 export const routerProviders = [provideRouter(routes)];

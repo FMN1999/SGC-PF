@@ -712,6 +712,7 @@ class CompraController:
             'monto_total': compra.monto_total,
             'fecha_compra': compra.fecha_compra,
             'id_proveedor': compra.id_proveedor.id,
+            'proveedor': compra.id_proveedor.denominacion,
             'id_obra': compra.id_obra.id,
             'costo_transporte': compra.costo_transporte,
             'moneda_transporte': compra.moneda_transporte,
@@ -758,3 +759,18 @@ class IngresoController:
         )
         ingreso.save()
         return ingreso
+
+
+class PagoController:
+    @staticmethod
+    def crear_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion, fecha_pago):
+        # Validar campos obligatorios
+        if not monto or not moneda or cuota is None or not id_proveedor:
+            return {'status': 'error', 'error': 'Faltan campos obligatorios'}
+
+        # Llamada a la capa de datos para almacenar el pago
+        pago_id = PagoData.guardar_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion, fecha_pago)
+        if pago_id:
+            return {'status': 'success', 'pago_id': pago_id}
+        else:
+            return {'status': 'error', 'error': 'Error al guardar el pago en la base de datos'}

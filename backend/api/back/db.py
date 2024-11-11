@@ -735,3 +735,24 @@ class CompraData:
             return compra
         except Compra.DoesNotExist:
             return None
+
+
+class PagoData:
+    @staticmethod
+    def guardar_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion, fecha_pago):
+        try:
+            # Crear una instancia de Pago
+            pago = Pago(
+                monto=monto,
+                moneda=moneda,
+                cuota=cuota,
+                fecha_pago=fecha_pago,
+                id_proveedor_id=id_proveedor,
+                id_compra_id=id_compra if id_compra else None,
+                id_subcontratacion_id=id_subcontratacion if id_subcontratacion else None
+            )
+            pago.save()
+            return pago.id
+        except Exception as e:
+            print(f"Error al guardar el pago: {e}")
+            return None
