@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 
@@ -20,7 +20,8 @@ export class CompraComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private compraService: CompraService
+    private compraService: CompraService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -58,5 +59,10 @@ export class CompraComponent implements OnInit {
         console.error('Error al cambiar el estado:', error);
       }
     );
+  }
+
+  abrirFormularioIngreso() {
+    // Navegar a un componente de ingreso o abrir un formulario/modal de ingreso
+    this.router.navigate(['/ingreso', this.compra.id]);  // Ejemplo de navegación a un componente de ingreso
   }
 }

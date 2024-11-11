@@ -125,6 +125,25 @@ class EmpresaData:
             print(f"Error al cargar las emrpesas: {e}")
             raise
 
+    @staticmethod
+    def get_almacenes(id_empresa):
+        try:
+            almacenes = Almacen.objects.filter(id_empresa=id_empresa)
+            almacenes_return = [
+                {
+                    'id': a.id,
+                    'descripcion': a.descripcion,
+                    'direccion': a.direccion,
+                    'contacto': a.contacto,
+                    'ciudad': a.ciudad,
+                    'provincia': a.provincia,
+                } for a in almacenes
+            ]
+            return almacenes_return
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
+
 
 class ClienteData:
     @staticmethod

@@ -1,0 +1,44 @@
+<form [formGroup]="ingresoForm" (ngSubmit)="onSubmit()">
+  <div formArrayName="ingresos">
+    <div *ngFor="let ingreso of ingresos.controls; let i = index" [formGroupName]="i">
+      <label>Material:</label>
+      <select formControlName="id_material">
+        <option *ngFor="let material of materialesDisponibles" [value]="material.id_material">
+          {{ material.material }}
+        </option>
+      </select>
+
+      <label>Cantidad:</label>
+      <input formControlName="cantidad" type="number" />
+
+      <label>Unidad de Medida:</label>
+      <input formControlName="unidadMedida" readonly />
+
+      <label>Fecha de Ingreso:</label>
+      <input formControlName="fecha" type="date" />
+
+      <label>Fecha Real:</label>
+      <input formControlName="fechaReal" type="date" />
+
+      <label>Almacén:</label>
+      <select formControlName="id_almacen">
+        <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+          {{ almacen.descripcion }}
+        </option>
+      </select>
+
+      <label>¿Se lleva el material a la obra?</label>
+      <input formControlName="en_obra" type="checkbox" />
+
+      <label>Realizado:</label>
+      <input formControlName="realizado" type="checkbox" />
+
+      <button type="button" (click)="eliminarIngreso(i)">Eliminar Ingreso</button>
+    </div>
+    <button type="button" (click)="particionar(material.id_material, material.material, material.unidad_medida)" *ngFor="let material of materialesDisponibles">
+      Particionar {{ material.material }}
+    </button>
+  </div>
+
+  <button type="submit">Guardar Ingresos</button>
+</form>

@@ -26,6 +26,7 @@ import {SolicitudesComponent} from "./components/solicitudes/solicitudes.compone
 import {PresupuestoServicioComponent} from "./components/presupuesto-servicio/presupuesto-servicio.component";
 import {CrearTareaComponent} from "./components/crear-tarea/crear-tarea.component";
 import {CompraComponent} from "./components/compra/compra.component";
+import {IngresoComponent} from "./components/ingreso/ingreso.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -56,6 +57,7 @@ const routes: Routes = [
   { path: 'solicitud-servicio', component: PresupuestoServicioComponent },
   { path: 'crear-tarea', component: CrearTareaComponent },
   { path: 'compra/:id', component: CompraComponent },
+  { path: 'ingreso/:id', component: IngresoComponent },
 ];
 
 @NgModule({

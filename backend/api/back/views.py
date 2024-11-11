@@ -926,3 +926,37 @@ class TareaView(View):
             return JsonResponse({"message": "Tarea creada"}, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class IngresoView(View):
+    def post(self, request):
+        try:
+            # Parseo del cuerpo de la solicitud para obtener una lista de ingresos
+            data = json.loads(request.body)
+
+            ingresos_creados = []
+            for ingreso_data in data:
+                # Llama al controlador para crear cada ingreso
+                ingreso = IngresoController.crear_ingreso(ingreso_data)
+                ingresos_creados.append({
+                    'ingreso_id': ingreso.id,
+                    'message': 'Ingreso creado correctamente'
+                })
+
+            return JsonResponse({
+                'message': 'Ingresos creados correctamente',
+                'ingresos': ingresos_creados
+            }, status=201)
+        except Exception as e:
+            # Manejo de errores para fallos en el procesamiento
+            return JsonResponse({'error': str(e)}, status=500)
+
+class AlmacenesView(View):
+    def get(self, request, id_empresa):
+        try:
+            almacenes = EmpresaController.get_almacenes(id_empresa)
+            # Devolver la lista de empresas como JSON
+            return JsonResponse(almacenes, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)

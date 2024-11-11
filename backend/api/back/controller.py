@@ -132,6 +132,10 @@ class EmpresaController:
     def get_vehiculos(id_empresa):
         return EmpresaData.get_vehiculos(id_empresa)
 
+    @staticmethod
+    def get_almacenes(id_empresa):
+        return EmpresaData.get_almacenes(id_empresa)
+
 
 class ProveedorController:
     @staticmethod
@@ -722,6 +726,7 @@ class CompraController:
                     'nro_serie': linea.nro_serie,
                     'precio_total': linea.precio_total,
                     'id_material': linea.id_material.id,
+                    'material': linea.id_material.descripcion,
                     'unidad_medida': linea.unidad_medida
                 } for linea in lineas
             ]
@@ -732,3 +737,24 @@ class CompraController:
     def cambiar_estado_compra(compra_id, nuevo_estado):
         compra = CompraData.actualizar_estado_compra(compra_id, nuevo_estado)
         return compra is not None
+
+
+class IngresoController:
+    @staticmethod
+    def crear_ingreso(data):
+        almacen = Almacen.objects.get(id=data.get('id_almacen')) if data.get('id_almacen') else None
+        compra = Compra.objects.get(id=data.get('id_compra')) if data.get('id_compra') else None
+        material = Material.objects.get(id=data.get('id_material'))
+        ingreso = Ingreso(
+            cantidad=data.get('cantidad'),
+            fecha=data.get('fecha'),
+            id_material=material,
+            unidad_medida=data.get('unidad_medida'),
+            id_almacen=almacen,
+            id_compra=compra,
+            fecha_real=data.get('fecha_real'),
+            realizado=data.get('realizado', False),
+            en_obra=data.get('en_obra', False)
+        )
+        ingreso.save()
+        return ingreso

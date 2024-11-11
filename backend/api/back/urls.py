@@ -60,4 +60,7 @@ urlpatterns = [
     path('tarea/', views.TareaView.as_view(), name='crear_tarea'),
     path('compra/<int:compra_id>/cambiar_estado/', views.CompraView.as_view(), name='cambiar_estado_compra'),
     path('compra/<int:compra_id>/', views.CompraView.as_view(), name='detalle_compra'),
+    path('ingreso/', views.IngresoView.as_view(), name='crear_ingreso'),
+    path('almacenes/<int:id_empresa>/', views.AlmacenesView.as_view(), name='almacenes'),
+
 ]

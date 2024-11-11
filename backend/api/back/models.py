@@ -301,8 +301,11 @@ class Compra(models.Model):
 class Almacen(models.Model):
     id = models.AutoField(primary_key=True)
     descripcion = models.CharField()
+    direccion = models.CharField()
     id_empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, db_column='id_empresa')
     contacto = models.CharField()
+    ciudad = models.CharField()
+    provincia = models.CharField()
 
     class Meta:
         db_table = 'Almacen'
@@ -381,3 +384,20 @@ class Tarea(models.Model):
 
     class Meta:
         db_table = 'Tarea'
+
+
+class Ingreso(models.Model):
+    id = models.AutoField(primary_key=True)
+    cantidad = models.FloatField()
+    fecha = models.DateField()
+    id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
+    unidad_medida = models.CharField()
+    id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
+    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
+    fecha_real = models.DateField()
+    realizado = models.BooleanField()
+    en_obra = models.BooleanField()
+
+    class Meta:
+        db_table = 'Ingreso'
+
