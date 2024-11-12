@@ -432,6 +432,8 @@ class Tarea_Herramienta(models.Model):
     id_herramienta = models.ForeignKey(Herramienta, on_delete=models.CASCADE, db_column='id_herramienta')
     uso_desde = models.DateField()
     uso_hasta = models.DateField()
+    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
+
 
     class Meta:
         db_table = 'Tarea_Herramienta'

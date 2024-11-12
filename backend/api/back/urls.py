@@ -63,4 +63,11 @@ urlpatterns = [
     path('ingreso/', views.IngresoView.as_view(), name='crear_ingreso'),
     path('almacenes/<int:id_empresa>/', views.AlmacenesView.as_view(), name='almacenes'),
     path('pago/', views.PagoView.as_view(), name='registrar_pago'),
+    path('herramientas/<int:id_empresa>/', views.HerramientasView.as_view(), name='herramientas'),
+    path('tarea/<int:id_tarea>/', views.TareaView.as_view(), name='tarea_detail'),
+    path('tarea/agregar-colaborador/', views.TareaColaboradorView.as_view(), name='agregar_colaborador'),
+    path('tarea/agregar-herramienta/', views.TareaHerramientaView.as_view(), name='agregar_herramienta'),
+    path('tarea/agregar-material/', views.TareaMaterialView.as_view(), name='agregar_material'),
+    path('tarea/<int:id_tarea>/actualizar/', views.TareaView.as_view(), name='actualizar_tarea'),
+
 ]

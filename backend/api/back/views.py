@@ -901,6 +901,15 @@ class VehiculosView(View):
             return JsonResponse({'error': str(e)}, status=500)
 
 
+class HerramientasView(View):
+    def get(self, request, id_empresa):
+        try:
+            herramientas = EmpresaController.get_herramientas(id_empresa)
+            return JsonResponse(herramientas, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class TareaView(View):
     def post(self, request):
@@ -927,6 +936,51 @@ class TareaView(View):
             return JsonResponse({"message": "Tarea creada"}, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+    def get(self, request, id_tarea):
+        try:
+            tarea = Tarea.objects.get(id=id_tarea)
+            tarea_data = {
+                'fecha_inicio': tarea.fecha_inicio,
+                'fecha_fin': tarea.fecha_fin,
+                'precio_total': tarea.precio_total,
+                'descripcion': tarea.descripcion,
+                'titulo': tarea.titulo,
+            }
+            return JsonResponse(tarea_data, safe=False)
+        except Tarea.DoesNotExist:
+            return JsonResponse({'detail': 'Tarea no encontrada'}, status=500)
+
+    def put(self, request, id_tarea):
+        tarea = get_object_or_404(Tarea, id=id_tarea)
+        data = json.loads(request.body)
+
+        tarea.id_area_id = data.get('id_area', tarea.id_area_id)
+        tarea.fecha_inicio = data.get('fecha_inicio', tarea.fecha_inicio)
+        tarea.fecha_fin = data.get('fecha_fin', tarea.fecha_fin)
+        tarea.precio_total = data.get('precio_total', tarea.precio_total)
+        tarea.id_presupuesto_servicio_id = data.get('id_presupuesto_servicio', tarea.id_presupuesto_servicio_id)
+        tarea.id_vehiculo_id = data.get('id_vehiculo', tarea.id_vehiculo_id)
+        tarea.descripcion = data.get('descripcion', tarea.descripcion)
+        tarea.titulo = data.get('titulo', tarea.titulo)
+
+        # Guardar cambios
+        tarea.save()
+
+        # Preparar y enviar la respuesta
+        response_data = {
+            'id': tarea.id,
+            'id_area': tarea.id_area_id,
+            'fecha_inicio': tarea.fecha_inicio,
+            'fecha_fin': tarea.fecha_fin,
+            'precio_total': tarea.precio_total,
+            'id_presupuesto_servicio': tarea.id_presupuesto_servicio_id,
+            'id_vehiculo': tarea.id_vehiculo_id,
+            'descripcion': tarea.descripcion,
+            'titulo': tarea.titulo,
+        }
+
+        return JsonResponse(response_data, status=201)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -991,3 +1045,96 @@ class PagoView(View):
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'JSON inválido'}, status=400)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TareaColaboradorView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        id_tarea = data.get('id_tarea')
+        id_colaborador = data.get('id_colaborador')
+        estado = data.get('estado', 'Activo')
+
+        # Validación de existencia de Tarea y Colaborador
+        tarea = get_object_or_404(Tarea, id=id_tarea)
+        colaborador = get_object_or_404(Colaborador, id=id_colaborador)
+
+        # Crear Tarea_Colaborador
+        tarea_colaborador = Tarea_Colaborador.objects.create(
+            id_tarea=tarea,
+            id_colaborador=colaborador,
+            estado=estado
+        )
+
+        # Preparar la respuesta
+        response_data = {
+            'id': tarea_colaborador.id,
+            'id_tarea': tarea.id,
+            'id_colaborador': colaborador.id,
+            'estado': tarea_colaborador.estado
+        }
+
+        return JsonResponse(response_data, status=201)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TareaHerramientaView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        id_tarea = data.get('id_tarea')
+        id_h = data.get('id_herramienta')
+        id_v =data.get('id_vehiculo')
+        # Validación de existencia de Tarea y Herramienta
+        tarea = get_object_or_404(Tarea, id=id_tarea)
+        herramienta = Herramienta.objects.get(id=id_h) if id_h is not None else None
+        vehiculo = Vehiculo.objects.get(id=id_v) if id_v is not None else None
+
+        # Crear Tarea_Herramienta
+        tarea_herramienta = Tarea_Herramienta.objects.create(
+            id_tarea=tarea,
+            id_herramienta=herramienta,
+            id_vehiculo=vehiculo,
+            uso_desde=data.get('uso_desde'),
+            uso_hasta=data.get('uso_hasta')
+        )
+
+        # Preparar la respuesta
+        response_data = {
+            'id': tarea_herramienta.id,
+            'id_tarea': tarea.id,
+            'uso_desde': tarea_herramienta.uso_desde,
+            'uso_hasta': tarea_herramienta.uso_hasta
+        }
+
+        return JsonResponse(response_data, status=201)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TareaMaterialView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        id_tarea = data.get('id_tarea')
+        id_material = data.get('id_material')
+
+        # Validación de existencia de Tarea y Material
+        tarea = get_object_or_404(Tarea, id=id_tarea)
+        material = get_object_or_404(Material, id=id_material)
+
+        # Crear Tarea_Material
+        tarea_material = Tarea_Material.objects.create(
+            id_tarea=tarea,
+            id_material=material,
+            cant_utilizada=data.get('cant_utilizada'),
+            cant_no_utilizada=data.get('cant_no_utilizada', 0)
+        )
+
+        # Preparar la respuesta
+        response_data = {
+            'id': tarea_material.id,
+            'id_tarea': tarea.id,
+            'id_material': material.id,
+            'cant_utilizada': tarea_material.cant_utilizada,
+            'cant_no_utilizada': tarea_material.cant_no_utilizada
+        }
+
+        return JsonResponse(response_data, status=201)

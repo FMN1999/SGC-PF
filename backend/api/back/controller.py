@@ -133,6 +133,10 @@ class EmpresaController:
         return EmpresaData.get_vehiculos(id_empresa)
 
     @staticmethod
+    def get_herramientas(id_empresa):
+        return EmpresaData.get_herramientas(id_empresa)
+
+    @staticmethod
     def get_almacenes(id_empresa):
         return EmpresaData.get_almacenes(id_empresa)
 

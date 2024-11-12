@@ -13,4 +13,23 @@ export class TareaService {
   crearTarea(tarea: any): Observable<any> {
     return this.http.post(`${this.apiUrl}tarea/`, tarea);
   }
+
+  getTarea(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}tarea/${id}/`);
+  }
+
+  agregarColaborador(colaboradorData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}tarea/agregar-colaborador/`, colaboradorData);
+  }
+
+  agregarHerramienta(herramientaData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}tarea/agregar-herramienta/`, herramientaData);
+  }
+  agregarMaterial(materialData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}tarea/agregar-material/`, materialData);
+  }
+
+  actualizarTarea(idTarea: number, tareaData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/tarea/${idTarea}/actualizar/`, tareaData);
+  }
 }

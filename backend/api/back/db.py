@@ -144,6 +144,27 @@ class EmpresaData:
             print(f"Error al cargar las emrpesas: {e}")
             raise
 
+    @staticmethod
+    def get_herramientas(id_empresa):
+        try:
+            herramientas = Herramienta.objects.filter(id_material__id_proveedor__id_empresa=id_empresa)
+            herramientas_return = [
+                {
+                    'id': h.id,
+                    'descripcion': h.id_material.descripcion,
+                    'marca': h.marca,
+                    'id_almacen': h.id_almacen.id,
+                    'almacen': h.id_almacen.descripcion,
+                    'ubicacion': h.ubicacion,
+                    'id_compra': h.id_compra.id,
+                    'id_material': h.id_material.id,
+                } for h in herramientas
+            ]
+            print(herramientas_return)
+            return herramientas_return
+        except Exception as e:
+            print(f"Error al cargar las emrpesas: {e}")
+            raise
 
 class ClienteData:
     @staticmethod
