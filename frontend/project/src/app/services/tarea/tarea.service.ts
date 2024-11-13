@@ -30,6 +30,34 @@ export class TareaService {
   }
 
   actualizarTarea(idTarea: number, tareaData: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/tarea/${idTarea}/actualizar/`, tareaData);
+    return this.http.put<any>(`${this.apiUrl}tarea/${idTarea}/actualizar/`, tareaData);
+  }
+
+  obtenerColaboradoresTarea(tareaId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}tarea/${tareaId}/colaboradores/`);
+  }
+
+  obtenerHerramientasTarea(tareaId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}tarea/${tareaId}/herramientas/`);
+  }
+
+  obtenerMaterialesTarea(tareaId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}tarea/${tareaId}/materiales/`);
+  }
+
+  eliminarColaboradorTarea(colaboradorId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}tarea/colaborador/${colaboradorId}/eliminar/`);
+  }
+
+  eliminarHerramientaTarea(herramientaId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}tarea/herramienta/${herramientaId}/eliminar/`);
+  }
+
+  eliminarMaterialTarea(materialId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}tarea/material/${materialId}/eliminar/`);
+  }
+
+  actualizarCantDias(colaboradorId: number, cantDias: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}tarea/colaborador/${colaboradorId}/actualizar_cant_dias/`, { cant_dias: cantDias });
   }
 }

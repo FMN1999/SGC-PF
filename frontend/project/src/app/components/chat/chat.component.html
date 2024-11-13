@@ -1,0 +1,13 @@
+<!-- chat.component.html -->
+<div>
+  <input [(ngModel)]="query" placeholder="¿Cuál es el precio de...?" />
+  <button (click)="onBuscar()">Buscar</button>
+</div>
+
+<div *ngFor="let item of resultados">
+  <p>{{ item.tipo }}: {{ item.descripcion }}</p>
+  <p>Precio total: {{ item.precio_total }}</p>
+  <p>Proveedor: {{ item.proveedor }}</p>
+  <button (click)="onAgregar(item)">Agregar</button>
+</div>
+

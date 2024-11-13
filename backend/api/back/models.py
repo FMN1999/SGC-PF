@@ -421,6 +421,7 @@ class Tarea_Colaborador(models.Model):
     id_tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE, db_column='id_tarea')
     estado = models.CharField()
     id_colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE, db_column='id_colaborador')
+    cant_dias = models.FloatField()
 
     class Meta:
         db_table = 'Tarea_Colaborador'
@@ -432,8 +433,6 @@ class Tarea_Herramienta(models.Model):
     id_herramienta = models.ForeignKey(Herramienta, on_delete=models.CASCADE, db_column='id_herramienta')
     uso_desde = models.DateField()
     uso_hasta = models.DateField()
-    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
-
 
     class Meta:
         db_table = 'Tarea_Herramienta'

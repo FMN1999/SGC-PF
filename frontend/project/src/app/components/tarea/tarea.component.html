@@ -1,57 +1,98 @@
-<form (ngSubmit)="actualizarTarea()">
-  <!-- Título de la tarea -->
+<div *ngIf="!modoEdicion">
+  <h3>{{ titulo }}</h3>
+  <p>{{ descripcion }}</p>
+  <p>Fecha de inicio: {{ fechaInicio | date }}</p>
+  <p>Fecha de fin: {{ fechaFin | date }}</p>
+  <p>Precio total: {{ precioTotal | currency }}</p>
+  <p>Area: {{ vehiculo }}</p>
+  <button (click)="habilitarEdicion()">Editar</button>
+</div>
+
+<form *ngIf="modoEdicion" (ngSubmit)="actualizarTarea()">
   <label for="titulo">Título de la tarea</label>
   <input id="titulo" [(ngModel)]="titulo" name="titulo" required>
 
-  <!-- Descripción de la tarea -->
   <label for="descripcion">Descripción de la tarea</label>
   <textarea id="descripcion" [(ngModel)]="descripcion" name="descripcion" required></textarea>
 
-  <!-- Fecha inicio -->
   <label for="fechaInicio">Fecha de inicio</label>
   <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio" required>
 
-  <!-- Fecha fin -->
   <label for="fechaFin">Fecha de fin</label>
   <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin" required>
 
-  <!-- Precio total -->
   <label for="precioTotal">Precio total</label>
   <input type="number" id="precioTotal" [(ngModel)]="precioTotal" name="precioTotal" required>
 
-  <!-- Selección de colaborador -->
+  <label for="vehiculoSeleccionado">Vehículo</label>
+  <select id="vehiculoSeleccionado" [(ngModel)]="vehiculoSeleccionado" name="vehiculoSeleccionado">
+    <option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">{{ vehiculo.descripcion }}</option>
+  </select>
+  <button type="submit">Guardar Cambios</button>
+  <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+</form>
+
+<!-- Sección de colaboradores, herramientas y materiales siempre visible -->
+<div>
+  <h3>Colaboradores asignados</h3>
+  <ul>
+    <li *ngFor="let colaborador of colaboradoresTarea">
+      {{ colaborador.id_colaborador__nombre }} - Estado: {{ colaborador.estado }}
+      <span *ngIf="!editandoCantDias[colaborador.id]">
+        Días trabajados: {{ colaborador.cant_dias }}
+        <button (click)="habilitarEdicionCantDias(colaborador.id, colaborador.cant_dias)">Días trabajados</button>
+      </span>
+      <span *ngIf="editandoCantDias[colaborador.id]">
+        Días trabajados:
+        <input type="number" [(ngModel)]="cantDiasTemp[colaborador.id]" step="0.5" />
+        <button (click)="guardarCantDias(colaborador.id)">Guardar</button>
+      </span>
+      <button (click)="eliminarColaborador(colaborador.id)">Eliminar</button>
+    </li>
+  </ul>
+
+
   <label for="colaboradorSeleccionado">Colaborador</label>
   <select id="colaboradorSeleccionado" [(ngModel)]="colaboradorSeleccionado" name="colaboradorSeleccionado">
-    <option *ngFor="let colaborador of colaboradores" [value]="colaborador.id">{{ colaborador.nombre }}</option>
+    <option *ngFor="let colaborador of colaboradores" [value]="colaborador.id">{{ colaborador.nombre }} {{colaborador.apellido}}</option>
   </select>
   <button type="button" (click)="agregarColaborador()">Agregar Colaborador</button>
 
-  <!-- Selección de herramienta -->
+  <h3>Herramientas asignadas</h3>
+  <ul>
+    <li *ngFor="let herramienta of herramientasTarea">
+      {{ herramienta.herramienta }} - Uso desde: {{ herramienta.uso_desde }} hasta: {{ herramienta.uso_hasta }}
+      <button (click)="eliminarHerramienta(herramienta.id)">Eliminar</button>
+    </li>
+  </ul>
+
   <label for="herramientaSeleccionada">Herramienta</label>
   <select id="herramientaSeleccionada" [(ngModel)]="herramientaSeleccionada" name="herramientaSeleccionada">
     <option *ngFor="let herramienta of herramientas" [value]="herramienta.id">{{ herramienta.descripcion }}</option>
   </select>
+  <label for="usoDesde">Uso desde</label>
+  <input type="date" id="usoDesde" [(ngModel)]="fechaInicio" name="usoDesde" required>
 
-  <label for="vehiculoSeleccionado">Vehiculo</label>
-  <select id="vehiculoSeleccionado" [(ngModel)]="vehiculoSeleccionado" name="vehiculoSeleccionado">
-    <option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">{{ vehiculo.descripcion }}</option>
-  </select>
+  <label for="usoHasta">Uso hasta</label>
+  <input type="date" id="usoHasta" [(ngModel)]="fechaFin" name="usoHasta" required>
+
   <button type="button" (click)="agregarHerramienta()">Agregar Herramienta</button>
 
-  <!-- Selección de material -->
+ <h3>Materiales asignados</h3>
+  <ul>
+    <li *ngFor="let material of materialesTarea">
+      {{ material.material }} - Utilizado: {{ material.cant_utilizada }} No Utilizado: {{ material.cant_no_utilizada }}
+      <button (click)="eliminarMaterial(material.id)">Eliminar</button>
+    </li>
+  </ul>
   <label for="materialSeleccionado">Material</label>
   <select id="materialSeleccionado" [(ngModel)]="materialSeleccionado" name="materialSeleccionado">
-    <option *ngFor="let material of materiales" [value]="material.id">{{ material.nombre }}</option>
+    <option *ngFor="let material of materiales" [value]="material.id">{{ material.descripcion }}</option>
   </select>
-
   <label for="cantidadUtilizada">Cantidad utilizada</label>
   <input type="number" id="cantidadUtilizada" [(ngModel)]="cantidadUtilizada" name="cantidadUtilizada">
-
   <label for="cantidadNoUtilizada">Cantidad no utilizada</label>
   <input type="number" id="cantidadNoUtilizada" [(ngModel)]="cantidadNoUtilizada" name="cantidadNoUtilizada">
-
   <button type="button" (click)="agregarMaterial()">Agregar Material</button>
+</div>
 
-  <!-- Botón para actualizar la tarea -->
-  <button type="submit">Actualizar Tarea</button>
-</form>

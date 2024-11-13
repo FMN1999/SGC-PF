@@ -69,5 +69,15 @@ urlpatterns = [
     path('tarea/agregar-herramienta/', views.TareaHerramientaView.as_view(), name='agregar_herramienta'),
     path('tarea/agregar-material/', views.TareaMaterialView.as_view(), name='agregar_material'),
     path('tarea/<int:id_tarea>/actualizar/', views.TareaView.as_view(), name='actualizar_tarea'),
+    path('tarea/<int:tarea_id>/colaboradores/', views.TareaColaboradorView.as_view(), name='colaboradores_tarea'),
+    path('tarea/<int:tarea_id>/herramientas/', views.TareaHerramientaView.as_view(), name='herramientas_tarea'),
+    path('tarea/<int:tarea_id>/materiales/', views.TareaMaterialView.as_view(), name='materiales_tarea'),
+    path('tarea/colaborador/<int:colaborador_id>/eliminar/', views.TareaColaboradorView.as_view(),
+         name='eliminar_colaborador_tarea'),
+    path('tarea/herramienta/<int:herramienta_id>/eliminar/', views.TareaHerramientaView.as_view(),
+         name='eliminar_herramienta_tarea'),
+    path('tarea/material/<int:material_id>/eliminar/', views.TareaMaterialView.as_view(), name='eliminar_material_tarea'),
+    path('tarea/colaborador/<int:colaborador_id>/actualizar_cant_dias/', views.TareaColaboradorView.as_view(),
+         name='actualizar_cant_dias'),
 
 ]

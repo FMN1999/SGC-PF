@@ -3,7 +3,7 @@ import { TareaService } from '../../services/tarea/tarea.service'; // Ajusta la 
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { UsuarioService} from '../../services/usuarios/usuario.service'
 import {FormsModule} from "@angular/forms";
-import {NgForOf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
 
 @Component({
@@ -12,21 +12,27 @@ import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
   templateUrl: './tarea.component.html',
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    NgIf,
+    DatePipe,
+    CurrencyPipe
   ],
   styleUrls: ['./tarea.component.scss']
 })
 export class TareaComponent implements OnInit {
-  // @ts-ignore
-  tareaId: number;
+  tareaId: number = 0;
   fechaInicio: Date | undefined;
   fechaFin: Date | undefined;
+  usoDesde: Date | undefined;
+  usoHasta: Date | undefined;
   precioTotal: number | undefined;
-  // @ts-ignore
-  descripcion: string;
+  descripcion: string = '';
   titulo: string | undefined;
+  modoEdicion: boolean = false;
 
-  // Para agregar colaboradores, herramientas y materiales
+  colaboradoresTarea: any[] = [];
+  herramientasTarea: any[] = [];
+  materialesTarea: any[] = [];
   colaboradores: any[] = [];
   herramientas: any[] = [];
   materiales: any[] = [];
@@ -37,9 +43,16 @@ export class TareaComponent implements OnInit {
   materialSeleccionado: number | undefined;
   cantidadUtilizada: number | undefined;
   cantidadNoUtilizada: number | undefined;
-  empresaId:string = ''
-  tarea: any;
   vehiculoSeleccionado: number | undefined;
+  empresaId: string = '';
+  tarea: any;
+  id_vehiculo: any;
+  vehiculo:any;
+  cant_dias: any;
+
+  editandoCantDias: { [colaboradorId: number]: boolean } = {}; // Almacena el estado de edición de cada colaborador
+  cantDiasTemp: { [colaboradorId: number]: number } = {}; // Almacena el valor temporal de cant_dias para cada colaborador
+
 
   constructor(
     private tareaService: TareaService,
@@ -50,22 +63,37 @@ export class TareaComponent implements OnInit {
 
   ngOnInit(): void {
     this.tareaId = +this.route.snapshot.paramMap.get('id')!;
-    // @ts-ignore
-    this.empresaId = sessionStorage.getItem('id_empresa');
+    this.empresaId = sessionStorage.getItem('id_empresa') || '';
+    this.cargarDatosRelacionados();
     this.usuarioService.obtenerUsuariosPorEmpresa(Number(this.empresaId)).subscribe(u => this.colaboradores = u.colaboradores);
     this.empresaService.obtenerHerramientasPorEmpresa(Number(this.empresaId)).subscribe(herramientas => this.herramientas = herramientas);
     this.empresaService.listarMaterialesPorEmpresa(Number(this.empresaId)).subscribe(materiales => this.materiales = materiales);
     this.empresaService.obtenerVehiculosPorEmpresa(Number(this.empresaId)).subscribe(vehiculos => this.vehiculos = vehiculos);
 
-    // Aquí podrías cargar los datos de una tarea específica si es que estás editando una
-    // Asumimos que la tarea ya existe y la estamos editando
     this.tareaService.getTarea(this.tareaId).subscribe((tarea) => {
       this.fechaInicio = tarea.fecha_inicio;
       this.fechaFin = tarea.fecha_fin;
       this.precioTotal = tarea.precio_total;
       this.descripcion = tarea.descripcion;
       this.titulo = tarea.titulo;
+      this.id_vehiculo=tarea.id_vehiculo;
+      this.vehiculo = tarea.vehiculo;
+      this.vehiculoSeleccionado = tarea.id_vehiculo;
     });
+  }
+
+  cargarDatosRelacionados() {
+    this.tareaService.obtenerColaboradoresTarea(Number(this.tareaId)).subscribe(data => this.colaboradoresTarea = data);
+    this.tareaService.obtenerHerramientasTarea(Number(this.tareaId)).subscribe(data => this.herramientasTarea = data);
+    this.tareaService.obtenerMaterialesTarea(Number(this.tareaId)).subscribe(data => this.materialesTarea = data);
+  }
+
+  habilitarEdicion() {
+    this.modoEdicion = true;
+  }
+
+  cancelarEdicion() {
+    this.modoEdicion = false;
   }
 
   // Método para agregar colaborador a la tarea
@@ -75,6 +103,7 @@ export class TareaComponent implements OnInit {
         id_tarea: this.tareaId,
         id_colaborador: this.colaboradorSeleccionado,
         estado: 'Activo',
+        cant_dias:this.cant_dias
       };
       this.tareaService.agregarColaborador(colaboradorData).subscribe((response: any) => {
         console.log('Colaborador agregado', response);
@@ -88,9 +117,8 @@ export class TareaComponent implements OnInit {
       const herramientaData = {
         id_tarea: this.tareaId,
         id_herramienta: this.herramientaSeleccionada,
-        id_vehiculo: this.vehiculoSeleccionado,
-        uso_desde: this.fechaInicio,
-        uso_hasta: this.fechaFin
+        uso_desde: this.usoDesde,
+        uso_hasta: this.usoHasta
       };
       this.tareaService.agregarHerramienta(herramientaData).subscribe((response: any) => {
         console.log('Herramienta agregada', response);
@@ -116,17 +144,52 @@ export class TareaComponent implements OnInit {
   // Método para actualizar la tarea
   actualizarTarea() {
     const tareaData = {
-      id_area: this.tarea.id_area, // Asume que el área ya está seleccionada
+      id_vehiculo: this.vehiculoSeleccionado,
+      vehiculo: this.vehiculo,
       fecha_inicio: this.fechaInicio,
       fecha_fin: this.fechaFin,
       precio_total: this.precioTotal,
-      id_presupuesto_servicio: this.tarea.id_presupuesto_servicio, // Asume que el presupuesto ya está seleccionado
-      id_vehiculo: this.tarea.id_vehiculo, // Asume que el vehículo ya está seleccionado
       descripcion: this.descripcion,
       titulo: this.titulo
     };
     this.tareaService.actualizarTarea(this.tareaId, tareaData).subscribe((response: any) => {
       console.log('Tarea actualizada', response);
+      this.modoEdicion = false;
     });
   }
+
+  eliminarColaborador(colaboradorId: number): void {
+    this.tareaService.eliminarColaboradorTarea(colaboradorId).subscribe(() => {
+      this.colaboradoresTarea = this.colaboradoresTarea.filter(c => c.id !== colaboradorId);
+    });
+  }
+
+  eliminarHerramienta(herramientaId: number): void {
+    this.tareaService.eliminarHerramientaTarea(herramientaId).subscribe(() => {
+      this.herramientasTarea = this.herramientasTarea.filter(h => h.id !== herramientaId);
+    });
+  }
+
+  eliminarMaterial(materialId: number): void {
+    this.tareaService.eliminarMaterialTarea(materialId).subscribe(() => {
+      this.materialesTarea = this.materialesTarea.filter(m => m.id !== materialId);
+    });
+  }
+
+  habilitarEdicionCantDias(colaboradorId: number, cantDiasActual: number): void {
+    this.editandoCantDias[colaboradorId] = true;
+    this.cantDiasTemp[colaboradorId] = cantDiasActual;
+  }
+
+  // Método para guardar la nueva cantidad de días
+  guardarCantDias(colaboradorId: number): void {
+    const cantDias = this.cantDiasTemp[colaboradorId];
+    this.tareaService.actualizarCantDias(colaboradorId, cantDias).subscribe(() => {
+      // Actualizamos la lista de colaboradores con el nuevo valor de cant_dias
+      const colaborador = this.colaboradoresTarea.find(c => c.id === colaboradorId);
+      if (colaborador) colaborador.cant_dias = cantDias;
+      this.editandoCantDias[colaboradorId] = false; // Desactivar edición
+    });
+  }
+
 }

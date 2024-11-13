@@ -914,7 +914,6 @@ class HerramientasView(View):
 class TareaView(View):
     def post(self, request):
         data = json.loads(request.body)
-        print(data)
         presupuesto_servicio = None
         if data.get('id_presupuesto_servicio'):
             presupuesto_servicio = get_object_or_404(Presupuesto_Servicio, id=data["id_presupuesto_servicio"])
@@ -946,6 +945,10 @@ class TareaView(View):
                 'precio_total': tarea.precio_total,
                 'descripcion': tarea.descripcion,
                 'titulo': tarea.titulo,
+                'id_area': tarea.id_area.id,
+                'area': tarea.id_area.descripcion,
+                'id_vehiculo':tarea.id_vehiculo.id,
+                'vehiculo':tarea.id_vehiculo.tipo,
             }
             return JsonResponse(tarea_data, safe=False)
         except Tarea.DoesNotExist:
@@ -955,11 +958,9 @@ class TareaView(View):
         tarea = get_object_or_404(Tarea, id=id_tarea)
         data = json.loads(request.body)
 
-        tarea.id_area_id = data.get('id_area', tarea.id_area_id)
         tarea.fecha_inicio = data.get('fecha_inicio', tarea.fecha_inicio)
         tarea.fecha_fin = data.get('fecha_fin', tarea.fecha_fin)
         tarea.precio_total = data.get('precio_total', tarea.precio_total)
-        tarea.id_presupuesto_servicio_id = data.get('id_presupuesto_servicio', tarea.id_presupuesto_servicio_id)
         tarea.id_vehiculo_id = data.get('id_vehiculo', tarea.id_vehiculo_id)
         tarea.descripcion = data.get('descripcion', tarea.descripcion)
         tarea.titulo = data.get('titulo', tarea.titulo)
@@ -1054,6 +1055,7 @@ class TareaColaboradorView(View):
         id_tarea = data.get('id_tarea')
         id_colaborador = data.get('id_colaborador')
         estado = data.get('estado', 'Activo')
+        cant_dias = data.get('cant_dias')
 
         # Validación de existencia de Tarea y Colaborador
         tarea = get_object_or_404(Tarea, id=id_tarea)
@@ -1063,7 +1065,8 @@ class TareaColaboradorView(View):
         tarea_colaborador = Tarea_Colaborador.objects.create(
             id_tarea=tarea,
             id_colaborador=colaborador,
-            estado=estado
+            estado=estado,
+            cant_dias=cant_dias,
         )
 
         # Preparar la respuesta
@@ -1071,10 +1074,41 @@ class TareaColaboradorView(View):
             'id': tarea_colaborador.id,
             'id_tarea': tarea.id,
             'id_colaborador': colaborador.id,
-            'estado': tarea_colaborador.estado
+            'estado': tarea_colaborador.estado,
+            'cant_dias': tarea_colaborador.cant_dias,
         }
 
         return JsonResponse(response_data, status=201)
+
+    def get(self, request, tarea_id):
+        print(tarea_id)
+        colaboradores = Tarea_Colaborador.objects.filter(id_tarea=tarea_id)
+        data = [
+            {
+                'id': c.id,
+                'id_colaborador':c.id_colaborador.id,
+                'nombre':c.id_colaborador.id_usuario.nombre,
+                'apellido':c.id_colaborador.id_usuario.apellido,
+                'estado': c.estado,
+                'cant_dias':c.cant_dias,
+            } for c in colaboradores
+        ]
+
+        return JsonResponse(data, safe=False)
+
+    def delete(self,request, colaborador_id):
+        Tarea_Colaborador.objects.get(id=colaborador_id).delete()
+        return JsonResponse({'message': 'Colaborador eliminado'}, status=204)
+
+    def patch(self, request, colaborador_id):
+        data = json.loads(request.body)
+        cant_dias = data.get('cant_dias')
+        if cant_dias is not None:
+            tarea = Tarea_Colaborador.objects.get(id=colaborador_id)
+            tarea.cant_dias = cant_dias
+            return JsonResponse({'message': 'Cantidad de días actualizada', 'cant_dias': cant_dias}, status=200)
+        else:
+            return JsonResponse({'error': 'Cantidad de días no proporcionada'}, status=400)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1083,17 +1117,14 @@ class TareaHerramientaView(View):
         data = json.loads(request.body)
         id_tarea = data.get('id_tarea')
         id_h = data.get('id_herramienta')
-        id_v =data.get('id_vehiculo')
         # Validación de existencia de Tarea y Herramienta
         tarea = get_object_or_404(Tarea, id=id_tarea)
         herramienta = Herramienta.objects.get(id=id_h) if id_h is not None else None
-        vehiculo = Vehiculo.objects.get(id=id_v) if id_v is not None else None
 
         # Crear Tarea_Herramienta
         tarea_herramienta = Tarea_Herramienta.objects.create(
             id_tarea=tarea,
             id_herramienta=herramienta,
-            id_vehiculo=vehiculo,
             uso_desde=data.get('uso_desde'),
             uso_hasta=data.get('uso_hasta')
         )
@@ -1107,6 +1138,23 @@ class TareaHerramientaView(View):
         }
 
         return JsonResponse(response_data, status=201)
+
+    def get(self,request, tarea_id):
+        herramientas = Tarea_Herramienta.objects.filter(id_tarea=tarea_id)
+        data = [
+            {
+                'id': h.id,
+                'id_herramienta': h.id_herramienta.id,
+                'herramienta':h.id_herramienta.id_material.descripcion,
+                'uso_desde': h.uso_desde,
+                'uso_hasta': h.uso_hasta,
+            } for h in herramientas
+        ]
+        return JsonResponse(data, safe=False)
+
+    def delete(self, request, herramienta_id):
+        Tarea_Herramienta.objects.get(id=herramienta_id).delete()
+        return JsonResponse({'message': 'Herramienta eliminada'}, status=204)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1138,3 +1186,56 @@ class TareaMaterialView(View):
         }
 
         return JsonResponse(response_data, status=201)
+
+    def get(self, request, tarea_id):
+        materiales = Tarea_Material.objects.filter(id_tarea=tarea_id)
+        data= [
+            {
+                'id': m.id,
+                'id_material': m.id_material.id,
+                'material': m.id_material.descripcion,
+                'cant_utilizada': m.cant_utilizada,
+                'cant_no_utilizada': m.cant_no_utilizada,
+            } for m in materiales
+        ]
+        return JsonResponse(data, safe=False)
+
+    def delete(self, request, material_id):
+        Tarea_Material.objects.get(id=material_id).delete()
+        return JsonResponse({'message': 'Material eliminado'}, status=204)
+
+
+# Ejemplo en views.py
+class ChatPresupuestoView(View):
+    def get(self, request):
+        data = json.loads(request.body)
+        query = data.get('query', '')
+        # Lógica para buscar materiales y servicios
+        materiales = Material.objects.filter(descripcion__icontains=query)[:3]  # Top 3
+        servicios = Servicio.objects.filter(descripcion__icontains=query)[:3]  # Top 3
+
+        # Calcular el precio total con impuestos y otros gastos
+        resultados = []
+        for material in materiales:
+            precio_total = material.precio + material.impuestos_total + material.otros_gastos
+            resultados.append({
+                "tipo": "Material",
+                "descripcion": material.descripcion,
+                "precio_total": precio_total,
+                "proveedor": material.id_proveedor.denominacion,
+                "id": material.id
+            })
+
+        for servicio in servicios:
+            precio_total = servicio.precio_x_unidad + servicio.impuestos_total + servicio.otros_gastos
+            resultados.append({
+                "tipo": "Servicio",
+                "descripcion": servicio.descripcion,
+                "precio_total": precio_total,
+                "proveedor": servicio.id_proveedor.denominacion,
+                "id": servicio.id
+            })
+
+        # Ordenar resultados por precio total
+        resultados = sorted(resultados, key=lambda x: x["precio_total"])[:3]  # Top 3 de todos
+        return JsonResponse(resultados)
