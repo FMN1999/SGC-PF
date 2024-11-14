@@ -1205,37 +1205,17 @@ class TareaMaterialView(View):
         return JsonResponse({'message': 'Material eliminado'}, status=204)
 
 
-# Ejemplo en views.py
-class ChatPresupuestoView(View):
-    def get(self, request):
+@method_decorator(csrf_exempt, name='dispatch')
+class Assistant(View):
+    def post(self, request):
         data = json.loads(request.body)
-        query = data.get('query', '')
-        # Lógica para buscar materiales y servicios
-        materiales = Material.objects.filter(descripcion__icontains=query)[:3]  # Top 3
-        servicios = Servicio.objects.filter(descripcion__icontains=query)[:3]  # Top 3
+        user_message = data.get('message', '').lower()
 
-        # Calcular el precio total con impuestos y otros gastos
-        resultados = []
-        for material in materiales:
-            precio_total = material.precio + material.impuestos_total + material.otros_gastos
-            resultados.append({
-                "tipo": "Material",
-                "descripcion": material.descripcion,
-                "precio_total": precio_total,
-                "proveedor": material.id_proveedor.denominacion,
-                "id": material.id
-            })
+        # Aquí, procesas el mensaje y generas una respuesta
+        # Puedes usar lógica condicional o incluso un modelo de lenguaje para respuestas automáticas
+        if 'presupuesto' in user_message:
+            response_message = "¿Quieres ayuda para crear un presupuesto? Puedo guiarte en el proceso."
+        else:
+            response_message = "Lo siento, no entendí tu pregunta."
 
-        for servicio in servicios:
-            precio_total = servicio.precio_x_unidad + servicio.impuestos_total + servicio.otros_gastos
-            resultados.append({
-                "tipo": "Servicio",
-                "descripcion": servicio.descripcion,
-                "precio_total": precio_total,
-                "proveedor": servicio.id_proveedor.denominacion,
-                "id": servicio.id
-            })
-
-        # Ordenar resultados por precio total
-        resultados = sorted(resultados, key=lambda x: x["precio_total"])[:3]  # Top 3 de todos
-        return JsonResponse(resultados)
+        return JsonResponse({'message': response_message})

@@ -79,5 +79,6 @@ urlpatterns = [
     path('tarea/material/<int:material_id>/eliminar/', views.TareaMaterialView.as_view(), name='eliminar_material_tarea'),
     path('tarea/colaborador/<int:colaborador_id>/actualizar_cant_dias/', views.TareaColaboradorView.as_view(),
          name='actualizar_cant_dias'),
+    path('assistant', views.Assistant.as_view(), name='assistant'),
 
 ]

@@ -6,13 +6,15 @@ import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ObraService } from '../../services/obra/obra.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
+import { ChatComponent } from '../chat/chat.component'
 
 @Component({
   selector: 'app-crear-presupuesto',
   templateUrl: './crear-presupuesto.component.html',
   imports: [
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    ChatComponent
   ],
   standalone: true
 })

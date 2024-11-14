@@ -1,5 +1,7 @@
 from datetime import date
-
+from django.db.models import F, Sum, Q
+from django.utils import timezone
+from geopy.distance import geodesic  # Para calcular distancias geográficas
 from .db import *
 from django.core.exceptions import ValidationError
 
@@ -778,3 +780,358 @@ class PagoController:
             return {'status': 'success', 'pago_id': pago_id}
         else:
             return {'status': 'error', 'error': 'Error al guardar el pago en la base de datos'}
+
+
+class ChatController:
+    @staticmethod
+    def generador_presupuesto(data):
+
+        # Extrae detalles del proyecto
+        dimensiones = data.get('dimensiones')
+        tipo_obra = data.get('tipo_obra')
+
+        # Lógica para seleccionar materiales y servicios en función del tipo de obra
+        # Aquí, por simplicidad, filtramos materiales que podrían coincidir con el tipo de obra
+        materiales = Material.objects.filter(
+            Q(tipo_material__icontains=tipo_obra) | Q(descripcion__icontains=tipo_obra)
+        )
+
+        servicios = Servicio.objects.filter(
+            Q(descripcion__icontains=tipo_obra) | Q(unidad_medida__icontains=dimensiones)
+        )
+
+        # Calcula costos estimados sumando precios de materiales y servicios
+        total_materiales = materiales.aggregate(total=Sum(F('precio') + F('impuestos_total') + F('otros_gastos')))
+        total_servicios = servicios.aggregate(
+            total=Sum(F('precio_x_unidad') + F('impuestos_total') + F('otros_gastos')))
+
+        # Calcula un total general
+        total_estimado = (total_materiales['total'] or 0) + (total_servicios['total'] or 0)
+
+        # Organiza los datos de respuesta
+        response_data = {
+            "materiales": list(materiales.values('id', 'tipo_material', 'marca', 'precio', 'moneda')),
+            "servicios": list(
+                servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'frecuencia_pago')),
+            "total_estimado": total_estimado,
+            "moneda": "ARS",  # Aquí puedes ajustar la moneda si es variable
+        }
+
+        # Responde con los datos en formato JSON
+        return response_data
+
+    @staticmethod
+    def recomendaciones_materiales(cliente_id):
+        # Obtener el cliente
+        cliente = Cliente.objects.get(id=cliente_id)
+
+        # Buscar las obras previas del cliente
+        obras_previas = Obra.objects.filter(id_cliente=cliente)
+
+        # Buscar materiales usados en estas obras previas
+        materiales_utilizados = Material.objects.filter(presupuesto_material__id_obra__in=obras_previas).distinct()
+
+        # Filtrar las ofertas activas
+        fecha_actual = timezone.now().date()
+        ofertas_activas = Oferta.objects.filter(fecha_desde__lte=fecha_actual, fecha_hasta__gte=fecha_actual)
+
+        # Buscar materiales en oferta
+        materiales_oferta = Oferta_Material.objects.filter(id_oferta__in=ofertas_activas.values_list('id', flat=True))
+
+        # Construir la respuesta
+        recomendaciones = []
+        for material in materiales_utilizados:
+            ofertas = materiales_oferta.filter(id_material=material)
+            ofertas_data = [{"descripcion": oferta.id_oferta.descripcion, "descuento": oferta.porc_desc} for oferta in
+                            ofertas]
+            recomendaciones.append({
+                "material_id": material.id,
+                "descripcion": material.descripcion,
+                "marca": material.marca,
+                "precio": material.precio,
+                "moneda": material.moneda,
+                "ofertas": ofertas_data,
+            })
+
+        return recomendaciones
+
+    @staticmethod
+    def ofertas_especiales():
+        # Obtener la fecha actual para filtrar ofertas activas
+        fecha_actual = timezone.now().date()
+        ofertas_activas = Oferta.objects.filter(fecha_desde__lte=fecha_actual, fecha_hasta__gte=fecha_actual)
+
+        # Filtrar ofertas de materiales y servicios aplicables al tipo de obra o cliente
+        ofertas_materiales = Oferta_Material.objects.filter(id_oferta__in=ofertas_activas)
+        ofertas_servicios = Oferta_Servicio.objects.filter(id_oferta__in=ofertas_activas)
+
+        # Construir la respuesta
+        ofertas = {
+            "materiales": [],
+            "servicios": []
+        }
+
+        # Procesar las ofertas de materiales
+        for oferta_material in ofertas_materiales:
+            ofertas["materiales"].append({
+                "material_id": oferta_material.id_material.id,
+                "descripcion_material": oferta_material.id_material.descripcion,
+                "marca": oferta_material.id_material.marca,
+                "descuento": oferta_material.porc_desc,
+                "descripcion_oferta": oferta_material.id_oferta.descripcion,
+                "fecha_hasta": oferta_material.id_oferta.fecha_hasta
+            })
+
+        # Procesar las ofertas de servicios
+        for oferta_servicio in ofertas_servicios:
+            ofertas["servicios"].append({
+                "servicio_id": oferta_servicio.id_servicio.id,
+                "descripcion_servicio": oferta_servicio.id_servicio.descripcion,
+                "descuento": oferta_servicio.porc_desc,
+                "descripcion_oferta": oferta_servicio.id_oferta.descripcion,
+                "fecha_hasta": oferta_servicio.id_oferta.fecha_hasta
+            })
+
+        return ofertas
+
+    @staticmethod
+    def calcular_transporte_almacenaje(obra_id):
+        # Obtener la obra y el almacén relacionado
+        obra = Obra.objects.get(id=obra_id)
+        almacen = Almacen.objects.get(id=obra.id_almacen.id)
+
+        # Calcular la distancia entre la obra y el almacén
+        distancia = geodesic((obra.latitud, obra.longitud), (almacen.latitud, almacen.longitud)).km
+
+        # Obtener los materiales necesarios y sus cantidades
+        compras = Compra.objects.filter(id_obra=obra_id)
+        materiales = [{"material": compra.id_material, "cantidad": compra.cantidad} for compra in compras]
+
+        # Obtener vehículos disponibles y calcular costo de transporte
+        vehiculos = Vehiculo.objects.all()
+        transporte_opciones = []
+
+        for vehiculo in vehiculos:
+            costo_transporte = vehiculo.costo_km * distancia
+            transporte_opciones.append({
+                "vehiculo_id": vehiculo.id,
+                "descripcion_vehiculo": vehiculo.descripcion,
+                "capacidad": vehiculo.capacidad,
+                "costo_transporte": costo_transporte
+            })
+
+        # Opciones de almacenaje: se puede personalizar según la necesidad
+        costo_almacenaje = almacen.costo_almacenaje  # Ejemplo simplificado
+
+        data_return = {
+            "distancia_km": distancia,
+            "transporte_opciones": transporte_opciones,
+            "costo_almacenaje": costo_almacenaje
+        }
+        return data_return
+
+    @staticmethod
+    def seguimiento_avance_obra(obra_id):
+        # Obtener la obra y sus tareas asociadas
+        obra = Obra.objects.get(id=obra_id)
+        tareas = Tarea.objects.filter(id_obra=obra_id)
+
+        # Variables de control de avance
+        avance_total = 0
+        tareas_data = []
+
+        for tarea in tareas:
+            # Calcular porcentaje de avance de cada tarea
+            porcentaje_avance = tarea.porcentaje_avance  # Suponiendo que este campo almacena el progreso
+            avance_total += porcentaje_avance
+
+            # Obtener colaboradores, materiales y herramientas asignados a la tarea
+            colaboradores = Tarea_Colaborador.objects.filter(id_tarea=tarea.id)
+            materiales = Tarea_Material.objects.filter(id_tarea=tarea.id)
+            herramientas = Tarea_Herramienta.objects.filter(id_tarea=tarea.id)
+
+            # Formato de cada tarea para la respuesta
+            tareas_data.append({
+                "tarea_id": tarea.id,
+                "descripcion": tarea.descripcion,
+                "estado": tarea.estado,
+                "porcentaje_avance": porcentaje_avance,
+                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.nombre} for col in
+                                  colaboradores],
+                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.nombre} for mat in materiales],
+                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.nombre} for her in
+                                 herramientas]
+            })
+
+        # Cálculo del avance general de la obra
+        avance_general = avance_total / len(tareas) if tareas else 0
+
+        data_return={
+            "obra_id": obra_id,
+            "nombre_obra": obra.nombre,
+            "avance_general": avance_general,
+            "tareas": tareas_data
+        }
+        return data_return
+
+    @staticmethod
+    def calcular_promedio_historial(material_id):
+        # Calcular el costo promedio histórico de un material en proyectos anteriores
+        compras_historial = Compra.objects.filter(id_material=material_id)
+        total_costo = sum([compra.precio_unitario * compra.cantidad for compra in compras_historial])
+        total_cantidad = sum([compra.cantidad for compra in compras_historial])
+        return total_costo / total_cantidad if total_cantidad else 0
+
+    @staticmethod
+    def optimizacion_costos(obra_id):
+        # Obtener la obra actual
+        obra = Obra.objects.get(id=obra_id)
+
+        # Obtener el presupuesto de la obra actual
+        presupuesto_actual = Presupuesto.objects.filter(id_obra=obra_id)
+
+        # Obtener las compras realizadas en la obra
+        compras_obra = Compra.objects.filter(id_obra=obra_id)
+
+        # Obtener subcontrataciones de obras previas
+        subcontrataciones_previas = Subcontratacion.objects.filter(id_obra__cliente=obra.cliente)
+
+        # Comparar costos de materiales y servicios
+        costos_historial = {}
+        for compra in compras_obra:
+            material = compra.id_material
+            costos_historial[material.id] = costos_historial.get(material.id,
+                                                                 0) + compra.precio_unitario * compra.cantidad
+
+        # Comparar costos con subcontrataciones previas
+        for sub in subcontrataciones_previas:
+            servicio = sub.id_servicio
+            costos_historial[servicio.id] = costos_historial.get(servicio.id, 0) + sub.precio_unitario * sub.cantidad
+
+        # Calcular el presupuesto total actual y compararlo
+        total_presupuesto = sum([p.costo_estimado for p in presupuesto_actual])
+
+        # Sugerencias de optimización
+        sugerencias = []
+        for material_id, costo in costos_historial.items():
+            material = Material.objects.get(id=material_id)
+            # Si el costo es más alto que el promedio histórico, sugerir alternativas
+            promedio_costo_material = ChatController.calcular_promedio_historial(material_id)
+            if costo > promedio_costo_material:
+                sugerencias.append(
+                    f"Material {material.nombre} tiene un costo más alto que el promedio histórico. Considere alternativas más económicas.")
+
+        # Generar respuesta con sugerencias
+        data_return= {
+            "obra_id": obra_id,
+            "nombre_obra": obra.nombre,
+            "total_presupuesto": total_presupuesto,
+            "sugerencias": sugerencias
+        }
+        return data_return
+
+    @staticmethod
+    def gestion_proveedores(obra_id):
+        # Obtener la obra actual
+        obra = Obra.objects.get(id=obra_id)
+
+        # Obtener el cliente de la obra
+        cliente = obra.cliente
+
+        # Buscar proveedores que hayan trabajado en proyectos similares o del mismo cliente
+        proveedores_aptos = Proveedor.objects.filter(
+            tipo_material__in=[compra.id_material.tipo for compra in Compra.objects.filter(id_obra=obra_id)])
+
+        # Buscar subcontratistas que hayan trabajado con este cliente o en proyectos similares
+        subcontratistas_aptos = Subcontratacion.objects.filter(id_obra__cliente=cliente)
+
+        # Analizar el desempeño de proveedores y subcontratistas
+        proveedores_recomendados = []
+        for proveedor in proveedores_aptos:
+            historial = proveedor.historial_obras.filter(id_obra__cliente=cliente)
+            if historial.exists():
+                proveedores_recomendados.append({
+                    "proveedor": proveedor.nombre,
+                    "calificacion": proveedor.calificacion,
+                    "materiales": [material.nombre for material in proveedor.tipo_material.all()],
+                    "comentarios": [comentario.texto for comentario in proveedor.comentarios.all()],
+                })
+
+        subcontratistas_recomendados = []
+        for sub in subcontratistas_aptos:
+            if sub.id_obra.cliente == cliente:
+                subcontratistas_recomendados.append({
+                    "subcontratista": sub.id_subcontratista.nombre,
+                    "calificacion": sub.calificacion,
+                    "servicios": [servicio.nombre for servicio in sub.id_servicios.all()],
+                    "comentarios": [comentario.texto for comentario in sub.id_subcontratista.comentarios.all()],
+                })
+
+        # Generar respuesta con proveedores y subcontratistas recomendados
+        data_return={
+            "obra_id": obra_id,
+            "nombre_obra": obra.nombre,
+            "proveedores_recomendados": proveedores_recomendados,
+            "subcontratistas_recomendados": subcontratistas_recomendados,
+        }
+        return data_return
+
+    @staticmethod
+    def analiza_costos(obra_id):
+        # Obtener la obra actual
+        obra = Obra.objects.get(id=obra_id)
+
+        # Obtener el presupuesto de la obra
+        presupuesto = Presupuesto.objects.get(id_obra=obra_id)
+
+        # Obtener las compras asociadas a la obra
+        compras = Compra.objects.filter(id_obra=obra_id)
+
+        # Obtener las subcontrataciones asociadas
+        subcontrataciones = Subcontratacion.objects.filter(id_obra=obra_id)
+
+        # Comparar con el historial de obras previas
+        obras_previas = Obra.objects.exclude(id=obra_id)  # Excluir la obra actual
+
+        # Cálculos para encontrar el costo promedio de materiales y subcontratistas
+        costo_material_promedio = compras.aggregate(Sum('costo'))['costo__sum'] / len(compras) if compras else 0
+        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('costo'))['costo__sum'] / len(
+            subcontrataciones) if subcontrataciones else 0
+
+        # Análisis comparativo con el historial de obras
+        comparativa_materiales = []
+        for obra_prev in obras_previas:
+            compras_previas = Compra.objects.filter(id_obra=obra_prev.id)
+            costo_material_prev = compras_previas.aggregate(Sum('costo'))['costo__sum'] / len(
+                compras_previas) if compras_previas else 0
+            comparativa_materiales.append({
+                'obra': obra_prev.nombre,
+                'costo_material': costo_material_prev,
+                'diferencia': costo_material_promedio - costo_material_prev
+            })
+
+        comparativa_subcontratacion = []
+        for obra_prev in obras_previas:
+            subcontrataciones_previas = Subcontratacion.objects.filter(id_obra=obra_prev.id)
+            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('costo'))['costo__sum'] / len(
+                subcontrataciones_previas) if subcontrataciones_previas else 0
+            comparativa_subcontratacion.append({
+                'obra': obra_prev.nombre,
+                'costo_subcontratacion': costo_subcontratacion_prev,
+                'diferencia': costo_subcontratacion_promedio - costo_subcontratacion_prev
+            })
+
+        # Generar recomendaciones basadas en los resultados comparativos
+        recomendaciones = {
+            "materiales": f"El costo promedio de materiales en esta obra es de {costo_material_promedio}. Se recomienda revisar las obras previas para optimizar la compra de materiales.",
+            "subcontrataciones": f"El costo promedio de subcontratación en esta obra es de {costo_subcontratacion_promedio}. Verificar las subcontrataciones previas puede ayudar a reducir costos."
+        }
+
+        data_return={
+            "obra_id": obra_id,
+            "nombre_obra": obra.nombre,
+            "comparativa_materiales": comparativa_materiales,
+            "comparativa_subcontratacion": comparativa_subcontratacion,
+            "recomendaciones": recomendaciones,
+        }
+        return data_return
