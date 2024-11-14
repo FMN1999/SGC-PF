@@ -10,9 +10,13 @@ export class ChatService {
   constructor(private http: HttpClient) {}
 
   // Esta función se comunica con el backend para obtener la respuesta del asistente
-  getResponse(userMessage: string): Observable<any> {
+  getResponse(userMessage: string, data: any): Observable<any> {
     const url = 'http://localhost:8000/api/assistant';  // Cambia la URL según tu configuración de Django
-    return this.http.post<any>(url, { message: userMessage });
+    data={
+      message: userMessage,
+      adicional: data,
+    }
+    return this.http.post<any>(url, data);
   }
 }
 

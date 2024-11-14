@@ -1209,10 +1209,34 @@ class TareaMaterialView(View):
 class Assistant(View):
     def post(self, request):
         data = json.loads(request.body)
+        adicional = data.get('adicional')
         user_message = data.get('message', '').lower()
+        data_return = None
 
-        # Aquí, procesas el mensaje y generas una respuesta
-        # Puedes usar lógica condicional o incluso un modelo de lenguaje para respuestas automáticas
+        if adicional.tipo == 1:
+            data_return = ChatController.gestion_proveedores(adicional.id_obra)
+
+        if adicional.tipo == 2:
+            data_return = ChatController.recomendaciones_materiales(adicional.id_cliente)
+
+        if adicional.tipo == 3:
+            data_return = ChatController.ofertas_especiales()
+
+        if adicional.tipo == 4:
+            data_return = ChatController.calcular_transporte_almacenaje(adicional.id_obra)
+
+        if adicional.tipo == 5:
+            data_return = ChatController.seguimiento_avance_obra(adicional.id_obra)
+
+        if adicional.tipo == 6:
+            data_return = ChatController.optimizacion_costos(adicional.id_obra)
+
+        if adicional.tipo == 7:
+            data_return = ChatController.gestion_proveedores(adicional.id_obra)
+
+        if adicional.tipo == 8:
+            data_return = ChatController.analiza_costos(adicional.id_obra)
+
         if 'presupuesto' in user_message:
             response_message = "¿Quieres ayuda para crear un presupuesto? Puedo guiarte en el proceso."
         else:
