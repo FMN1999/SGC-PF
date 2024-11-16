@@ -7,6 +7,7 @@ import { ObraService } from '../../services/obra/obra.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
 import { ChatComponent } from '../chat/chat.component'
+import {DataShareService} from "../../services/data-share/data-share.service";
 
 @Component({
   selector: 'app-crear-presupuesto',
@@ -30,10 +31,9 @@ export class CrearPresupuestoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
-    private empresaService: EmpresaService,
-    private usuarioService: UsuarioService,
     private obraService: ObraService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dataShareService: DataShareService
   ) {}
 
   ngOnInit() {
@@ -42,6 +42,8 @@ export class CrearPresupuestoComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.obraId = +params['obra_id'];
+      this.dataShareService.setObraId(this.obraId); // Establecer obraId en el servicio
+
       console.log(this.obraId)
     });
 

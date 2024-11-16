@@ -172,6 +172,7 @@ class Obra(models.Model):
     estado = models.CharField()
     ganancias = models.FloatField()
     perdidas = models.FloatField()
+    tipo_obra = models.CharField()
     id_empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, db_column='id_empresa')
 
     class Meta:

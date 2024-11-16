@@ -1210,36 +1210,92 @@ class Assistant(View):
     def post(self, request):
         data = json.loads(request.body)
         adicional = data.get('adicional')
+        id_obra = adicional.get('id_obra')
+        id_cliente = adicional.get('id_cliente')
         user_message = data.get('message', '').lower()
         data_return = None
+        response_message = ''
 
-        if adicional.tipo == 1:
-            data_return = ChatController.gestion_proveedores(adicional.id_obra)
+        if int(user_message) == 1:
+            data_return = ChatController.generador_presupuesto(id_obra)
+            response_message = self.format_generador_presupuesto(data_return)
 
-        if adicional.tipo == 2:
-            data_return = ChatController.recomendaciones_materiales(adicional.id_cliente)
+        elif int(user_message) == 2:
+            data_return = ChatController.recomendaciones_materiales(id_cliente)
+            response_message = self.format_recomendaciones_materiales(data_return)
 
-        if adicional.tipo == 3:
+        elif int(user_message) == 3:
             data_return = ChatController.ofertas_especiales()
+            response_message = "Estas son las ofertas especiales vigentes: {}".format(data_return)
 
-        if adicional.tipo == 4:
-            data_return = ChatController.calcular_transporte_almacenaje(adicional.id_obra)
+        elif int(user_message) == 4:
+            data_return = ChatController.calcular_transporte_almacenaje(id_obra)
+            response_message = f"El costo estimado de transporte y almacenamiento es: {data_return}"
 
-        if adicional.tipo == 5:
-            data_return = ChatController.seguimiento_avance_obra(adicional.id_obra)
+        elif int(user_message) == 5:
+            data_return = ChatController.seguimiento_avance_obra(id_obra)
+            response_message = "El seguimiento del avance de obra indica: {}".format(data_return)
 
-        if adicional.tipo == 6:
-            data_return = ChatController.optimizacion_costos(adicional.id_obra)
+        elif int(user_message) == 6:
+            data_return = ChatController.optimizacion_costos(id_obra)
+            response_message = "Aquí tienes sugerencias para optimizar costos: {}".format(data_return)
 
-        if adicional.tipo == 7:
-            data_return = ChatController.gestion_proveedores(adicional.id_obra)
+        elif int(user_message) == 7:
+            data_return = ChatController.gestion_proveedores(id_obra)
+            response_message = self.format_gestion_proveedores(data_return)
 
-        if adicional.tipo == 8:
-            data_return = ChatController.analiza_costos(adicional.id_obra)
+        elif int(user_message) == 8:
+            data_return = ChatController.analiza_costos(id_obra)
+            response_message = "El análisis de costos es el siguiente: {}".format(data_return)
 
-        if 'presupuesto' in user_message:
-            response_message = "¿Quieres ayuda para crear un presupuesto? Puedo guiarte en el proceso."
-        else:
-            response_message = "Lo siento, no entendí tu pregunta."
+        elif user_message.lower() == 'si':
+            response_message = "Ok, ingrese otra opción"
 
-        return JsonResponse({'message': response_message})
+        elif user_message.lower() == 'no':
+            response_message = "Entendido, ¡Hasta luego!"
+
+        return JsonResponse({'message': response_message, 'data_return': data_return})
+
+    def format_gestion_proveedores(self, data):
+        if not data:
+            return "No se encontraron proveedores o subcontratistas recomendados."
+
+        response = f"Para la obra *{data['nombre_obra']}* (ID: {data['obra_id']}):\n\n"
+        if data.get('proveedores_recomendados'):
+            response += "### Proveedores recomendados:\n"
+            for proveedor in data['proveedores_recomendados']:
+                response += f"- **{proveedor['proveedor']}** (Calificación: {proveedor['calificacion']})\n"
+                response += f"  - Materiales: {', '.join(proveedor['materiales'])}\n"
+                response += f"  - Comentarios: {', '.join(proveedor['comentarios'])}\n"
+
+        if data.get('subcontratistas_recomendados'):
+            response += "\n### Subcontratistas recomendados:\n"
+            for sub in data['subcontratistas_recomendados']:
+                response += f"- **{sub['subcontratista']}** (Calificación: {sub['calificacion']})\n"
+                response += f"  - Servicios: {', '.join(sub['servicios'])}\n"
+                response += f"  - Comentarios: {', '.join(sub['comentarios'])}\n"
+
+        return response
+
+    def format_recomendaciones_materiales(self, data):
+        if not data:
+            return "No se encontraron recomendaciones de materiales."
+
+        response = "Recomendaciones de materiales frecuentes:\n"
+        for material in data:
+            response += f"- {material['nombre']}: {material['descripcion']}\n"
+        return response
+
+    def format_generador_presupuesto(self, data):
+        if not data:
+            return "No se pudo generar un presupuesto para esta obra."
+
+        response = f"Presupuesto generado para la obra *{data['direccion']}* (ID: {data['id_obra']}):\n\n"
+        response += f"- **Total estimado:** {data['total']} {data['moneda']}\n"
+        response += f"- **Materiales incluidos:**\n"
+        for material in data['materiales']:
+            response += f"  - {material['nombre']} ({material['cantidad']} unidades a {material['precio_unitario']} {data['moneda']}/unidad)\n"
+        response += f"- **Servicios estimados:**\n"
+        for servicio in data['servicios']:
+            response += f"  - {servicio['nombre']} ({servicio['horas']} horas a {servicio['precio_hora']} {data['moneda']}/hora)\n"
+        return response

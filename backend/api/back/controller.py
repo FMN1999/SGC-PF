@@ -785,10 +785,9 @@ class PagoController:
 class ChatController:
     @staticmethod
     def generador_presupuesto(data):
-
-        # Extrae detalles del proyecto
-        dimensiones = data.get('dimensiones')
-        tipo_obra = data.get('tipo_obra')
+        obra = ObraData.get_by_id(data)
+        dimensiones = obra.dimensiones
+        tipo_obra = obra.tipo_obra
 
         # Lógica para seleccionar materiales y servicios en función del tipo de obra
         # Aquí, por simplicidad, filtramos materiales que podrían coincidir con el tipo de obra
@@ -1036,7 +1035,7 @@ class ChatController:
         obra = Obra.objects.get(id=obra_id)
 
         # Obtener el cliente de la obra
-        cliente = obra.cliente
+        cliente = obra.id_cliente
 
         # Buscar proveedores que hayan trabajado en proyectos similares o del mismo cliente
         proveedores_aptos = Proveedor.objects.filter(

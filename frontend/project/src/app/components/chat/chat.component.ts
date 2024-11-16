@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { ChatService } from '../../services/chat/chat.service'
 import {NgClass, NgForOf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {DataShareService} from "../../services/data-share/data-share.service";
 
 @Component({
   selector: 'app-chat',
@@ -17,11 +18,19 @@ import {FormsModule} from "@angular/forms";
 export class ChatComponent implements OnInit {
   userMessage: string = '';
   messages: { text: string, isUser: boolean }[] = [];
+  adicional: { id_obra?: number, id_cliente?: number } = {};
 
-  constructor(private chatService: ChatService) {}
 
-  NgOnInit(){
-    this.mensajesBienvenida()
+  constructor(private chatService: ChatService,
+              private dataShareService: DataShareService) {}
+
+  ngOnInit(){
+    this.mensajesBienvenida();
+    this.dataShareService.obraId$.subscribe((obraId) => {
+      if (obraId) {
+        this.adicional = { id_obra: obraId }; // Configurar datos adicionales
+      }
+    });
   }
 
   mensajesBienvenida():void {
@@ -40,13 +49,16 @@ export class ChatComponent implements OnInit {
   sendMessage() {
     if (this.userMessage.trim()) {
       this.messages.push({ text: this.userMessage, isUser: true });
-      this.chatService.getResponse(this.userMessage).subscribe((response) => {
+      this.chatService.getResponse(this.userMessage, this.adicional).subscribe((response) => {
         this.messages.push({ text: response.message, isUser: false });
       });
-      this.userMessage = '';  // Limpiar el input
+      this.userMessage = ''; // Limpiar el input
     }
   }
 
-  ngOnInit(): void {
+  setAdicionalData(adicionalData: { id_obra?: number, id_cliente?: number }) {
+    this.adicional = adicionalData;
   }
+
+
 }
