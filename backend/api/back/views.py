@@ -1226,7 +1226,7 @@ class Assistant(View):
 
         elif int(user_message) == 3:
             data_return = ChatController.ofertas_especiales()
-            response_message = "Estas son las ofertas especiales vigentes: {}".format(data_return)
+            response_message = self.format_ofertas_especiales(data_return)
 
         elif int(user_message) == 4:
             data_return = ChatController.calcular_transporte_almacenaje(id_obra)
@@ -1234,11 +1234,26 @@ class Assistant(View):
 
         elif int(user_message) == 5:
             data_return = ChatController.seguimiento_avance_obra(id_obra)
-            response_message = "El seguimiento del avance de obra indica: {}".format(data_return)
+            response_message = self.format_seguimiento_avance_obra(data_return)
+
 
         elif int(user_message) == 6:
             data_return = ChatController.optimizacion_costos(id_obra)
-            response_message = "Aquí tienes sugerencias para optimizar costos: {}".format(data_return)
+            # Construir el mensaje de respuesta
+            response_message = f"Aquí tienes sugerencias para optimizar costos en la obra '{data_return['nombre_obra']}':\n"
+            response_message += f"- Presupuesto total actual: {data_return['total_presupuesto']}.\n"
+            if data_return['sugerencias']['materiales']:
+                response_message += "\nSugerencias para materiales:\n"
+                for sugerencia in data_return['sugerencias']['materiales']:
+                    response_message += f"  * {sugerencia}\n"
+            else:
+                response_message += "\nNo se encontraron sugerencias para materiales.\n"
+            if data_return['sugerencias']['servicios']:
+                response_message += "\nSugerencias para servicios:\n"
+                for sugerencia in data_return['sugerencias']['servicios']:
+                    response_message += f"  * {sugerencia}\n"
+            else:
+                response_message += "\nNo se encontraron sugerencias para servicios.\n"
 
         elif int(user_message) == 7:
             data_return = ChatController.gestion_proveedores(id_obra)
@@ -1283,19 +1298,85 @@ class Assistant(View):
 
         response = "Recomendaciones de materiales frecuentes:\n"
         for material in data:
-            response += f"- {material['nombre']}: {material['descripcion']}\n"
+            response += f"- {material['descripcion']}: {material['marca']}; Precio {material['precio']} {material['moneda']} / {material['unidad_medida']}\n"
         return response
 
     def format_generador_presupuesto(self, data):
         if not data:
             return "No se pudo generar un presupuesto para esta obra."
 
-        response = f"Presupuesto generado para la obra *{data['direccion']}* (ID: {data['id_obra']}):\n\n"
+        response = f"Presupuesto generado para la obra *{data['direccion']}:* \n\n"
         response += f"- **Total estimado:** {data['total']} {data['moneda']}\n"
         response += f"- **Materiales incluidos:**\n"
         for material in data['materiales']:
-            response += f"  - {material['nombre']} ({material['cantidad']} unidades a {material['precio_unitario']} {data['moneda']}/unidad)\n"
+            response += f"  - {material['descripcion']} ( con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
         response += f"- **Servicios estimados:**\n"
         for servicio in data['servicios']:
-            response += f"  - {servicio['nombre']} ({servicio['horas']} horas a {servicio['precio_hora']} {data['moneda']}/hora)\n"
+            response += f"  - {servicio['descripcion']} (con precio de {servicio['precio_x_unidad']} {servicio['moneda']}/{servicio['unidad_medida']})\n"
         return response
+
+    @staticmethod
+    def format_ofertas_especiales(ofertas):
+        response = "Estas son las ofertas especiales vigentes:\n\n"
+
+        # Procesar materiales
+        if ofertas["materiales"]:
+            response += "🏗️ **Ofertas de Materiales:**\n"
+            for material in ofertas["materiales"]:
+                response += (
+                    f"- **{material['descripcion_material']}** (Marca: {material['marca']})\n"
+                    f"  Oferta: {material['descripcion_oferta']}\n"
+                    f"  Descuento: {material['descuento']}% hasta {material['fecha_hasta']}\n\n"
+                )
+        else:
+            response += "No hay ofertas disponibles para materiales.\n\n"
+
+        # Procesar servicios
+        if ofertas["servicios"]:
+            response += "🛠️ **Ofertas de Servicios:**\n"
+            for servicio in ofertas["servicios"]:
+                response += (
+                    f"- **{servicio['descripcion_servicio']}**\n"
+                    f"  Oferta: {servicio['descripcion_oferta']}\n"
+                    f"  Descuento: {servicio['descuento']}% hasta {servicio['fecha_hasta']}\n\n"
+                )
+        else:
+            response += "No hay ofertas disponibles para servicios.\n"
+
+        return response
+
+    def format_seguimiento_avance_obra(self, data):
+        mensaje = f"Seguimiento del avance de obra:\n\n"
+        mensaje += f"📍 *Nombre de la obra*: {data['nombre_obra']} (ID: {data['obra_id']})\n"
+        mensaje += f"📊 *Avance general*: {data['avance_general']:.2f}%\n\n"
+
+        if data["tareas"]:
+            mensaje += "🔨 *Tareas en progreso*:\n"
+            for tarea in data["tareas"]:
+                mensaje += f"  - *Tarea ID*: {tarea['tarea_id']}\n"
+                mensaje += f"    *Descripción*: {tarea['descripcion']}\n"
+                mensaje += f"    *Avance*: {tarea['porcentaje_avance']:.2f}%\n"
+
+                # Colaboradores
+                if tarea["colaboradores"]:
+                    mensaje += "    👷‍♂️ *Colaboradores asignados*:\n"
+                    for col in tarea["colaboradores"]:
+                        mensaje += f"      - {col['nombre']} {col['apellido']} (ID: {col['id']})\n"
+
+                # Materiales
+                if tarea["materiales"]:
+                    mensaje += "    🧱 *Materiales utilizados*:\n"
+                    for mat in tarea["materiales"]:
+                        mensaje += f"      - {mat['nombre']} (ID: {mat['id']})\n"
+
+                # Herramientas
+                if tarea["herramientas"]:
+                    mensaje += "    🔧 *Herramientas utilizadas*:\n"
+                    for her in tarea["herramientas"]:
+                        mensaje += f"      - {her['nombre']} (ID: {her['id']})\n"
+                mensaje += "\n"
+        else:
+            mensaje += "No hay tareas asociadas a esta obra.\n"
+
+        return mensaje
+

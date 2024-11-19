@@ -382,6 +382,7 @@ class Tarea(models.Model):
     id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
     descripcion = models.CharField()
     titulo = models.CharField()
+    porcentaje_avance = models.FloatField()
 
     class Meta:
         db_table = 'Tarea'

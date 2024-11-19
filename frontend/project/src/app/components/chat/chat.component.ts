@@ -24,11 +24,19 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService,
               private dataShareService: DataShareService) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.mensajesBienvenida();
+
     this.dataShareService.obraId$.subscribe((obraId) => {
       if (obraId) {
-        this.adicional = { id_obra: obraId }; // Configurar datos adicionales
+        this.adicional = { ...this.adicional, id_obra: obraId }; // Mantener el id_cliente existente
+      }
+
+    });
+
+    this.dataShareService.clienteId$.subscribe((clienteId) => {
+      if (clienteId) {
+        this.adicional = { ...this.adicional, id_cliente: clienteId }; // Mantener el id_obra existente
       }
     });
   }

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
-import { EmpresaService } from '../../services/empresa/empresa.service';
-import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ObraService } from '../../services/obra/obra.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
@@ -27,6 +25,7 @@ export class CrearPresupuestoComponent implements OnInit {
   id_empresa: number=0;
   obraId!: number;
   areas: any[] = [];
+  clienteId!:number;
 
   constructor(
     private fb: FormBuilder,
@@ -43,8 +42,12 @@ export class CrearPresupuestoComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.obraId = +params['obra_id'];
       this.dataShareService.setObraId(this.obraId); // Establecer obraId en el servicio
+    });
 
-      console.log(this.obraId)
+    this.obraService.obtenerObra(this.obraId).subscribe(obra =>{
+      this.clienteId = obra.cliente.id;
+      this.dataShareService.setClienteId(this.clienteId);
+      console.log(this.clienteId)
     });
 
 

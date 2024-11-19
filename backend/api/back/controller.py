@@ -785,19 +785,31 @@ class PagoController:
 class ChatController:
     @staticmethod
     def generador_presupuesto(data):
+        PALABRAS_EXCLUIDAS = {'de', 'con', 'para', 'el', 'la', 'los', 'las', 'y', 'en', 'a', 'un', 'una'}
         obra = ObraData.get_by_id(data)
         dimensiones = obra.dimensiones
         tipo_obra = obra.tipo_obra
 
-        # Lógica para seleccionar materiales y servicios en función del tipo de obra
-        # Aquí, por simplicidad, filtramos materiales que podrían coincidir con el tipo de obra
-        materiales = Material.objects.filter(
-            Q(tipo_material__icontains=tipo_obra) | Q(descripcion__icontains=tipo_obra)
-        )
+        palabras_clave = [
+            palabra for palabra in tipo_obra.split()
+            if palabra.lower() not in PALABRAS_EXCLUIDAS
+        ]
 
-        servicios = Servicio.objects.filter(
-            Q(descripcion__icontains=tipo_obra) | Q(unidad_medida__icontains=dimensiones)
-        )
+        # Crear un Q object dinámico para materiales
+        query_materiales = Q()
+        for palabra in palabras_clave:
+            query_materiales |= Q(tipo_material__icontains=palabra) | Q(descripcion__icontains=palabra)
+
+        # Buscar materiales que coincidan con las palabras clave
+        materiales = Material.objects.filter(query_materiales)
+
+        # Crear un Q object dinámico para servicios
+        query_servicios = Q()
+        for palabra in palabras_clave:
+            query_servicios |= Q(descripcion__icontains=palabra) | Q(unidad_medida__icontains=palabra)
+
+        # Buscar servicios que coincidan con las palabras clave
+        servicios = Servicio.objects.filter(query_servicios)
 
         # Calcula costos estimados sumando precios de materiales y servicios
         total_materiales = materiales.aggregate(total=Sum(F('precio') + F('impuestos_total') + F('otros_gastos')))
@@ -809,11 +821,13 @@ class ChatController:
 
         # Organiza los datos de respuesta
         response_data = {
-            "materiales": list(materiales.values('id', 'tipo_material', 'marca', 'precio', 'moneda')),
+            "direccion": obra.direccion,
+            "total": obra.monto_total_est,
+            "moneda": obra.moneda,
+            "materiales": list(materiales.values('id', 'descripcion','unidad_medida', 'marca', 'precio', 'moneda')),
             "servicios": list(
-                servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'frecuencia_pago')),
+                servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
-            "moneda": "ARS",  # Aquí puedes ajustar la moneda si es variable
         }
 
         # Responde con los datos en formato JSON
@@ -828,7 +842,7 @@ class ChatController:
         obras_previas = Obra.objects.filter(id_cliente=cliente)
 
         # Buscar materiales usados en estas obras previas
-        materiales_utilizados = Material.objects.filter(presupuesto_material__id_obra__in=obras_previas).distinct()
+        materiales_utilizados = LineaCompra.objects.filter(id_compra__id_obra__in=obras_previas).distinct()
 
         # Filtrar las ofertas activas
         fecha_actual = timezone.now().date()
@@ -840,15 +854,16 @@ class ChatController:
         # Construir la respuesta
         recomendaciones = []
         for material in materiales_utilizados:
-            ofertas = materiales_oferta.filter(id_material=material)
+            ofertas = materiales_oferta.filter(id_material=material.id_material)
             ofertas_data = [{"descripcion": oferta.id_oferta.descripcion, "descuento": oferta.porc_desc} for oferta in
                             ofertas]
             recomendaciones.append({
                 "material_id": material.id,
-                "descripcion": material.descripcion,
-                "marca": material.marca,
-                "precio": material.precio,
-                "moneda": material.moneda,
+                "descripcion": material.id_material.descripcion,
+                "marca": material.id_material.marca,
+                "precio": material.id_material.precio,
+                "moneda": material.id_material.moneda,
+                "unidad_medida": material.id_material.unidad_medida,
                 "ofertas": ofertas_data,
             })
 
@@ -896,6 +911,7 @@ class ChatController:
     @staticmethod
     def calcular_transporte_almacenaje(obra_id):
         # Obtener la obra y el almacén relacionado
+        print(obra_id)
         obra = Obra.objects.get(id=obra_id)
         almacen = Almacen.objects.get(id=obra.id_almacen.id)
 
@@ -933,8 +949,7 @@ class ChatController:
     def seguimiento_avance_obra(obra_id):
         # Obtener la obra y sus tareas asociadas
         obra = Obra.objects.get(id=obra_id)
-        tareas = Tarea.objects.filter(id_obra=obra_id)
-
+        tareas = Tarea.objects.filter(id_area__id_obra=obra_id)
         # Variables de control de avance
         avance_total = 0
         tareas_data = []
@@ -953,12 +968,11 @@ class ChatController:
             tareas_data.append({
                 "tarea_id": tarea.id,
                 "descripcion": tarea.descripcion,
-                "estado": tarea.estado,
                 "porcentaje_avance": porcentaje_avance,
-                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.nombre} for col in
+                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre, "apellido":col.id_colaborador.id_usuario.apellido } for col in
                                   colaboradores],
-                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.nombre} for mat in materiales],
-                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.nombre} for her in
+                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.descripcion} for mat in materiales],
+                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for her in
                                  herramientas]
             })
 
@@ -967,7 +981,7 @@ class ChatController:
 
         data_return={
             "obra_id": obra_id,
-            "nombre_obra": obra.nombre,
+            "nombre_obra": obra.direccion,
             "avance_general": avance_general,
             "tareas": tareas_data
         }
@@ -976,8 +990,8 @@ class ChatController:
     @staticmethod
     def calcular_promedio_historial(material_id):
         # Calcular el costo promedio histórico de un material en proyectos anteriores
-        compras_historial = Compra.objects.filter(id_material=material_id)
-        total_costo = sum([compra.precio_unitario * compra.cantidad for compra in compras_historial])
+        compras_historial = LineaCompra.objects.filter(id_material=material_id)
+        total_costo = sum([compra.precio_total for compra in compras_historial])
         total_cantidad = sum([compra.cantidad for compra in compras_historial])
         return total_costo / total_cantidad if total_cantidad else 0
 
@@ -990,42 +1004,53 @@ class ChatController:
         presupuesto_actual = Presupuesto.objects.filter(id_obra=obra_id)
 
         # Obtener las compras realizadas en la obra
-        compras_obra = Compra.objects.filter(id_obra=obra_id)
+        compras_obra = LineaCompra.objects.filter(id_compra__id_obra=obra_id)
 
         # Obtener subcontrataciones de obras previas
-        subcontrataciones_previas = Subcontratacion.objects.filter(id_obra__cliente=obra.cliente)
+        subcontrataciones_previas = Subcontratacion.objects.filter(id_obra__id_cliente=obra.id_cliente)
 
-        # Comparar costos de materiales y servicios
-        costos_historial = {}
+        # Calcular costos de materiales
+        costos_materiales = {}
         for compra in compras_obra:
             material = compra.id_material
-            costos_historial[material.id] = costos_historial.get(material.id,
-                                                                 0) + compra.precio_unitario * compra.cantidad
+            costos_materiales[material.id] = costos_materiales.get(material.id, 0) + compra.precio_total
 
-        # Comparar costos con subcontrataciones previas
+        # Calcular costos de servicios
+        costos_servicios = {}
         for sub in subcontrataciones_previas:
             servicio = sub.id_servicio
-            costos_historial[servicio.id] = costos_historial.get(servicio.id, 0) + sub.precio_unitario * sub.cantidad
+            costos_servicios[servicio.id] = costos_servicios.get(servicio.id, 0) + sub.monto_contratacion
 
-        # Calcular el presupuesto total actual y compararlo
-        total_presupuesto = sum([p.costo_estimado for p in presupuesto_actual])
+        # Calcular el presupuesto total actual
+        total_presupuesto = sum([p.total for p in presupuesto_actual])
 
-        # Sugerencias de optimización
-        sugerencias = []
-        for material_id, costo in costos_historial.items():
+        # Sugerencias de optimización de materiales
+        sugerencias_materiales = []
+        for material_id, costo in costos_materiales.items():
             material = Material.objects.get(id=material_id)
-            # Si el costo es más alto que el promedio histórico, sugerir alternativas
             promedio_costo_material = ChatController.calcular_promedio_historial(material_id)
             if costo > promedio_costo_material:
-                sugerencias.append(
-                    f"Material {material.nombre} tiene un costo más alto que el promedio histórico. Considere alternativas más económicas.")
+                sugerencias_materiales.append(
+                    f"El material '{material.descripcion}' tiene un costo ({costo}) mayor que el promedio histórico ({promedio_costo_material}). Considere alternativas más económicas.")
 
-        # Generar respuesta con sugerencias
-        data_return= {
+        # Sugerencias de optimización de servicios
+        sugerencias_servicios = []
+        for servicio_id, costo in costos_servicios.items():
+            servicio = Servicio.objects.get(id=servicio_id)
+            promedio_costo_servicio = ChatController.calcular_promedio_historial(servicio_id)
+            if costo > promedio_costo_servicio:
+                sugerencias_servicios.append(
+                    f"El servicio '{servicio.descripcion}' tiene un costo ({costo}) mayor que el promedio histórico ({promedio_costo_servicio}). Considere proveedores alternativos o ajustes en el contrato.")
+
+        # Generar respuesta con sugerencias separadas
+        data_return = {
             "obra_id": obra_id,
-            "nombre_obra": obra.nombre,
+            "nombre_obra": obra.direccion,
             "total_presupuesto": total_presupuesto,
-            "sugerencias": sugerencias
+            "sugerencias": {
+                "materiales": sugerencias_materiales,
+                "servicios": sugerencias_servicios
+            }
         }
         return data_return
 
