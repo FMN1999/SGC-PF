@@ -1062,39 +1062,43 @@ class ChatController:
         # Obtener el cliente de la obra
         cliente = obra.id_cliente
 
-        # Buscar proveedores que hayan trabajado en proyectos similares o del mismo cliente
-        proveedores_aptos = Proveedor.objects.filter(
-            tipo_material__in=[compra.id_material.tipo for compra in Compra.objects.filter(id_obra=obra_id)])
+        # Obtener los materiales comprados en la obra actual
+        materiales_comprados = LineaCompra.objects.filter(id_compra__id_obra=obra_id).values_list(
+            "id_material", flat=True
+        )
+
+        # Buscar proveedores que ofrecen los materiales comprados
+        proveedores_aptos = Proveedor.objects.filter(material__id__in=materiales_comprados)
 
         # Buscar subcontratistas que hayan trabajado con este cliente o en proyectos similares
-        subcontratistas_aptos = Subcontratacion.objects.filter(id_obra__cliente=cliente)
+        subcontratistas_aptos = Subcontratacion.objects.filter(id_obra__id_cliente=cliente)
 
-        # Analizar el desempeño de proveedores y subcontratistas
+        # Analizar el desempeño de proveedores
         proveedores_recomendados = []
         for proveedor in proveedores_aptos:
-            historial = proveedor.historial_obras.filter(id_obra__cliente=cliente)
+            historial = proveedor.id_compra.filter(id_compra__id_obra__id_cliente=cliente)
             if historial.exists():
                 proveedores_recomendados.append({
-                    "proveedor": proveedor.nombre,
+                    "proveedor": proveedor.denominacion,
                     "calificacion": proveedor.calificacion,
-                    "materiales": [material.nombre for material in proveedor.tipo_material.all()],
-                    "comentarios": [comentario.texto for comentario in proveedor.comentarios.all()],
+                    "materiales": [material.descripcion for material in proveedor.material.all()],
+                    "comentarios": [comentario.texto for comentario in proveedor.comentario_set.all()],
                 })
 
+        # Analizar el desempeño de subcontratistas
         subcontratistas_recomendados = []
         for sub in subcontratistas_aptos:
-            if sub.id_obra.cliente == cliente:
-                subcontratistas_recomendados.append({
-                    "subcontratista": sub.id_subcontratista.nombre,
-                    "calificacion": sub.calificacion,
-                    "servicios": [servicio.nombre for servicio in sub.id_servicios.all()],
-                    "comentarios": [comentario.texto for comentario in sub.id_subcontratista.comentarios.all()],
-                })
+            subcontratistas_recomendados.append({
+                "subcontratista": sub.id_subcontratista.denominacion,
+                "calificacion": sub.id_subcontratista.calificacion,
+                "servicios": [servicio.descripcion for servicio in sub.id_servicio.all()],
+                "comentarios": [comentario.texto for comentario in sub.id_subcontratista.comentario_set.all()],
+            })
 
         # Generar respuesta con proveedores y subcontratistas recomendados
-        data_return={
+        data_return = {
             "obra_id": obra_id,
-            "nombre_obra": obra.nombre,
+            "nombre_obra": obra.direccion,
             "proveedores_recomendados": proveedores_recomendados,
             "subcontratistas_recomendados": subcontratistas_recomendados,
         }
@@ -1105,11 +1109,8 @@ class ChatController:
         # Obtener la obra actual
         obra = Obra.objects.get(id=obra_id)
 
-        # Obtener el presupuesto de la obra
-        presupuesto = Presupuesto.objects.get(id_obra=obra_id)
-
         # Obtener las compras asociadas a la obra
-        compras = Compra.objects.filter(id_obra=obra_id)
+        compras = LineaCompra.objects.filter(id_compra__id_obra=obra_id)
 
         # Obtener las subcontrataciones asociadas
         subcontrataciones = Subcontratacion.objects.filter(id_obra=obra_id)
@@ -1118,15 +1119,15 @@ class ChatController:
         obras_previas = Obra.objects.exclude(id=obra_id)  # Excluir la obra actual
 
         # Cálculos para encontrar el costo promedio de materiales y subcontratistas
-        costo_material_promedio = compras.aggregate(Sum('costo'))['costo__sum'] / len(compras) if compras else 0
-        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('costo'))['costo__sum'] / len(
+        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(compras) if compras else 0
+        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))['monto_contratacion__sum'] / len(
             subcontrataciones) if subcontrataciones else 0
 
         # Análisis comparativo con el historial de obras
         comparativa_materiales = []
         for obra_prev in obras_previas:
             compras_previas = Compra.objects.filter(id_obra=obra_prev.id)
-            costo_material_prev = compras_previas.aggregate(Sum('costo'))['costo__sum'] / len(
+            costo_material_prev = compras_previas.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
                 compras_previas) if compras_previas else 0
             comparativa_materiales.append({
                 'obra': obra_prev.nombre,
@@ -1137,7 +1138,7 @@ class ChatController:
         comparativa_subcontratacion = []
         for obra_prev in obras_previas:
             subcontrataciones_previas = Subcontratacion.objects.filter(id_obra=obra_prev.id)
-            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('costo'))['costo__sum'] / len(
+            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('monto_contratacion'))['monto_contratacion__sum'] / len(
                 subcontrataciones_previas) if subcontrataciones_previas else 0
             comparativa_subcontratacion.append({
                 'obra': obra_prev.nombre,
@@ -1153,7 +1154,7 @@ class ChatController:
 
         data_return={
             "obra_id": obra_id,
-            "nombre_obra": obra.nombre,
+            "nombre_obra": obra.direccion,
             "comparativa_materiales": comparativa_materiales,
             "comparativa_subcontratacion": comparativa_subcontratacion,
             "recomendaciones": recomendaciones,
