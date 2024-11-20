@@ -66,7 +66,6 @@ export class ObraComponent implements OnInit {
       porcentaje: [0, Validators.required]
     });
 
-
   }
 
   ngOnInit(): void {
@@ -279,5 +278,10 @@ export class ObraComponent implements OnInit {
 
   crearPresupuesto(): void {
     this.router.navigate(['/crear-presupuesto'], {queryParams: {obra_id: this.obra_id}}).then(r =>{});
-   }
+  }
+
+  irAReporte(id: number): void {
+    this.router.navigate(['/reportes', id]);
+  }
+
 }

@@ -1397,3 +1397,9 @@ class Assistant(View):
 
         return mensaje
 
+
+class ReporteObraView(View):
+    def get(self, request, id_obra):
+        resultado = ReporteObra.reporte_gastos_avance(id_obra)
+        return JsonResponse(resultado, safe=False)
+

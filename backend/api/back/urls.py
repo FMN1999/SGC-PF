@@ -80,5 +80,6 @@ urlpatterns = [
     path('tarea/colaborador/<int:colaborador_id>/actualizar_cant_dias/', views.TareaColaboradorView.as_view(),
          name='actualizar_cant_dias'),
     path('assistant', views.Assistant.as_view(), name='assistant'),
+    path('reporte-gastos-avance/<int:id_obra>/', views.ReporteObraView.as_view(), name='reporte')
 
 ]

@@ -29,6 +29,7 @@ import {CompraComponent} from "./components/compra/compra.component";
 import {IngresoComponent} from "./components/ingreso/ingreso.component";
 import {PagoComponent} from "./components/pago/pago.component";
 import {TareaComponent} from "./components/tarea/tarea.component";
+import {ReporteObraComponent} from "./components/reporte-obra/reporte-obra.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -62,6 +63,7 @@ const routes: Routes = [
   { path: 'ingreso/:id', component: IngresoComponent },
   { path: 'registrar-pago', component: PagoComponent },
   { path: 'tarea/:id', component: TareaComponent },
+  { path: 'reportes/:id', component: ReporteObraComponent },
 ];
 
 @NgModule({

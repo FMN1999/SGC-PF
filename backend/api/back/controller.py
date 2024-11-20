@@ -1160,3 +1160,60 @@ class ChatController:
             "recomendaciones": recomendaciones,
         }
         return data_return
+
+
+class ReporteObra:
+    @staticmethod
+    def reporte_gastos_avance(obra_id):
+        # Obtener la obra y presupuesto
+        obra = Obra.objects.get(id=obra_id)
+        presupuesto = Presupuesto.objects.filter(id_obra=obra_id).first()
+        if not presupuesto:
+            return {"error": "No hay un presupuesto asociado a esta obra."}
+
+        # Compras realizadas
+        compras = LineaCompra.objects.filter(id_compra__id_obra=obra_id)
+        total_compras = sum([compra.precio_total for compra in compras])
+
+        # Comparativa compras vs presupuesto
+        diferencia_compras_presupuesto = presupuesto.total - total_compras
+
+        # Materiales utilizados en tareas
+        materiales_usados_ids = Tarea_Material.objects.filter(id_tarea__id_area__id_obra=obra_id).values_list(
+            'id_material', flat=True)
+
+        # Materiales comprados no utilizados
+        materiales_comprados_ids = compras.values_list('id_material', flat=True)
+        materiales_no_usados_ids = set(materiales_comprados_ids) - set(materiales_usados_ids)
+        materiales_no_usados = Material.objects.filter(id__in=materiales_no_usados_ids)
+
+        # Porcentaje de avance general
+        tareas = Tarea.objects.filter(id_area__id_obra=obra_id)
+        avance_total = sum([tarea.porcentaje_avance for tarea in tareas])
+        avance_general = avance_total / len(tareas) if tareas else 0
+
+        # Porcentaje de avance por área
+        areas = Area.objects.filter(id_obra=obra_id)
+        avance_por_area = []
+        for area in areas:
+            tareas_area = Tarea.objects.filter(id_area=area.id)
+            avance_area = sum([t.porcentaje_avance for t in tareas_area]) / len(tareas_area) if tareas_area else 0
+            avance_por_area.append({
+                "area_id": area.id,
+                "nombre_area": area.descripcion,
+                "avance": avance_area
+            })
+
+        # Generar reporte
+        data_return = {
+            "obra_id": obra.id,
+            "nombre_obra": obra.direccion,
+            "presupuesto_total": presupuesto.total,
+            "total_compras": total_compras,
+            "diferencia_compras_presupuesto": diferencia_compras_presupuesto,
+            "materiales_no_usados": [{"id": mat.id, "descripcion": mat.descripcion} for mat in materiales_no_usados],
+            "avance_general": avance_general,
+            "avance_por_area": avance_por_area
+        }
+
+        return data_return
