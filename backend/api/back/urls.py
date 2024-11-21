@@ -80,6 +80,8 @@ urlpatterns = [
     path('tarea/colaborador/<int:colaborador_id>/actualizar_cant_dias/', views.TareaColaboradorView.as_view(),
          name='actualizar_cant_dias'),
     path('assistant', views.Assistant.as_view(), name='assistant'),
-    path('reporte-gastos-avance/<int:id_obra>/', views.ReporteObraView.as_view(), name='reporte')
+    path('reporte-gastos-avance/<int:id_obra>/', views.ReporteObraView.as_view(), name='reporte'),
+    path('obras-empresa/<int:id_empresa>/', views.ObraEmpresaView.as_view(), name='obra_x_empresa'),
+    path('registrar-pago/', views.CobroView.as_view(), name='registra_cobro')
 
 ]

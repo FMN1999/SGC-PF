@@ -30,6 +30,7 @@ import {IngresoComponent} from "./components/ingreso/ingreso.component";
 import {PagoComponent} from "./components/pago/pago.component";
 import {TareaComponent} from "./components/tarea/tarea.component";
 import {ReporteObraComponent} from "./components/reporte-obra/reporte-obra.component";
+import {RegistrarPagoComponent} from "./components/registrar-pago/registrar-pago.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -64,6 +65,7 @@ const routes: Routes = [
   { path: 'registrar-pago', component: PagoComponent },
   { path: 'tarea/:id', component: TareaComponent },
   { path: 'reportes/:id', component: ReporteObraComponent },
+  { path: 'registrar-pago', component: RegistrarPagoComponent },
 ];
 
 @NgModule({

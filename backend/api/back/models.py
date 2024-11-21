@@ -449,3 +449,19 @@ class Tarea_Material(models.Model):
 
     class Meta:
         db_table = 'Tarea_Material'
+
+
+class Cobros(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, db_column='id_cliente')
+    id_obra = models.ForeignKey(Obra, on_delete=models.CASCADE, db_column='id_obra')
+    monto = models.FloatField()
+    moneda = models.CharField()
+    fecha_pago = models.DateField()
+    realizado = models.BooleanField()
+    fecha_limite = models.DateField()
+    cantidad_recargo = models.FloatField()
+    unidad_recargo = models.CharField()
+
+    class Meta:
+        db_table = 'Cobros'

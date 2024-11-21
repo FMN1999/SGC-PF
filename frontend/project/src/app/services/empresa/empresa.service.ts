@@ -39,5 +39,9 @@ export class EmpresaService {
   obtenerAlmacenesPorEmpresa(id_empresa: number):Observable<any> {
     return this.http.get(`${this.apiUrl}/almacenes/${id_empresa}/`);
   }
+
+  obtenerObrasPorEmpresa(id_empresa: number):Observable<any> {
+    return this.http.get(`${this.apiUrl}/obras-empresa/${id_empresa}/`);
+  }
 }
 

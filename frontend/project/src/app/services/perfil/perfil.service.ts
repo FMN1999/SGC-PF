@@ -18,5 +18,7 @@ export class PerfilService {
   actualizarPerfil(userId: number, perfilData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${userId}/`, perfilData);  // Llamada PUT para actualizar el perfil
   }
+
+
 }
 

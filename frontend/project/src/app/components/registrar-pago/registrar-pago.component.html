@@ -1,0 +1,56 @@
+<form [formGroup]="pagoForm" (ngSubmit)="submitPago()">
+  <div>
+    <label for="id_cliente">Cliente</label>
+    <select formControlName="id_cliente" id="id_cliente" required>
+      <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }} {{ cliente.apellido }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="id_obra">Obra</label>
+    <select formControlName="id_obra" id="id_obra" required>
+      <option *ngFor="let obra of obras" [value]="obra.id">{{ obra.direccion }} - {{obra.cliente_nombre}} {{obra.cliente_apellido}}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="monto">Monto</label>
+    <input type="number" formControlName="monto" id="monto" required />
+  </div>
+
+  <div>
+    <label for="moneda">Moneda</label>
+    <input type="text" formControlName="moneda" id="moneda" required />
+  </div>
+
+  <div>
+    <label for="fecha_pago">Fecha de Pago</label>
+    <input type="date" formControlName="fecha_pago" id="fecha_pago" required />
+  </div>
+
+  <div>
+    <label>
+      <input type="checkbox" formControlName="realizado" />
+      ¿Pago realizado?
+    </label>
+  </div>
+
+  <div *ngIf="pagoForm.get('realizado')?.value === false">
+    <label for="fecha_limite">Fecha Límite</label>
+    <input type="date" formControlName="fecha_limite" id="fecha_limite" />
+  </div>
+
+  <div>
+    <label for="cantidad_recargo">Recargo</label>
+    <input type="number" formControlName="cantidad_recargo" id="cantidad_recargo" />
+  </div>
+
+  <div>
+    <label for="unidad_recargo">Unidad de Recargo</label>
+    <input type="text" formControlName="unidad_recargo" id="unidad_recargo" />
+  </div>
+
+  <button type="submit">Registrar Pago</button>
+</form>
+
+

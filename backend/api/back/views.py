@@ -1403,3 +1403,44 @@ class ReporteObraView(View):
         resultado = ReporteObra.reporte_gastos_avance(id_obra)
         return JsonResponse(resultado, safe=False)
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CobroView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        cliente = ClienteController.get_by_id(data["id_cliente"])
+        obra = Obra.objects.get(id=data["id_obra"])
+
+        try:
+            pago = Cobros.objects.create(
+                id_cliente=cliente,
+                id_obra=obra,
+                monto=data["monto"],
+                moneda=data["moneda"],
+                fecha_pago=data["fecha_pago"],
+                realizado=data["realizado"],
+                fecha_limite=data["fecha_limite"],
+                cantidad_recargo=data["cantidad_recargo"],
+                unidad_recargo=data["unidad_recargo"]
+            )
+            return JsonResponse({"message": "Tarea creada"}, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, status=500)
+
+
+class ObraEmpresaView(View):
+    def get(self, request, id_empresa):
+        obras = Obra.objects.filter(id_empresa=id_empresa)
+        obras_return = [
+            {
+                'id': o.id,
+                'direccion': o.direccion,
+                'id_cliente': o.id_cliente.id,
+                'cliente_nombre': o.id_cliente.id_usuario.nombre,
+                'cliente_apellido': o.id_cliente.id_usuario.apellido,
+                'estado': o.estado
+            } for o in obras
+        ]
+        print(obras_return)
+        return JsonResponse({'obras':obras_return}, safe=False)

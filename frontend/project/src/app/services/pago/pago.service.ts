@@ -23,7 +23,7 @@ export class PagoService {
     return this.datosPago;
   }
 
-  clearDatosPago(): void {
-    this.datosPago = null;
+  registrarCobro(pagoData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}registrar-pago/`, pagoData);
   }
 }
