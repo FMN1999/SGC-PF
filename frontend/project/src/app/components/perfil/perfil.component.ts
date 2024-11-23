@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../services/perfil/perfil.service';
-import {NgIf} from "@angular/common";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';  // Importar ActivatedRoute
+import {NgForOf, NgIf} from "@angular/common";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
 
 @Component({
   selector: 'app-perfil',
@@ -10,7 +11,10 @@ import { ActivatedRoute } from '@angular/router';  // Importar ActivatedRoute
   templateUrl: './perfil.component.html',
   imports: [
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgForOf,
+    RouterLink,
+    FormsModule
   ],
   styleUrls: ['./perfil.component.scss']
 })
@@ -19,12 +23,16 @@ export class PerfilComponent implements OnInit {
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');
   editMode: boolean = false;
   perfilForm: FormGroup;
-  perfilIdUrl: string | null = '';  // Guardar el ID de la URL
+  perfilIdUrl: string = '';  // Guardar el ID de la URL
+  obras: any = null;
+  tareas: any[] = [];
+  editTareas: boolean[] = [];
 
   constructor(
     private perfilService: PerfilService,
     private fb: FormBuilder,
-    private route: ActivatedRoute  // Inyectar ActivatedRoute
+    private route: ActivatedRoute,  // Inyectar ActivatedRoute
+    private tareaService: TareaService
   ) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -42,6 +50,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // @ts-ignore
     this.perfilIdUrl = this.route.snapshot.paramMap.get('id');
     if (this.perfilIdUrl) {
       this.perfilService.obtenerPerfil(parseInt(this.perfilIdUrl)).subscribe((data: any) => {
@@ -60,7 +69,15 @@ export class PerfilComponent implements OnInit {
           deuda: this.perfil.deuda,
         });
       });
+
+      this.perfilService.tareasPorUsuario(parseInt(this.perfilIdUrl)).subscribe((data: any)=>{
+        this.tareas = data;
+      });
+      this.perfilService.obrasPorUsuario(parseInt(this.perfilIdUrl)).subscribe((data: any)=>{
+        this.obras = data;
+      });
     }
+
   }
 
   esUsuarioActual(): boolean {
@@ -87,6 +104,28 @@ export class PerfilComponent implements OnInit {
         });
       }
     }
+  }
+
+  activarEdicionTarea(index: number): void {
+    this.editTareas[index] = true;
+  }
+
+  cancelarEdicionTarea(index: number): void {
+    this.editTareas[index] = false;
+  }
+
+  guardarCambiosTarea(index: number, tarea: any): void {
+
+    this.tareaService
+      // @ts-ignore
+      .actualizarCantDias(this.perfilIdUrl, tarea.cant_dias, tarea.id_tarea)
+      .subscribe({
+        next: () => {
+          this.editTareas[index] = false;
+          console.log('Cantidad de días actualizada correctamente');
+        },
+        error: (err) => console.error('Error al actualizar cantidad de días', err)
+      });
   }
 }
 

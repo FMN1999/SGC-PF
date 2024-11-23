@@ -19,6 +19,13 @@ export class PerfilService {
     return this.http.put(`${this.apiUrl}/${userId}/`, perfilData);  // Llamada PUT para actualizar el perfil
   }
 
+  obrasPorUsuario(userId: number): Observable<any>{
+    return this.http.get(`${this.apiUrl}/${userId}/obras/`)
+  }
+
+  tareasPorUsuario(userId: number): Observable<any>{
+    return this.http.get(`${this.apiUrl}/${userId}/tareas/`)
+  }
 
 }
 

@@ -82,6 +82,7 @@ urlpatterns = [
     path('assistant', views.Assistant.as_view(), name='assistant'),
     path('reporte-gastos-avance/<int:id_obra>/', views.ReporteObraView.as_view(), name='reporte'),
     path('obras-empresa/<int:id_empresa>/', views.ObraEmpresaView.as_view(), name='obra_x_empresa'),
-    path('registrar-pago/', views.CobroView.as_view(), name='registra_cobro')
-
+    path('registrar-pago/', views.CobroView.as_view(), name='registra_cobro'),
+    path('perfil/<int:userId>/obras/', views.ObrasPerfilView.as_view(), name='obtener_obras'),
+    path('perfil/<int:userId>/tareas/', views.TareasPerfilView.as_view(), name='obtener_tareas'),
 ]

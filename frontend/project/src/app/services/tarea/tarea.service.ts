@@ -57,7 +57,7 @@ export class TareaService {
     return this.http.delete(`${this.apiUrl}tarea/material/${materialId}/eliminar/`);
   }
 
-  actualizarCantDias(colaboradorId: number, cantDias: number): Observable<any> {
-    return this.http.patch(`${this.apiUrl}tarea/colaborador/${colaboradorId}/actualizar_cant_dias/`, { cant_dias: cantDias });
+  actualizarCantDias(colaboradorId: number, cantDias: number, id_tarea: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}tarea/colaborador/${colaboradorId}/actualizar_cant_dias/`, { cant_dias: cantDias, id_tarea: id_tarea });
   }
 }

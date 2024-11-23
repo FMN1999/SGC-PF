@@ -1103,8 +1103,12 @@ class TareaColaboradorView(View):
     def patch(self, request, colaborador_id):
         data = json.loads(request.body)
         cant_dias = data.get('cant_dias')
+        tarea = data.get('id_tarea')
+        print(colaborador_id)
+        print(tarea)
         if cant_dias is not None:
-            tarea = Tarea_Colaborador.objects.get(id=colaborador_id)
+            colaborador = Colaborador.objects.get(id_usuario=colaborador_id)
+            tarea = Tarea_Colaborador.objects.get(id_colaborador=colaborador.id, id_tarea=tarea)
             tarea.cant_dias = cant_dias
             return JsonResponse({'message': 'Cantidad de días actualizada', 'cant_dias': cant_dias}, status=200)
         else:
@@ -1235,7 +1239,6 @@ class Assistant(View):
         elif int(user_message) == 5:
             data_return = ChatController.seguimiento_avance_obra(id_obra)
             response_message = self.format_seguimiento_avance_obra(data_return)
-
 
         elif int(user_message) == 6:
             data_return = ChatController.optimizacion_costos(id_obra)
@@ -1442,5 +1445,47 @@ class ObraEmpresaView(View):
                 'estado': o.estado
             } for o in obras
         ]
-        print(obras_return)
         return JsonResponse({'obras':obras_return}, safe=False)
+
+
+class ObrasPerfilView(View):
+    def get(self, request, userId):
+        try:
+            user = Cliente.objects.get(id_usuario=userId)
+        except Cliente.DoesNotExist:
+            return JsonResponse(None, safe=False)
+
+        obras = Obra.objects.filter(id_cliente=user.id)
+        obras_return = [
+            {
+                'id': o.id,
+                'direccion': o.direccion,
+                'estado': o.estado
+            } for o in obras
+        ]
+        return JsonResponse(obras_return, safe=False)
+
+
+class TareasPerfilView(View):
+    def get(self, request, userId):
+        try:
+            # Buscar el colaborador
+            user = Colaborador.objects.get(id_usuario=userId)
+
+            # Obtener las tareas asociadas al colaborador
+            tareas = Tarea_Colaborador.objects.filter(id_colaborador=user.id)
+            tareas_return = [
+                {
+                    'id': t.id,
+                    'tarea': t.id_tarea.titulo,
+                    'descripcion': t.id_tarea.descripcion,
+                    'cant_dias': t.cant_dias,
+                    'estado': t.estado,
+                    'id_tarea': t.id_tarea.id,
+                } for t in tareas
+            ]
+            return JsonResponse(tareas_return, safe=False)
+
+        except Colaborador.DoesNotExist:
+            # Si no se encuentra el colaborador, devolver null
+            return JsonResponse(None, safe=False)

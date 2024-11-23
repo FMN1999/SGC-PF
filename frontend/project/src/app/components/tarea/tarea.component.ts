@@ -184,7 +184,7 @@ export class TareaComponent implements OnInit {
   // Método para guardar la nueva cantidad de días
   guardarCantDias(colaboradorId: number): void {
     const cantDias = this.cantDiasTemp[colaboradorId];
-    this.tareaService.actualizarCantDias(colaboradorId, cantDias).subscribe(() => {
+    this.tareaService.actualizarCantDias(colaboradorId, cantDias, this.tareaId).subscribe(() => {
       // Actualizamos la lista de colaboradores con el nuevo valor de cant_dias
       const colaborador = this.colaboradoresTarea.find(c => c.id === colaboradorId);
       if (colaborador) colaborador.cant_dias = cantDias;

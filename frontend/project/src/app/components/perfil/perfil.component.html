@@ -75,6 +75,38 @@
   </form>
 </div>
 
+<div *ngIf="obras !== null">
+  <h2>Obras</h2>
+  <ul>
+    <li *ngFor="let o of obras">
+      <a [routerLink]="['/obra', o.id]">{{ o.direccion }} - {{ o.estado }} </a>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="tareas !== null">
+  <h2>Tareas</h2>
+  <ul>
+    <li *ngFor="let t of tareas; let i = index">
+      <a [routerLink]="['/tarea', t.id]">{{ t.titulo }} - {{ t.descripcion }} </a>
+      <p>Estado: {{ t.estado }} </p>
+
+      <div *ngIf="!editTareas[i]">
+        <p>Cantidad de días: {{ t.cant_dias }} </p>
+        <button (click)="activarEdicionTarea(i)">Editar</button>
+      </div>
+
+      <div *ngIf="editTareas[i]">
+        <label for="cant_dias_{{i}}">Cantidad de días</label>
+        <input id="cant_dias_{{i}}" type="number" [(ngModel)]="tareas[i].cant_dias" />
+        <button (click)="guardarCambiosTarea(i, t)">Guardar</button>
+        <button (click)="cancelarEdicionTarea(i)">Cancelar</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
 <!-- Mensaje mientras se carga el perfil -->
 <div *ngIf="!perfil && !editMode">
   Cargando perfil...
