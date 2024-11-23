@@ -12,6 +12,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+  // @ts-ignore
+  idEmpresa = +sessionStorage.getItem('id_empresa')
   isLoggedIn: boolean = false;
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;

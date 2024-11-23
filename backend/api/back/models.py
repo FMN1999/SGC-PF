@@ -278,7 +278,6 @@ class Presupuesto_Trabajador(models.Model):
     monto_linea = models.FloatField()
     id_presupuesto = models.ForeignKey(Presupuesto, on_delete=models.CASCADE, db_column='id_presupuesto')
 
-
     class Meta:
         db_table = 'Presupuesto_Trabajador'
 

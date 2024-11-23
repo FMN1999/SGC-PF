@@ -1,0 +1,17 @@
+<div *ngIf="cargando">Cargando obras...</div>
+<div *ngIf="error">Ocurrió un error al cargar las obras.</div>
+
+<div *ngIf="!cargando && !error">
+  <h1>Obras de la Empresa {{ idEmpresa }}</h1>
+  <ul>
+    <li *ngFor="let obra of obras">
+      <h3>{{ obra.tipo_obra }} - {{ obra.estado }}</h3>
+      <p>Dirección: {{ obra.direccion }}</p>
+      <p>Cliente: {{ obra.cliente_nombre }} {{ obra.cliente_apellido }}</p>
+      <p>Teléfono de Contacto: {{ obra.telefono_contacto }}</p>
+      <p>Fecha de Inicio Estimada: {{ obra.fecha_inicio_est }}</p>
+      <p>Monto Total Estimado: {{ obra.monto_total_est | currency }}</p>
+    </li>
+  </ul>
+</div>
+

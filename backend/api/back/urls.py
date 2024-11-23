@@ -85,4 +85,5 @@ urlpatterns = [
     path('registrar-pago/', views.CobroView.as_view(), name='registra_cobro'),
     path('perfil/<int:userId>/obras/', views.ObrasPerfilView.as_view(), name='obtener_obras'),
     path('perfil/<int:userId>/tareas/', views.TareasPerfilView.as_view(), name='obtener_tareas'),
+    path('almacenes-detalles/<int:id_empresa>/', views.AlmacenesPorEmpresaView.as_view(), name='almacenes'),
 ]

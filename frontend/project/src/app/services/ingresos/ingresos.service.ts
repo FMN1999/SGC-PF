@@ -13,5 +13,9 @@ export class IngresoService {
   crearIngresos(ingresoData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}ingreso/`, ingresoData);
   }
+
+  obtenerIngresosPorAlmacen(id_almacen: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/ingresos/${id_almacen}/`);
+  }
 }
 

@@ -1442,6 +1442,10 @@ class ObraEmpresaView(View):
                 'id_cliente': o.id_cliente.id,
                 'cliente_nombre': o.id_cliente.id_usuario.nombre,
                 'cliente_apellido': o.id_cliente.id_usuario.apellido,
+                'telefono_contacto': o.telefono_contacto,
+                'fecha_inicio_est': o.fecha_inicio_est,
+                'monto_total_est': o.monto_total_est,
+                'tipo_obra': o.tipo_obra,
                 'estado': o.estado
             } for o in obras
         ]
@@ -1489,3 +1493,62 @@ class TareasPerfilView(View):
         except Colaborador.DoesNotExist:
             # Si no se encuentra el colaborador, devolver null
             return JsonResponse(None, safe=False)
+
+
+class AlmacenesPorEmpresaView(View):
+    def get(self, request, id_empresa):
+        try:
+            almacenes = Almacen.objects.filter(id_empresa=id_empresa)
+            almacenes_return = []
+
+            for almacen in almacenes:
+                # Obtener ingresos del almacén
+                ingresos = Ingreso.objects.filter(id_almacen=almacen.id)
+                ingresos_data = [
+                    {
+                        'id': ingreso.id,
+                        'cantidad': ingreso.cantidad,
+                        'fecha': ingreso.fecha,
+                        'material': {
+                            'id': ingreso.id_material.id,
+                            'nombre': ingreso.id_material.descripcion
+                        },
+                        'unidad_medida': ingreso.unidad_medida,
+                        'id_compra': ingreso.id_compra.id,
+                        'fecha_real': ingreso.fecha_real,
+                        'realizado': ingreso.realizado,
+                        'en_obra': ingreso.en_obra,
+                    }
+                    for ingreso in ingresos
+                ]
+
+                # Obtener herramientas del almacén
+                herramientas = Herramienta.objects.filter(id_almacen=almacen.id)
+                herramientas_data = [
+                    {
+                        'id': herramienta.id,
+                        'material': {
+                            'id': herramienta.id_material.id,
+                            'nombre': herramienta.id_material.descripcion
+                        },
+                        'ubicacion': herramienta.ubicacion,
+                        'marca': herramienta.marca,
+                        'id_compra': herramienta.id_compra.id,
+                    }
+                    for herramienta in herramientas
+                ]
+
+                almacenes_return.append({
+                    'id': almacen.id,
+                    'descripcion': almacen.descripcion,
+                    'direccion': almacen.direccion,
+                    'contacto': almacen.contacto,
+                    'ciudad': almacen.ciudad,
+                    'provincia': almacen.provincia,
+                    'ingresos': ingresos_data,
+                    'herramientas': herramientas_data,
+                })
+
+            return JsonResponse({'almacenes': almacenes_return}, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
