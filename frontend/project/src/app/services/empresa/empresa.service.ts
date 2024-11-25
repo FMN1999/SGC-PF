@@ -46,5 +46,9 @@ export class EmpresaService {
   obtenerAlmacenesConDetalles(id_empresa: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/almacenes-detalles/${id_empresa}/`);
   }
+
+  obtenerBalanceFinanciero(empresaId: number, anio: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/balance-financiero/${empresaId}/anio/${anio}`);
+  }
 }
 

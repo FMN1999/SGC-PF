@@ -86,4 +86,6 @@ urlpatterns = [
     path('perfil/<int:userId>/obras/', views.ObrasPerfilView.as_view(), name='obtener_obras'),
     path('perfil/<int:userId>/tareas/', views.TareasPerfilView.as_view(), name='obtener_tareas'),
     path('almacenes-detalles/<int:id_empresa>/', views.AlmacenesPorEmpresaView.as_view(), name='almacenes'),
+    path('pagos-cobros-obra/<int:id_obra>/', views.PagosCobrosObraView.as_view(), name='finanzas-obra'),
+    path('balance-financiero/<int:id_empresa>/anio/<int:anio>', views.PagosCobrosEmpresaView.as_view(), name='finanzas-obra'),
 ]

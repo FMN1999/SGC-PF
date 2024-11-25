@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Balance Financiero: {{ balanceData.anio }}</h2>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Resumen</h3>
+      <p><strong>Ingresos Totales:</strong> {{ balanceData.ingresos_totales | currency }}</p>
+      <p><strong>Egresos Totales:</strong> {{ balanceData.egresos_totales | currency }}</p>
+      <p><strong>Balance Total:</strong> {{ balanceData.balance_total | currency }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="!loading">
+    <div id="chart-ingresos-egresos">
+      <apx-chart
+        [series]="ingresosEgresosChartOptions.series!"
+        [chart]="ingresosEgresosChartOptions.chart!"
+        [xaxis]="ingresosEgresosChartOptions.xaxis!"
+        [title]="ingresosEgresosChartOptions.title!"
+        [dataLabels]="ingresosEgresosChartOptions.dataLabels!"
+        [tooltip]="ingresosEgresosChartOptions.tooltip!">
+      </apx-chart>
+    </div>
+
+    <div id="chart-balance-mensual">
+      <apx-chart
+        [series]="balanceMensualChartOptions.series!"
+        [chart]="balanceMensualChartOptions.chart!"
+        [xaxis]="balanceMensualChartOptions.xaxis!"
+        [title]="balanceMensualChartOptions.title!"
+        [dataLabels]="balanceMensualChartOptions.dataLabels!"
+        [tooltip]="balanceMensualChartOptions.tooltip!">
+      </apx-chart>
+    </div>
+  </div>
+</div>
+

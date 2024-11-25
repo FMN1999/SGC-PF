@@ -284,4 +284,8 @@ export class ObraComponent implements OnInit {
     this.router.navigate(['/reportes', id]);
   }
 
+  irAPagosCobros(): void {
+    this.router.navigate(['/pagos-cobros', this.obra_id]);
+  }
+
 }

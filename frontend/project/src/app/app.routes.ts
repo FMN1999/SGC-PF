@@ -31,6 +31,8 @@ import {ReporteObraComponent} from "./components/reporte-obra/reporte-obra.compo
 import {RegistrarPagoComponent} from "./components/registrar-pago/registrar-pago.component";
 import {ObrasComponent} from "./components/obras/obras.component";
 import {AlmacenesComponent} from "./components/almacenes/almacenes.component";
+import {FinanzasObraComponent} from "./components/finanzas-obra/finanzas-obra.component";
+import {BalanceFinancieroComponent} from "./components/balance-financiero/balance-financiero.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -67,6 +69,9 @@ export const routes: Routes = [
   { path: 'pago-cliente', component: RegistrarPagoComponent },
   { path: 'obras/:id', component: ObrasComponent },
   { path: 'almacenes/:id', component: AlmacenesComponent },
+  { path: 'pagos-cobros/:id', component: FinanzasObraComponent },
+  { path: 'balance/:id', component: BalanceFinancieroComponent },
+
 ];
 
 export const routerProviders = [provideRouter(routes)];

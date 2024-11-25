@@ -7,6 +7,7 @@ from .controller import *
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1552,3 +1553,94 @@ class AlmacenesPorEmpresaView(View):
             return JsonResponse({'almacenes': almacenes_return}, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+        
+
+class PagosCobrosObraView(View):
+    def get(self, request, id_obra):
+        try:
+            # Obtener pagos relacionados con la obra
+            pagos = Pago.objects.filter(id_compra__id_obra=id_obra)
+            pagos_data = [
+                {
+                    'id': pago.id,
+                    'monto': pago.monto,
+                    'moneda': pago.moneda,
+                    'cuota': pago.cuota,
+                    'id_proveedor': pago.id_proveedor.id,
+                    'proveedor_nombre': pago.id_proveedor.denominacion,
+                    'id_compra': pago.id_compra.id,
+                    'fecha_pago': pago.fecha_pago,
+                }
+                for pago in pagos
+            ]
+
+            # Obtener cobros relacionados con la obra
+            cobros = Cobros.objects.filter(id_obra=id_obra)
+            cobros_data = [
+                {
+                    'id': cobro.id,
+                    'id_cliente': cobro.id_cliente.id,
+                    'cliente_nombre': cobro.id_cliente.id_usuario.nombre,
+                    'cliente_apellido': cobro.id_cliente.id_usuario.apellido,
+                    'monto': cobro.monto,
+                    'moneda': cobro.moneda,
+                    'fecha_pago': cobro.fecha_pago,
+                    'realizado': cobro.realizado,
+                    'fecha_limite': cobro.fecha_limite,
+                    'cantidad_recargo': cobro.cantidad_recargo,
+                    'unidad_recargo': cobro.unidad_recargo,
+                }
+                for cobro in cobros
+            ]
+
+            return JsonResponse({'pagos': pagos_data, 'cobros': cobros_data}, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+
+class PagosCobrosEmpresaView(View):
+    def get(self, request, id_empresa, anio):
+        data = json.loads(request.body)
+
+        # Egresos
+        compras = Compra.objects.filter(
+            id_obra__id_empresa=id_empresa,
+            fecha_compra__year=anio
+        ).values('fecha_compra__month').annotate(total=Sum('monto_total'))
+
+        subcontrataciones = Subcontratacion.objects.filter(
+            id_obra__id_empresa=id_empresa,
+            fecha_contrato__year=anio
+        ).values('fecha_contrato__month').annotate(total=Sum('monto_contratacion'))
+
+        # Total Egresos por mes
+        egresos_mensuales = {i: 0 for i in range(1, 13)}
+        for compra in compras:
+            egresos_mensuales[compra['fecha_compra__month']] += compra['total']
+        for subcontratacion in subcontrataciones:
+            egresos_mensuales[subcontratacion['fecha_contrato__month']] += subcontratacion['total']
+
+        # Ingresos: Suponemos pagos registrados en un modelo `Pago`
+        ingresos = Pago.objects.filter(
+            empresa_id=empresa_id,
+            fecha_pago__year=anio
+        ).values('fecha_pago__month').annotate(total=Sum('monto'))
+
+        ingresos_mensuales = {i: 0 for i in range(1, 13)}
+        for ingreso in ingresos:
+            ingresos_mensuales[ingreso['fecha_pago__month']] += ingreso['total']
+
+        # Cálculo total
+        total_egresos = sum(egresos_mensuales.values())
+        total_ingresos = sum(ingresos_mensuales.values())
+        balance_mensual = {i: ingresos_mensuales[i] - egresos_mensuales[i] for i in range(1, 13)}
+
+        return JsonResponse({
+            'anio': anio,
+            'egresos_totales': total_egresos,
+            'ingresos_totales': total_ingresos,
+            'balance_total': total_ingresos - total_egresos,
+            'egresos_mensuales': egresos_mensuales,
+            'ingresos_mensuales': ingresos_mensuales,
+            'balance_mensual': balance_mensual,
+        })

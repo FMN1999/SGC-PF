@@ -74,5 +74,9 @@ export class ObraService {
   getPresupuestosPorObra(idObra: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}obras/${idObra}/presupuestos/`);
   }
+
+  obtenerPagosCobrosPorObra(id_obra: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}pagos-cobros-obra/${id_obra}/`);
+  }
 }
 
