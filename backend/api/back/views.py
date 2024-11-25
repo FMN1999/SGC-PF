@@ -1600,47 +1600,57 @@ class PagosCobrosObraView(View):
 
 class PagosCobrosEmpresaView(View):
     def get(self, request, id_empresa, anio):
-        data = json.loads(request.body)
+        try:
+            # Egresos
+            compras = Compra.objects.filter(
+                id_obra__id_empresa=id_empresa,
+                fecha_compra__year=anio
+            ).values('fecha_compra__month').annotate(total=Sum('monto_total'))
+            print(compras)
+    
+            subcontrataciones = Subcontratacion.objects.filter(
+                id_obra__id_empresa=id_empresa,
+                fecha_contrato__year=anio
+            ).values('fecha_contrato__month').annotate(total=Sum('monto_contratacion'))
+            print(subcontrataciones)
+    
+            # Total Egresos por mes
+            egresos_mensuales = {i: 0 for i in range(1, 13)}
+            for compra in compras:
+                egresos_mensuales[compra['fecha_compra__month']] += compra['total']
+            for subcontratacion in subcontrataciones:
+                egresos_mensuales[subcontratacion['fecha_contrato__month']] += subcontratacion['total']
 
-        # Egresos
-        compras = Compra.objects.filter(
-            id_obra__id_empresa=id_empresa,
-            fecha_compra__year=anio
-        ).values('fecha_compra__month').annotate(total=Sum('monto_total'))
+            print(egresos_mensuales)
+    
+            # Ingresos: Suponemos pagos registrados en un modelo `Pago`
+            ingresos = Pago.objects.filter(
+                id_proveedor__id_empresa=id_empresa,
+                fecha_pago__year=anio
+            ).values('fecha_pago__month').annotate(total=Sum('monto'))
 
-        subcontrataciones = Subcontratacion.objects.filter(
-            id_obra__id_empresa=id_empresa,
-            fecha_contrato__year=anio
-        ).values('fecha_contrato__month').annotate(total=Sum('monto_contratacion'))
+            print(ingresos)
+    
+            ingresos_mensuales = {i: 0 for i in range(1, 13)}
+            for ingreso in ingresos:
+                ingresos_mensuales[ingreso['fecha_pago__month']] += ingreso['total']
+            print(ingresos_mensuales)
+    
+            # Cálculo total
+            total_egresos = sum(egresos_mensuales.values())
+            total_ingresos = sum(ingresos_mensuales.values())
+            balance_mensual = {i: ingresos_mensuales[i] - egresos_mensuales[i] for i in range(1, 13)}
+    
+            data = {
+                    'anio': anio,
+                    'egresos_totales': total_egresos,
+                    'ingresos_totales': total_ingresos,
+                    'balance_total': total_ingresos - total_egresos,
+                    'egresos_mensuales': egresos_mensuales,
+                    'ingresos_mensuales': ingresos_mensuales,
+                    'balance_mensual': balance_mensual,
+            }
+            return JsonResponse(data, safe=False)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
-        # Total Egresos por mes
-        egresos_mensuales = {i: 0 for i in range(1, 13)}
-        for compra in compras:
-            egresos_mensuales[compra['fecha_compra__month']] += compra['total']
-        for subcontratacion in subcontrataciones:
-            egresos_mensuales[subcontratacion['fecha_contrato__month']] += subcontratacion['total']
-
-        # Ingresos: Suponemos pagos registrados en un modelo `Pago`
-        ingresos = Pago.objects.filter(
-            empresa_id=empresa_id,
-            fecha_pago__year=anio
-        ).values('fecha_pago__month').annotate(total=Sum('monto'))
-
-        ingresos_mensuales = {i: 0 for i in range(1, 13)}
-        for ingreso in ingresos:
-            ingresos_mensuales[ingreso['fecha_pago__month']] += ingreso['total']
-
-        # Cálculo total
-        total_egresos = sum(egresos_mensuales.values())
-        total_ingresos = sum(ingresos_mensuales.values())
-        balance_mensual = {i: ingresos_mensuales[i] - egresos_mensuales[i] for i in range(1, 13)}
-
-        return JsonResponse({
-            'anio': anio,
-            'egresos_totales': total_egresos,
-            'ingresos_totales': total_ingresos,
-            'balance_total': total_ingresos - total_egresos,
-            'egresos_mensuales': egresos_mensuales,
-            'ingresos_mensuales': ingresos_mensuales,
-            'balance_mensual': balance_mensual,
-        })
