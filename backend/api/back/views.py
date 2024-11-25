@@ -1602,39 +1602,33 @@ class PagosCobrosEmpresaView(View):
     def get(self, request, id_empresa, anio):
         try:
             # Egresos
-            compras = Compra.objects.filter(
-                id_obra__id_empresa=id_empresa,
-                fecha_compra__year=anio
-            ).values('fecha_compra__month').annotate(total=Sum('monto_total'))
-            print(compras)
+            pagos = Pago.objects.filter(
+                id_proveedor__id_empresa=id_empresa,
+                fecha_pago__year=anio
+            ).values('fecha_pago__month').annotate(total=Sum('monto'))
+            print(pagos)
     
             subcontrataciones = Subcontratacion.objects.filter(
                 id_obra__id_empresa=id_empresa,
                 fecha_contrato__year=anio
             ).values('fecha_contrato__month').annotate(total=Sum('monto_contratacion'))
-            print(subcontrataciones)
     
             # Total Egresos por mes
             egresos_mensuales = {i: 0 for i in range(1, 13)}
-            for compra in compras:
-                egresos_mensuales[compra['fecha_compra__month']] += compra['total']
+            for pago in pagos:
+                egresos_mensuales[pago['fecha_pago__month']] += pago['total']
             for subcontratacion in subcontrataciones:
                 egresos_mensuales[subcontratacion['fecha_contrato__month']] += subcontratacion['total']
 
-            print(egresos_mensuales)
-    
             # Ingresos: Suponemos pagos registrados en un modelo `Pago`
-            ingresos = Pago.objects.filter(
-                id_proveedor__id_empresa=id_empresa,
+            ingresos = Cobros.objects.filter(
+                id_cliente__id_empresa=id_empresa,
                 fecha_pago__year=anio
             ).values('fecha_pago__month').annotate(total=Sum('monto'))
-
-            print(ingresos)
     
             ingresos_mensuales = {i: 0 for i in range(1, 13)}
             for ingreso in ingresos:
                 ingresos_mensuales[ingreso['fecha_pago__month']] += ingreso['total']
-            print(ingresos_mensuales)
     
             # Cálculo total
             total_egresos = sum(egresos_mensuales.values())
@@ -1653,4 +1647,3 @@ class PagosCobrosEmpresaView(View):
             return JsonResponse(data, safe=False)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
-
