@@ -464,3 +464,20 @@ class Cobros(models.Model):
 
     class Meta:
         db_table = 'Cobros'
+
+
+class Permiso(models.Model):
+    id = models.AutoField(primary_key=True)
+    descripcion = models.CharField()
+
+    class Meta:
+        db_table = 'Permiso'
+
+
+class Permiso_Usuario(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, db_column='id_usuario')
+    id_permiso = models.ForeignKey(Permiso, on_delete=models.CASCADE, db_column='id_permiso')
+
+    class Meta:
+        db_table = 'Permiso_Usuario'

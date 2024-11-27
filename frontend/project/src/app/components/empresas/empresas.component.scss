@@ -1,0 +1,42 @@
+button {
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.loading {
+  font-size: 18px;
+  color: blue;
+}
+
+.error {
+  font-size: 18px;
+  color: red;
+}
+
+.empresas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.empresas-table th,
+.empresas-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.empresas-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../services/perfil/perfil.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
 
 @Component({
@@ -32,7 +32,8 @@ export class PerfilComponent implements OnInit {
     private perfilService: PerfilService,
     private fb: FormBuilder,
     private route: ActivatedRoute,  // Inyectar ActivatedRoute
-    private tareaService: TareaService
+    private tareaService: TareaService,
+    private router: Router
   ) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -126,6 +127,10 @@ export class PerfilComponent implements OnInit {
         },
         error: (err) => console.error('Error al actualizar cantidad de días', err)
       });
+  }
+
+  gestionarPermisos(idUsuario: number): void {
+    this.router.navigate([`/usuario/${idUsuario}/permisos`]);
   }
 }
 

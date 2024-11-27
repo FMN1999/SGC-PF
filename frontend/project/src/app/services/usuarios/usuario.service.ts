@@ -21,4 +21,24 @@ export class UsuarioService {
   darDeBajaColaborador(id: number, fechaBaja: string): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/colaboradores/${id}/baja/`, { fecha_baja: fechaBaja });
   }
+
+  getPermisosUsuario(idUsuario: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/permisos-usuario/${idUsuario}/`);
+  }
+
+  getPermisosDisponibles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/permisos/`);
+  }
+
+  asignarPermiso(idUsuario: number, idPermiso: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/alta-permiso-usuario/${idUsuario}/`, {
+      id_permiso: idPermiso,
+    });
+  }
+
+  eliminarPermiso(idUsuario: number, idPermiso: number): Observable<any> {
+    return this.http.delete(
+      `${this.apiUrl}/usuario/${idUsuario}/permiso/${idPermiso}/`
+    );
+  }
 }

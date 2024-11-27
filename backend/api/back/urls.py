@@ -88,4 +88,9 @@ urlpatterns = [
     path('almacenes-detalles/<int:id_empresa>/', views.AlmacenesPorEmpresaView.as_view(), name='almacenes'),
     path('pagos-cobros-obra/<int:id_obra>/', views.PagosCobrosObraView.as_view(), name='finanzas-obra'),
     path('balance-financiero/<int:id_empresa>/anio/<int:anio>', views.PagosCobrosEmpresaView.as_view(), name='finanzas-obra'),
+    path('empresas/crear/', views.EmpresasView.as_view(), name='empresa-create'),
+    path('permisos-usuario/<int:id_usuario>/', views.PermisosView.as_view(), name='empresa-create'),
+    path('permisos/', views.PermisosView.as_view(), name='empresa-create'),
+    path('alta-permiso-usuario/<int:id_usuario>/', views.PermisosView.as_view(), name='empresa-create'),
+    path('usuario/<int:id_usuario>/permiso/<int:id_permiso>/', views.PermisosView.as_view(), name='empresa-create'),
 ]

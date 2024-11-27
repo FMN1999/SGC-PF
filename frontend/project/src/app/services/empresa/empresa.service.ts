@@ -50,5 +50,9 @@ export class EmpresaService {
   obtenerBalanceFinanciero(empresaId: number, anio: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/balance-financiero/${empresaId}/anio/${anio}`);
   }
+
+  crearEmpresa(empresa: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/empresas/crear/`, empresa);
+  }
 }
 

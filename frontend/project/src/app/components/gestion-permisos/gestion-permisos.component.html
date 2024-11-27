@@ -1,0 +1,37 @@
+<h2>Gestión de Permisos</h2>
+
+<div>
+  <h3>Permisos actuales del usuario</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let permiso of permisosUsuario">
+        <td>{{ permiso.id }}</td>
+        <td>{{ permiso.descripcion }}</td>
+        <td>
+          <button (click)="eliminarPermiso(permiso.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <h3>Agregar Permiso</h3>
+  <form (ngSubmit)="agregarPermiso()">
+    <label>Seleccione un permiso:</label>
+    <select [(ngModel)]="nuevoPermisoId" name="permiso" required>
+      <option *ngFor="let permiso of permisosDisponibles" [value]="permiso.id">
+        {{ permiso.descripcion }}
+      </option>
+    </select>
+    <button type="submit">Agregar</button>
+  </form>
+</div>
+

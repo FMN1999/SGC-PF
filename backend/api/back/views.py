@@ -34,8 +34,9 @@ class LoginView(View):
             return JsonResponse({'error': str(e)}, status=400)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class EmpresasView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         try:
             # Obtener todas las empresas desde la base de datos
             empresas = EmpresaController.get_all()
@@ -45,6 +46,25 @@ class EmpresasView(View):
             return JsonResponse(empresas_list, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            nueva_empresa = Empresa.objects.create(
+                denominacion=data.get('denominacion'),
+                cuit=data.get('cuit'),
+                telefono=data.get('telefono'),
+                email=data.get('email'),
+            )
+            return JsonResponse({
+                "id": nueva_empresa.id,
+                "denominacion": nueva_empresa.denominacion,
+                "cuit": nueva_empresa.cuit,
+                "telefono": nueva_empresa.telefono,
+                "email": nueva_empresa.email,
+            }, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1606,7 +1626,6 @@ class PagosCobrosEmpresaView(View):
                 id_proveedor__id_empresa=id_empresa,
                 fecha_pago__year=anio
             ).values('fecha_pago__month').annotate(total=Sum('monto'))
-            print(pagos)
     
             subcontrataciones = Subcontratacion.objects.filter(
                 id_obra__id_empresa=id_empresa,
@@ -1647,3 +1666,34 @@ class PagosCobrosEmpresaView(View):
             return JsonResponse(data, safe=False)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PermisosView(View):
+    def get(self, request, id_usuario=None):
+        if id_usuario:
+            permisos_usuario = Permiso_Usuario.objects.filter(id_usuario=id_usuario)
+            data = [
+                {"id": p.id, "descripcion": p.id_permiso.descripcion}
+                for p in permisos_usuario
+            ]
+        else:
+            permisos = Permiso.objects.all()
+            data = [{"id": p.id, "descripcion": p.descripcion} for p in permisos]
+        return JsonResponse(data, safe=False)
+
+    def post(self, request, id_usuario):
+        data = json.loads(request.body)
+        permiso = Permiso.objects.get(id=data["id_permiso"])
+        usuario = Usuario.objects.get(id=id_usuario)
+        Permiso_Usuario.objects.create(id_usuario=usuario, id_permiso=permiso)
+        return JsonResponse({"message": "Permiso asignado correctamente"}, status=201)
+
+    def delete(self, request, id_usuario, id_permiso):
+        # Eliminar permiso del usuario
+        try:
+            permiso_usuario = Permiso_Usuario.objects.get(id_usuario=id_usuario, id_permiso=id_permiso)
+            permiso_usuario.delete()
+            return JsonResponse({"message": "Permiso eliminado correctamente"}, status=200)
+        except Permiso_Usuario.DoesNotExist:
+            return JsonResponse({"error": "Relación no encontrada"}, status=400)
