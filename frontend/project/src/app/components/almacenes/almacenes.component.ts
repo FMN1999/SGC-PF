@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
+import { HeaderComponent } from '../../components/header/header.component'
 
 @Component({
   standalone: true,
@@ -9,7 +10,8 @@ import {ActivatedRoute} from "@angular/router";
   templateUrl: './almacenes.component.html',
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
+    HeaderComponent
   ],
   styleUrls: ['./almacenes.component.scss']
 })
