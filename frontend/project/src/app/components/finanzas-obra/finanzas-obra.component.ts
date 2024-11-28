@@ -4,14 +4,13 @@ import {ActivatedRoute} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-finanzas-obra',
-  standalone: true,
-  templateUrl: './finanzas-obra.component.html',
-  imports: [
-    NgIf,
-    NgForOf
-  ],
-  styleUrls: ['./finanzas-obra.component.scss']
+    selector: 'app-finanzas-obra',
+    templateUrl: './finanzas-obra.component.html',
+    imports: [
+        NgIf,
+        NgForOf
+    ],
+    styleUrls: ['./finanzas-obra.component.scss']
 })
 export class FinanzasObraComponent implements OnInit {
   // @ts-ignore

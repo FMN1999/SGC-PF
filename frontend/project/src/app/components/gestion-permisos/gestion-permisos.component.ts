@@ -5,14 +5,13 @@ import {NgForOf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 
 @Component({
-  standalone: true,
-  selector: 'app-gestion-permisos',
-  templateUrl: './gestion-permisos.component.html',
-  styleUrls: ['./gestion-permisos.component.scss'],
-  imports: [
-    NgForOf,
-    FormsModule
-  ]
+    selector: 'app-gestion-permisos',
+    templateUrl: './gestion-permisos.component.html',
+    styleUrls: ['./gestion-permisos.component.scss'],
+    imports: [
+        NgForOf,
+        FormsModule
+    ]
 })
 export class GestionPermisosComponent implements OnInit {
   idUsuario: number = 0;

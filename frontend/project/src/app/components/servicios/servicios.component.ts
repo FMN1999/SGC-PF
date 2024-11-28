@@ -4,15 +4,14 @@ import {Router, RouterLink} from '@angular/router';
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-servicios',
-  templateUrl: './servicios.component.html',
-  standalone: true,
-  imports: [
-    RouterLink,
-    NgForOf,
-    NgIf
-  ],
-  styleUrls: ['./servicios.component.scss']
+    selector: 'app-servicios',
+    templateUrl: './servicios.component.html',
+    imports: [
+        RouterLink,
+        NgForOf,
+        NgIf
+    ],
+    styleUrls: ['./servicios.component.scss']
 })
 export class ServiciosComponent implements OnInit {
   servicios: any[] = [];

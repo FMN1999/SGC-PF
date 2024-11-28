@@ -1,17 +1,10 @@
 <header class="generic-header">
-  <!-- Ícono de casita para ir al Home -->
   <div class="left-section">
-    <button (click)="irAlHome()" class="icon-btn" aria-label="Ir al Home">
-      🏠
-    </button>
+    <fa-icon [icon]="['fas', 'home']" class="icon-btn" (click)="irAlHome()"></fa-icon>
   </div>
 
-  <!-- Opciones del usuario -->
   <div class="right-section">
-    <button (click)="toggleUserMenu()" class="icon-btn" aria-label="Opciones de Usuario">
-      👤
-    </button>
-    <!-- Menú desplegable -->
+    <fa-icon [icon]="['fas', 'user']" class="icon-btn" (click)="toggleUserMenu()"></fa-icon>
     <ul class="user-menu" *ngIf="userMenuVisible">
       <li (click)="irAlPerfil()">Mi Perfil</li>
       <li (click)="cerrarSesion()">Cerrar Sesión</li>

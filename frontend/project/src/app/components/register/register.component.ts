@@ -6,11 +6,10 @@ import { AuthService } from '../../services/auth/auth.service'; // Ajusta la rut
 import { EmpresaService } from '../../services/empresa/empresa.service'; // Ajusta la ruta si es necesario
 
 @Component({
-  selector: 'app-register',
-  standalone: true,  // Standalone component
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
-  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor]  // Importamos los módulos que necesitamos
+    selector: 'app-register', // Standalone component
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor] // Importamos los módulos que necesitamos
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;

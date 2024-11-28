@@ -4,15 +4,14 @@ import {formatDate, NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 
 @Component({
-  selector: 'app-usuarios',
-  templateUrl: './usuarios.component.html',
-  standalone: true,
-  imports: [
-    NgForOf,
-    NgIf,
-    RouterLink
-  ],
-  styleUrls: ['./usuarios.component.scss']
+    selector: 'app-usuarios',
+    templateUrl: './usuarios.component.html',
+    imports: [
+        NgForOf,
+        NgIf,
+        RouterLink
+    ],
+    styleUrls: ['./usuarios.component.scss']
 })
 export class UsuariosComponent implements OnInit {
   clientes: any[] = [];

@@ -5,15 +5,14 @@ import { Router } from '@angular/router';
 import { NgForOf, NgIf } from "@angular/common";
 
 @Component({
-  selector: 'app-crear-colaborador',
-  templateUrl: './crear-colaborador.component.html',
-  standalone: true,
-  imports: [
-    NgForOf,
-    ReactiveFormsModule,
-    NgIf
-  ],
-  styleUrls: ['./crear-colaborador.component.scss']
+    selector: 'app-crear-colaborador',
+    templateUrl: './crear-colaborador.component.html',
+    imports: [
+        NgForOf,
+        ReactiveFormsModule,
+        NgIf
+    ],
+    styleUrls: ['./crear-colaborador.component.scss']
 })
 export class CrearColaboradorComponent implements OnInit {
   colaboradorForm: FormGroup;

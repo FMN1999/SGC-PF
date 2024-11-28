@@ -5,18 +5,17 @@ import { ObraService } from '../../services/obra/obra.service';
 import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 
 @Component({
-  selector: 'app-obra',
-  standalone: true,
-  templateUrl: './obra.component.html',
-  imports: [
-    ReactiveFormsModule,
-    NgIf,
-    NgForOf,
-    NgOptimizedImage,
-    DatePipe,
-    RouterLink
-  ],
-  styleUrls: ['./obra.component.scss']
+    selector: 'app-obra',
+    templateUrl: './obra.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgIf,
+        NgForOf,
+        NgOptimizedImage,
+        DatePipe,
+        RouterLink
+    ],
+    styleUrls: ['./obra.component.scss']
 })
 export class ObraComponent implements OnInit {
   obraForm: FormGroup;

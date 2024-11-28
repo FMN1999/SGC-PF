@@ -4,15 +4,14 @@ import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-oferta',
-  standalone: true,
-  templateUrl: './oferta.component.html',
-  imports: [
-    NgIf,
-    DatePipe,
-    NgForOf
-  ],
-  styleUrls: ['./oferta.component.scss']
+    selector: 'app-oferta',
+    templateUrl: './oferta.component.html',
+    imports: [
+        NgIf,
+        DatePipe,
+        NgForOf
+    ],
+    styleUrls: ['./oferta.component.scss']
 })
 export class OfertaComponent implements OnInit {
   oferta: any;

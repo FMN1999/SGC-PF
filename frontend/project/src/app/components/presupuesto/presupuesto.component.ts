@@ -5,15 +5,14 @@ import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
-  selector: 'app-presupuesto',
-  templateUrl: './presupuesto.component.html',
-  standalone: true,
-  imports: [
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule
-  ],
-  styleUrls: ['./presupuesto.component.scss']
+    selector: 'app-presupuesto',
+    templateUrl: './presupuesto.component.html',
+    imports: [
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule
+    ],
+    styleUrls: ['./presupuesto.component.scss']
 })
 export class PresupuestoComponent implements OnInit {
   // @ts-ignore

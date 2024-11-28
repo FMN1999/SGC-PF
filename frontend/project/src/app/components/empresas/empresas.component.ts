@@ -4,14 +4,13 @@ import {NgForOf, NgIf} from "@angular/common";
 import {Router} from "@angular/router";
 
 @Component({
-  standalone: true,
-  selector: 'app-listado-empresas',
-  templateUrl: './empresas.component.html',
-  styleUrls: ['./empresas.component.scss'],
-  imports: [
-    NgIf,
-    NgForOf
-  ]
+    selector: 'app-listado-empresas',
+    templateUrl: './empresas.component.html',
+    styleUrls: ['./empresas.component.scss'],
+    imports: [
+        NgIf,
+        NgForOf
+    ]
 })
 export class EmpresasComponent implements OnInit {
   empresas: any[] = [];

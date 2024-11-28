@@ -8,14 +8,13 @@ import { ChatComponent } from '../chat/chat.component'
 import {DataShareService} from "../../services/data-share/data-share.service";
 
 @Component({
-  selector: 'app-crear-presupuesto',
-  templateUrl: './crear-presupuesto.component.html',
-  imports: [
-    ReactiveFormsModule,
-    NgForOf,
-    ChatComponent
-  ],
-  standalone: true
+    selector: 'app-crear-presupuesto',
+    templateUrl: './crear-presupuesto.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgForOf,
+        ChatComponent
+    ]
 })
 export class CrearPresupuestoComponent implements OnInit {
   presupuestoForm!: FormGroup;

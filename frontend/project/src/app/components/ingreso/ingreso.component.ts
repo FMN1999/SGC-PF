@@ -7,15 +7,14 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  standalone: true,
-  selector: 'app-ingreso',
-  templateUrl: './ingreso.component.html',
-  imports: [
-    ReactiveFormsModule,
-    NgForOf,
-    NgIf
-  ],
-  styleUrls: ['./ingreso.component.scss']
+    selector: 'app-ingreso',
+    templateUrl: './ingreso.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgForOf,
+        NgIf
+    ],
+    styleUrls: ['./ingreso.component.scss']
 })
 export class IngresoComponent implements OnInit {
   ingresoForm: FormGroup;

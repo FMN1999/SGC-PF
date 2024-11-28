@@ -5,7 +5,6 @@ import {ActivatedRoute} from "@angular/router";
 import { HeaderComponent } from '../../components/header/header.component'
 
 @Component({
-  standalone: true,
   selector: 'app-almacenes-empresa',
   templateUrl: './almacenes.component.html',
   imports: [
@@ -13,6 +12,7 @@ import { HeaderComponent } from '../../components/header/header.component'
     NgIf,
     HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./almacenes.component.scss']
 })
 

@@ -5,15 +5,14 @@ import { PagoService } from '../../services/pago/pago.service'
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  standalone: true,
-  selector: 'app-compra',
-  templateUrl: './compra.component.html',
-  imports: [
-    NgIf,
-    NgForOf,
-    DatePipe
-  ],
-  styleUrls: ['./compra.component.scss']
+    selector: 'app-compra',
+    templateUrl: './compra.component.html',
+    imports: [
+        NgIf,
+        NgForOf,
+        DatePipe
+    ],
+    styleUrls: ['./compra.component.scss']
 })
 export class CompraComponent implements OnInit {
   compra: any;

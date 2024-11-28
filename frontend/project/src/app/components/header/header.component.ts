@@ -2,20 +2,25 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service'
 import {NgIf} from "@angular/common";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faUser } from '@fortawesome/free-solid-svg-icons'; // Importa los íconos necesarios
+
 
 @Component({
-  standalone: true,
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    FaIconComponent
   ]
 })
 export class HeaderComponent {
   userMenuVisible = false; // Controla la visibilidad del menú desplegable
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) { library.add(faHome, faUser); }
 
   toggleUserMenu(): void {
     this.userMenuVisible = !this.userMenuVisible; // Alternar la visibilidad del menú

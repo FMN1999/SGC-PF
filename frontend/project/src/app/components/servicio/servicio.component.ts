@@ -5,14 +5,13 @@ import { NgIf } from "@angular/common";
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para usar ngModel
 
 @Component({
-  selector: 'app-servicio',
-  templateUrl: './servicio.component.html',
-  standalone: true,
-  imports: [
-    NgIf,
-    FormsModule
-  ],
-  styleUrls: ['./servicio.component.scss']
+    selector: 'app-servicio',
+    templateUrl: './servicio.component.html',
+    imports: [
+        NgIf,
+        FormsModule
+    ],
+    styleUrls: ['./servicio.component.scss']
 })
 export class ServicioComponent implements OnInit {
   servicio: any;

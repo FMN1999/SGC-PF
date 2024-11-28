@@ -9,14 +9,13 @@ import {NgForOf} from "@angular/common";
 
 
 @Component({
-  standalone: true,
-  selector: 'app-crear-tarea',
-  templateUrl: './crear-tarea.component.html',
-  imports: [
-    ReactiveFormsModule,
-    NgForOf
-  ],
-  styleUrls: ['./crear-tarea.component.scss']
+    selector: 'app-crear-tarea',
+    templateUrl: './crear-tarea.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgForOf
+    ],
+    styleUrls: ['./crear-tarea.component.scss']
 })
 export class CrearTareaComponent implements OnInit {
   tareaForm: FormGroup;

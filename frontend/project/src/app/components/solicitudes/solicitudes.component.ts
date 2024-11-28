@@ -3,14 +3,13 @@ import { CompraService } from '../../services/compra/compra.service';
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  standalone: true,
-  selector: 'app-solicitudes',
-  templateUrl: './solicitudes.component.html',
-  imports: [
-    NgIf,
-    NgForOf
-  ],
-  styleUrls: ['./solicitudes.component.scss']
+    selector: 'app-solicitudes',
+    templateUrl: './solicitudes.component.html',
+    imports: [
+        NgIf,
+        NgForOf
+    ],
+    styleUrls: ['./solicitudes.component.scss']
 })
 export class SolicitudesComponent implements OnInit {
   solicitudesPendientes: any[] = [];

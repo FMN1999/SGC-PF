@@ -15,17 +15,16 @@ import {
 } from 'chart.js';
 
 @Component({
-  selector: 'app-reporte-obra',
-  standalone: true,
-  templateUrl: './reporte-obra.component.html',
-  imports: [
-    NgIf,
-    CurrencyPipe,
-    PercentPipe,
-    NgForOf,
-    BaseChartDirective
-  ],
-  styleUrls: ['./reporte-obra.component.scss']
+    selector: 'app-reporte-obra',
+    templateUrl: './reporte-obra.component.html',
+    imports: [
+        NgIf,
+        CurrencyPipe,
+        PercentPipe,
+        NgForOf,
+        BaseChartDirective
+    ],
+    styleUrls: ['./reporte-obra.component.scss']
 })
 export class ReporteObraComponent implements OnInit {
   reporte: any;

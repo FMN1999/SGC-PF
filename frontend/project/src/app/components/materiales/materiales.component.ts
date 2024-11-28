@@ -4,15 +4,14 @@ import {NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 
 @Component({
-  selector: 'app-materiales',
-  templateUrl: './materiales.component.html',
-  standalone: true,
-  imports: [
-    NgIf,
-    NgForOf,
-    RouterLink
-  ],
-  styleUrls: ['./materiales.component.scss']
+    selector: 'app-materiales',
+    templateUrl: './materiales.component.html',
+    imports: [
+        NgIf,
+        NgForOf,
+        RouterLink
+    ],
+    styleUrls: ['./materiales.component.scss']
 })
 export class MaterialesComponent implements OnInit {
   materiales: any[] = [];

@@ -5,14 +5,13 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-crear-servicio',
-  templateUrl: './crear-servicio.component.html',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgIf
-  ],
-  styleUrls: ['./crear-servicio.component.scss']
+    selector: 'app-crear-servicio',
+    templateUrl: './crear-servicio.component.html',
+    imports: [
+        FormsModule,
+        NgIf
+    ],
+    styleUrls: ['./crear-servicio.component.scss']
 })
 export class CrearServicioComponent implements OnInit {
 

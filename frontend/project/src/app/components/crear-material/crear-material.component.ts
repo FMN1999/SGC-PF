@@ -6,14 +6,13 @@ import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-crear-material',
-  standalone: true,
-  templateUrl: './crear-material.component.html',
-  imports: [
-    FormsModule,
-    NgIf
-  ],
-  styleUrls: ['./crear-material.component.scss']
+    selector: 'app-crear-material',
+    templateUrl: './crear-material.component.html',
+    imports: [
+        FormsModule,
+        NgIf
+    ],
+    styleUrls: ['./crear-material.component.scss']
 })
 export class CrearMaterialComponent {
   id_proveedor: number;

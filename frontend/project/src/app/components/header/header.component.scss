@@ -12,8 +12,9 @@
   background: none;
   border: none;
   font-size: 1.5em;
-  color: #fff;
+  color: #fff; /* Blanco para mejor visibilidad */
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .icon-btn:hover {

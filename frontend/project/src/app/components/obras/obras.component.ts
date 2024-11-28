@@ -4,15 +4,14 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-obras-empresa',
-  standalone: true,
-  templateUrl: './obras.component.html',
-  imports: [
-    CurrencyPipe,
-    NgForOf,
-    NgIf
-  ],
-  styleUrls: ['./obras.component.scss']
+    selector: 'app-obras-empresa',
+    templateUrl: './obras.component.html',
+    imports: [
+        CurrencyPipe,
+        NgForOf,
+        NgIf
+    ],
+    styleUrls: ['./obras.component.scss']
 })
 export class ObrasComponent implements OnInit {
   idEmpresa: number | null = null;

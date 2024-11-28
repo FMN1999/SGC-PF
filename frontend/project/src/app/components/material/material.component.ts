@@ -5,15 +5,14 @@ import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import {DatePipe, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-material',
-  templateUrl: './material.component.html',
-  standalone: true,
-  imports: [
-    NgIf,
-    ReactiveFormsModule,
-    DatePipe
-  ],
-  styleUrls: ['./material.component.scss']
+    selector: 'app-material',
+    templateUrl: './material.component.html',
+    imports: [
+        NgIf,
+        ReactiveFormsModule,
+        DatePipe
+    ],
+    styleUrls: ['./material.component.scss']
 })
 export class MaterialComponent implements OnInit {
   material: any;

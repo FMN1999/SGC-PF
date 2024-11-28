@@ -5,14 +5,13 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf} from "@angular/common"; // Para obtener los clientes
 
 @Component({
-  selector: 'app-crear-obra',
-  templateUrl: './crear-obra.component.html',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    NgForOf
-  ],
-  styleUrls: ['./crear-obra.component.scss']
+    selector: 'app-crear-obra',
+    templateUrl: './crear-obra.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgForOf
+    ],
+    styleUrls: ['./crear-obra.component.scss']
 })
 export class CrearObraComponent implements OnInit {
   obraForm: FormGroup;

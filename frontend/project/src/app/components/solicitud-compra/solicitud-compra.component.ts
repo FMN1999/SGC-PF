@@ -7,15 +7,14 @@ import {CompraService} from "../../services/compra/compra.service";
 import {EmpresaService} from "../../services/empresa/empresa.service";
 
 @Component({
-  selector: 'app-solicitud-compra',
-  standalone: true,
-  templateUrl: './solicitud-compra.component.html',
-  imports: [
-    NgIf,
-    ReactiveFormsModule,
-    NgForOf
-  ],
-  styleUrls: ['./solicitud-compra.component.scss']
+    selector: 'app-solicitud-compra',
+    templateUrl: './solicitud-compra.component.html',
+    imports: [
+        NgIf,
+        ReactiveFormsModule,
+        NgForOf
+    ],
+    styleUrls: ['./solicitud-compra.component.scss']
 })
 export class SolicitudCompraComponent implements OnInit {
   // @ts-ignore

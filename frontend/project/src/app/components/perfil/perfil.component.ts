@@ -6,17 +6,16 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
 
 @Component({
-  selector: 'app-perfil',
-  standalone: true,
-  templateUrl: './perfil.component.html',
-  imports: [
-    NgIf,
-    ReactiveFormsModule,
-    NgForOf,
-    RouterLink,
-    FormsModule
-  ],
-  styleUrls: ['./perfil.component.scss']
+    selector: 'app-perfil',
+    templateUrl: './perfil.component.html',
+    imports: [
+        NgIf,
+        ReactiveFormsModule,
+        NgForOf,
+        RouterLink,
+        FormsModule
+    ],
+    styleUrls: ['./perfil.component.scss']
 })
 export class PerfilComponent implements OnInit {
   perfil: any;

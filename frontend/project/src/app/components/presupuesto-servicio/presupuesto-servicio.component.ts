@@ -8,15 +8,14 @@ import {EmpresaService} from "../../services/empresa/empresa.service";
 
 
 @Component({
-  standalone: true,
-  selector: 'presupuesto-servicio',
-  templateUrl: './presupuesto-servicio.component.html',
-  imports: [
-    ReactiveFormsModule,
-    NgIf,
-    NgForOf
-  ],
-  styleUrls: ['./presupuesto-servicio.component.scss']
+    selector: 'presupuesto-servicio',
+    templateUrl: './presupuesto-servicio.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgIf,
+        NgForOf
+    ],
+    styleUrls: ['./presupuesto-servicio.component.scss']
 })
 export class PresupuestoServicioComponent implements OnInit {
   // @ts-ignore

@@ -15,15 +15,14 @@ export interface ChartOptions {
 }
 
 @Component({
-  standalone: true,
-  selector: 'app-balance-financiero',
-  templateUrl: './balance-financiero.component.html',
-  imports: [
-    ChartComponent,
-    CurrencyPipe,
-    NgIf
-  ],
-  styleUrls: ['./balance-financiero.component.scss']
+    selector: 'app-balance-financiero',
+    templateUrl: './balance-financiero.component.html',
+    imports: [
+        ChartComponent,
+        CurrencyPipe,
+        NgIf
+    ],
+    styleUrls: ['./balance-financiero.component.scss']
 })
 export class BalanceFinancieroComponent implements OnInit {
   empresaId!: number;

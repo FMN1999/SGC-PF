@@ -7,17 +7,16 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
 
 @Component({
-  standalone: true,
-  selector: 'app-tarea',
-  templateUrl: './tarea.component.html',
-  imports: [
-    FormsModule,
-    NgForOf,
-    NgIf,
-    DatePipe,
-    CurrencyPipe
-  ],
-  styleUrls: ['./tarea.component.scss']
+    selector: 'app-tarea',
+    templateUrl: './tarea.component.html',
+    imports: [
+        FormsModule,
+        NgForOf,
+        NgIf,
+        DatePipe,
+        CurrencyPipe
+    ],
+    styleUrls: ['./tarea.component.scss']
 })
 export class TareaComponent implements OnInit {
   tareaId: number = 0;

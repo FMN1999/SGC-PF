@@ -5,16 +5,15 @@ import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para ngModel
 
 @Component({
-  selector: 'app-perfil-proveedor',
-  templateUrl: './perfil-proveedor.component.html',
-  standalone: true,
-  imports: [
-    NgIf,
-    NgForOf,
-    RouterLink,
-    FormsModule  // Agregar FormsModule para el uso de ngModel
-  ],
-  styleUrls: ['./perfil-proveedor.component.scss']
+    selector: 'app-perfil-proveedor',
+    templateUrl: './perfil-proveedor.component.html',
+    imports: [
+        NgIf,
+        NgForOf,
+        RouterLink,
+        FormsModule // Agregar FormsModule para el uso de ngModel
+    ],
+    styleUrls: ['./perfil-proveedor.component.scss']
 })
 export class PerfilProveedorComponent implements OnInit {
   proveedor: any;

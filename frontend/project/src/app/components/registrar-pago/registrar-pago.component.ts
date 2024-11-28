@@ -6,15 +6,14 @@ import{ PagoService } from '../../services/pago/pago.service';
 import{ EmpresaService } from '../../services/empresa/empresa.service';
 
 @Component({
-  selector: 'app-registrar-pago',
-  standalone: true,
-  templateUrl: './registrar-pago.component.html',
-  imports: [
-    ReactiveFormsModule,
-    NgIf,
-    NgForOf
-  ],
-  styleUrls: ['./registrar-pago.component.scss']
+    selector: 'app-registrar-pago',
+    templateUrl: './registrar-pago.component.html',
+    imports: [
+        ReactiveFormsModule,
+        NgIf,
+        NgForOf
+    ],
+    styleUrls: ['./registrar-pago.component.scss']
 })
 export class RegistrarPagoComponent implements OnInit {
   pagoForm!: FormGroup;
