@@ -1,10 +1,10 @@
 <header class="generic-header">
   <div class="left-section">
-    <fa-icon [icon]="['fas', 'home']" class="icon-btn" (click)="irAlHome()"></fa-icon>
+    <i class="fas fa-home" (click)="irAlHome()"></i>
   </div>
 
   <div class="right-section">
-    <fa-icon [icon]="['fas', 'user']" class="icon-btn" (click)="toggleUserMenu()"></fa-icon>
+    <i class="fas fa-user" (click)="toggleUserMenu()"></i>
     <ul class="user-menu" *ngIf="userMenuVisible">
       <li (click)="irAlPerfil()">Mi Perfil</li>
       <li (click)="cerrarSesion()">Cerrar Sesión</li>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service'
 import {NgIf} from "@angular/common";
@@ -17,11 +17,15 @@ import { faHome, faUser } from '@fortawesome/free-solid-svg-icons'; // Importa l
     FaIconComponent
   ]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   userMenuVisible = false; // Controla la visibilidad del menú desplegable
 
-  constructor(private router: Router, private authService: AuthService) { library.add(faHome, faUser); }
+  constructor(private router: Router, private authService: AuthService) { }
 
+  ngOnInit(): void {
+    // Registrar los íconos en el ciclo de vida 'ngOnInit'
+    library.add(faHome, faUser);
+  }
   toggleUserMenu(): void {
     this.userMenuVisible = !this.userMenuVisible; // Alternar la visibilidad del menú
   }
