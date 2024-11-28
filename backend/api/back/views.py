@@ -1674,7 +1674,12 @@ class PermisosView(View):
         if id_usuario:
             permisos_usuario = Permiso_Usuario.objects.filter(id_usuario=id_usuario)
             data = [
-                {"id": p.id, "descripcion": p.id_permiso.descripcion}
+                {
+                    "id": p.id,
+                    "descripcion": p.id_permiso.descripcion,
+                    "id_usuario":p.id_usuario.id,
+                    "id_permiso":p.id_permiso.id
+                }
                 for p in permisos_usuario
             ]
         else:

@@ -10,6 +10,7 @@
     <p>Rol: {{ perfil.rol }}</p>
     <p>Fecha de alta: {{ perfil.fecha_alta }}</p>
     <p>Empresa: {{perfil.empresa_col}}</p>
+    <button (click)="gestionarPermisos(perfil.id)">Gestionar Permisos</button>
   </div>
 
   <!-- Datos adicionales si es cliente -->
@@ -50,7 +51,7 @@
 
       <label for="rol">Rol</label>
       <input id="rol" type="text" formControlName="rol">
-      <button (click)="gestionarPermisos(perfil.id)">Gestionar Permisos</button>
+
 
     </div>
 
