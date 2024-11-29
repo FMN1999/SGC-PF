@@ -2,17 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
 import { PagoService } from '../../services/pago/pago.service'
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-compra',
-    templateUrl: './compra.component.html',
-    imports: [
-        NgIf,
-        NgForOf,
-        DatePipe
-    ],
-    styleUrls: ['./compra.component.scss']
+  selector: 'app-compra',
+  templateUrl: './compra.component.html',
+  imports: [
+    NgIf,
+    NgForOf,
+    DatePipe,
+    HeaderComponent,
+    CurrencyPipe
+  ],
+  standalone: true,
+  styleUrls: ['./compra.component.scss']
 })
 export class CompraComponent implements OnInit {
   compra: any;

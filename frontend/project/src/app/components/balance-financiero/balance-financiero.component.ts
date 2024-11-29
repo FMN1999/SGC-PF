@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartComponent, ApexChart, ApexAxisChartSeries, ApexXAxis, ApexTitleSubtitle, ApexDataLabels, ApexTooltip, ApexResponsive } from "ng-apexcharts";
 import {CurrencyPipe, NgIf} from "@angular/common";
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import { HeaderComponent } from '../header/header.component';
 
 export interface ChartOptions {
   series: ApexAxisChartSeries;
@@ -15,14 +16,16 @@ export interface ChartOptions {
 }
 
 @Component({
-    selector: 'app-balance-financiero',
-    templateUrl: './balance-financiero.component.html',
-    imports: [
-        ChartComponent,
-        CurrencyPipe,
-        NgIf
-    ],
-    styleUrls: ['./balance-financiero.component.scss']
+  selector: 'app-balance-financiero',
+  templateUrl: './balance-financiero.component.html',
+  imports: [
+    ChartComponent,
+    CurrencyPipe,
+    NgIf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./balance-financiero.component.scss']
 })
 export class BalanceFinancieroComponent implements OnInit {
   empresaId!: number;
