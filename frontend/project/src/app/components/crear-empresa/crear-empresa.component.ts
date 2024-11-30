@@ -2,15 +2,18 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-alta-empresa',
-    templateUrl: './crear-empresa.component.html',
-    styleUrls: ['./crear-empresa.component.scss'],
-    imports: [
-        ReactiveFormsModule,
-        NgIf
-    ]
+  standalone: true,
+  selector: 'app-alta-empresa',
+  templateUrl: './crear-empresa.component.html',
+  styleUrls: ['./crear-empresa.component.scss'],
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    HeaderComponent
+  ]
 })
 export class CrearEmpresaComponent {
   empresaForm: FormGroup;

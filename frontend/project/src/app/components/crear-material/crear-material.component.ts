@@ -4,15 +4,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-crear-material',
-    templateUrl: './crear-material.component.html',
-    imports: [
-        FormsModule,
-        NgIf
-    ],
-    styleUrls: ['./crear-material.component.scss']
+  selector: 'app-crear-material',
+  templateUrl: './crear-material.component.html',
+  imports: [
+    FormsModule,
+    NgIf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./crear-material.component.scss']
 })
 export class CrearMaterialComponent {
   id_proveedor: number;

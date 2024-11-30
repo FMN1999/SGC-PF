@@ -5,14 +5,15 @@ import {FormsModule} from "@angular/forms";
 import {DataShareService} from "../../services/data-share/data-share.service";
 
 @Component({
-    selector: 'app-chat',
-    imports: [
-        NgForOf,
-        NgClass,
-        FormsModule
-    ],
-    templateUrl: './chat.component.html',
-    styleUrl: './chat.component.scss'
+  selector: 'app-chat',
+  imports: [
+    NgForOf,
+    NgClass,
+    FormsModule
+  ],
+  templateUrl: './chat.component.html',
+  standalone: true,
+  styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnInit {
   userMessage: string = '';

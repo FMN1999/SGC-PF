@@ -1,0 +1,83 @@
+@import '../home/home.component';
+
+.crear-material-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: $white-color;
+  border: 1px solid $background-color;
+  border-radius: 8px;
+
+  h1 {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: $text-color;
+    }
+
+    input,
+    textarea,
+    select {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid $background-color;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+      }
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+
+    .form-group {
+      flex: 1;
+    }
+  }
+
+  .association-form {
+    margin-top: 20px;
+
+    h2 {
+      margin-bottom: 15px;
+      color: $secondary-color;
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    background-color: $secondary-color;
+    color: $white-color;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover:not(:disabled) {
+      background-color: $hover-color;
+    }
+
+    &:disabled {
+      background-color: lighten($secondary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+}
+

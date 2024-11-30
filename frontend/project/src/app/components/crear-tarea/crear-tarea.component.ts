@@ -6,16 +6,19 @@ import { ObraService } from '../../services/obra/obra.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 
 @Component({
-    selector: 'app-crear-tarea',
-    templateUrl: './crear-tarea.component.html',
-    imports: [
-        ReactiveFormsModule,
-        NgForOf
-    ],
-    styleUrls: ['./crear-tarea.component.scss']
+  standalone: true,
+  selector: 'app-crear-tarea',
+  templateUrl: './crear-tarea.component.html',
+  imports: [
+    ReactiveFormsModule,
+    NgForOf,
+    HeaderComponent
+  ],
+  styleUrls: ['./crear-tarea.component.scss']
 })
 export class CrearTareaComponent implements OnInit {
   tareaForm: FormGroup;

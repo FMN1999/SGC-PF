@@ -3,15 +3,18 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import { ObraService } from '../../services/obra/obra.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf} from "@angular/common"; // Para obtener los clientes
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-crear-obra',
-    templateUrl: './crear-obra.component.html',
-    imports: [
-        ReactiveFormsModule,
-        NgForOf
-    ],
-    styleUrls: ['./crear-obra.component.scss']
+  selector: 'app-crear-obra',
+  templateUrl: './crear-obra.component.html',
+  imports: [
+    ReactiveFormsModule,
+    NgForOf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./crear-obra.component.scss']
 })
 export class CrearObraComponent implements OnInit {
   obraForm: FormGroup;

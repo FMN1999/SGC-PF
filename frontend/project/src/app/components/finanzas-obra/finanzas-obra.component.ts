@@ -1,16 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ObraService } from '../../services/obra/obra.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
+import {HeaderComponent} from '../header/header.component'
 
 @Component({
-    selector: 'app-finanzas-obra',
-    templateUrl: './finanzas-obra.component.html',
-    imports: [
-        NgIf,
-        NgForOf
-    ],
-    styleUrls: ['./finanzas-obra.component.scss']
+  selector: 'app-finanzas-obra',
+  templateUrl: './finanzas-obra.component.html',
+  imports: [
+    NgIf,
+    NgForOf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./finanzas-obra.component.scss']
 })
 export class FinanzasObraComponent implements OnInit {
   // @ts-ignore

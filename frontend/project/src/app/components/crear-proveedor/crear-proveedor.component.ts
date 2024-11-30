@@ -4,12 +4,14 @@ import { Router } from '@angular/router';
 import { NgForOf, NgIf } from '@angular/common';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
+import { HeaderComponent } from '../header/header.component'
 
 @Component({
-    selector: 'app-crear-proveedor',
-    templateUrl: './crear-proveedor.component.html',
-    imports: [ReactiveFormsModule, NgForOf, NgIf],
-    styleUrls: ['./crear-proveedor.component.scss']
+  standalone: true,
+  selector: 'app-crear-proveedor',
+  templateUrl: './crear-proveedor.component.html',
+  imports: [ReactiveFormsModule, NgForOf, NgIf, HeaderComponent],
+  styleUrls: ['./crear-proveedor.component.scss']
 })
 export class CrearProveedorComponent implements OnInit {
   proveedorForm: FormGroup;

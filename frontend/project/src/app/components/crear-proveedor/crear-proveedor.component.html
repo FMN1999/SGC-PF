@@ -1,27 +1,44 @@
-<form [formGroup]="proveedorForm" (ngSubmit)="onSubmit()">
-  <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
+<app-header></app-header>
+<div class="crear-proveedor-container">
+  <h1>Crear Proveedor</h1>
+  <form [formGroup]="proveedorForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
 
-  <label>Denominación</label>
-  <input formControlName="denominacion" type="text" required />
+    <div class="form-group">
+      <label for="denominacion">Denominación</label>
+      <input id="denominacion" formControlName="denominacion" type="text" required />
+    </div>
 
-  <label>Teléfono</label>
-  <input formControlName="telefono" type="text" required />
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" formControlName="telefono" type="text" required />
+    </div>
 
-  <label>Dirección</label>
-  <input formControlName="direccion" type="text" required />
+    <div class="form-group">
+      <label for="direccion">Dirección</label>
+      <input id="direccion" formControlName="direccion" type="text" required />
+    </div>
 
-  <label>Email</label>
-  <input formControlName="email" type="email" required />
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" type="email" required />
+    </div>
 
-  <label>CUIL</label>
-  <input formControlName="cuil" type="text" required />
+    <div class="form-group">
+      <label for="cuil">CUIL</label>
+      <input id="cuil" formControlName="cuil" type="text" required />
+    </div>
 
-  <label>Ciudad</label>
-  <input formControlName="ciudad" type="text" required />
+    <div class="form-group">
+      <label for="ciudad">Ciudad</label>
+      <input id="ciudad" formControlName="ciudad" type="text" required />
+    </div>
 
-  <label>Provincia</label>
-  <input formControlName="provincia" type="text" required />
+    <div class="form-group">
+      <label for="provincia">Provincia</label>
+      <input id="provincia" formControlName="provincia" type="text" required />
+    </div>
 
-  <button type="submit">Crear Proveedor</button>
-</form>
-
+    <button type="submit" class="submit-btn">Crear Proveedor</button>
+  </form>
+</div>

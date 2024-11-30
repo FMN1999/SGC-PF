@@ -3,18 +3,23 @@ import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { ObraService } from '../../services/obra/obra.service';
 import {ActivatedRoute} from "@angular/router";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import { ChatComponent } from '../chat/chat.component'
 import {DataShareService} from "../../services/data-share/data-share.service";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-crear-presupuesto',
-    templateUrl: './crear-presupuesto.component.html',
-    imports: [
-        ReactiveFormsModule,
-        NgForOf,
-        ChatComponent
-    ]
+  standalone:true,
+  selector: 'app-crear-presupuesto',
+  templateUrl: './crear-presupuesto.component.html',
+  imports: [
+    ReactiveFormsModule,
+    NgForOf,
+    ChatComponent,
+    HeaderComponent,
+    NgIf
+  ],
+  styleUrls: ['./crear-presupuesto.component.scss']
 })
 export class CrearPresupuestoComponent implements OnInit {
   presupuestoForm!: FormGroup;
@@ -138,5 +143,23 @@ export class CrearPresupuestoComponent implements OnInit {
       console.log('Presupuesto guardado:', response);
       this.presupuestoForm.reset();
     });
+  }
+
+  removerMaterial(index: number) {
+    if (index > -1) {
+      this.materialesFormArray.removeAt(index);
+    }
+  }
+
+  removerServicio(index: number) {
+    if (index > -1) {
+      this.serviciosFormArray.removeAt(index);
+    }
+  }
+
+  removerTrabajador(index: number) {
+    if (index > -1) {
+      this.trabajadoresFormArray.removeAt(index);
+    }
   }
 }

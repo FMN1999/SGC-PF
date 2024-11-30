@@ -3,16 +3,19 @@ import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-crear-oferta',
-    templateUrl: './crear-oferta.component.html',
-    imports: [
-        FormsModule,
-        NgForOf,
-        NgIf
-    ],
-    styleUrls: ['./crear-oferta.component.scss']
+  selector: 'app-crear-oferta',
+  templateUrl: './crear-oferta.component.html',
+  imports: [
+    FormsModule,
+    NgForOf,
+    NgIf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./crear-oferta.component.scss']
 })
 export class CrearOfertaComponent implements OnInit {
   materiales: any[] = [];

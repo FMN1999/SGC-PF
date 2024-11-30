@@ -1,33 +1,68 @@
-<form [formGroup]="obraForm" (ngSubmit)="onSubmit()">
-  <label>Dirección:</label>
-  <input formControlName="direccion" type="text">
+<app-header></app-header>
+<div class="crear-obra-container">
+  <h1>Crear Obra</h1>
+  <form [formGroup]="obraForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="direccion">Dirección:</label>
+      <input id="direccion" formControlName="direccion" type="text" required />
+    </div>
 
-  <label>Cliente:</label>
-  <select formControlName="id_cliente">
-    <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }} {{ cliente.apellido }}</option>
-  </select>
+    <div class="form-group">
+      <label for="id_cliente">Cliente:</label>
+      <select id="id_cliente" formControlName="id_cliente" required>
+        <option *ngFor="let cliente of clientes" [value]="cliente.id">
+          {{ cliente.nombre }} {{ cliente.apellido }}
+        </option>
+      </select>
+    </div>
 
-  <label>Teléfono de Contacto:</label>
-  <input formControlName="telefono_contacto" type="text">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="telefono_contacto">Teléfono de Contacto:</label>
+        <input id="telefono_contacto" formControlName="telefono_contacto" type="text" required />
+      </div>
 
-  <label>Fecha de Inicio Estimada:</label>
-  <input formControlName="fecha_inicio_est" type="date">
+      <div class="form-group">
+        <label for="fecha_inicio_est">Fecha de Inicio Estimada:</label>
+        <input id="fecha_inicio_est" formControlName="fecha_inicio_est" type="date" required />
+      </div>
 
-  <label>Fecha de Fin Estimada:</label>
-  <input formControlName="fecha_fin_est" type="date">
+      <div class="form-group">
+        <label for="fecha_fin_est">Fecha de Fin Estimada:</label>
+        <input id="fecha_fin_est" formControlName="fecha_fin_est" type="date" required />
+      </div>
+    </div>
 
-  <label>Monto Total Estimado:</label>
-  <input formControlName="monto_total_est" type="number">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="monto_total_est">Monto Total Estimado:</label>
+        <input
+          id="monto_total_est"
+          formControlName="monto_total_est"
+          type="number"
+          step="0.01"
+          required
+        />
+      </div>
 
-  <label>Moneda:</label>
-  <input formControlName="moneda" type="text">
+      <div class="form-group">
+        <label for="moneda">Moneda:</label>
+        <input id="moneda" formControlName="moneda" type="text" required />
+      </div>
+    </div>
 
-  <label>Pisos:</label>
-  <input formControlName="pisos" type="number">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="pisos">Pisos:</label>
+        <input id="pisos" formControlName="pisos" type="number" required />
+      </div>
 
-  <label>Dimensiones:</label>
-  <input formControlName="dimensiones" type="text">
+      <div class="form-group">
+        <label for="dimensiones">Dimensiones:</label>
+        <input id="dimensiones" formControlName="dimensiones" type="text" required />
+      </div>
+    </div>
 
-  <button type="submit">Crear Obra</button>
-</form>
-
+    <button class="submit-btn" type="submit" [disabled]="obraForm.invalid">Crear Obra</button>
+  </form>
+</div>

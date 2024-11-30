@@ -1,0 +1,90 @@
+@import '../home/home.component';
+
+.crear-oferta-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: $white-color;
+  border: 1px solid $background-color;
+  border-radius: 8px;
+
+  h1 {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .form-group,
+  .checkbox-group {
+    margin-bottom: 15px;
+
+    label {
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid $background-color;
+      border-radius: 4px;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+      }
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+  }
+
+  .nested-form {
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 2px solid $background-color;
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+
+      .form-group {
+        flex: 1;
+      }
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    background-color: $secondary-color;
+    color: $white-color;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: $hover-color;
+    }
+
+    &:disabled {
+      background-color: lighten($secondary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+
+  .success-message {
+    color: $success-color;
+    margin-top: 15px;
+  }
+
+  .error-message {
+    color: $error-color;
+    margin-top: 15px;
+  }
+}

@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ActivatedRoute } from '@angular/router';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
-    selector: 'app-gestion-permisos',
-    templateUrl: './gestion-permisos.component.html',
-    styleUrls: ['./gestion-permisos.component.scss'],
-    imports: [
-        NgForOf,
-        FormsModule
-    ]
+  selector: 'app-gestion-permisos',
+  templateUrl: './gestion-permisos.component.html',
+  styleUrls: ['./gestion-permisos.component.scss'],
+  standalone: true,
+  imports: [
+    NgForOf,
+    FormsModule,
+    HeaderComponent,
+    NgIf
+  ]
 })
 export class GestionPermisosComponent implements OnInit {
   idUsuario: number = 0;

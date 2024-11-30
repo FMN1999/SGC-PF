@@ -3,16 +3,19 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf } from "@angular/common";
+import { HeaderComponent } from '../header/header.component'
 
 @Component({
-    selector: 'app-crear-colaborador',
-    templateUrl: './crear-colaborador.component.html',
-    imports: [
-        NgForOf,
-        ReactiveFormsModule,
-        NgIf
-    ],
-    styleUrls: ['./crear-colaborador.component.scss']
+  selector: 'app-crear-colaborador',
+  standalone:true,
+  templateUrl: './crear-colaborador.component.html',
+  imports: [
+    NgForOf,
+    ReactiveFormsModule,
+    NgIf,
+    HeaderComponent
+  ],
+  styleUrls: ['./crear-colaborador.component.scss']
 })
 export class CrearColaboradorComponent implements OnInit {
   colaboradorForm: FormGroup;

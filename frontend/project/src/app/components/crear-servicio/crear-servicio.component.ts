@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';  // Asegúrate de que la ruta del servicio sea correcta
-import {FormsModule, NgForm} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-crear-servicio',
-    templateUrl: './crear-servicio.component.html',
-    imports: [
-        FormsModule,
-        NgIf
-    ],
-    styleUrls: ['./crear-servicio.component.scss']
+  standalone: true,
+  selector: 'app-crear-servicio',
+  templateUrl: './crear-servicio.component.html',
+  imports: [
+    FormsModule,
+    NgIf,
+    HeaderComponent
+  ],
+  styleUrls: ['./crear-servicio.component.scss']
 })
 export class CrearServicioComponent implements OnInit {
 

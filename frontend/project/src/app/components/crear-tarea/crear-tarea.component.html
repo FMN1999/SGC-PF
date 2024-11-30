@@ -1,59 +1,63 @@
-<h2>Crear Tarea</h2>
-<form [formGroup]="tareaForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="titulo">Título</label>
-    <input id="titulo" formControlName="titulo" type="text" />
-  </div>
+<app-header></app-header>
 
-  <div>
-    <label for="descripcion">Descripción</label>
-    <input id="descripcion" formControlName="descripcion" type="text" />
-  </div>
+<div class="crear-tarea-container">
+  <h2>Crear Tarea</h2>
+  <form [formGroup]="tareaForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="titulo">Título</label>
+      <input id="titulo" formControlName="titulo" type="text" />
+    </div>
 
-  <div>
-    <label for="id_presupuesto_servicio">Presupuesto Servicio</label>
-    <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio">
-      <option value="">Seleccione un presupuesto</option>
-      <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio">
-        {{ presupuesto.desc_servicio }}
-      </option>
-    </select>
-  </div>
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <input id="descripcion" formControlName="descripcion" type="text" />
+    </div>
 
-  <div>
-    <label for="id_area">Área</label>
-    <select id="id_area" formControlName="id_area" required>
-      <option value="">Seleccione un área</option>
-      <option *ngFor="let area of areas" [value]="area.id">
-        {{ area.descripcion }}
-      </option>
-    </select>
-  </div>
+    <div class="form-group">
+      <label for="id_presupuesto_servicio">Presupuesto Servicio</label>
+      <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio">
+        <option value="">Seleccione un presupuesto</option>
+        <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio">
+          {{ presupuesto.desc_servicio }}
+        </option>
+      </select>
+    </div>
 
-  <div>
-    <label for="fecha_inicio">Fecha de Inicio</label>
-    <input id="fecha_inicio" formControlName="fecha_inicio" type="date" />
-  </div>
+    <div class="form-group">
+      <label for="id_area">Área</label>
+      <select id="id_area" formControlName="id_area" required>
+        <option value="">Seleccione un área</option>
+        <option *ngFor="let area of areas" [value]="area.id">
+          {{ area.descripcion }}
+        </option>
+      </select>
+    </div>
 
-  <div>
-    <label for="fecha_fin">Fecha de Fin</label>
-    <input id="fecha_fin" formControlName="fecha_fin" type="date" />
-  </div>
+    <div class="form-group">
+      <label for="fecha_inicio">Fecha de Inicio</label>
+      <input id="fecha_inicio" formControlName="fecha_inicio" type="date" />
+    </div>
 
-  <div>
-    <label for="precio_total">Precio Total</label>
-    <input id="precio_total" formControlName="precio_total" type="number" />
-  </div>
+    <div class="form-group">
+      <label for="fecha_fin">Fecha de Fin</label>
+      <input id="fecha_fin" formControlName="fecha_fin" type="date" />
+    </div>
 
-  <div>
-    <label for="id_vehiculo">Vehículo</label>
-    <select id="id_vehiculo" formControlName="id_vehiculo" required>
-      <option value="">Seleccione un vehículo</option>
-      <option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">
-        {{ vehiculo.modelo }}
-      </option>
-    </select>
-  </div>
+    <div class="form-group">
+      <label for="precio_total">Precio Total</label>
+      <input id="precio_total" formControlName="precio_total" type="number" />
+    </div>
 
-  <button type="submit">Crear Tarea</button>
-</form>
+    <div class="form-group">
+      <label for="id_vehiculo">Vehículo</label>
+      <select id="id_vehiculo" formControlName="id_vehiculo" required>
+        <option value="">Seleccione un vehículo</option>
+        <option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">
+          {{ vehiculo.modelo }}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" class="submit-btn">Crear Tarea</button>
+  </form>
+</div>

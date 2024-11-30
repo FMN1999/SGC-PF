@@ -1,0 +1,98 @@
+@import '../home/home.component';
+
+.material-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: $background-color;
+
+  .material-details {
+    p {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: $secondary-color;
+
+      strong {
+        font-weight: bold;
+        color: $primary-color;
+      }
+    }
+
+    .buttons {
+      margin-top: 20px;
+
+      button {
+        padding: 10px 20px;
+        margin-right: 10px;
+        border-radius: $button-radius;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &.btn-primary {
+          background-color: $primary-color;
+          color: white;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+          }
+        }
+
+        &.btn-secondary {
+          background-color: #6c757d;
+          color: white;
+
+          &:hover {
+            background-color: darken(#6c757d, 10%);
+          }
+        }
+
+        &.btn-danger {
+          background-color: $danger-color;
+          color: white;
+
+          &:hover {
+            background-color: darken($danger-color, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  .material-form {
+    margin-top: 20px;
+
+    .form-group {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        font-size: 1rem;
+        color: $secondary-color;
+        margin-bottom: 5px;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid $border-color;
+        border-radius: $button-radius;
+        transition: border-color 0.3s;
+
+        &:focus {
+          border-color: $primary-color;
+        }
+      }
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        width: 48%;
+      }
+    }
+  }
+}

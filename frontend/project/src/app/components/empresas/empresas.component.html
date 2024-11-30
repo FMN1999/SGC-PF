@@ -1,3 +1,5 @@
+<app-header></app-header>
+
 <div *ngIf="loading" class="loading">
   Cargando empresas...
 </div>
@@ -7,27 +9,26 @@
 </div>
 
 <div *ngIf="!loading && !error">
-  <h2>Listado de Empresas</h2>
-  <button (click)="irACrearEmpresa()">Crear Nueva Empresa</button>
-  <table class="empresas-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Denominación</th>
-        <th>CUIT</th>
-        <th>Teléfono</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let empresa of empresas">
-        <td>{{ empresa.id }}</td>
-        <td>{{ empresa.denominacion }}</td>
-        <td>{{ empresa.cuit }}</td>
-        <td>{{ empresa.telefono }}</td>
-        <td>{{ empresa.email }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container">
+    <h2>Listado de Empresas</h2>
+    <button (click)="irACrearEmpresa()" class="create-button">Crear Nueva Empresa</button>
+    <table class="empresas-table">
+      <thead>
+        <tr>
+          <th>Denominación</th>
+          <th>CUIT</th>
+          <th>Teléfono</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let empresa of empresas">
+          <td>{{ empresa.denominacion }}</td>
+          <td>{{ empresa.cuit }}</td>
+          <td>{{ empresa.telefono }}</td>
+          <td>{{ empresa.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-
