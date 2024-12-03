@@ -1,20 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PresupuestoService} from "../../services/presupuesto/presupuesto.service";
 import {CompraService} from "../../services/compra/compra.service";
 import {EmpresaService} from "../../services/empresa/empresa.service";
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
-    selector: 'app-solicitud-compra',
-    templateUrl: './solicitud-compra.component.html',
-    imports: [
-        NgIf,
-        ReactiveFormsModule,
-        NgForOf
-    ],
-    styleUrls: ['./solicitud-compra.component.scss']
+  selector: 'app-solicitud-compra',
+  templateUrl: './solicitud-compra.component.html',
+  imports: [
+    NgIf,
+    ReactiveFormsModule,
+    NgForOf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./solicitud-compra.component.scss']
 })
 export class SolicitudCompraComponent implements OnInit {
   // @ts-ignore

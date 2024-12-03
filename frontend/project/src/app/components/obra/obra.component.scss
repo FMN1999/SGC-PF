@@ -1,0 +1,228 @@
+@import '../home/home.component';
+
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: $section-padding;
+  background-color: $white-color;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h2, h3 {
+    color: $primary-color;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid $border-color;  // Línea debajo del título
+  }
+
+  .form-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px; // Separación entre los campos del formulario
+
+    @media (min-width: 600px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;  // Espaciado adicional entre los campos
+
+      label {
+        font-weight: bold;
+        color: $text-color;
+        margin-bottom: 8px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="date"],
+      input[type="url"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid $border-color;
+        border-radius: $button-radius;
+        background-color: $section-bg-color;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
+      }
+      button[type="submit"] {
+        width: 100%; /* Asegura que el botón de submit ocupe todo el ancho */
+        display: block; /* Se comporta como un bloque para llenar todo el espacio disponible */
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px; /* Espaciado entre los botones */
+    justify-content: flex-start; /* Alinear los botones al inicio */
+    margin-top: 20px; /* Separar la sección de las anteriores */
+  }
+
+  .form-buttons, .botones-areas, .botones-documento {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-top: 20px;
+    border-top: 2px solid $border-color;  // Línea divisoria encima de los botones
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    flex-direction: column; /* Alinea los botones de arriba hacia abajo */
+
+    button {
+      flex: 1;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: $button-radius;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+
+      &.btn-primary {
+        background-color: $secondary-color;
+        color: $white-color;
+        border: none;
+
+        &:disabled {
+          background-color: $border-color;
+        }
+      }
+
+      &.btn-danger {
+        background-color: $danger-color;
+        color: $white-color;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+      }
+
+      &.btn-info {
+        background-color: $loading-color;
+        color: $white-color;
+        &:hover {
+          background-color: darken($loading-color, 10%);
+        }
+      }
+
+      &.btn-sm {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  button[type="submit"] {
+      width: 100%; /* Asegura que el botón de submit ocupe todo el ancho */
+      display: block; /* Se comporta como un bloque para llenar todo el espacio disponible */
+  }
+
+
+  .foto-section {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    input[type="url"] {
+      width: 80%;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+
+  }
+
+  /* Estilos para los Listados */
+  .presupuestos, .documentos, .areas {
+    margin-top: 20px;
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 15px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: $button-radius;
+      border: 1px solid $border-color;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      strong {
+        color: $primary-color;
+      }
+
+      button {
+        align-self: flex-start;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  /* Estilo para los elementos dentro de los listados */
+  .documento-item, .nota-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: $button-radius;
+    border: 1px solid $border-color;
+    margin-top: 20px;  // Separación adicional entre notas y documentos
+
+    button {
+      margin-top: 10px;
+    }
+  }
+
+  /* Estilo para las fotos dentro de las notas */
+  .foto-item {
+    margin: 5px;
+    max-width: 100px;
+    height: auto;
+  }
+
+  @media (max-width: 600px) {
+    .form-container {
+      grid-template-columns: 1fr;
+    }
+
+    .form-buttons, .action-buttons, .botones-areas {
+      flex-direction: column;  // Los botones se apilan en móviles
+    }
+  }
+
+  .fotos-item {
+    margin-top: 20px;
+  }
+
+  .foto-section {
+    margin-bottom: 10px;
+  }
+
+  .foto-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el campo y el botón */
+  }
+
+  .agregar-foto-btn {
+    margin-top: 15px;
+  }
+
+  }

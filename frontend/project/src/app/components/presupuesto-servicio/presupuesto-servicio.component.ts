@@ -5,17 +5,20 @@ import { PresupuestoService } from '../../services/presupuesto/presupuesto.servi
 import { SubcontratacionService } from '../../services/subcontratacion/subcontratacion.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {EmpresaService} from "../../services/empresa/empresa.service";
+import {HeaderComponent} from '../header/header.component';
 
 
 @Component({
-    selector: 'presupuesto-servicio',
-    templateUrl: './presupuesto-servicio.component.html',
-    imports: [
-        ReactiveFormsModule,
-        NgIf,
-        NgForOf
-    ],
-    styleUrls: ['./presupuesto-servicio.component.scss']
+  selector: 'presupuesto-servicio',
+  templateUrl: './presupuesto-servicio.component.html',
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    NgForOf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./presupuesto-servicio.component.scss']
 })
 export class PresupuestoServicioComponent implements OnInit {
   // @ts-ignore

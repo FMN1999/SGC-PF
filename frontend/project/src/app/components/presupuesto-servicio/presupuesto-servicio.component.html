@@ -1,45 +1,70 @@
-<form [formGroup]="subcontratacionForm" (ngSubmit)="onSubmit()">
-  <h3>Servicios</h3>
-  <p *ngIf="idPresupuesto">Cargando servicios del presupuesto...</p>
+<app-header></app-header>
 
-  <div formArrayName="lineasSubcontratacion">
-    <div *ngFor="let linea of lineasSubcontratacion.controls; let i = index" [formGroupName]="i" class="linea-subcontratacion">
-      <label>Servicio:</label>
-      <select formControlName="id_servicio">
-        <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
-      </select>
+<div class="subcontratacion-container">
+  <form [formGroup]="subcontratacionForm" (ngSubmit)="onSubmit()">
+    <h3>Servicios</h3>
+    <p *ngIf="!idPresupuesto" class="mensaje-carga">Cargando servicios del presupuesto...</p>
 
-      <label>Horas:</label>
-      <input formControlName="horas" type="number" />
+    <div formArrayName="lineasSubcontratacion">
+      <div *ngFor="let linea of lineasSubcontratacion.controls; let i = index" [formGroupName]="i" class="linea-subcontratacion">
+        <div class="form-group">
+          <label>Servicio:</label>
+          <select formControlName="id_servicio">
+            <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
+          </select>
+        </div>
 
-      <label>Precio por Hora:</label>
-      <input formControlName="precio_x_hora" type="number" />
+        <div class="form-group">
+          <label>Horas:</label>
+          <input formControlName="horas" type="number" />
+        </div>
 
-      <label>Moneda:</label>
-      <input formControlName="moneda" type="text" />
+        <div class="form-group">
+          <label>Precio por Hora:</label>
+          <input formControlName="precio_x_hora" type="number" />
+        </div>
 
-      <label>Descripción del Servicio:</label>
-      <input formControlName="desc_servicio" type="text" />
+        <div class="form-group">
+          <label>Moneda:</label>
+          <input formControlName="moneda" type="text" />
+        </div>
 
-      <label>Número de Contrato:</label>
-      <input formControlName="nro_contrato" type="number" />
+        <div class="form-group">
+          <label>Descripción del Servicio:</label>
+          <input formControlName="desc_servicio" type="text" />
+        </div>
 
-      <label>Fecha de Contrato:</label>
-      <input formControlName="fecha_contrato" type="date" />
+        <div class="form-group">
+          <label>Número de Contrato:</label>
+          <input formControlName="nro_contrato" type="number" />
+        </div>
 
-      <label>Fecha de Vencimiento del Contrato:</label>
-      <input formControlName="fecha_contrato_hasta" type="date" />
+        <div class="form-group">
+          <label>Fecha de Contrato:</label>
+          <input formControlName="fecha_contrato" type="date" />
+        </div>
 
-      <label>Monto de Contratación:</label>
-      <input formControlName="monto_contratacion" type="number" />
+        <div class="form-group">
+          <label>Fecha de Vencimiento del Contrato:</label>
+          <input formControlName="fecha_contrato_hasta" type="date" />
+        </div>
 
-      <!-- Botón para eliminar línea de subcontratación -->
-      <button type="button" (click)="eliminarLineaSubcontratacion(i)">Eliminar</button>
+        <div class="form-group">
+          <label>Monto de Contratación:</label>
+          <input formControlName="monto_contratacion" type="number" />
+        </div>
+
+        <!-- Botón para eliminar línea de subcontratación -->
+        <button type="button" class="btn-eliminar" (click)="eliminarLineaSubcontratacion(i)">Eliminar</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Botón para agregar y confirmar -->
-  <button type="button" (click)="agregarLineaSubcontratacion()">Agregar Servicio</button>
-  <button type="submit" [disabled]="subcontratacionForm.invalid">Confirmar Subcontratación</button>
-</form>
+    <!-- Botón para agregar y confirmar -->
+    <div class="actions">
+      <button type="button" class="btn-agregar" (click)="agregarLineaSubcontratacion()">Agregar Servicio</button>
+      <button type="submit" class="btn-confirmar" [disabled]="subcontratacionForm.invalid">Confirmar Contratación</button>
+    </div>
+  </form>
+</div>
+
 

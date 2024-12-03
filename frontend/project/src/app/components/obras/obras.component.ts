@@ -2,16 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
+import{HeaderComponent} from '../header/header.component';
 
 @Component({
-    selector: 'app-obras-empresa',
-    templateUrl: './obras.component.html',
-    imports: [
-        CurrencyPipe,
-        NgForOf,
-        NgIf
-    ],
-    styleUrls: ['./obras.component.scss']
+  selector: 'app-obras-empresa',
+  templateUrl: './obras.component.html',
+  imports: [
+    CurrencyPipe,
+    NgForOf,
+    NgIf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./obras.component.scss']
 })
 export class ObrasComponent implements OnInit {
   idEmpresa: number | null = null;

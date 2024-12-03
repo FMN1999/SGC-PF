@@ -1,30 +1,78 @@
-form {
-  max-width: 500px;
-  margin: auto;
-}
+@import '../../components/home/home.component';
 
-div {
-  margin-bottom: 1rem;
-}
+.pago-container {
+  padding: $section-padding;
+  background-color: $section-bg-color;
+  border-radius: $button-radius;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
 
-label {
-  display: block;
-  font-weight: bold;
-}
+  h3 {
+    font-size: 1.5rem;
+    color: $primary-color;
+    margin-bottom: 20px;
 
-input, select, button {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
+    &::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background-color: $secondary-color;
+      margin-top: 5px;
+      border-radius: $button-radius;
+    }
+  }
 
-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+  .form-group {
+    margin-bottom: $section-padding;
 
-button:hover {
-  background-color: #45a049;
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+        box-shadow: 0 0 5px rgba($primary-color, 0.5);
+      }
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+  }
+
+  .actions {
+    text-align: center;
+
+    .btn-registrar-pago {
+      background-color: $secondary-color;
+      color: $white-color;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: $button-radius;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+
+      &:disabled {
+        background-color: lighten($secondary-color, 20%);
+        cursor: not-allowed;
+      }
+    }
+  }
 }

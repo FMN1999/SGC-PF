@@ -1,0 +1,74 @@
+@import '../../components/home/home.component';
+
+.lista-servicios {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $section-padding;
+  background-color: $section-bg-color;
+  min-height: 80vh; // Asegura que el contenido esté centrado verticalmente
+
+  .titulo {
+    font-size: 2rem;
+    color: $primary-color;
+    margin-bottom: 30px;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background-color: $secondary-color;
+      margin: 10px auto 0;
+      border-radius: $button-radius;
+    }
+  }
+
+  .servicios {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    max-width: 500px;
+
+    .servicio-item {
+      margin-bottom: 15px;
+
+      .servicio-link {
+        display: block;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: $white-color;
+        background-color: $secondary-color;
+        border-radius: $button-radius;
+        transition: background-color 0.3s, transform 0.2s;
+
+        &:hover {
+          background-color: $hover-color;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .no-servicios {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2rem;
+    color: $text-color;
+
+    p {
+      background-color: lighten($section-bg-color, 5%);
+      padding: 20px;
+      border-radius: $button-radius;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

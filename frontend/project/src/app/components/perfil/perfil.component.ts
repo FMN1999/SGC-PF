@@ -4,18 +4,21 @@ import {NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
-    selector: 'app-perfil',
-    templateUrl: './perfil.component.html',
-    imports: [
-        NgIf,
-        ReactiveFormsModule,
-        NgForOf,
-        RouterLink,
-        FormsModule
-    ],
-    styleUrls: ['./perfil.component.scss']
+  selector: 'app-perfil',
+  templateUrl: './perfil.component.html',
+  imports: [
+    NgIf,
+    ReactiveFormsModule,
+    NgForOf,
+    RouterLink,
+    FormsModule,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./perfil.component.scss']
 })
 export class PerfilComponent implements OnInit {
   perfil: any;

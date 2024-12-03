@@ -3,19 +3,22 @@ import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
 import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
-    selector: 'app-obra',
-    templateUrl: './obra.component.html',
-    imports: [
-        ReactiveFormsModule,
-        NgIf,
-        NgForOf,
-        NgOptimizedImage,
-        DatePipe,
-        RouterLink
-    ],
-    styleUrls: ['./obra.component.scss']
+  selector: 'app-obra',
+  templateUrl: './obra.component.html',
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    NgForOf,
+    NgOptimizedImage,
+    DatePipe,
+    RouterLink,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./obra.component.scss']
 })
 export class ObraComponent implements OnInit {
   obraForm: FormGroup;
@@ -28,6 +31,8 @@ export class ObraComponent implements OnInit {
   documentoForm!: FormGroup;
   documentos: any[] = []; // Lista de documentos para mostrar
   presupuestos: any[] = [];
+  areasMode: boolean=false;
+  documentoMode: boolean=false;
 
   constructor(
     private fb: FormBuilder,
@@ -110,6 +115,14 @@ export class ObraComponent implements OnInit {
         perdidas: obra.perdidas
       });
     });
+  }
+
+  toggleNewAreaMode(): void{
+    this.areasMode = !this.areasMode;
+  }
+
+  toggleNewDocumentoMode(): void{
+    this.documentoMode = !this.documentoMode;
   }
 
   toggleEditMode(): void {
