@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CompraService } from '../../services/compra/compra.service';
 import {NgForOf, NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-    selector: 'app-solicitudes',
-    templateUrl: './solicitudes.component.html',
-    imports: [
-        NgIf,
-        NgForOf
-    ],
-    styleUrls: ['./solicitudes.component.scss']
+  selector: 'app-solicitudes',
+  templateUrl: './solicitudes.component.html',
+  imports: [
+    NgIf,
+    NgForOf,
+    HeaderComponent
+  ],
+  standalone: true,
+  styleUrls: ['./solicitudes.component.scss']
 })
 export class SolicitudesComponent implements OnInit {
   solicitudesPendientes: any[] = [];

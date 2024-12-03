@@ -1,26 +1,52 @@
-<div>
-  <h2>Clientes</h2>
-  <ul>
-    <li *ngFor="let cliente of clientes">
-      <a [routerLink]="['/perfil', cliente.id_usuario]">{{ cliente.nombre }} {{ cliente.apellido }}</a>
-      <button *ngIf="cliente.fecha_baja === null" (click)="darDeBajaCliente(cliente.id)">Dar de baja</button>
-    </li>
-  </ul>
+<app-header></app-header>
 
-  <h2>Colaboradores</h2>
-  <ul>
-    <li *ngFor="let colaborador of colaboradores">
-      <a [routerLink]="['/perfil', colaborador.id_usuario]">{{ colaborador.nombre }} {{ colaborador.apellido }}</a>
-      <button *ngIf="colaborador.fecha_baja === null" (click)="darDeBajaColaborador(colaborador.id)">Dar de baja</button>
-    </li>
-  </ul>
+<div class="entidades-container">
+  <section class="entidad">
+    <h2>Clientes</h2>
+    <ul class="entidad-lista">
+      <li *ngFor="let cliente of clientes" class="entidad-item">
+        <a class="entidad-link" [routerLink]="['/perfil', cliente.id_usuario]">
+          {{ cliente.nombre }} {{ cliente.apellido }}
+        </a>
+        <button
+          *ngIf="cliente.fecha_baja === null"
+          class="btn btn-danger btn-small"
+          (click)="darDeBajaCliente(cliente.id)"
+        >
+          Dar de baja
+        </button>
+      </li>
+    </ul>
+  </section>
 
-  <h2>Proveedores</h2>
-  <ul>
-    <li *ngFor="let proveedor of proveedores">
-      <a [routerLink]="['/proveedor', proveedor.id]">{{ proveedor.denominacion }}</a>
-    </li>
-  </ul>
+  <section class="entidad">
+    <h2>Colaboradores</h2>
+    <ul class="entidad-lista">
+      <li *ngFor="let colaborador of colaboradores" class="entidad-item">
+        <a class="entidad-link" [routerLink]="['/perfil', colaborador.id_usuario]">
+          {{ colaborador.nombre }} {{ colaborador.apellido }}
+        </a>
+        <button
+          *ngIf="colaborador.fecha_baja === null"
+          class="btn btn-danger btn-small"
+          (click)="darDeBajaColaborador(colaborador.id)"
+        >
+          Dar de baja
+        </button>
+      </li>
+    </ul>
+  </section>
+
+  <section class="entidad">
+    <h2>Proveedores</h2>
+    <ul class="entidad-lista">
+      <li *ngFor="let proveedor of proveedores" class="entidad-item">
+        <a class="entidad-link" [routerLink]="['/proveedor', proveedor.id]">
+          {{ proveedor.denominacion }}
+        </a>
+      </li>
+    </ul>
+  </section>
 </div>
 
 

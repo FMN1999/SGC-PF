@@ -4,14 +4,14 @@ import { HttpClient } from '@angular/common/http';  // Para hacer la petición H
 import { NgIf, NgFor } from '@angular/common';  // Para *ngIf y *ngFor
 import { AuthService } from '../../services/auth/auth.service'; // Ajusta la ruta si es necesario
 import { EmpresaService } from '../../services/empresa/empresa.service'; // Ajusta la ruta si es necesario
-import {HeaderComponent} from '../header/header.component';
+
 
 @Component({
   selector: 'app-register', // Standalone component
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor, HeaderComponent] // Importamos los módulos que necesitamos
+  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor] // Importamos los módulos que necesitamos
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;

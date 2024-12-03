@@ -1,18 +1,25 @@
-<div *ngIf="solicitudesPendientes.length > 0; else noSolicitudes">
-  <h2>Solicitudes de Compra Pendientes</h2>
-  <ul>
-    <li *ngFor="let solicitud of solicitudesPendientes">
-      <p>ID de Compra: {{ solicitud.id }}</p>
-      <p>Fecha de Compra: {{ solicitud.fecha_compra }}</p>
-      <p>Monto Total: {{ solicitud.monto_total }} {{ solicitud.moneda_transporte }}</p>
-      <p>Proveedor ID: {{ solicitud.id_proveedor }}</p>
-      <p>Obra ID: {{ solicitud.id_obra }}</p>
-      <!-- Agrega más detalles según lo necesites -->
-    </li>
-  </ul>
-</div>
+<app-header></app-header>
 
-<ng-template #noSolicitudes>
-  <p>No hay solicitudes pendientes.</p>
-</ng-template>
+<div class="solicitudes-container">
+  <div *ngIf="solicitudesPendientes.length > 0; else noSolicitudes">
+    <h2 class="titulo">Solicitudes de Compra Pendientes</h2>
+    <ul class="lista-solicitudes">
+      <li *ngFor="let solicitud of solicitudesPendientes" class="solicitud-item">
+        <div class="detalle">
+          <p><strong>ID de Compra:</strong> {{ solicitud.id }}</p>
+          <p><strong>Fecha de Compra:</strong> {{ solicitud.fecha_compra }}</p>
+          <p><strong>Monto Total:</strong> {{ solicitud.monto_total }} {{ solicitud.moneda_transporte }}</p>
+          <p><strong>Proveedor ID:</strong> {{ solicitud.id_proveedor }}</p>
+          <p><strong>Obra ID:</strong> {{ solicitud.id_obra }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noSolicitudes>
+    <div class="no-solicitudes">
+      <p>No hay solicitudes pendientes.</p>
+    </div>
+  </ng-template>
+</div>
 

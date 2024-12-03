@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
-import { HeaderComponent } from '../../components/header/header.component'
+import { HeaderComponent } from '../header/header.component'
 
 @Component({
   selector: 'app-almacenes-empresa',

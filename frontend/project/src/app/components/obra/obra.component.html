@@ -1,9 +1,18 @@
 <app-header></app-header>
 
 <div class="container">
-  <h2>Detalles de la Obra</h2>
+  <h2>Detalles de Obra en {{ obra.direccion }}</h2>
+  <div class="action-buttons">
+    <button (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
+    <button class="btn btn-info" (click)="irAPagosCobros()">Ver Pagos y Cobros</button>
+  </div>
+  <p><strong>Cliente:</strong> {{ obra.id_cliente }}</p>
+  <p><strong>Contacto (Tel.):</strong> {{ obra.telefono_contacto }}</p>
+  <p><strong>Fecha de inicio (est.):</strong> {{ obra.fecha_inicio_est | date }}</p>
+  <p><strong>Fecha de fin (est.):</strong> {{ obra.fecha_fin_est }}</p>
 
-  <form [formGroup]="obraForm" (ngSubmit)="onSubmit()" class="form-container">
+
+  <form *ngIf="editMode" [formGroup]="obraForm" (ngSubmit)="onSubmit()" class="form-container">
     <div class="form-group">
       <label for="direccion">Dirección:</label>
       <input id="direccion" formControlName="direccion" class="form-control" [readonly]="!editMode" />
@@ -86,11 +95,6 @@
     Guardar cambios
   </button>
 
-
-  <div class="action-buttons">
-    <button (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
-    <button class="btn btn-info" (click)="irAPagosCobros()">Ver Pagos y Cobros</button>
-  </div>
 
   <h3>Áreas de la Obra</h3>
   <button *ngIf="!areasMode" type="button" class="btn btn-primary" (click)="toggleNewAreaMode()">Nueva Área</button>

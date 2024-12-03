@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
-import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
 
 @Component({
@@ -12,7 +12,6 @@ import {HeaderComponent} from '../header/header.component';
     ReactiveFormsModule,
     NgIf,
     NgForOf,
-    NgOptimizedImage,
     DatePipe,
     RouterLink,
     HeaderComponent
@@ -33,6 +32,7 @@ export class ObraComponent implements OnInit {
   presupuestos: any[] = [];
   areasMode: boolean=false;
   documentoMode: boolean=false;
+  obra: any;
 
   constructor(
     private fb: FormBuilder,
@@ -97,6 +97,7 @@ export class ObraComponent implements OnInit {
 
   cargarObra(): void {
     this.obraService.obtenerObra(this.obra_id).subscribe((obra: any) => {
+      this.obra = obra;
       this.obraForm.patchValue({
         direccion: obra.direccion,
         id_cliente: obra.id_cliente,
