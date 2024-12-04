@@ -752,6 +752,7 @@ class IngresoController:
         almacen = Almacen.objects.get(id=data.get('id_almacen')) if data.get('id_almacen') else None
         compra = Compra.objects.get(id=data.get('id_compra')) if data.get('id_compra') else None
         material = Material.objects.get(id=data.get('id_material'))
+
         ingreso = Ingreso(
             cantidad=data.get('cantidad'),
             fecha=data.get('fecha'),
@@ -763,6 +764,15 @@ class IngresoController:
             realizado=data.get('realizado', False),
             en_obra=data.get('en_obra', False)
         )
+        try:
+            idMaterial = data.get('id_material')
+            h=Herramienta.objects.get(id=idMaterial)
+            h.id_almacen = almacen
+            h.save()
+        except Exception as e:
+            print(f"Error al asignar almacén: {str(e)}")
+            raise
+
         ingreso.save()
         return ingreso
 

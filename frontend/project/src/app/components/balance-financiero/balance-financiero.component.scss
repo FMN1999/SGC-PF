@@ -1,6 +1,6 @@
 @import '../../components/home/home.component';
 
-// Estilos SCSS para el componente de balance financiero
+
 .container {
   padding: 20px;
 
@@ -49,20 +49,44 @@
   margin-bottom: 10px;
 }
 
-// Ajustes generales para tablas y layout
-.table {
-  width: 100%;
-  margin-top: 15px;
-  border-collapse: collapse;
-  text-align: left;
+// Estilos para la tabla de detalle financiero
+.detalle-financiero {
+  margin-top: 20px;
 
-  th, td {
-    padding: 8px;
-    border: 1px solid $background-color;
+  h3 {
+    color: $primary-color;
+    margin-bottom: 15px;
   }
 
-  th {
-    background-color: $primary-color;
-    color: $white-color;
+  .table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+    text-align: left;
+
+    th, td {
+      padding: 10px;
+      border: 1px solid $border-color;
+      text-align: center;
+    }
+
+    th {
+      background-color: $primary-color;
+      color: $white-color;
+    }
+
+    td {
+      font-size: 0.95rem;
+
+      &.positivo {
+        color: $success-color;
+        font-weight: bold;
+      }
+
+      &.negativo {
+        color: $error-color;
+        font-weight: bold;
+      }
+    }
   }
 }

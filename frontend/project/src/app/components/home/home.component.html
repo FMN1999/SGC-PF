@@ -18,10 +18,9 @@
       <li *ngIf="isLoggedIn"><a href="/servicios">Servicios</a></li>
       <li *ngIf="isLoggedIn"><a href="/solicitudes">Solicitudes de compra</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/obras', idEmpresa]">Obras</a></li>
-      <li *ngIf="isLoggedIn"><a [routerLink]="['/almacenes', idEmpresa]">Almacenes</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/balance', idEmpresa]">Balance anual</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/empresas']">Empresas</a></li>
-      <li *ngIf="isLoggedIn"><a href="#" (click)="logout()">Cerrar sesión</a></li>
+      <li *ngIf="isLoggedIn"><a href="/home" (click)="logout()">Cerrar sesión</a></li>
     </ul>
   </nav>
 
@@ -60,7 +59,7 @@
     <!-- Otros contenidos del Home -->
     <section class="services">
         <div class="service">
-          <a href="/almacenes"><h3>Almacenes</h3></a>
+          <a [routerLink]="['/almacenes', idEmpresa]"><h3>Almacenes</h3></a>
           <p>Existencias, ingresos y stock.</p>
         </div>
         <div class="service">

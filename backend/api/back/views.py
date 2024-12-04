@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -1029,6 +1031,19 @@ class IngresoView(View):
             # Manejo de errores para fallos en el procesamiento
             return JsonResponse({'error': str(e)}, status=500)
 
+    def put(self, request, id_ingreso):
+        ingreso = Ingreso.objects.get(id=id_ingreso)
+        ingreso.fecha_real = datetime.now().date()
+        ingreso.realizado = True
+        ingreso.save()
+        return JsonResponse({"respuesta": "True"}, status=201)
+
+    def patch(self, request, id_ingreso):
+        ingreso = Ingreso.objects.get(id=id_ingreso)
+        ingreso.en_obra = True
+        ingreso.save()
+        return JsonResponse({"respuesta": "True"}, status=201)
+
 
 class AlmacenesView(View):
     def get(self, request, id_empresa):
@@ -1150,8 +1165,8 @@ class TareaHerramientaView(View):
         tarea_herramienta = Tarea_Herramienta.objects.create(
             id_tarea=tarea,
             id_herramienta=herramienta,
-            uso_desde=data.get('uso_desde'),
-            uso_hasta=data.get('uso_hasta')
+            uso_desde=data.get('uso_desde', None),
+            uso_hasta=data.get('uso_hasta', None)
         )
 
         # Preparar la respuesta
@@ -1197,7 +1212,7 @@ class TareaMaterialView(View):
         tarea_material = Tarea_Material.objects.create(
             id_tarea=tarea,
             id_material=material,
-            cant_utilizada=data.get('cant_utilizada'),
+            cant_utilizada=data.get('cant_utilizada',0),
             cant_no_utilizada=data.get('cant_no_utilizada', 0)
         )
 
@@ -1524,7 +1539,7 @@ class AlmacenesPorEmpresaView(View):
 
             for almacen in almacenes:
                 # Obtener ingresos del almacén
-                ingresos = Ingreso.objects.filter(id_almacen=almacen.id)
+                ingresos = Ingreso.objects.filter(id_almacen=almacen.id, en_obra=False)
                 ingresos_data = [
                     {
                         'id': ingreso.id,
@@ -1536,6 +1551,7 @@ class AlmacenesPorEmpresaView(View):
                         },
                         'unidad_medida': ingreso.unidad_medida,
                         'id_compra': ingreso.id_compra.id,
+                        'fecha_compra': ingreso.id_compra.fecha_compra,
                         'fecha_real': ingreso.fecha_real,
                         'realizado': ingreso.realizado,
                         'en_obra': ingreso.en_obra,
@@ -1553,7 +1569,7 @@ class AlmacenesPorEmpresaView(View):
                             'nombre': herramienta.id_material.descripcion
                         },
                         'ubicacion': herramienta.ubicacion,
-                        'marca': herramienta.marca,
+                        'marca': herramienta.id_material.marca,
                         'id_compra': herramienta.id_compra.id,
                     }
                     for herramienta in herramientas
@@ -1702,3 +1718,20 @@ class PermisosView(View):
             return JsonResponse({"message": "Permiso eliminado correctamente"}, status=200)
         except Permiso_Usuario.DoesNotExist:
             return JsonResponse({"error": "Relación no encontrada"}, status=400)
+
+
+class TareasView(View):
+    def get(self, request, id_empresa):
+        tareas = Tarea.objects.filter(
+            id_presupuesto_servicio__id_presupuesto__id_obra__id_empresa=id_empresa
+        ).exclude(porcentaje_avance=100)
+        tareas_response = [
+            {
+                "id": t.id,
+                "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
+                "tarea": t.titulo,
+            }
+            for t in tareas
+        ]
+        return JsonResponse(tareas_response, safe=False)
+

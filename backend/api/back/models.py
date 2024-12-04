@@ -317,7 +317,6 @@ class Herramienta(models.Model):
     id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
     id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
     ubicacion = models.CharField()
-    marca = models.CharField()
 
     class Meta:
         db_table = 'Herramienta'

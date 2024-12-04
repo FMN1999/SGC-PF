@@ -36,3 +36,28 @@
   </div>
 </div>
 
+<div class="detalle-financiero">
+  <h3>Detalle Financiero Mensual</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Ingresos</th>
+        <th>Egresos</th>
+        <th>Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let mes of meses; let i = index">
+        <td>{{ mes }}</td>
+        <td>{{ balanceData.ingresos_mensuales[i + 1] | currency }}</td>
+        <td>{{ balanceData.egresos_mensuales[i + 1] | currency }}</td>
+        <td [ngClass]="{'positivo': balanceData.balance_mensual[i + 1] >= 0, 'negativo': balanceData.balance_mensual[i + 1] < 0}">
+          {{ balanceData.balance_mensual[i + 1] | currency }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+

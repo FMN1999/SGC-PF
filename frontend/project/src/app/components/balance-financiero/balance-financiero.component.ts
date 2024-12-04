@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartComponent, ApexChart, ApexAxisChartSeries, ApexXAxis, ApexTitleSubtitle, ApexDataLabels, ApexTooltip, ApexResponsive } from "ng-apexcharts";
-import {CurrencyPipe, NgIf} from "@angular/common";
+import {CurrencyPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { HeaderComponent } from '../header/header.component';
 
@@ -22,7 +22,9 @@ export interface ChartOptions {
     ChartComponent,
     CurrencyPipe,
     NgIf,
-    HeaderComponent
+    HeaderComponent,
+    NgClass,
+    NgForOf
   ],
   standalone: true,
   styleUrls: ['./balance-financiero.component.scss']
