@@ -20,6 +20,7 @@ import { HeaderComponent } from '../header/header.component'
 export class CrearColaboradorComponent implements OnInit {
   colaboradorForm: FormGroup;
   mensajeError: string = '';
+  mensajeSuccess: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +34,7 @@ export class CrearColaboradorComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       usuario: ['', Validators.required],
       contrasenia: ['', Validators.required],
-      fecha_nacimiento: ['', Validators.required],
+      fecha_nacimiento: [''],
       sexo: [''],
       celular: [''],
       telefono: [''],
@@ -50,7 +51,6 @@ export class CrearColaboradorComponent implements OnInit {
 
   onSubmit() {
     if (this.colaboradorForm.valid) {
-      // Aquí organizamos los datos en las claves `usuario` y `colaborador`
       const datosColaborador = {
         usuario: {
           nombre: this.colaboradorForm.get('nombre')?.value,
@@ -71,14 +71,12 @@ export class CrearColaboradorComponent implements OnInit {
         }
       };
 
-      // Enviamos los datos organizados al servicio
       this.colaboradorService.crearColaborador(datosColaborador).subscribe({
         next: (response: any) => {
-          // Si se crea exitosamente, redirigir o mostrar un mensaje
-          this.router.navigate(['/']).then(r => {});  // Cambia la ruta si es necesario
+          this.mensajeSuccess = 'Colaborador creado exitosamente.';
         },
         error: (error: any) => {
-          this.mensajeError = 'Ocurrió un error al registrar el colaborador';
+          this.mensajeError = error.error.message || 'Ocurrió un error al registrar el colaborador';
         }
       });
     }

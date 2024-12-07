@@ -76,4 +76,18 @@
     font-weight: bold;
     text-align: center;
   }
+
+  .success {
+    background-color: lighten($success-color, 40%); /* Usa el color de éxito */
+    color: $success-color;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1rem;
+    border: 1px solid darken($success-color, 10%);
+    box-shadow: 0 4px 8px rgba(0, 128, 0, 0.2); /* Agrega un ligero sombreado */
+
+  }
 }

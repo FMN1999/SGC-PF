@@ -3,7 +3,7 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import { IngresoService } from '../../services/ingresos/ingresos.service';
 import { TareaService } from '../../services/tarea/tarea.service';
 import {NgForOf, NgIf} from "@angular/common";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { HeaderComponent } from '../header/header.component'
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import Swal from 'sweetalert2';
@@ -34,7 +34,8 @@ export class AlmacenesComponent implements OnInit {
     private empresaService: EmpresaService,
     private ingresoService: IngresoService,
     private tareaService: TareaService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -120,5 +121,9 @@ export class AlmacenesComponent implements OnInit {
     });
   }
 
+  abrirFormularioCrearAlmacen(): void {
+    // Navegar al componente de creación de almacén
+    this.router.navigate(['/crear-almacen']);
+  }
 
 }

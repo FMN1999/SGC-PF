@@ -22,6 +22,7 @@ export class CompraComponent implements OnInit {
   compra: any;
   estadoActual: string = '';
   id_usuario:string='';
+  generarIngresoHabilitado: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +36,7 @@ export class CompraComponent implements OnInit {
     this.id_usuario = sessionStorage.getItem('id_usuario');
     const compraId = Number(this.route.snapshot.paramMap.get('id'));
     this.obtenerCompra(compraId);
+    this.verificarIngresos(compraId);
   }
 
   obtenerCompra(compraId: number): void {
@@ -46,11 +48,11 @@ export class CompraComponent implements OnInit {
 
   obtenerBotones(): string[] {
     const secuenciaEstados = {
-      'Pendiente': ['Rechazado', 'Confirmado'],
-      'Confirmado': ['Cancelado', 'Pedido'],
+      'Pendiente': ['Rechazar', 'Confirmar'],
+      'Confirmado': ['Cancelar', 'Pedir'],
       'Pedido': ['A recibir'],
       'A recibir': ['Recibido'],
-      'Recibido': ['Cerrado']
+      'Recibido': ['Cerrar']
     };
     // @ts-ignore
     return secuenciaEstados[this.estadoActual] || [];
@@ -83,5 +85,9 @@ export class CompraComponent implements OnInit {
     this.router.navigate(['/registrar-pago']);
   }
 
-
+  verificarIngresos(id_compra:number): void {
+    this.compraService.verificarIngreso(id_compra).subscribe((data: any) => {
+      this.generarIngresoHabilitado = !data.todos_ingresos_realizados;
+    });
+  }
 }

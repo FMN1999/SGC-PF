@@ -10,7 +10,7 @@
     <p><strong>Costo Transporte:</strong> {{ compra.costo_transporte }}</p>
     <p><strong>Moneda Transporte:</strong> {{ compra.moneda_transporte }}</p>
     <p><strong>Solicitante:</strong> {{ compra.id_solicitante }}</p>
-    <p><strong>Aprobador:</strong> {{ compra.id_aprobador }}</p>
+    <p><strong>Aprobador:</strong> {{ compra.nombre_aprobador }} {{compra.apellido_aprobador}}</p>
     <p><strong>Estado Actual:</strong> {{ estadoActual }}</p>
   </div>
 
@@ -24,10 +24,14 @@
   </div>
 
   <div class="acciones">
-    <button class="btn-accion" (click)="abrirFormularioIngreso()">Generar Ingreso</button>
-    <button class="btn-accion" (click)="registrarPagoCompra(compra.id, compra.id_proveedor)">
+    <button class="btn-accion" [disabled]="!generarIngresoHabilitado" (click)="abrirFormularioIngreso()">Generar Ingreso</button>
+    <button
+      [disabled]="estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado'"
+      class="btn-accion"
+      (click)="registrarPagoCompra(compra.id, compra.id_proveedor)">
       Registrar Pago
     </button>
+
   </div>
 
   <div class="lineas-compra">

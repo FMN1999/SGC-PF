@@ -37,10 +37,11 @@
       background-color: lighten($section-bg-color, 5%);
       border: 1px solid $table-border-color;
       border-radius: $button-radius;
-      transition: box-shadow 0.3s;
+      transition: box-shadow 0.3s, background-color 0.3s;
 
       &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background-color: lighten($secondary-color, 40%);
       }
 
       .detalle {
@@ -51,6 +52,16 @@
           strong {
             color: $primary-color;
           }
+        }
+      }
+
+      a.solicitud-link {
+        text-decoration: none;
+        color: inherit; // Heredar el color estándar del texto.
+        display: block; // Permitir que toda la tarjeta sea clicable.
+
+        &:hover {
+          text-decoration: none;
         }
       }
     }

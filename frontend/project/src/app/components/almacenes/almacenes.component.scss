@@ -4,6 +4,35 @@
   padding: $section-padding;
   background-color: $background-color;
 
+  .crear-almacen {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .crear-almacen-btn {
+      background-color: $success-color;
+      color: $white-color;
+      font-size: 1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: $button-radius;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: darken($success-color, 10%);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:disabled {
+        background-color: $border-color;
+        cursor: not-allowed;
+      }
+    }
+  }
+
   .almacenes-title {
     font-size: 2rem;
     color: $primary-color;

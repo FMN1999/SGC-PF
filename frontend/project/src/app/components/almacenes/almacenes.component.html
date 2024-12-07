@@ -1,7 +1,9 @@
 <app-header></app-header>
 <div class="almacenes-container">
   <h2 class="almacenes-title">Almacenes de la Empresa</h2>
-
+  <div class="crear-almacen">
+    <button class="crear-almacen-btn" (click)="abrirFormularioCrearAlmacen()">Crear Nuevo Almacén</button>
+  </div>
   <div class="almacenes-empty" *ngIf="almacenes.length === 0">
     No hay almacenes disponibles para esta empresa.
   </div>

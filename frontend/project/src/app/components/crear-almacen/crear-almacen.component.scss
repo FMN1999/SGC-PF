@@ -1,0 +1,86 @@
+@import '../home/home.component';
+
+.crear-almacen-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: $white-color;
+  border: 1px solid $background-color;
+  border-radius: 8px;
+
+  h2 {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: $text-color;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid $background-color;
+        border-radius: 4px;
+        transition: border-color 0.3s;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
+      }
+
+      .error {
+        margin-top: 5px;
+        font-size: 0.9rem;
+        color: $error-color;
+      }
+    }
+
+    .submit-btn {
+      background-color: $secondary-color;
+      color: $white-color;
+      font-size: 1rem;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover:not(:disabled) {
+        background-color: $hover-color;
+      }
+
+      &:disabled {
+        background-color: lighten($secondary-color, 20%);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .success, .error {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .success {
+    color: $success-color;
+  }
+
+  .error {
+    color: $error-color;
+  }
+}

@@ -69,6 +69,13 @@
       &:hover {
         background-color: $hover-color;
       }
+
+      &:disabled {
+        background-color: lighten($secondary-color, 30%);
+        color: $white-color;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
     }
   }
 
@@ -109,3 +116,4 @@
     }
   }
 }
+

@@ -53,24 +53,18 @@ class ColaboradorController:
 
     @staticmethod
     def crear_colaborador(usuario_data, colaborador_data):
+        print(int(colaborador_data.get('id_empresa')))
         empresa = EmpresaData.obtener_empresa_por_id(int(colaborador_data.get('id_empresa')))
-        if not empresa:
-            raise ValidationError("La empresa seleccionada no existe")
-
-        # Validar datos de usuario (por ejemplo, si el email ya está registrado)
+        print(empresa.id)
         if UsuarioData.valida_usuario_email(usuario_data.get('email')):
             raise ValidationError("El email ya está en uso")
 
         if UsuarioData.valida_usuario_user(usuario_data.get('usuario')):
             raise ValidationError("El nombre de usuario ya está en uso")
 
-        # Crear el usuario y el cliente dentro de una transacción
-        try:
-            usuario = UsuarioData.crear_usuario(usuario_data)
-            colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario, empresa)
-            return colaborador
-        except Exception as e:
-            raise ValidationError(f"Error al registrar el cliente: {str(e)}")
+        usuario = UsuarioData.crear_usuario(usuario_data)
+        colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario, empresa)
+        return colaborador
 
     @staticmethod
     def get_by_empresa(id_emp):
@@ -725,6 +719,8 @@ class CompraController:
             'estado': compra.estado,
             'id_solicitante': compra.id_solicitante.id,
             'id_aprobador': compra.id_aprobador.id if compra.id_aprobador else None,
+            'nombre_aprobador': compra.id_aprobador.nombre if compra.id_aprobador else None,
+            'apellido_aprobador': compra.id_aprobador.apellido if compra.id_aprobador else None,
             'lineas_compra': [
                 {
                     'nr_posicion': linea.nr_posicion,
