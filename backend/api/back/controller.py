@@ -358,6 +358,7 @@ class ObraController:
     @staticmethod
     def create(data):
         direccion = data.get('direccion')
+        tipo_obra = data.get('tipo_obra')
         id_cliente = data.get('id_cliente')
         telefono_contacto = data.get('telefono_contacto')
         fecha_inicio_est = data.get('fecha_inicio_est')
@@ -376,14 +377,15 @@ class ObraController:
             direccion=direccion,
             id_cliente=cliente,
             telefono_contacto=telefono_contacto,
-            fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d'),
-            fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d'),
+            fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d') if fecha_inicio_est else None,
+            fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d') if fecha_fin_est else None,
             monto_total_est= 0 if monto_total_est == '' else monto_total_est,
             moneda=moneda,
-            pisos=pisos,
+            pisos=pisos if pisos else 0,
             dimensiones=dimensiones,
             estado=estado,
-            id_empresa=empresa
+            id_empresa=empresa,
+            tipo_obra=tipo_obra
         )
         return ObraData.guardar(nueva_obra)
 

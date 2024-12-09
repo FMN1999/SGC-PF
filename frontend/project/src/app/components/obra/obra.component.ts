@@ -100,7 +100,7 @@ export class ObraComponent implements OnInit {
       this.obra = obra;
       this.obraForm.patchValue({
         direccion: obra.direccion,
-        id_cliente: obra.id_cliente,
+        id_cliente: obra.cliente.id,
         telefono_contacto: obra.telefono_contacto,
         fecha_inicio_est: obra.fecha_inicio_est,
         fecha_fin_est: obra.fecha_fin_est,

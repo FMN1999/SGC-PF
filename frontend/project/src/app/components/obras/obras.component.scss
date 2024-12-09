@@ -33,6 +33,35 @@
   background-color: lighten($error-color, 50%);
 }
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: $primary-color;
+  }
+
+  .create-obra-button {
+    padding: 10px 20px;
+    background-color: $success-color;
+    color: $white-color;
+    border: none;
+    border-radius: $button-radius;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($success-color, 10%);
+    }
+  }
+}
+
 .obras-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -50,6 +79,13 @@
   padding: $section-padding;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
 
   .obra-header {
     font-size: 1.2rem;
@@ -66,24 +102,5 @@
     &.activo {
       color: $danger-color;
     }
-  }
-}
-
-.almacenes-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: $primary-color;
-  text-align: center;
-  margin-bottom: 20px;
-  position: relative;
-
-  &::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 3px;
-    background: $secondary-color;
-    margin: 10px auto 0;
-    border-radius: $button-radius;
   }
 }

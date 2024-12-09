@@ -112,7 +112,6 @@ export class CrearOfertaComponent implements OnInit {
     this.proveedorService.crearOferta(ofertaCompleta).subscribe({
       next: (response) => {
         this.mensajeExito = 'Oferta creada con éxito';
-        this.router.navigate([`/proveedor/${this.id_proveedor}`]).then(r => {});
       },
       error: () => {
         this.mensajeError = 'Error al crear la oferta.';

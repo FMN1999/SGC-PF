@@ -6,6 +6,28 @@
   border: 1px solid $border-color;
   border-radius: $button-radius;
 
+  .acciones {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+
+    .btn {
+      margin-left: 10px;
+      background-color: $secondary-color;
+      color: $white-color;
+      padding: 10px 20px;
+      border: none;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+    }
+  }
+
   .entidad {
     margin-bottom: 20px;
 

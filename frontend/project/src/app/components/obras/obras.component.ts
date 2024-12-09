@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import{HeaderComponent} from '../header/header.component';
@@ -22,7 +22,11 @@ export class ObrasComponent implements OnInit {
   cargando = true;
   error = false;
 
-  constructor(private empresaService: EmpresaService, private route: ActivatedRoute) {}
+  constructor(
+    private empresaService: EmpresaService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -46,5 +50,13 @@ export class ObrasComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  irACrearObra(): void {
+    this.router.navigate(['/crear-obra']);
+  }
+
+  irAObra(id: number): void {
+    this.router.navigate([`/obra/${id}`]);
   }
 }

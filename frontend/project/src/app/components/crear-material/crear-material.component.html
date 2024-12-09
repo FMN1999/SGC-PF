@@ -3,7 +3,7 @@
   <h1>Crear Material</h1>
   <form (ngSubmit)="crearMaterial()">
     <div class="form-group">
-      <label for="tipo_material">Tipo de Material:</label>
+      <label for="tipo_material">Denominación:</label>
       <input id="tipo_material" [(ngModel)]="materialData.tipo_material" name="tipo_material" required />
     </div>
 
@@ -25,43 +25,51 @@
 
       <div class="form-group">
         <label for="precio">Precio:</label>
-        <input id="precio" [(ngModel)]="materialData.precio" name="precio" required type="number" step="0.01" />
+        <input id="precio" [(ngModel)]="materialData.precio" name="precio" type="number" step="0.01" />
       </div>
 
       <div class="form-group">
         <label for="moneda">Moneda:</label>
-        <input id="moneda" [(ngModel)]="materialData.moneda" name="moneda" required />
+        <input id="moneda" [(ngModel)]="materialData.moneda" name="moneda" />
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="fecha_desde_precio">Fecha Desde Precio:</label>
-        <input
-          id="fecha_desde_precio"
-          [(ngModel)]="materialData.fecha_desde_precio"
-          name="fecha_desde_precio"
-          required
-          type="date"
-        />
+        <input id="fecha_desde_precio" [(ngModel)]="materialData.fecha_desde_precio" name="fecha_desde_precio" type="date"/>
       </div>
 
       <div class="form-group">
         <label for="impuestos_total">Impuestos:</label>
-        <input
-          id="impuestos_total"
-          [(ngModel)]="materialData.impuestos_total"
-          name="impuestos_total"
-          required
-          type="number"
-          step="0.01"
-        />
+        <input id="impuestos_total" [(ngModel)]="materialData.impuestos_total" name="impuestos_total" type="number" step="0.01"/>
       </div>
 
       <div class="form-group">
         <label for="moneda_impuestos">Moneda Impuestos:</label>
-        <input id="moneda_impuestos" [(ngModel)]="materialData.moneda_impuestos" name="moneda_impuestos" required />
+        <input id="moneda_impuestos" [(ngModel)]="materialData.moneda_impuestos" name="moneda_impuestos"/>
       </div>
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion_impuestos">Descripción Impuestos:</label>
+      <textarea id="descripcion_impuestos" [(ngModel)]="materialData.descripcion_impuestos" name="descripcion_impuestos"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="otros_gastos">Otros gastos:</label>
+      <input id="otros_gastos" [(ngModel)]="materialData.otros_gastos" name="otros_gastos" type="number" step="0.01"/>
+    </div>
+
+    <div class="form-group">
+      <label for="moneda_otros_gastos">Moneda de Otros gastos:</label>
+      <input id="moneda_otros_gastos" [(ngModel)]="materialData.moneda_otros_gastos" name="moneda_otros_gastos"/>
+    </div>
+
+
+    <div class="form-group">
+      <label for="descripcion_otros_gastos">Descripción de otros gastos:</label>
+      <textarea id="descripcion_otros_gastos" [(ngModel)]="materialData.descripcion_otros_gastos" name="descripcion_otros_gastos"></textarea>
     </div>
 
     <div class="form-group">
@@ -87,13 +95,28 @@
         </div>
 
         <div class="form-group">
-          <label for="marca_vehiculo">Marca:</label>
-          <input id="marca_vehiculo" [(ngModel)]="vehiculoData.marca_vehiculo" name="marca_vehiculo" />
+          <label for="modelo">Modelo:</label>
+          <input id="modelo" [(ngModel)]="vehiculoData.modelo" name="modelo" />
         </div>
 
         <div class="form-group">
-          <label for="modelo">Modelo:</label>
-          <input id="modelo" [(ngModel)]="vehiculoData.modelo" name="modelo" />
+          <label for="precio_x_hora">Precio por hora:</label>
+          <input id="precio_x_hora" [(ngModel)]="vehiculoData.precio_x_hora" name="precio_x_hora" type="number" step="0.01" />
+        </div>
+
+        <div class="form-group">
+          <label for="moneda_vehiculo">Moneda de Otros gastos:</label>
+          <input id="moneda_vehiculo" [(ngModel)]="vehiculoData.moneda" name="moneda_vehiculo"/>
+        </div>
+
+        <div class="form-group">
+          <label>Almacen</label>
+          <select [(ngModel)]="vehiculoData.id_almacen" id="id_almacen" formControlName="id_almacen">
+            <option value="">Seleccione un almacén</option>
+            <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+              {{ almacen.descripcion }}
+            </option>
+          </select>
         </div>
       </div>
     </div>
@@ -107,12 +130,19 @@
         </div>
 
         <div class="form-group">
-          <label for="marca_herramienta">Marca:</label>
-          <input id="marca_herramienta" [(ngModel)]="herramientaData.marca_herramienta" name="marca_herramienta" />
+          <label>Almacen</label>
+          <select [(ngModel)]="herramientaData.id_almacen" id="id_almacenh" formControlName="id_almacenh">
+            <option value="">Seleccione un almacén</option>
+            <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+              {{ almacen.descripcion }}
+            </option>
+          </select>
         </div>
       </div>
     </div>
 
     <button class="submit-btn" type="submit">Crear Material</button>
   </form>
+  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+  <div *ngIf="mensajeSuccess" class="success">{{ mensajeSuccess }}</div>
 </div>

@@ -1,15 +1,15 @@
 <app-header></app-header>
 
 <div class="container">
-  <h2>Detalles de Obra en {{ obra.direccion }}</h2>
+  <h2>Detalles de Obra en {{ obra?.direccion }}</h2>
   <div class="action-buttons">
     <button (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
     <button class="btn btn-info" (click)="irAPagosCobros()">Ver Pagos y Cobros</button>
   </div>
-  <p><strong>Cliente:</strong> {{ obra.id_cliente }}</p>
-  <p><strong>Contacto (Tel.):</strong> {{ obra.telefono_contacto }}</p>
-  <p><strong>Fecha de inicio (est.):</strong> {{ obra.fecha_inicio_est | date }}</p>
-  <p><strong>Fecha de fin (est.):</strong> {{ obra.fecha_fin_est }}</p>
+  <p><strong>Cliente:</strong> {{ obra?.cliente.nombre }}</p>
+  <p><strong>Contacto (Tel.):</strong> {{ obra?.telefono_contacto }}</p>
+  <p><strong>Fecha de inicio (est.):</strong> {{ obra?.fecha_inicio_est | date }}</p>
+  <p><strong>Fecha de fin (est.):</strong> {{ obra?.fecha_fin_est }}</p>
 
 
   <form *ngIf="editMode" [formGroup]="obraForm" (ngSubmit)="onSubmit()" class="form-container">

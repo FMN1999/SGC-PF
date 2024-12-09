@@ -24,12 +24,12 @@
 
       <div class="form-group">
         <label for="fecha_inicio_est">Fecha de Inicio Estimada:</label>
-        <input id="fecha_inicio_est" formControlName="fecha_inicio_est" type="date" required />
+        <input id="fecha_inicio_est" formControlName="fecha_inicio_est" type="date" />
       </div>
 
       <div class="form-group">
         <label for="fecha_fin_est">Fecha de Fin Estimada:</label>
-        <input id="fecha_fin_est" formControlName="fecha_fin_est" type="date" required />
+        <input id="fecha_fin_est" formControlName="fecha_fin_est" type="date" />
       </div>
     </div>
 
@@ -41,28 +41,36 @@
           formControlName="monto_total_est"
           type="number"
           step="0.01"
-          required
         />
       </div>
 
       <div class="form-group">
         <label for="moneda">Moneda:</label>
-        <input id="moneda" formControlName="moneda" type="text" required />
+        <input id="moneda" formControlName="moneda" type="text"/>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="pisos">Pisos:</label>
-        <input id="pisos" formControlName="pisos" type="number" required />
+        <input id="pisos" formControlName="pisos" type="number" required/>
       </div>
-
       <div class="form-group">
         <label for="dimensiones">Dimensiones:</label>
-        <input id="dimensiones" formControlName="dimensiones" type="text" required />
+        <input id="dimensiones" formControlName="dimensiones" type="text" />
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="tipo_obra">Tipo de obra:</label>
+      <input id="tipo_obra" formControlName="tipo_obra" type="text" />
+    </div>
+
+
     <button class="submit-btn" type="submit" [disabled]="obraForm.invalid">Crear Obra</button>
   </form>
+
+  <div *ngIf="mensajeExito" class="success-message">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
+
 </div>

@@ -162,4 +162,8 @@ export class CrearPresupuestoComponent implements OnInit {
       this.trabajadoresFormArray.removeAt(index);
     }
   }
+
+  showChat() {
+    this.dataShareService.showChat();
+  }
 }

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { ChatService } from '../../services/chat/chat.service'
-import {NgClass, NgForOf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {DataShareService} from "../../services/data-share/data-share.service";
 
@@ -9,7 +9,8 @@ import {DataShareService} from "../../services/data-share/data-share.service";
   imports: [
     NgForOf,
     NgClass,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './chat.component.html',
   standalone: true,
@@ -19,6 +20,7 @@ export class ChatComponent implements OnInit {
   userMessage: string = '';
   messages: { text: string, isUser: boolean }[] = [];
   adicional: { id_obra?: number, id_cliente?: number } = {};
+  isVisible: boolean = false;
 
 
   constructor(private chatService: ChatService,
@@ -26,6 +28,11 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     this.mensajesBienvenida();
+
+    this.dataShareService.isVisible$.subscribe((visible) => {
+      this.isVisible = visible;
+    });
+
 
     this.dataShareService.obraId$.subscribe((obraId) => {
       if (obraId) {
@@ -39,6 +46,10 @@ export class ChatComponent implements OnInit {
         this.adicional = { ...this.adicional, id_cliente: clienteId }; // Mantener el id_obra existente
       }
     });
+  }
+
+  toggleChat() {
+    this.dataShareService.toggleVisibility();
   }
 
   mensajesBienvenida():void {

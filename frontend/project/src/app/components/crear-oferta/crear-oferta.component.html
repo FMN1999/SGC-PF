@@ -1,10 +1,21 @@
 <app-header></app-header>
 <div class="crear-oferta-container">
   <h1>Crear Oferta</h1>
-  <form (submit)="agregarOferta()">
+
+  <form #ofertaForm="ngForm" (submit)="agregarOferta()">
     <div class="form-group">
       <label for="descripcion">Descripción:</label>
-      <input id="descripcion" [(ngModel)]="ofertaData.descripcion" name="descripcion" type="text" required />
+      <input
+        id="descripcion"
+        [(ngModel)]="ofertaData.descripcion"
+        name="descripcion"
+        type="text"
+        required
+        #descripcion="ngModel"
+      />
+      <div *ngIf="descripcion.invalid && descripcion.touched" class="error">
+        Descripción es requerida.
+      </div>
     </div>
 
     <div class="form-row">
@@ -16,24 +27,59 @@
           [(ngModel)]="ofertaData.monto_total"
           name="monto_total"
           required
+          #monto_total="ngModel"
         />
+        <div *ngIf="monto_total.invalid && monto_total.touched" class="error">
+          Monto Total es requerido.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="moneda">Moneda:</label>
-        <input id="moneda" [(ngModel)]="ofertaData.moneda" name="moneda"  type="text" required />
+        <input
+          id="moneda"
+          [(ngModel)]="ofertaData.moneda"
+          name="moneda"
+          type="text"
+          required
+          maxlength="3"
+          #moneda="ngModel"
+        />
+        <div *ngIf="moneda.invalid && moneda.touched" class="error">
+          Moneda es requerida y debe tener máximo 3 caracteres.
+        </div>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="fecha_desde">Fecha Desde:</label>
-        <input id="fecha_desde" type="date" [(ngModel)]="ofertaData.fecha_desde" name="fecha_desde" required />
+        <input
+          id="fecha_desde"
+          type="date"
+          [(ngModel)]="ofertaData.fecha_desde"
+          name="fecha_desde"
+          required
+          #fecha_desde="ngModel"
+        />
+        <div *ngIf="fecha_desde.invalid && fecha_desde.touched" class="error">
+          Fecha Desde es requerida.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="fecha_hasta">Fecha Hasta:</label>
-        <input id="fecha_hasta" type="date" [(ngModel)]="ofertaData.fecha_hasta" name="fecha_hasta" required />
+        <input
+          id="fecha_hasta"
+          type="date"
+          [(ngModel)]="ofertaData.fecha_hasta"
+          name="fecha_hasta"
+          required
+          #fecha_hasta="ngModel"
+        />
+        <div *ngIf="fecha_hasta.invalid && fecha_hasta.touched" class="error">
+          Fecha Hasta es requerida.
+        </div>
       </div>
     </div>
 
@@ -47,7 +93,7 @@
           id="material_{{material.id}}"
         />
         <label for="material_{{material.id}}">
-          {{ material.descripcion }} - {{ material.marca }}
+          {{ material.tipo_material }} - {{ material.marca }}
         </label>
       </div>
 
@@ -156,9 +202,9 @@
       </div>
     </div>
 
-    <button class="submit-btn" type="submit">Crear Oferta</button>
+    <button class="submit-btn" type="submit" [disabled]="ofertaForm.invalid">Crear Oferta</button>
 
-    <div *ngIf="mensajeExito" class="success-message">{{ mensajeExito }}</div>
-    <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
   </form>
+  <div *ngIf="mensajeExito" class="success-message">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
 </div>

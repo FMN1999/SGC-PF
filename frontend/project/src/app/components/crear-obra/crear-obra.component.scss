@@ -14,6 +14,34 @@
     margin-bottom: 20px;
   }
 
+  .success-message {
+    text-align: center;
+    color: $success-color;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid lighten($success-color, 20%);
+    border-radius: $button-radius;
+    background-color: lighten($success-color, 50%);
+  }
+
+  .error-message {
+    text-align: center;
+    color: $error-color;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid lighten($error-color, 20%);
+    border-radius: $button-radius;
+    background-color: lighten($error-color, 50%);
+  }
+
+  .error {
+    color: $error-color;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
   .form-group {
     display: flex;
     flex-direction: column;

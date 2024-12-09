@@ -78,13 +78,23 @@
     }
   }
 
+  .error {
+    color: $error-color;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
   .success-message {
     color: $success-color;
+    text-align: center;
     margin-top: 15px;
+    font-weight: bold;
   }
 
   .error-message {
     color: $error-color;
+    text-align: center;
     margin-top: 15px;
+    font-weight: bold;
   }
 }

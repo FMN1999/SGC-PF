@@ -189,7 +189,6 @@ class ColaboradorView(View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': f"Error desconocido: {str(e)}"}, status=500)
 
-
     def patch(self, request, id):
         try:
             colaborador = ColaboradorController.get_by_id(id)
@@ -343,6 +342,7 @@ class MaterialView(View):
 
         # Crear el material
         proveedor = get_object_or_404(Proveedor, id=data.get('id_proveedor'))
+        fecha =data.get('fecha_desde_precio')
         material = Material.objects.create(
             id_proveedor=proveedor,
             tipo_material=data.get('tipo_material'),
@@ -357,26 +357,24 @@ class MaterialView(View):
             otros_gastos=data.get('otros_gastos'),
             moneda_otros_gastos=data.get('moneda_otros_gastos'),
             descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
-            fecha_desde_precio=data.get('fecha_desde_precio')
+            fecha_desde_precio=fecha if fecha else None
         )
 
-        # Asociación opcional con Vehículo o Herramienta
         if data.get('tipo_asociacion') == 'vehiculo':
             Vehiculo.objects.create(
                 id_material=material,
                 patente=data.get('patente'),
                 tipo=data.get('tipo'),
-                marca=data.get('marca_vehiculo'),
                 modelo=data.get('modelo'),
                 precio_x_hora=data.get('precio_x_hora'),
+                moneda=data.get('moneda'),
                 id_almacen_id=data.get('id_almacen')
             )
         elif data.get('tipo_asociacion') == 'herramienta':
             Herramienta.objects.create(
                 id_material=material,
                 id_almacen_id=data.get('id_almacen'),
-                ubicacion=data.get('ubicacion'),
-                marca=data.get('marca_herramienta')
+                ubicacion=data.get('ubicacion')
             )
 
         return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
