@@ -1,3 +1,4 @@
+from itertools import product
 from datetime import date
 from django.db.models import F, Sum, Q
 from django.utils import timezone
@@ -783,8 +784,8 @@ class PagoController:
 
 
 class ChatController:
-    @staticmethod
-    def generador_presupuesto(data):
+    @classmethod
+    def generador_presupuesto(cls, data):
         PALABRAS_EXCLUIDAS = {'de', 'con', 'para', 'el', 'la', 'los', 'las', 'y', 'en', 'a', 'un', 'una'}
         obra = ObraData.get_by_id(data)
         dimensiones = obra.dimensiones
@@ -796,17 +797,13 @@ class ChatController:
         ]
 
         # Crear un Q object dinámico para materiales
-        query_materiales = Q()
-        for palabra in palabras_clave:
-            query_materiales |= Q(tipo_material__icontains=palabra) | Q(descripcion__icontains=palabra)
+        query_materiales = cls._generar_query(palabras_clave, ['tipo_material', 'descripcion'])
 
         # Buscar materiales que coincidan con las palabras clave
         materiales = Material.objects.filter(query_materiales)
 
         # Crear un Q object dinámico para servicios
-        query_servicios = Q()
-        for palabra in palabras_clave:
-            query_servicios |= Q(descripcion__icontains=palabra) | Q(unidad_medida__icontains=palabra)
+        query_servicios = cls._generar_query(palabras_clave, ['descripcion', 'unidad_medida'])
 
         # Buscar servicios que coincidan con las palabras clave
         servicios = Servicio.objects.filter(query_servicios)
@@ -824,7 +821,7 @@ class ChatController:
             "direccion": obra.direccion,
             "total": obra.monto_total_est,
             "moneda": obra.moneda,
-            "materiales": list(materiales.values('id', 'descripcion','unidad_medida', 'marca', 'precio', 'moneda')),
+            "materiales": list(materiales.values('id', 'descripcion', 'unidad_medida', 'marca', 'precio', 'moneda')),
             "servicios": list(
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
@@ -1160,6 +1157,13 @@ class ChatController:
             "recomendaciones": recomendaciones,
         }
         return data_return
+
+    @staticmethod
+    def _generar_query(palabras_clave, campos):
+        query = Q()
+        for p, c in product(palabras_clave, campos):
+            query |= Q(**{f'{c}__icontains': p})
+        return query
 
 
 class ReporteObra:
