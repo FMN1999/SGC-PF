@@ -1,0 +1,14 @@
+<header class="generic-header">
+  <div class="left-section">
+    <i class="fas fa-home" (click)="irAlHome()"></i>
+  </div>
+
+  <div class="right-section">
+    <i class="fas fa-user" (click)="toggleUserMenu()"></i>
+    <ul class="user-menu" *ngIf="userMenuVisible">
+      <li (click)="irAlPerfil()">Mi Perfil</li>
+      <li (click)="cerrarSesion()">Cerrar Sesión</li>
+    </ul>
+  </div>
+</header>
+

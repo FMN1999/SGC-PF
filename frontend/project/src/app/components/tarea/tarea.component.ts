@@ -5,9 +5,9 @@ import { UsuarioService} from '../../services/usuarios/usuario.service'
 import {FormsModule} from "@angular/forms";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
-  standalone: true,
   selector: 'app-tarea',
   templateUrl: './tarea.component.html',
   imports: [
@@ -15,8 +15,10 @@ import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
     NgForOf,
     NgIf,
     DatePipe,
-    CurrencyPipe
+    CurrencyPipe,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./tarea.component.scss']
 })
 export class TareaComponent implements OnInit {

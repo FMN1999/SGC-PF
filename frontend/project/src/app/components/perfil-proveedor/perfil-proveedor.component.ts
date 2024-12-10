@@ -3,17 +3,19 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para ngModel
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-perfil-proveedor',
   templateUrl: './perfil-proveedor.component.html',
-  standalone: true,
   imports: [
     NgIf,
     NgForOf,
     RouterLink,
-    FormsModule  // Agregar FormsModule para el uso de ngModel
+    FormsModule, // Agregar FormsModule para el uso de ngModel,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./perfil-proveedor.component.scss']
 })
 export class PerfilProveedorComponent implements OnInit {

@@ -1,52 +1,53 @@
-<h3>Registrar Pago</h3>
+<app-header></app-header>
+<div class="registrar-pago-container">
+  <h3>Registrar Pago</h3>
 
-<form [formGroup]="pagoForm" (ngSubmit)="registrarPago()">
-  <div>
-    <label for="tipo_pago">Tipo de Pago:</label>
-    <select id="tipo_pago" formControlName="tipo_pago">
-      <option value="">Seleccione un tipo de pago</option>
-      <option value="compra">Compra</option>
-      <option value="subcontratacion">Subcontratación</option>
-      <option value="proveedor_directo">Proveedor Directo</option>
-    </select>
-  </div>
+  <form [formGroup]="pagoForm" (ngSubmit)="registrarPago()">
+    <div>
+      <label for="tipo_pago">Tipo de Pago:</label>
+      <select id="tipo_pago" formControlName="tipo_pago">
+        <option value="">Seleccione un tipo de pago</option>
+        <option value="compra">Compra</option>
+        <option value="subcontratacion">Contratación</option>
+        <option value="proveedor_directo">Proveedor Directo</option>
+      </select>
+    </div>
 
-  <div>
-    <label for="monto">Monto:</label>
-    <input id="monto" formControlName="monto" type="number" required />
-  </div>
+    <div>
+      <label for="monto">Monto:</label>
+      <input id="monto" formControlName="monto" type="number" required />
+    </div>
 
-  <div>
-    <label for="moneda">Moneda:</label>
-    <input id="moneda" formControlName="moneda" type="text" required />
-  </div>
+    <div>
+      <label for="moneda">Moneda:</label>
+      <input id="moneda" formControlName="moneda" type="text" required />
+    </div>
 
-  <div>
-    <label for="cuota">Cuota:</label>
-    <input id="cuota" formControlName="cuota" type="number" required />
-  </div>
+    <div>
+      <label for="cuota">Cuota:</label>
+      <input id="cuota" formControlName="cuota" type="number" required />
+    </div>
 
-  <div>
-    <label for="fecha_pago">Fecha de pago:</label>
-    <input id="fecha_pago" formControlName="fecha_pago" type="date" required />
-  </div>
+    <div>
+      <label for="fecha_pago">Fecha de pago:</label>
+      <input id="fecha_pago" formControlName="fecha_pago" type="date" required />
+    </div>
 
-  <div>
-    <label for="id_proveedor">Proveedor ID:</label>
-    <input id="id_proveedor" formControlName="id_proveedor" type="number" required />
-  </div>
+    <div>
+      <label for="id_proveedor">Proveedor:</label>
+      <input id="id_proveedor" formControlName="id_proveedor" type="number" required />
+    </div>
 
-  <!-- Campo de ID de Compra, visible solo si el tipo de pago es "Compra" -->
-  <div *ngIf="tipoPagoSeleccionado === 'compra'">
-    <label for="id_compra">ID Compra:</label>
-    <input id="id_compra" formControlName="id_compra" type="number" />
-  </div>
+    <div *ngIf="tipoPagoSeleccionado === 'compra'" class="conditional-field">
+      <label for="id_compra">ID Compra:</label>
+      <input id="id_compra" formControlName="id_compra" type="number" />
+    </div>
 
-  <!-- Campo de ID de Subcontratación, visible solo si el tipo de pago es "Subcontratación" -->
-  <div *ngIf="tipoPagoSeleccionado === 'subcontratacion'">
-    <label for="id_subcontratacion">ID Subcontratación:</label>
-    <input id="id_subcontratacion" formControlName="id_subcontratacion" type="number" />
-  </div>
+    <div *ngIf="tipoPagoSeleccionado === 'subcontratacion'" class="conditional-field">
+      <label for="id_subcontratacion">Contratación:</label>
+      <input id="id_subcontratacion" formControlName="id_subcontratacion" type="number" />
+    </div>
 
-  <button type="submit" [disabled]="pagoForm.invalid">Registrar Pago</button>
-</form>
+    <button type="submit" [disabled]="pagoForm.invalid">Registrar Pago</button>
+  </form>
+</div>

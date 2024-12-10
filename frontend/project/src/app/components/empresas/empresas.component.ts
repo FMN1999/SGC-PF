@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {Router} from "@angular/router";
+import {HeaderComponent} from '../header/header.component'
 
 @Component({
-  standalone: true,
   selector: 'app-listado-empresas',
   templateUrl: './empresas.component.html',
   styleUrls: ['./empresas.component.scss'],
+  standalone: true,
   imports: [
     NgIf,
-    NgForOf
+    NgForOf,
+    HeaderComponent
   ]
 })
 export class EmpresasComponent implements OnInit {

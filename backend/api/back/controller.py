@@ -54,24 +54,18 @@ class ColaboradorController:
 
     @staticmethod
     def crear_colaborador(usuario_data, colaborador_data):
+        print(int(colaborador_data.get('id_empresa')))
         empresa = EmpresaData.obtener_empresa_por_id(int(colaborador_data.get('id_empresa')))
-        if not empresa:
-            raise ValidationError("La empresa seleccionada no existe")
-
-        # Validar datos de usuario (por ejemplo, si el email ya está registrado)
+        print(empresa.id)
         if UsuarioData.valida_usuario_email(usuario_data.get('email')):
             raise ValidationError("El email ya está en uso")
 
         if UsuarioData.valida_usuario_user(usuario_data.get('usuario')):
             raise ValidationError("El nombre de usuario ya está en uso")
 
-        # Crear el usuario y el cliente dentro de una transacción
-        try:
-            usuario = UsuarioData.crear_usuario(usuario_data)
-            colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario, empresa)
-            return colaborador
-        except Exception as e:
-            raise ValidationError(f"Error al registrar el cliente: {str(e)}")
+        usuario = UsuarioData.crear_usuario(usuario_data)
+        colaborador = ColaboradorData.crear_colaborador(colaborador_data, usuario, empresa)
+        return colaborador
 
     @staticmethod
     def get_by_empresa(id_emp):
@@ -365,6 +359,7 @@ class ObraController:
     @staticmethod
     def create(data):
         direccion = data.get('direccion')
+        tipo_obra = data.get('tipo_obra')
         id_cliente = data.get('id_cliente')
         telefono_contacto = data.get('telefono_contacto')
         fecha_inicio_est = data.get('fecha_inicio_est')
@@ -383,14 +378,15 @@ class ObraController:
             direccion=direccion,
             id_cliente=cliente,
             telefono_contacto=telefono_contacto,
-            fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d'),
-            fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d'),
+            fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d') if fecha_inicio_est else None,
+            fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d') if fecha_fin_est else None,
             monto_total_est= 0 if monto_total_est == '' else monto_total_est,
             moneda=moneda,
-            pisos=pisos,
+            pisos=pisos if pisos else 0,
             dimensiones=dimensiones,
             estado=estado,
-            id_empresa=empresa
+            id_empresa=empresa,
+            tipo_obra=tipo_obra
         )
         return ObraData.guardar(nueva_obra)
 
@@ -726,6 +722,8 @@ class CompraController:
             'estado': compra.estado,
             'id_solicitante': compra.id_solicitante.id,
             'id_aprobador': compra.id_aprobador.id if compra.id_aprobador else None,
+            'nombre_aprobador': compra.id_aprobador.nombre if compra.id_aprobador else None,
+            'apellido_aprobador': compra.id_aprobador.apellido if compra.id_aprobador else None,
             'lineas_compra': [
                 {
                     'nr_posicion': linea.nr_posicion,
@@ -753,6 +751,7 @@ class IngresoController:
         almacen = Almacen.objects.get(id=data.get('id_almacen')) if data.get('id_almacen') else None
         compra = Compra.objects.get(id=data.get('id_compra')) if data.get('id_compra') else None
         material = Material.objects.get(id=data.get('id_material'))
+
         ingreso = Ingreso(
             cantidad=data.get('cantidad'),
             fecha=data.get('fecha'),
@@ -764,6 +763,15 @@ class IngresoController:
             realizado=data.get('realizado', False),
             en_obra=data.get('en_obra', False)
         )
+        try:
+            idMaterial = data.get('id_material')
+            h=Herramienta.objects.get(id=idMaterial)
+            h.id_almacen = almacen
+            h.save()
+        except Exception as e:
+            print(f"Error al asignar almacén: {str(e)}")
+            raise
+
         ingreso.save()
         return ingreso
 

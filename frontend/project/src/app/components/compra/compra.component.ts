@@ -2,23 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
 import { PagoService } from '../../services/pago/pago.service'
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
-  standalone: true,
   selector: 'app-compra',
   templateUrl: './compra.component.html',
   imports: [
     NgIf,
     NgForOf,
-    DatePipe
+    DatePipe,
+    HeaderComponent,
+    CurrencyPipe
   ],
+  standalone: true,
   styleUrls: ['./compra.component.scss']
 })
 export class CompraComponent implements OnInit {
   compra: any;
   estadoActual: string = '';
   id_usuario:string='';
+  generarIngresoHabilitado: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,6 +36,7 @@ export class CompraComponent implements OnInit {
     this.id_usuario = sessionStorage.getItem('id_usuario');
     const compraId = Number(this.route.snapshot.paramMap.get('id'));
     this.obtenerCompra(compraId);
+    this.verificarIngresos(compraId);
   }
 
   obtenerCompra(compraId: number): void {
@@ -43,11 +48,11 @@ export class CompraComponent implements OnInit {
 
   obtenerBotones(): string[] {
     const secuenciaEstados = {
-      'Pendiente': ['Rechazado', 'Confirmado'],
-      'Confirmado': ['Cancelado', 'Pedido'],
+      'Pendiente': ['Rechazar', 'Confirmar'],
+      'Confirmado': ['Cancelar', 'Pedir'],
       'Pedido': ['A recibir'],
       'A recibir': ['Recibido'],
-      'Recibido': ['Cerrado']
+      'Recibido': ['Cerrar']
     };
     // @ts-ignore
     return secuenciaEstados[this.estadoActual] || [];
@@ -80,5 +85,9 @@ export class CompraComponent implements OnInit {
     this.router.navigate(['/registrar-pago']);
   }
 
-
+  verificarIngresos(id_compra:number): void {
+    this.compraService.verificarIngreso(id_compra).subscribe((data: any) => {
+      this.generarIngresoHabilitado = !data.todos_ingresos_realizados;
+    });
+  }
 }

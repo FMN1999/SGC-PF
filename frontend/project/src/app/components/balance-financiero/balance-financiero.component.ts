@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChartComponent, ApexChart, ApexAxisChartSeries, ApexXAxis, ApexTitleSubtitle, ApexDataLabels, ApexTooltip, ApexResponsive } from "ng-apexcharts";
-import {CurrencyPipe, NgIf} from "@angular/common";
+import {CurrencyPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import { HeaderComponent } from '../header/header.component';
 
 export interface ChartOptions {
   series: ApexAxisChartSeries;
@@ -15,14 +16,17 @@ export interface ChartOptions {
 }
 
 @Component({
-  standalone: true,
   selector: 'app-balance-financiero',
   templateUrl: './balance-financiero.component.html',
   imports: [
     ChartComponent,
     CurrencyPipe,
-    NgIf
+    NgIf,
+    HeaderComponent,
+    NgClass,
+    NgForOf
   ],
+  standalone: true,
   styleUrls: ['./balance-financiero.component.scss']
 })
 export class BalanceFinancieroComponent implements OnInit {

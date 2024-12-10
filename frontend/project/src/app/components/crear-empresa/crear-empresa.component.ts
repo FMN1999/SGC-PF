@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   standalone: true,
@@ -10,7 +11,8 @@ import {NgIf} from "@angular/common";
   styleUrls: ['./crear-empresa.component.scss'],
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    HeaderComponent
   ]
 })
 export class CrearEmpresaComponent {

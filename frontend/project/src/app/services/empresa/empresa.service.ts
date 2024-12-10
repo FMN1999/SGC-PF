@@ -54,5 +54,9 @@ export class EmpresaService {
   crearEmpresa(empresa: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/empresas/crear/`, empresa);
   }
+
+  crearAlmacen(almacenData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/crear-almacen/`, almacenData);
+  }
 }
 

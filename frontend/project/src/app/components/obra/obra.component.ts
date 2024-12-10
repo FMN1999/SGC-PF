@@ -2,20 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
-import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-obra',
-  standalone: true,
   templateUrl: './obra.component.html',
   imports: [
     ReactiveFormsModule,
     NgIf,
     NgForOf,
-    NgOptimizedImage,
     DatePipe,
-    RouterLink
+    RouterLink,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./obra.component.scss']
 })
 export class ObraComponent implements OnInit {
@@ -29,6 +30,9 @@ export class ObraComponent implements OnInit {
   documentoForm!: FormGroup;
   documentos: any[] = []; // Lista de documentos para mostrar
   presupuestos: any[] = [];
+  areasMode: boolean=false;
+  documentoMode: boolean=false;
+  obra: any;
 
   constructor(
     private fb: FormBuilder,
@@ -93,9 +97,10 @@ export class ObraComponent implements OnInit {
 
   cargarObra(): void {
     this.obraService.obtenerObra(this.obra_id).subscribe((obra: any) => {
+      this.obra = obra;
       this.obraForm.patchValue({
         direccion: obra.direccion,
-        id_cliente: obra.id_cliente,
+        id_cliente: obra.cliente.id,
         telefono_contacto: obra.telefono_contacto,
         fecha_inicio_est: obra.fecha_inicio_est,
         fecha_fin_est: obra.fecha_fin_est,
@@ -111,6 +116,14 @@ export class ObraComponent implements OnInit {
         perdidas: obra.perdidas
       });
     });
+  }
+
+  toggleNewAreaMode(): void{
+    this.areasMode = !this.areasMode;
+  }
+
+  toggleNewDocumentoMode(): void{
+    this.documentoMode = !this.documentoMode;
   }
 
   toggleEditMode(): void {

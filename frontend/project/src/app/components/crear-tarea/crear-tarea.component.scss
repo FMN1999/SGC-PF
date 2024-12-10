@@ -1,0 +1,87 @@
+@import '../home/home.component';
+
+/* Estilos para el contenedor de la página de creación de tarea */
+.crear-tarea-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: $white-color;
+  border: 1px solid $background-color;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
+      font-weight: bold;
+      color: $text-color;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid $background-color;
+      border-radius: 4px;
+      background-color: $white-color;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+      }
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.2rem;
+    background-color: $secondary-color;
+    color: $white-color;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $hover-color;
+    }
+
+    &:disabled {
+      background-color: lighten($secondary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Adaptabilidad para móviles */
+@media (max-width: 768px) {
+  .crear-tarea-container {
+    padding: 15px;
+
+    .form-group {
+      input,
+      select {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+    }
+
+    .submit-btn {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  }
+}

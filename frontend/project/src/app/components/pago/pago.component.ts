@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
 import { PagoService } from '../../services/pago/pago.service';
 import {NgIf} from "@angular/common";
+import {HeaderComponent} from '../header/header.component'
 
 @Component({
-  standalone: true,
   selector: 'app-pago',
   templateUrl: './pago.component.html',
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./pago.component.scss']
 })
 export class PagoComponent implements OnInit {

@@ -1,33 +1,50 @@
-<div *ngIf="compra">
+<app-header></app-header>
+<div class="compra-container" *ngIf="compra">
   <h2>Detalles de Compra #{{ compra.id }}</h2>
-  <p><strong>Proveedor:</strong> {{ compra.denominacion }}</p>
-  <p><strong>Obra:</strong> {{ compra.id_obra }}</p>
-  <p><strong>Monto Total:</strong> {{ compra.monto_total }}</p>
-  <p><strong>Fecha de Compra:</strong> {{ compra.fecha_compra | date }}</p>
-  <p><strong>Costo Transporte:</strong> {{ compra.costo_transporte }}</p>
-  <p><strong>Moneda Transporte:</strong> {{ compra.moneda_transporte }}</p>
-  <p><strong>Solicitante:</strong> {{ compra.id_solicitante }}</p>
-  <p><strong>Aprobador:</strong> {{ compra.id_aprobador }}</p>
-  <p><strong>Estado Actual:</strong> {{ estadoActual }}</p>
 
-  <h3>Cambiar Estado</h3>
-  <div *ngFor="let estado of obtenerBotones()">
-    <button (click)="cambiarEstado(estado)">{{ estado }}</button>
+  <div class="compra-detalle">
+    <p><strong>Proveedor:</strong> {{ compra.denominacion }}</p>
+    <p><strong>Obra:</strong> {{ compra.id_obra }}</p>
+    <p><strong>Monto Total:</strong> {{ compra.monto_total | currency }}</p>
+    <p><strong>Fecha de Compra:</strong> {{ compra.fecha_compra | date }}</p>
+    <p><strong>Costo Transporte:</strong> {{ compra.costo_transporte }}</p>
+    <p><strong>Moneda Transporte:</strong> {{ compra.moneda_transporte }}</p>
+    <p><strong>Solicitante:</strong> {{ compra.id_solicitante }}</p>
+    <p><strong>Aprobador:</strong> {{ compra.nombre_aprobador }} {{compra.apellido_aprobador}}</p>
+    <p><strong>Estado Actual:</strong> {{ estadoActual }}</p>
   </div>
 
-  <button (click)="abrirFormularioIngreso()">Generar Ingreso</button>
-   <button (click)="registrarPagoCompra(compra.id, compra.id_proveedor)">Registrar Pago</button>
-
-  <h3>Líneas de Compra</h3>
-  <div *ngFor="let linea of compra.lineas_compra">
-    <p><strong>Posición:</strong> {{ linea.nr_posicion }}</p>
-    <p><strong>Cantidad:</strong> {{ linea.cantidad }}</p>
-    <p><strong>Lote:</strong> {{ linea.lote }}</p>
-    <p><strong>Nro Serie:</strong> {{ linea.nro_serie }}</p>
-    <p><strong>Precio Total:</strong> {{ linea.precio_total }}</p>
-    <p><strong>Material:</strong> {{ linea.id_material }}</p>
-    <p><strong>Unidad de Medida:</strong> {{ linea.unidad_medida }}</p>
-    <hr />
+  <div class="cambiar-estado">
+    <h3>Cambiar Estado</h3>
+    <div class="botones-estado">
+      <button class="btn-estado" *ngFor="let estado of obtenerBotones()" (click)="cambiarEstado(estado)">
+        {{ estado }}
+      </button>
+    </div>
   </div>
 
+  <div class="acciones">
+    <button class="btn-accion" [disabled]="!generarIngresoHabilitado" (click)="abrirFormularioIngreso()">Generar Ingreso</button>
+    <button
+      [disabled]="estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado'"
+      class="btn-accion"
+      (click)="registrarPagoCompra(compra.id, compra.id_proveedor)">
+      Registrar Pago
+    </button>
+
+  </div>
+
+  <div class="lineas-compra">
+    <h3>Líneas de Compra</h3>
+    <div class="linea-compra" *ngFor="let linea of compra.lineas_compra">
+      <p><strong>Posición:</strong> {{ linea.nr_posicion }}</p>
+      <p><strong>Cantidad:</strong> {{ linea.cantidad }}</p>
+      <p><strong>Lote:</strong> {{ linea.lote }}</p>
+      <p><strong>Nro Serie:</strong> {{ linea.nro_serie }}</p>
+      <p><strong>Precio Total:</strong> {{ linea.precio_total }}</p>
+      <p><strong>Material:</strong> {{ linea.id_material }}</p>
+      <p><strong>Unidad de Medida:</strong> {{ linea.unidad_medida }}</p>
+      <hr />
+    </div>
+  </div>
 </div>

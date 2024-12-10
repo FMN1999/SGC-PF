@@ -1,37 +1,45 @@
-<h2>Gestión de Permisos</h2>
+<app-header></app-header>
 
-<div>
-  <h3>Permisos actuales del usuario</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Descripción</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let permiso of permisosUsuario">
-        <td>{{ permiso.id }}</td>
-        <td>{{ permiso.descripcion }}</td>
-        <td>
-          <button (click)="eliminarPermiso(permiso.id_permiso)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="gestion-permisos-container">
+  <h2>Gestión de Permisos</h2>
+
+  <!-- Permisos actuales -->
+  <section class="permisos-actuales">
+    <h3>Permisos actuales del usuario</h3>
+    <div *ngIf="!permisosUsuario || permisosUsuario.length === 0" class="no-permisos">
+      No hay permisos asignados al usuario.
+    </div>
+    <div class="table-container" *ngIf="permisosUsuario && permisosUsuario.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let permiso of permisosUsuario">
+            <td>{{ permiso.descripcion }}</td>
+            <td>
+              <button class="btn-danger" (click)="eliminarPermiso(permiso.id_permiso)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Agregar Permiso -->
+  <section class="agregar-permiso">
+    <h3>Agregar Permiso</h3>
+    <form (ngSubmit)="agregarPermiso()">
+      <label for="nuevoPermiso">Seleccione un permiso:</label>
+      <select [(ngModel)]="nuevoPermisoId" name="permiso" id="nuevoPermiso" required>
+        <option *ngFor="let permiso of permisosDisponibles" [value]="permiso.id">
+          {{ permiso.descripcion }}
+        </option>
+      </select>
+      <button type="submit" class="btn-primary">Agregar</button>
+    </form>
+  </section>
 </div>
-
-<div>
-  <h3>Agregar Permiso</h3>
-  <form (ngSubmit)="agregarPermiso()">
-    <label>Seleccione un permiso:</label>
-    <select [(ngModel)]="nuevoPermisoId" name="permiso" required>
-      <option *ngFor="let permiso of permisosDisponibles" [value]="permiso.id">
-        {{ permiso.descripcion }}
-      </option>
-    </select>
-    <button type="submit">Agregar</button>
-  </form>
-</div>
-

@@ -3,16 +3,18 @@ import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from '@angular/router';
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-presupuesto',
   templateUrl: './presupuesto.component.html',
-  standalone: true,
   imports: [
     NgForOf,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./presupuesto.component.scss']
 })
 export class PresupuestoComponent implements OnInit {

@@ -3,16 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import {DatePipe, NgIf} from "@angular/common";
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-material',
   templateUrl: './material.component.html',
-  standalone: true,
   imports: [
     NgIf,
     ReactiveFormsModule,
-    DatePipe
+    DatePipe,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./material.component.scss']
 })
 export class MaterialComponent implements OnInit {

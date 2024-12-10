@@ -1,62 +1,91 @@
-<div *ngIf="material; else loading">
+<app-header></app-header>
+
+<div *ngIf="material; else loading" class="material-container">
   <h2>Detalle del Material</h2>
 
   <!-- Modo de visualización -->
-  <div *ngIf="!editMode">
+  <div *ngIf="!editMode" class="material-details">
     <p><strong>Descripción:</strong> {{ material.descripcion }}</p>
     <p><strong>Marca:</strong> {{ material.marca }}</p>
     <p><strong>Precio:</strong> {{ material.precio }} {{ material.moneda }}</p>
     <p><strong>Fecha de Caducidad:</strong> {{ material.fecha_caducidad | date }}</p>
     <p><strong>Unidad de Medida:</strong> {{ material.unidad_medida }}</p>
 
-    <button (click)="navigateBack()">Volver al Perfil del Proveedor</button>
-    <button (click)="toggleEditMode()">Editar Material</button> <!-- Botón para activar la edición -->
+    <div class="buttons">
+      <button (click)="navigateBack()" class="btn-primary">Volver al Perfil del Proveedor</button>
+      <button (click)="toggleEditMode()" class="btn-secondary">Editar Material</button>
+    </div>
   </div>
 
   <!-- Modo de edición -->
-  <form [formGroup]="materialForm" *ngIf="editMode" (ngSubmit)="onSubmit()">
-    <label for="descripcion">Descripción:</label>
-    <input id="descripcion" formControlName="descripcion" type="text">
+  <form [formGroup]="materialForm" *ngIf="editMode" (ngSubmit)="onSubmit()" class="material-form">
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <input id="descripcion" formControlName="descripcion" type="text" />
+    </div>
 
-    <label for="marca">Marca:</label>
-    <input id="marca" formControlName="marca" type="text">
+    <div class="form-group">
+      <label for="marca">Marca:</label>
+      <input id="marca" formControlName="marca" type="text" />
+    </div>
 
-    <label for="precio">Precio:</label>
-    <input id="precio" formControlName="precio" type="number">
+    <div class="form-group">
+      <label for="precio">Precio:</label>
+      <input id="precio" formControlName="precio" type="number" />
+    </div>
 
-    <label for="moneda">Moneda:</label>
-    <input id="moneda" formControlName="moneda" type="text">
+    <div class="form-group">
+      <label for="moneda">Moneda:</label>
+      <input id="moneda" formControlName="moneda" type="text" />
+    </div>
 
-    <label for="fecha_caducidad">Fecha de Caducidad:</label>
-    <input id="fecha_caducidad" formControlName="fecha_caducidad" type="date">
+    <div class="form-group">
+      <label for="fecha_caducidad">Fecha de Caducidad:</label>
+      <input id="fecha_caducidad" formControlName="fecha_caducidad" type="date" />
+    </div>
 
-    <label for="unidad_medida">Unidad de Medida:</label>
-    <input id="unidad_medida" formControlName="unidad_medida" type="text">
+    <div class="form-group">
+      <label for="unidad_medida">Unidad de Medida:</label>
+      <input id="unidad_medida" formControlName="unidad_medida" type="text" />
+    </div>
 
-    <label for="impuestos_total">Impuestos:</label>
-  <input id="impuestos_total" formControlName="impuestos_total" name="impuestos_total" required type="number">
+    <div class="form-group">
+      <label for="impuestos_total">Impuestos:</label>
+      <input id="impuestos_total" formControlName="impuestos_total" required type="number" />
+    </div>
 
-  <label for="moneda_impuestos">Moneda Impuestos:</label>
-  <input id="moneda_impuestos" formControlName="moneda_impuestos" name="moneda_impuestos" required>
+    <div class="form-group">
+      <label for="moneda_impuestos">Moneda Impuestos:</label>
+      <input id="moneda_impuestos" formControlName="moneda_impuestos" required />
+    </div>
 
-  <label for="descripcion_impuestos">Descripción de Impuestos:</label>
-  <input id="descripcion_impuestos" formControlName="descripcion_impuestos" name="descripcion_impuestos" required>
+    <div class="form-group">
+      <label for="descripcion_impuestos">Descripción de Impuestos:</label>
+      <input id="descripcion_impuestos" formControlName="descripcion_impuestos" required />
+    </div>
 
-  <label for="otros_gastos">Otros gastos:</label>
-  <input id="otros_gastos" formControlName="otros_gastos" name="otros_gastos" required type="number">
+    <div class="form-group">
+      <label for="otros_gastos">Otros Gastos:</label>
+      <input id="otros_gastos" formControlName="otros_gastos" required type="number" />
+    </div>
 
-  <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
-  <input id="moneda_otros_gastos" formControlName="moneda_otros_gastos" name="moneda_otros_gastos" required>
+    <div class="form-group">
+      <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
+      <input id="moneda_otros_gastos" formControlName="moneda_otros_gastos" required />
+    </div>
 
-  <label for="descripcion_otros_gastos">Descripción de Otros Gastos:</label>
-  <input id="descripcion_otros_gastos" formControlName="descripcion_otros_gastos" name="descripcion_otros_gastos" required>
+    <div class="form-group">
+      <label for="descripcion_otros_gastos">Descripción de Otros Gastos:</label>
+      <input id="descripcion_otros_gastos" formControlName="descripcion_otros_gastos" required />
+    </div>
 
-  <button type="submit">Guardar Cambios</button>
-  <button type="button" (click)="toggleEditMode()">Cancelar</button>
+    <div class="buttons">
+      <button type="submit" class="btn-primary">Guardar Cambios</button>
+      <button type="button" (click)="toggleEditMode()" class="btn-danger">Cancelar</button>
+    </div>
   </form>
 </div>
 
 <ng-template #loading>
   <p>Cargando detalles del material...</p>
 </ng-template>
-

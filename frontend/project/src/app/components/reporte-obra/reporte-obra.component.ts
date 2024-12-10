@@ -13,18 +13,20 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-reporte-obra',
-  standalone: true,
   templateUrl: './reporte-obra.component.html',
   imports: [
     NgIf,
     CurrencyPipe,
     PercentPipe,
     NgForOf,
-    BaseChartDirective
+    BaseChartDirective,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./reporte-obra.component.scss']
 })
 export class ReporteObraComponent implements OnInit {

@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import {formatDate, NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  standalone: true,
   imports: [
     NgForOf,
     NgIf,
-    RouterLink
+    RouterLink,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./usuarios.component.scss']
 })
 export class UsuariosComponent implements OnInit {

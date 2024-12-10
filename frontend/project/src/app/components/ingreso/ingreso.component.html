@@ -1,44 +1,76 @@
-<form [formGroup]="ingresoForm" (ngSubmit)="onSubmit()">
-  <div formArrayName="ingresos">
-    <div *ngFor="let ingreso of ingresos.controls; let i = index" [formGroupName]="i">
-      <label>Material:</label>
-      <select formControlName="id_material">
-        <option *ngFor="let material of materialesDisponibles" [value]="material.id_material">
-          {{ material.material }}
-        </option>
-      </select>
+<app-header></app-header>
 
-      <label>Cantidad:</label>
-      <input formControlName="cantidad" type="number" />
+<div class="ingreso-container">
+  <form [formGroup]="ingresoForm" (ngSubmit)="onSubmit()">
+    <div formArrayName="ingresos" class="ingresos-section">
+      <div *ngFor="let ingreso of ingresos.controls; let i = index" [formGroupName]="i" class="ingreso-item">
+        <h3>Ingreso {{ i + 1 }}</h3>
 
-      <label>Unidad de Medida:</label>
-      <input formControlName="unidadMedida" readonly />
+        <!-- Material -->
+        <div class="form-group">
+          <label for="material-{{i}}">Material:</label>
+          <select formControlName="id_material" id="material-{{i}}">
+            <option *ngFor="let material of materialesDisponibles" [value]="material.id_material">
+              {{ material.material }}
+            </option>
+          </select>
+        </div>
 
-      <label>Fecha de Ingreso:</label>
-      <input formControlName="fecha" type="date" />
+        <!-- Cantidad -->
+        <div class="form-group">
+          <label for="cantidad-{{i}}">Cantidad:</label>
+          <input formControlName="cantidad" id="cantidad-{{i}}" type="number" />
+        </div>
 
-      <label>Fecha Real:</label>
-      <input formControlName="fechaReal" type="date" />
+        <!-- Unidad de Medida -->
+        <div class="form-group">
+          <label for="unidadMedida-{{i}}">Unidad de Medida:</label>
+          <input formControlName="unidadMedida" id="unidadMedida-{{i}}" readonly />
+        </div>
 
-      <label>Almacén:</label>
-      <select formControlName="id_almacen">
-        <option *ngFor="let almacen of almacenes" [value]="almacen.id">
-          {{ almacen.descripcion }}
-        </option>
-      </select>
+        <!-- Fecha de Ingreso -->
+        <div class="form-group">
+          <label for="fecha-{{i}}">Fecha de Ingreso:</label>
+          <input formControlName="fecha" id="fecha-{{i}}" type="date" />
+        </div>
 
-      <label>¿Se lleva el material a la obra?</label>
-      <input formControlName="en_obra" type="checkbox" />
+        <!-- Fecha Real -->
+        <div class="form-group">
+          <label for="fechaReal-{{i}}">Fecha Real:</label>
+          <input formControlName="fechaReal" id="fechaReal-{{i}}" type="date" />
+        </div>
 
-      <label>Realizado:</label>
-      <input formControlName="realizado" type="checkbox" />
+        <!-- Almacén -->
+        <div class="form-group">
+          <label for="almacen-{{i}}">Almacén:</label>
+          <select formControlName="id_almacen" id="almacen-{{i}}">
+            <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+              {{ almacen.descripcion }}
+            </option>
+          </select>
+        </div>
 
-      <button type="button" (click)="eliminarIngreso(i)">Eliminar Ingreso</button>
+        <!-- Material en Obra -->
+        <div class="form-group">
+          <label for="enObra-{{i}}">¿Se lleva el material a la obra?</label>
+          <input formControlName="en_obra" id="enObra-{{i}}" type="checkbox" />
+        </div>
+
+        <!-- Realizado -->
+        <div class="form-group">
+          <label for="realizado-{{i}}">Realizado:</label>
+          <input formControlName="realizado" id="realizado-{{i}}" type="checkbox" />
+        </div>
+
+        <div class="form-group buttons">
+          <button type="button" class="btn-danger" (click)="eliminarIngreso(i)">Eliminar Ingreso</button>
+          <button type="button" class="btn-secondary" (click)="particionar(materialesDisponibles[i].id_material, materialesDisponibles[i].material, materialesDisponibles[i].unidad_medida)">Particionar</button>
+        </div>
+      </div>
     </div>
-    <button type="button" (click)="particionar(material.id_material, material.material, material.unidad_medida)" *ngFor="let material of materialesDisponibles">
-      Particionar {{ material.material }}
-    </button>
-  </div>
 
-  <button type="submit">Guardar Ingresos</button>
-</form>
+    <div class="form-group">
+      <button type="submit" class="btn-primary">Guardar Ingresos</button>
+    </div>
+  </form>
+</div>

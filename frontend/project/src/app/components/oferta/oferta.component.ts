@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-oferta',
-  standalone: true,
   templateUrl: './oferta.component.html',
   imports: [
     NgIf,
     DatePipe,
-    NgForOf
+    NgForOf,
+    HeaderComponent,
+    CurrencyPipe
   ],
+  standalone: true,
   styleUrls: ['./oferta.component.scss']
 })
 export class OfertaComponent implements OnInit {

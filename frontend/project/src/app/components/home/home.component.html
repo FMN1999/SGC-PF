@@ -14,14 +14,11 @@
 
       <!-- Opciones que se muestran solo cuando el usuario está logueado -->
       <li *ngIf="isLoggedIn"><a href="/usuarios">Usuarios</a></li>
-      <li *ngIf="isLoggedIn"><a href="/materiales">Materiales</a></li>
-      <li *ngIf="isLoggedIn"><a href="/servicios">Servicios</a></li>
-      <li *ngIf="isLoggedIn"><a href="/solicitudes">Solicitudes de compra</a></li>
+      <li *ngIf="isLoggedIn"><a href="/solicitudes">Compras / Solicitudes</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/obras', idEmpresa]">Obras</a></li>
-      <li *ngIf="isLoggedIn"><a [routerLink]="['/almacenes', idEmpresa]">Almacenes</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/balance', idEmpresa]">Balance anual</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/empresas']">Empresas</a></li>
-      <li *ngIf="isLoggedIn"><a href="#" (click)="logout()">Cerrar sesión</a></li>
+      <li *ngIf="isLoggedIn"><a href="/home" (click)="logout()">Cerrar sesión</a></li>
     </ul>
   </nav>
 
@@ -59,14 +56,14 @@
 
     <!-- Otros contenidos del Home -->
     <section class="services">
-      <div class="service">
-        <h3>Gestión de Proyectos</h3>
-        <p>Controla tus proyectos en tiempo real.</p>
-      </div>
-      <div class="service">
-        <h3>Control de Materiales</h3>
-        <p>Administra materiales y recursos fácilmente.</p>
-      </div>
+        <div class="service">
+          <a [routerLink]="['/almacenes', idEmpresa]"><h3>Almacenes</h3></a>
+          <p>Existencias, ingresos y stock.</p>
+        </div>
+        <div class="service">
+          <h3>Control de Materiales</h3>
+          <p>Administra materiales y recursos fácilmente.</p>
+        </div>
     </section>
   </div>
 </section>

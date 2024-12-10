@@ -1,18 +1,30 @@
-<div *ngIf="solicitudesPendientes.length > 0; else noSolicitudes">
-  <h2>Solicitudes de Compra Pendientes</h2>
-  <ul>
-    <li *ngFor="let solicitud of solicitudesPendientes">
-      <p>ID de Compra: {{ solicitud.id }}</p>
-      <p>Fecha de Compra: {{ solicitud.fecha_compra }}</p>
-      <p>Monto Total: {{ solicitud.monto_total }} {{ solicitud.moneda_transporte }}</p>
-      <p>Proveedor ID: {{ solicitud.id_proveedor }}</p>
-      <p>Obra ID: {{ solicitud.id_obra }}</p>
-      <!-- Agrega más detalles según lo necesites -->
-    </li>
-  </ul>
+<app-header></app-header>
+
+<div class="solicitudes-container">
+  <!-- Iteramos sobre los estados disponibles -->
+  <div *ngFor="let estado of estadosCompras" class="estado-section">
+    <h2 class="titulo">Compras: {{ estado }}s</h2>
+
+    <!-- Lista de solicitudes para el estado actual -->
+    <ul class="lista-solicitudes">
+      <li *ngFor="let solicitud of solicitudesPorEstado[estado]" class="solicitud-item">
+        <a [routerLink]="['/compra', solicitud.id]" class="solicitud-link">
+          <div class="detalle">
+            <p><strong>ID de Compra:</strong> {{ solicitud.id }}</p>
+            <p><strong>Fecha de Compra:</strong> {{ solicitud.fecha }}</p>
+            <p><strong>Monto Total:</strong> {{ solicitud.monto }}</p>
+            <p><strong>Proveedor:</strong> {{ solicitud.proveedor }}</p>
+            <!-- Otros campos relevantes -->
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Template para cuando no hay solicitudes -->
+  <ng-template #noSolicitudes>
+    <div class="no-solicitudes">
+      <p>No hay solicitudes disponibles.</p>
+    </div>
+  </ng-template>
 </div>
-
-<ng-template #noSolicitudes>
-  <p>No hay solicitudes pendientes.</p>
-</ng-template>
-

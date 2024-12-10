@@ -30,7 +30,7 @@ export class CompraService {
     return this.http.get(`${this.apiUrl}compra/${compraId}/`);
   }
 
-  registrarPago(pago: any): Observable<any> {
-    return this.http.post(this.apiUrl, pago);
+  verificarIngreso(compraId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}verificar-ingresos/${compraId}/`);
   }
 }

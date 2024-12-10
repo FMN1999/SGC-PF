@@ -4,16 +4,18 @@ import { HttpClient } from '@angular/common/http';
 import {NgForOf, NgIf} from "@angular/common";
 import{ PagoService } from '../../services/pago/pago.service';
 import{ EmpresaService } from '../../services/empresa/empresa.service';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-registrar-pago',
-  standalone: true,
   templateUrl: './registrar-pago.component.html',
   imports: [
     ReactiveFormsModule,
     NgIf,
-    NgForOf
+    NgForOf,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./registrar-pago.component.scss']
 })
 export class RegistrarPagoComponent implements OnInit {

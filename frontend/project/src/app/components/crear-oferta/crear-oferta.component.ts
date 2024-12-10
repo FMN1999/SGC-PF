@@ -3,16 +3,18 @@ import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-crear-oferta',
   templateUrl: './crear-oferta.component.html',
-  standalone: true,
   imports: [
     FormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./crear-oferta.component.scss']
 })
 export class CrearOfertaComponent implements OnInit {
@@ -110,7 +112,6 @@ export class CrearOfertaComponent implements OnInit {
     this.proveedorService.crearOferta(ofertaCompleta).subscribe({
       next: (response) => {
         this.mensajeExito = 'Oferta creada con éxito';
-        this.router.navigate([`/proveedor/${this.id_proveedor}`]).then(r => {});
       },
       error: () => {
         this.mensajeError = 'Error al crear la oferta.';

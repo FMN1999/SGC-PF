@@ -1,65 +1,97 @@
-<div *ngIf="servicio; else loading">
-  <h2>Detalle del Servicio</h2>
+<app-header></app-header>
 
-  <!-- Mostrar detalles cuando no está en modo edición -->
-  <div *ngIf="!isEditing">
-    <p><strong>Descripción:</strong> {{ servicio.descripcion }}</p>
-    <p><strong>Precio por Unidad:</strong> {{ servicio.precio_x_unidad }} {{ servicio.moneda }}</p>
-    <p><strong>Unidad de Medida:</strong> {{ servicio.unidad_medida }}</p>
-    <p><strong>Frecuencia de Pago:</strong> {{ servicio.frecuencia_pago }}</p>
-    <p><strong>Monto por Frecuencia:</strong> {{ servicio.monto_x_frecuencia }} {{ servicio.moneda }}</p>
+<div class="detalle-servicio">
+  <ng-container *ngIf="servicio; else loading">
+    <h2 class="titulo">Detalle del Servicio</h2>
 
-    <button (click)="enableEditing()">Editar</button>
-    <button (click)="navigateBack()">Volver al Perfil del Proveedor</button>
-  </div>
+    <!-- Mostrar detalles cuando no está en modo edición -->
+    <div *ngIf="!isEditing" class="vista-detalles">
+      <p><strong>Descripción:</strong> {{ servicio.descripcion }}</p>
+      <p><strong>Precio por Unidad:</strong> {{ servicio.precio_x_unidad }} {{ servicio.moneda }}</p>
+      <p><strong>Unidad de Medida:</strong> {{ servicio.unidad_medida }}</p>
+      <p><strong>Frecuencia de Pago:</strong> {{ servicio.frecuencia_pago }}</p>
+      <p><strong>Monto por Frecuencia:</strong> {{ servicio.monto_x_frecuencia }} {{ servicio.moneda }}</p>
 
-  <!-- Formulario de edición -->
-  <div *ngIf="isEditing">
-    <h3>Editar Servicio</h3>
+      <div class="acciones">
+        <button class="btn btn-primary" (click)="enableEditing()">Editar</button>
+        <button class="btn btn-secondary" (click)="navigateBack()">Volver al Perfil del Proveedor</button>
+      </div>
+    </div>
 
-    <label for="descripcion">Descripción:</label>
-    <input id="descripcion" [(ngModel)]="servicio.descripcion" />
+    <!-- Formulario de edición -->
+    <div *ngIf="isEditing" class="vista-edicion">
+      <h3>Editar Servicio</h3>
 
-    <label for="precio">Precio por Unidad:</label>
-    <input id="precio" type="number" [(ngModel)]="servicio.precio_x_unidad" />
+      <div class="form-group">
+        <label for="descripcion">Descripción:</label>
+        <input id="descripcion" [(ngModel)]="servicio.descripcion" />
+      </div>
 
-    <label for="unidad">Unidad de Medida:</label>
-    <input id="unidad" [(ngModel)]="servicio.unidad_medida" />
+      <div class="form-group">
+        <label for="precio">Precio por Unidad:</label>
+        <input id="precio" type="number" [(ngModel)]="servicio.precio_x_unidad" />
+      </div>
 
-    <label for="frecuencia">Frecuencia de Pago:</label>
-    <input id="frecuencia" [(ngModel)]="servicio.frecuencia_pago" />
+      <div class="form-group">
+        <label for="unidad">Unidad de Medida:</label>
+        <input id="unidad" [(ngModel)]="servicio.unidad_medida" />
+      </div>
 
-    <label for="monto">Monto por Frecuencia:</label>
-    <input id="monto" type="number" [(ngModel)]="servicio.monto_x_frecuencia" />
+      <div class="form-group">
+        <label for="frecuencia">Frecuencia de Pago:</label>
+        <input id="frecuencia" [(ngModel)]="servicio.frecuencia_pago" />
+      </div>
 
-    <label for="moneda">Moneda:</label>
-    <input id="moneda" [(ngModel)]="servicio.moneda" />
+      <div class="form-group">
+        <label for="monto">Monto por Frecuencia:</label>
+        <input id="monto" type="number" [(ngModel)]="servicio.monto_x_frecuencia" />
+      </div>
 
-    <label for="impuestos_total">Impuestos</label>
-    <input type="number" id="impuestos_total" [(ngModel)]="servicio.impuestos_total" name="impuestos_total">
+      <div class="form-group">
+        <label for="moneda">Moneda:</label>
+        <input id="moneda" [(ngModel)]="servicio.moneda" />
+      </div>
 
-    <label for="moneda_impuestos">Moneda Impuestos</label>
-    <input type="text" id="moneda_impuestos" [(ngModel)]="servicio.moneda_impuestos" name="moneda_impuestos">
+      <div class="form-group">
+        <label for="impuestos_total">Impuestos:</label>
+        <input type="number" id="impuestos_total" [(ngModel)]="servicio.impuestos_total" />
+      </div>
 
-    <label for="descripcion_impuestos">Descripción Impuestos</label>
-    <input type="text" id="descripcion_impuestos" [(ngModel)]="servicio.descripcion_impuestos" name="descripcion_impuestos">
+      <div class="form-group">
+        <label for="moneda_impuestos">Moneda Impuestos:</label>
+        <input type="text" id="moneda_impuestos" [(ngModel)]="servicio.moneda_impuestos" />
+      </div>
 
-    <label for="otros_gastos">Otros Gastos</label>
-    <input type="number" id="otros_gastos" [(ngModel)]="servicio.otros_gastos" name="otros_gastos">
+      <div class="form-group">
+        <label for="descripcion_impuestos">Descripción Impuestos:</label>
+        <input type="text" id="descripcion_impuestos" [(ngModel)]="servicio.descripcion_impuestos" />
+      </div>
 
-    <label for="moneda_otros_gastos">Moneda Otros Gastos</label>
-    <input type="text" id="moneda_otros_gastos" [(ngModel)]="servicio.moneda_otros_gastos" name="moneda_otros_gastos">
+      <div class="form-group">
+        <label for="otros_gastos">Otros Gastos:</label>
+        <input type="number" id="otros_gastos" [(ngModel)]="servicio.otros_gastos" />
+      </div>
 
-    <label for="descripcion_otros_gastos">Descripción Otros Gastos</label>
-    <input type="text" id="descripcion_otros_gastos" [(ngModel)]="servicio.descripcion_otros_gastos" name="descripcion_otros_gastos">
+      <div class="form-group">
+        <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
+        <input type="text" id="moneda_otros_gastos" [(ngModel)]="servicio.moneda_otros_gastos" />
+      </div>
 
+      <div class="form-group">
+        <label for="descripcion_otros_gastos">Descripción Otros Gastos:</label>
+        <input type="text" id="descripcion_otros_gastos" [(ngModel)]="servicio.descripcion_otros_gastos" />
+      </div>
 
-    <button (click)="updateServicio()">Guardar</button>
-    <button (click)="cancelEditing()">Cancelar</button>
-  </div>
+      <div class="acciones">
+        <button class="btn btn-primary" (click)="updateServicio()">Guardar</button>
+        <button class="btn btn-secondary" (click)="cancelEditing()">Cancelar</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <p class="loading">Cargando detalles del servicio...</p>
+  </ng-template>
 </div>
 
-<ng-template #loading>
-  <p>Cargando detalles del servicio...</p>
-</ng-template>
 

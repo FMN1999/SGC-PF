@@ -317,7 +317,6 @@ class Herramienta(models.Model):
     id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
     id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
     ubicacion = models.CharField()
-    marca = models.CharField()
 
     class Meta:
         db_table = 'Herramienta'
@@ -328,8 +327,8 @@ class Vehiculo(models.Model):
     patente = models.CharField()
     id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
     tipo = models.CharField()
-    marca = models.CharField()
     modelo = models.CharField()
+    moneda = models.CharField()
     precio_x_hora = models.FloatField()
     id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
     id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')

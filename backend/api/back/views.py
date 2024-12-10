@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -174,18 +176,18 @@ class ColaboradorView(View):
         try:
             # Parsear los datos del request
             data = json.loads(request.body)
-            print(data)
             usuario_data = data.get('usuario')
             colaborador_data = data.get('colaborador')
-            print('Ingreso a crear')
 
             # Llamar al controlador para crear usuario y colaborador
             resultado = ColaboradorController.crear_colaborador(usuario_data, colaborador_data)
-            print('hecho')
             return JsonResponse({'message': 'Colaborador Creado'}, status=201)
 
-        except Exception as e:
+        except ValidationError as e:
+            # Capturar y manejar excepciones de validación
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f"Error desconocido: {str(e)}"}, status=500)
 
     def patch(self, request, id):
         try:
@@ -340,6 +342,7 @@ class MaterialView(View):
 
         # Crear el material
         proveedor = get_object_or_404(Proveedor, id=data.get('id_proveedor'))
+        fecha =data.get('fecha_desde_precio')
         material = Material.objects.create(
             id_proveedor=proveedor,
             tipo_material=data.get('tipo_material'),
@@ -354,26 +357,24 @@ class MaterialView(View):
             otros_gastos=data.get('otros_gastos'),
             moneda_otros_gastos=data.get('moneda_otros_gastos'),
             descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
-            fecha_desde_precio=data.get('fecha_desde_precio')
+            fecha_desde_precio=fecha if fecha else None
         )
 
-        # Asociación opcional con Vehículo o Herramienta
         if data.get('tipo_asociacion') == 'vehiculo':
             Vehiculo.objects.create(
                 id_material=material,
                 patente=data.get('patente'),
                 tipo=data.get('tipo'),
-                marca=data.get('marca_vehiculo'),
                 modelo=data.get('modelo'),
                 precio_x_hora=data.get('precio_x_hora'),
+                moneda=data.get('moneda'),
                 id_almacen_id=data.get('id_almacen')
             )
         elif data.get('tipo_asociacion') == 'herramienta':
             Herramienta.objects.create(
                 id_material=material,
                 id_almacen_id=data.get('id_almacen'),
-                ubicacion=data.get('ubicacion'),
-                marca=data.get('marca_herramienta')
+                ubicacion=data.get('ubicacion')
             )
 
         return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
@@ -399,8 +400,8 @@ class MaterialView(View):
             return JsonResponse({'message': 'Material eliminado con éxito'}, status=200)
         except Exception as e:
             return JsonResponse({'error': f"Error al eliminar el material: {str(e)}"}, status=500)
-        
-    def put(self,request, material_id):
+
+    def put(self, request, material_id):
         try:
             # Obtener los datos enviados en el request
             data = json.loads(request.body)
@@ -585,7 +586,7 @@ class ServiciosPorEmpresa(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ObraView(View):
-    def post(self,request):
+    def post(self, request):
         data = json.loads(request.body)
         nueva_obra = ObraController.create(data)
         return JsonResponse({'message': 'Obra creada exitosamente.'}, status=201)
@@ -649,11 +650,11 @@ class AreaView(View):
             return JsonResponse({"message": "Área eliminada correctamente"}, status=200)
         except Area.DoesNotExist:
             return JsonResponse({"error": "Área no encontrada"}, status=404)
-        
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class NotaView(View):
-    def post(self,request):
+    def post(self, request):
         data = json.loads(request.body)
         nota = ObraController.agregar_nota(data)
         return JsonResponse({'id': nota.id, 'descripcion': nota.descripcion, 'fecha': nota.fecha}, status=201)
@@ -677,7 +678,7 @@ class NotaView(View):
 
         return JsonResponse(notas_data, safe=False)
 
-    def delete(self,request, nota_id):
+    def delete(self, request, nota_id):
         try:
             # Intentar obtener la nota por ID y eliminarla
             ObraController.delete_nota(nota_id)
@@ -840,7 +841,7 @@ class PresupuestoTrabajadorView(View):
             return JsonResponse({"status": "success"}, status=200)
         except Presupuesto_Trabajador.DoesNotExist:
             return JsonResponse({"error": "Trabajador not found"}, status=404)
-        
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CompraView(View):
@@ -848,13 +849,25 @@ class CompraView(View):
     def post(request):
         data = json.loads(request.body)
         compra = CompraController.crear_solicitud_compra(data)
-        return JsonResponse({"Respuesta":"Compra creada"}, status=201)
+        return JsonResponse({"Respuesta": "Compra creada"}, status=201)
 
     def put(self, request, compra_id):
         compra = get_object_or_404(Compra, id=compra_id)
         data = json.loads(request.body)
-        print(data)
-        compra.estado = data.get('nuevo_estado')
+        estado_get = data.get('nuevo_estado')
+        if estado_get == "Rechazar":
+            compra.estado = "Rechazado"
+        if estado_get == "Confirmar":
+            compra.estado = "Confirmado"
+        if estado_get == "Cancelar":
+            compra.estado = "Cancelado"
+        if estado_get == "Cerrar":
+            compra.estado = "Cerrado"
+        if estado_get == "Pedir":
+            compra.estado = "Pedido"
+        if estado_get == "A recibir":
+            compra.estado = "A recibir"
+
         compra.id_aprobador = Usuario.objects.get(id=data.get('id_usuario'))
         compra.save()
         return JsonResponse({'message': 'Estado actualizado correctamente'})
@@ -871,9 +884,27 @@ class SolicitudesView(View):
     def get(self, request):
         id_empresa = request.GET.get('id_empresa')
 
-        compras_pendientes = Compra.objects.filter(estado="Pendiente", id_proveedor__id_empresa=id_empresa)
-        data = list(compras_pendientes.values())  # Convertir a formato JSON-friendly
-        return JsonResponse(data, safe=False)
+        # Filtrar compras según id_empresa y excluir los estados "Cancelado" y "Rechazado"
+        compras = Compra.objects.filter(
+            ~Q(estado__in=["Cancelado", "Rechazado"]),
+            id_proveedor__id_empresa=id_empresa
+        )
+
+        # Agrupar compras por estado
+        compras_por_estado = {}
+        for compra in compras:
+            estado = compra.estado
+            if estado not in compras_por_estado:
+                compras_por_estado[estado] = []
+            compras_por_estado[estado].append({
+                "id": compra.id,
+                "fecha": compra.fecha_compra,
+                "monto": compra.monto_total,
+                "proveedor": compra.id_proveedor.denominacion,  # Ajusta según los campos disponibles
+                # Agrega otros campos relevantes aquí
+            })
+
+        return JsonResponse(compras_por_estado, safe=False)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -892,7 +923,8 @@ class SubcontratacionView(View):
                 servicio = Servicio.objects.get(id=id_servicio)
                 usuario = Usuario.objects.get(id=id_usuario)
                 obra = Obra.objects.get(id=id_obra)
-                presupuesto_servicio = Presupuesto_Servicio.objects.get(id=id_presupuesto_servicio) if id_presupuesto_servicio is not None else None  # Ajusta si el ID es diferente
+                presupuesto_servicio = Presupuesto_Servicio.objects.get(
+                    id=id_presupuesto_servicio) if id_presupuesto_servicio is not None else None  # Ajusta si el ID es diferente
 
                 Subcontratacion.objects.create(
                     id_servicio=servicio,
@@ -968,8 +1000,8 @@ class TareaView(View):
                 'titulo': tarea.titulo,
                 'id_area': tarea.id_area.id,
                 'area': tarea.id_area.descripcion,
-                'id_vehiculo':tarea.id_vehiculo.id,
-                'vehiculo':tarea.id_vehiculo.tipo,
+                'id_vehiculo': tarea.id_vehiculo.id,
+                'vehiculo': tarea.id_vehiculo.tipo,
             }
             return JsonResponse(tarea_data, safe=False)
         except Tarea.DoesNotExist:
@@ -1029,6 +1061,19 @@ class IngresoView(View):
             # Manejo de errores para fallos en el procesamiento
             return JsonResponse({'error': str(e)}, status=500)
 
+    def put(self, request, id_ingreso):
+        ingreso = Ingreso.objects.get(id=id_ingreso)
+        ingreso.fecha_real = datetime.now().date()
+        ingreso.realizado = True
+        ingreso.save()
+        return JsonResponse({"respuesta": "True"}, status=201)
+
+    def patch(self, request, id_ingreso):
+        ingreso = Ingreso.objects.get(id=id_ingreso)
+        ingreso.en_obra = True
+        ingreso.save()
+        return JsonResponse({"respuesta": "True"}, status=201)
+
 
 class AlmacenesView(View):
     def get(self, request, id_empresa):
@@ -1055,13 +1100,17 @@ class PagoView(View):
 
             # Validar que solo uno de id_compra o id_subcontratacion esté presente
             if (id_compra and id_subcontratacion) or (not id_compra and not id_subcontratacion):
-                return JsonResponse({'error': 'Debe especificar solo una compra o una subcontratación, no ambas o ninguna.'}, status=400)
+                return JsonResponse(
+                    {'error': 'Debe especificar solo una compra o una subcontratación, no ambas o ninguna.'},
+                    status=400)
 
             # Llamada al controlador para crear el pago
-            resultado = PagoController.crear_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion, fecha_pago)
+            resultado = PagoController.crear_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion,
+                                                  fecha_pago)
 
             if resultado['status'] == 'success':
-                return JsonResponse({'message': 'Pago registrado exitosamente', 'pago_id': resultado['pago_id']}, status=201)
+                return JsonResponse({'message': 'Pago registrado exitosamente', 'pago_id': resultado['pago_id']},
+                                    status=201)
             else:
                 return JsonResponse({'error': resultado['error']}, status=400)
 
@@ -1107,17 +1156,17 @@ class TareaColaboradorView(View):
         data = [
             {
                 'id': c.id,
-                'id_colaborador':c.id_colaborador.id,
-                'nombre':c.id_colaborador.id_usuario.nombre,
-                'apellido':c.id_colaborador.id_usuario.apellido,
+                'id_colaborador': c.id_colaborador.id,
+                'nombre': c.id_colaborador.id_usuario.nombre,
+                'apellido': c.id_colaborador.id_usuario.apellido,
                 'estado': c.estado,
-                'cant_dias':c.cant_dias,
+                'cant_dias': c.cant_dias,
             } for c in colaboradores
         ]
 
         return JsonResponse(data, safe=False)
 
-    def delete(self,request, colaborador_id):
+    def delete(self, request, colaborador_id):
         Tarea_Colaborador.objects.get(id=colaborador_id).delete()
         return JsonResponse({'message': 'Colaborador eliminado'}, status=204)
 
@@ -1150,8 +1199,8 @@ class TareaHerramientaView(View):
         tarea_herramienta = Tarea_Herramienta.objects.create(
             id_tarea=tarea,
             id_herramienta=herramienta,
-            uso_desde=data.get('uso_desde'),
-            uso_hasta=data.get('uso_hasta')
+            uso_desde=data.get('uso_desde', None),
+            uso_hasta=data.get('uso_hasta', None)
         )
 
         # Preparar la respuesta
@@ -1164,13 +1213,13 @@ class TareaHerramientaView(View):
 
         return JsonResponse(response_data, status=201)
 
-    def get(self,request, tarea_id):
+    def get(self, request, tarea_id):
         herramientas = Tarea_Herramienta.objects.filter(id_tarea=tarea_id)
         data = [
             {
                 'id': h.id,
                 'id_herramienta': h.id_herramienta.id,
-                'herramienta':h.id_herramienta.id_material.descripcion,
+                'herramienta': h.id_herramienta.id_material.descripcion,
                 'uso_desde': h.uso_desde,
                 'uso_hasta': h.uso_hasta,
             } for h in herramientas
@@ -1197,7 +1246,7 @@ class TareaMaterialView(View):
         tarea_material = Tarea_Material.objects.create(
             id_tarea=tarea,
             id_material=material,
-            cant_utilizada=data.get('cant_utilizada'),
+            cant_utilizada=data.get('cant_utilizada', 0),
             cant_no_utilizada=data.get('cant_no_utilizada', 0)
         )
 
@@ -1214,7 +1263,7 @@ class TareaMaterialView(View):
 
     def get(self, request, tarea_id):
         materiales = Tarea_Material.objects.filter(id_tarea=tarea_id)
-        data= [
+        data = [
             {
                 'id': m.id,
                 'id_material': m.id_material.id,
@@ -1470,7 +1519,7 @@ class ObraEmpresaView(View):
                 'estado': o.estado
             } for o in obras
         ]
-        return JsonResponse({'obras':obras_return}, safe=False)
+        return JsonResponse({'obras': obras_return}, safe=False)
 
 
 class ObrasPerfilView(View):
@@ -1516,6 +1565,7 @@ class TareasPerfilView(View):
             return JsonResponse(None, safe=False)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class AlmacenesPorEmpresaView(View):
     def get(self, request, id_empresa):
         try:
@@ -1524,7 +1574,7 @@ class AlmacenesPorEmpresaView(View):
 
             for almacen in almacenes:
                 # Obtener ingresos del almacén
-                ingresos = Ingreso.objects.filter(id_almacen=almacen.id)
+                ingresos = Ingreso.objects.filter(id_almacen=almacen.id, en_obra=False)
                 ingresos_data = [
                     {
                         'id': ingreso.id,
@@ -1536,6 +1586,7 @@ class AlmacenesPorEmpresaView(View):
                         },
                         'unidad_medida': ingreso.unidad_medida,
                         'id_compra': ingreso.id_compra.id,
+                        'fecha_compra': ingreso.id_compra.fecha_compra,
                         'fecha_real': ingreso.fecha_real,
                         'realizado': ingreso.realizado,
                         'en_obra': ingreso.en_obra,
@@ -1553,7 +1604,7 @@ class AlmacenesPorEmpresaView(View):
                             'nombre': herramienta.id_material.descripcion
                         },
                         'ubicacion': herramienta.ubicacion,
-                        'marca': herramienta.marca,
+                        'marca': herramienta.id_material.marca,
                         'id_compra': herramienta.id_compra.id,
                     }
                     for herramienta in herramientas
@@ -1573,7 +1624,48 @@ class AlmacenesPorEmpresaView(View):
             return JsonResponse({'almacenes': almacenes_return}, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-        
+
+    def post(self, request):
+        try:
+            # Parsear el cuerpo de la solicitud
+            data = json.loads(request.body)
+
+            # Obtener los datos del formulario
+            descripcion = data.get('descripcion')
+            direccion = data.get('direccion')
+            contacto = data.get('contacto')
+            ciudad = data.get('ciudad')
+            provincia = data.get('provincia')
+            id_empresa = data.get('id_empresa')
+            empresa = Empresa.objects.get(id=id_empresa)
+
+            # Crear el almacén
+            almacen = Almacen.objects.create(
+                descripcion=descripcion,
+                direccion=direccion,
+                contacto=contacto,
+                ciudad=ciudad,
+                provincia=provincia,
+                id_empresa=empresa
+            )
+
+            # Retornar una respuesta exitosa
+            return JsonResponse({
+                'message': 'Almacén creado exitosamente.',
+                'almacen': {
+                    'id': almacen.id,
+                    'descripcion': almacen.descripcion,
+                    'direccion': almacen.direccion,
+                    'contacto': almacen.contacto,
+                    'ciudad': almacen.ciudad,
+                    'provincia': almacen.provincia,
+                    'id_empresa': almacen.id_empresa.id
+                }
+            }, status=201)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Error inesperado: {str(e)}'}, status=500)
+
 
 class PagosCobrosObraView(View):
     def get(self, request, id_obra):
@@ -1626,12 +1718,12 @@ class PagosCobrosEmpresaView(View):
                 id_proveedor__id_empresa=id_empresa,
                 fecha_pago__year=anio
             ).values('fecha_pago__month').annotate(total=Sum('monto'))
-    
+
             subcontrataciones = Subcontratacion.objects.filter(
                 id_obra__id_empresa=id_empresa,
                 fecha_contrato__year=anio
             ).values('fecha_contrato__month').annotate(total=Sum('monto_contratacion'))
-    
+
             # Total Egresos por mes
             egresos_mensuales = {i: 0 for i in range(1, 13)}
             for pago in pagos:
@@ -1644,24 +1736,24 @@ class PagosCobrosEmpresaView(View):
                 id_cliente__id_empresa=id_empresa,
                 fecha_pago__year=anio
             ).values('fecha_pago__month').annotate(total=Sum('monto'))
-    
+
             ingresos_mensuales = {i: 0 for i in range(1, 13)}
             for ingreso in ingresos:
                 ingresos_mensuales[ingreso['fecha_pago__month']] += ingreso['total']
-    
+
             # Cálculo total
             total_egresos = sum(egresos_mensuales.values())
             total_ingresos = sum(ingresos_mensuales.values())
             balance_mensual = {i: ingresos_mensuales[i] - egresos_mensuales[i] for i in range(1, 13)}
-    
+
             data = {
-                    'anio': anio,
-                    'egresos_totales': total_egresos,
-                    'ingresos_totales': total_ingresos,
-                    'balance_total': total_ingresos - total_egresos,
-                    'egresos_mensuales': egresos_mensuales,
-                    'ingresos_mensuales': ingresos_mensuales,
-                    'balance_mensual': balance_mensual,
+                'anio': anio,
+                'egresos_totales': total_egresos,
+                'ingresos_totales': total_ingresos,
+                'balance_total': total_ingresos - total_egresos,
+                'egresos_mensuales': egresos_mensuales,
+                'ingresos_mensuales': ingresos_mensuales,
+                'balance_mensual': balance_mensual,
             }
             return JsonResponse(data, safe=False)
         except Exception as e:
@@ -1677,8 +1769,8 @@ class PermisosView(View):
                 {
                     "id": p.id,
                     "descripcion": p.id_permiso.descripcion,
-                    "id_usuario":p.id_usuario.id,
-                    "id_permiso":p.id_permiso.id
+                    "id_usuario": p.id_usuario.id,
+                    "id_permiso": p.id_permiso.id
                 }
                 for p in permisos_usuario
             ]
@@ -1702,3 +1794,48 @@ class PermisosView(View):
             return JsonResponse({"message": "Permiso eliminado correctamente"}, status=200)
         except Permiso_Usuario.DoesNotExist:
             return JsonResponse({"error": "Relación no encontrada"}, status=400)
+
+
+class TareasView(View):
+    def get(self, request, id_empresa):
+        tareas = Tarea.objects.filter(
+            id_presupuesto_servicio__id_presupuesto__id_obra__id_empresa=id_empresa
+        ).exclude(porcentaje_avance=100)
+        tareas_response = [
+            {
+                "id": t.id,
+                "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
+                "tarea": t.titulo,
+            }
+            for t in tareas
+        ]
+        return JsonResponse(tareas_response, safe=False)
+
+
+class VerificarIngresosView(View):
+    def get(self, request, id_compra):
+        try:
+            # Total cantidad requerida por las líneas de la compra
+            lineas_compra = LineaCompra.objects.filter(id_compra=id_compra)
+            if not lineas_compra.exists():
+                return JsonResponse({"error": "No se encontraron líneas de compra para esta compra."}, status=404)
+
+            cantidad_total_requerida = lineas_compra.aggregate(total=Sum('cantidad'))['total'] or 0
+
+            # Total cantidad ingresada (realizada) para la compra
+            ingresos_realizados = Ingreso.objects.filter(id_compra=id_compra, realizado=True)
+            cantidad_total_ingresada = ingresos_realizados.aggregate(total=Sum('cantidad'))['total'] or 0
+
+            # Verificar si todos los ingresos requeridos han sido realizados
+            todos_ingresos_realizados = cantidad_total_ingresada >= cantidad_total_requerida
+
+            # Preparar la respuesta
+            data = {
+                "id_compra": id_compra,
+                "cantidad_total_requerida": cantidad_total_requerida,
+                "cantidad_total_ingresada": cantidad_total_ingresada,
+                "todos_ingresos_realizados": todos_ingresos_realizados,
+            }
+            return JsonResponse(data, safe=False)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)

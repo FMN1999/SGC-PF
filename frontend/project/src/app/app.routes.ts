@@ -36,6 +36,7 @@ import {BalanceFinancieroComponent} from "./components/balance-financiero/balanc
 import {EmpresasComponent} from "./components/empresas/empresas.component";
 import {CrearEmpresaComponent} from "./components/crear-empresa/crear-empresa.component";
 import {GestionPermisosComponent} from "./components/gestion-permisos/gestion-permisos.component";
+import {CrearAlmacenComponent} from "./components/crear-almacen/crear-almacen.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -77,6 +78,7 @@ export const routes: Routes = [
   { path: 'empresas', component: EmpresasComponent },
   { path: 'crear-empresa', component: CrearEmpresaComponent },
   { path: 'usuario/:id/permisos', component: GestionPermisosComponent },
+  { path: 'crear-almacen', component: CrearAlmacenComponent },
 ];
 
 export const routerProviders = [provideRouter(routes)];

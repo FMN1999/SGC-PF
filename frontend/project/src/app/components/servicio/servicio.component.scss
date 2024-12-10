@@ -1,0 +1,91 @@
+@import '../../components/home/home.component';
+
+.detalle-servicio {
+  padding: $section-padding;
+  background-color: $section-bg-color;
+
+  .titulo {
+    font-size: 1.8rem;
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .vista-detalles,
+  .vista-edicion {
+    margin-top: $section-padding;
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      strong {
+        color: $secondary-color;
+      }
+    }
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: $text-color;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      color: $text-color;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 5px $primary-color;
+      }
+    }
+  }
+
+  .acciones {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+
+    .btn {
+      padding: 10px 15px;
+      font-size: 1rem;
+      border-radius: $button-radius;
+      cursor: pointer;
+
+      &.btn-primary {
+        background-color: $secondary-color;
+        color: $white-color;
+        border: none;
+
+        &:hover {
+          background-color: $hover-color;
+        }
+      }
+
+      &.btn-secondary {
+        background-color: $border-color;
+        color: $text-color;
+        border: 1px solid $border-color;
+
+        &:hover {
+          background-color: lighten($border-color, 10%);
+        }
+      }
+    }
+  }
+
+  .loading {
+    text-align: center;
+    color: $loading-color;
+    font-size: 1.2rem;
+    margin: $section-padding 0;
+  }
+}

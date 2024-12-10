@@ -1,68 +1,89 @@
+<app-header></app-header>
 <div class="almacenes-container">
-  <h2>Almacenes de la Empresa</h2>
-
-  <div *ngIf="almacenes.length === 0">No hay almacenes disponibles para esta empresa.</div>
+  <h2 class="almacenes-title">Almacenes de la Empresa</h2>
+  <div class="crear-almacen">
+    <button class="crear-almacen-btn" (click)="abrirFormularioCrearAlmacen()">Crear Nuevo Almacén</button>
+  </div>
+  <div class="almacenes-empty" *ngIf="almacenes.length === 0">
+    No hay almacenes disponibles para esta empresa.
+  </div>
 
   <div *ngFor="let almacen of almacenes" class="almacen-card">
-    <h3>{{ almacen.descripcion }}</h3>
+    <h3 class="almacen-title">{{ almacen.descripcion }}</h3>
     <p><strong>Dirección:</strong> {{ almacen.direccion }}</p>
     <p><strong>Ciudad:</strong> {{ almacen.ciudad }}, {{ almacen.provincia }}</p>
     <p><strong>Contacto:</strong> {{ almacen.contacto }}</p>
 
     <!-- Ingresos -->
-    <h4>Ingresos</h4>
-    <div *ngIf="almacen.ingresos.length === 0">No hay ingresos registrados.</div>
-    <table *ngIf="almacen.ingresos.length > 0" class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Cantidad</th>
-          <th>Fecha</th>
-          <th>Material</th>
-          <th>Unidad de Medida</th>
-          <th>ID Compra</th>
-          <th>Fecha Real</th>
-          <th>Realizado</th>
-          <th>En Obra</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ingreso of almacen.ingresos">
-          <td>{{ ingreso.id }}</td>
-          <td>{{ ingreso.cantidad }}</td>
-          <td>{{ ingreso.fecha }}</td>
-          <td>{{ ingreso.material.nombre }}</td>
-          <td>{{ ingreso.unidad_medida }}</td>
-          <td>{{ ingreso.id_compra }}</td>
-          <td>{{ ingreso.fecha_real }}</td>
-          <td>{{ ingreso.realizado ? 'Sí' : 'No' }}</td>
-          <td>{{ ingreso.en_obra ? 'Sí' : 'No' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <h4 class="section-title">Ingresos</h4>
+    <div class="section-empty" *ngIf="almacen.ingresos.length === 0">
+      No hay ingresos registrados.
+    </div>
+    <div class="table-container">
+      <table *ngIf="almacen.ingresos.length > 0" class="table">
+        <thead>
+          <tr>
+            <th>Cantidad</th>
+            <th>Fecha ingreso programado</th>
+            <th>Material</th>
+            <th>Unidad de Medida</th>
+            <th>Fecha Ingreso</th>
+            <th>Ingresado</th>
+            <th>Fecha de compra</th>
+            <th>Ingresar</th>
+            <th>Transportar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ingreso of almacen.ingresos">
+            <td>{{ ingreso.cantidad }}</td>
+            <td>{{ ingreso.fecha }}</td>
+            <td>{{ ingreso.material.nombre }}</td>
+            <td>{{ ingreso.unidad_medida }}</td>
+            <td>{{ ingreso.fecha_real }}</td>
+            <td>{{ ingreso.realizado ? 'Sí' : 'No' }}</td>
+            <td>{{ ingreso.fecha_compra }}</td>
+            <td>
+              <button (click)="ingresar(ingreso.id)" [disabled]="ingreso.realizado">Realizar ingreso</button>
+            </td>
+            <td>
+              <select id="id_tarea" [(ngModel)]="tareaSeleccionada">
+                <option *ngFor="let tarea of tareas" [value]="tarea.id">
+                  {{ tarea.tarea }} - {{ tarea.obra }}
+                </option>
+              </select>
+              <button (click)="cargarMaterialTarea(ingreso.material.id, tareaSeleccionada, ingreso.id)">
+                Llevar a obra
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Herramientas -->
-    <h4>Herramientas</h4>
-    <div *ngIf="almacen.herramientas.length === 0">No hay herramientas registradas.</div>
-    <table *ngIf="almacen.herramientas.length > 0" class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Material</th>
-          <th>Ubicación</th>
-          <th>Marca</th>
-          <th>ID Compra</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let herramienta of almacen.herramientas">
-          <td>{{ herramienta.id }}</td>
-          <td>{{ herramienta.material.nombre }}</td>
-          <td>{{ herramienta.ubicacion }}</td>
-          <td>{{ herramienta.marca }}</td>
-          <td>{{ herramienta.id_compra }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <h4 class="section-title">Herramientas</h4>
+    <div class="section-empty" *ngIf="almacen.herramientas.length === 0">
+      No hay herramientas registradas.
+    </div>
+    <div class="table-container">
+      <table *ngIf="almacen.herramientas.length > 0" class="table">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Ubicación</th>
+            <th>Marca</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let herramienta of almacen.herramientas">
+            <td>{{ herramienta.material.nombre }}</td>
+            <td>{{ herramienta.ubicacion }}</td>
+            <td>{{ herramienta.marca }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+

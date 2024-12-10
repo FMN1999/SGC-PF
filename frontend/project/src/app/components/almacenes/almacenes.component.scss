@@ -1,27 +1,163 @@
+@import '../../components/home/home.component';
+
 .almacenes-container {
-  padding: 20px;
+  padding: $section-padding;
+  background-color: $background-color;
+
+  .crear-almacen {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .crear-almacen-btn {
+      background-color: $success-color;
+      color: $white-color;
+      font-size: 1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: $button-radius;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: darken($success-color, 10%);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:disabled {
+        background-color: $border-color;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .almacenes-title {
+    font-size: 2rem;
+    color: $primary-color;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .almacenes-empty {
+    text-align: center;
+    font-size: 1.2rem;
+    color: $text-color;
+    margin: 2rem 0;
+  }
+
+  .almacen-card {
+    border: 1px solid lighten($primary-color, 30%);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: $button-radius;
+    background-color: $white-color;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .almacen-title {
+      font-size: 1.5rem;
+      color: $secondary-color;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: $primary-color;
+      margin-top: 1.5rem;
+    }
+
+    .section-empty {
+      font-size: 1rem;
+      color: darken($text-color, 10%);
+      margin-top: 0.5rem;
+    }
+
+    .table-container {
+      overflow-x: auto; // Hacer que la tabla sea desplazable horizontalmente en pantallas pequeñas.
+      -webkit-overflow-scrolling: touch; // Mejora para iOS.
+      margin-top: 1rem;
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+
+        th, td {
+          border: 1px solid $border-color;
+          padding: 0.8rem;
+          text-align: center;
+          font-size: 0.9rem;
+        }
+
+        th {
+          background-color: $secondary-color;
+          color: $white-color;
+        }
+
+        tbody tr:nth-child(odd) {
+          background-color: lighten($background-color, 10%);
+        }
+
+        tbody tr:hover {
+          background-color: lighten($secondary-color, 20%);
+        }
+
+        button {
+          border-radius: $button-radius;
+          background-color: $success-color;
+          color: $white-color;
+          padding: 0.4rem 0.8rem;
+          font-size: 0.85rem;
+          border: none;
+
+          &:disabled {
+            background-color: $border-color;
+            cursor: not-allowed;
+          }
+
+          &:hover:not(:disabled) {
+            background-color: darken($success-color, 10%);
+          }
+        }
+
+        select {
+          border: 1px solid $border-color;
+          border-radius: $button-radius;
+          padding: 0.3rem;
+          font-size: 0.85rem;
+          color: $text-color;
+          background-color: $white-color;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+          }
+        }
+      }
+    }
+  }
 }
 
-.almacen-card {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
+/* Adaptabilidad para móviles */
+@media (max-width: 768px) {
+  .almacenes-container {
+    padding: 0.8rem;
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
+    .almacen-card {
+      padding: 1rem;
+    }
 
-.table th, .table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
+    .table-container {
+      margin-top: 1rem;
 
-.table th {
-  background-color: #f4f4f4;
+      .table {
+        font-size: 0.8rem;
+
+        th, td {
+          padding: 0.5rem;
+        }
+      }
+    }
+  }
 }

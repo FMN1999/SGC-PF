@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
 import { IngresoService } from '../../services/ingresos/ingresos.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
+import{HeaderComponent} from '../header/header.component';
 
 @Component({
-  standalone: true,
   selector: 'app-ingreso',
   templateUrl: './ingreso.component.html',
   imports: [
     ReactiveFormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./ingreso.component.scss']
 })
 export class IngresoComponent implements OnInit {

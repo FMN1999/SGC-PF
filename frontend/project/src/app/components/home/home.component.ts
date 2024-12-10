@@ -5,11 +5,10 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass, NgOptimizedImage],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'app-home',
+    imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass, NgOptimizedImage],
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   // @ts-ignore

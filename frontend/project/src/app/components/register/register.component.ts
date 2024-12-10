@@ -5,12 +5,13 @@ import { NgIf, NgFor } from '@angular/common';  // Para *ngIf y *ngFor
 import { AuthService } from '../../services/auth/auth.service'; // Ajusta la ruta si es necesario
 import { EmpresaService } from '../../services/empresa/empresa.service'; // Ajusta la ruta si es necesario
 
+
 @Component({
-  selector: 'app-register',
-  standalone: true,  // Standalone component
+  selector: 'app-register', // Standalone component
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
-  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor]  // Importamos los módulos que necesitamos
+  standalone: true,
+  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor] // Importamos los módulos que necesitamos
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;

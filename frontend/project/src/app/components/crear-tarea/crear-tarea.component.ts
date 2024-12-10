@@ -6,6 +6,7 @@ import { ObraService } from '../../services/obra/obra.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {ActivatedRoute} from "@angular/router";
 import {NgForOf} from "@angular/common";
+import { HeaderComponent } from '../header/header.component';
 
 
 @Component({
@@ -14,7 +15,8 @@ import {NgForOf} from "@angular/common";
   templateUrl: './crear-tarea.component.html',
   imports: [
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    HeaderComponent
   ],
   styleUrls: ['./crear-tarea.component.scss']
 })

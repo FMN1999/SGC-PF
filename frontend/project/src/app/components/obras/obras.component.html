@@ -1,17 +1,36 @@
-<div *ngIf="cargando">Cargando obras...</div>
-<div *ngIf="error">Ocurrió un error al cargar las obras.</div>
+<app-header></app-header>
+
+<div *ngIf="cargando" class="loading">
+  <p><span class="spinner"></span> Cargando obras...</p>
+</div>
+
+<div *ngIf="error" class="error-message">
+  <p>⚠️ Ocurrió un error al cargar las obras.</p>
+</div>
 
 <div *ngIf="!cargando && !error">
-  <h1>Obras de la Empresa {{ idEmpresa }}</h1>
-  <ul>
-    <li *ngFor="let obra of obras">
-      <h3>{{ obra.tipo_obra }} - {{ obra.estado }}</h3>
-      <p>Dirección: {{ obra.direccion }}</p>
-      <p>Cliente: {{ obra.cliente_nombre }} {{ obra.cliente_apellido }}</p>
-      <p>Teléfono de Contacto: {{ obra.telefono_contacto }}</p>
-      <p>Fecha de Inicio Estimada: {{ obra.fecha_inicio_est }}</p>
-      <p>Monto Total Estimado: {{ obra.monto_total_est | currency }}</p>
-    </li>
-  </ul>
+  <div class="header-container">
+    <h1>Obras de la Empresa {{ idEmpresa }}</h1>
+    <button (click)="irACrearObra()" class="create-obra-button">Crear Nueva Obra</button>
+  </div>
+  <div class="obras-container">
+    <div
+      *ngFor="let obra of obras"
+      class="obra-card"
+      (click)="irAObra(obra.id)">
+      <h3 class="obra-header">
+        {{ obra.tipo_obra }} -
+        <span class="obra-estado" [class.activo]="obra.estado === 'Activo'">
+          {{ obra.estado }}
+        </span>
+      </h3>
+      <p><strong>Dirección:</strong> {{ obra.direccion }}</p>
+      <p><strong>Cliente:</strong> {{ obra.cliente_nombre }} {{ obra.cliente_apellido }}</p>
+      <p><strong>Teléfono:</strong> {{ obra.telefono_contacto }}</p>
+      <p><strong>Inicio Estimado:</strong> {{ obra.fecha_inicio_est }}</p>
+      <p><strong>Monto Estimado:</strong> {{ obra.monto_total_est | currency }}</p>
+    </div>
+  </div>
 </div>
+
 

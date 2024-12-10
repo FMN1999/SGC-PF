@@ -3,15 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { NgIf } from "@angular/common";
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para usar ngModel
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-servicio',
   templateUrl: './servicio.component.html',
-  standalone: true,
   imports: [
     NgIf,
-    FormsModule
+    FormsModule,
+    HeaderComponent
   ],
+  standalone: true,
   styleUrls: ['./servicio.component.scss']
 })
 export class ServicioComponent implements OnInit {

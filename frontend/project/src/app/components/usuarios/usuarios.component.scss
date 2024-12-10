@@ -1,0 +1,82 @@
+@import '../../components/home/home.component';
+
+.entidades-container {
+  padding: $section-padding;
+  background-color: $section-bg-color;
+  border: 1px solid $border-color;
+  border-radius: $button-radius;
+
+  .acciones {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+
+    .btn {
+      margin-left: 10px;
+      background-color: $secondary-color;
+      color: $white-color;
+      padding: 10px 20px;
+      border: none;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+    }
+  }
+
+  .entidad {
+    margin-bottom: 20px;
+
+    h2 {
+      color: $primary-color;
+      margin-bottom: 15px;
+    }
+
+    .entidad-lista {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .entidad-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background-color: $table-header-bg-color;
+        border: 1px solid $table-border-color;
+        border-radius: $button-radius;
+        margin-bottom: 10px;
+
+        .entidad-link {
+          text-decoration: none;
+          color: $secondary-color;
+
+          &:hover {
+            color: $hover-color;
+          }
+        }
+
+        .btn {
+          margin-left: 10px;
+
+          &.btn-small {
+            padding: 5px 10px;
+          }
+
+          &.btn-danger {
+            background-color: $danger-color;
+            color: $white-color;
+
+            &:hover {
+              background-color: darken($danger-color, 10%);
+            }
+          }
+        }
+      }
+    }
+  }
+}

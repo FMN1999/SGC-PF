@@ -6,6 +6,18 @@ $text-color: #333; // Texto oscuro para buena legibilidad
 $white-color: #ffffff;
 $hover-color: darken($secondary-color, 10%);
 $header-height: 50px; /* Reducimos la altura del header */
+$success-color: #218838;
+$error-color: #dc3545; // Rojo Bootstrap
+$loading-color: #007bff;
+$border-color: #ddd;
+$section-padding: 20px;
+$section-bg-color: #fff;
+$table-header-bg-color: #f2f2f2;
+$table-border-color: #ccc;
+$button-radius: 4px;
+$danger-color: #dc3545;
+
+
 
 /* Tipografía */
 body {
