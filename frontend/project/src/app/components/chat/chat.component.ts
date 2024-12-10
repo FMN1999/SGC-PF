@@ -4,13 +4,16 @@ import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {DataShareService} from "../../services/data-share/data-share.service";
 
+import {MarkdownModule} from 'ngx-markdown';
+
 @Component({
   selector: 'app-chat',
   imports: [
     NgForOf,
     NgClass,
     FormsModule,
-    NgIf
+    NgIf,
+    MarkdownModule,
   ],
   templateUrl: './chat.component.html',
   standalone: true,
@@ -55,14 +58,14 @@ export class ChatComponent implements OnInit {
   mensajesBienvenida():void {
     this.messages.push({text: '¡Hola! Soy tu asistente virtual, ¿En qué puedo ayudarte?', isUser: false});
     this.messages.push({text: 'Ingresá la opción deseada:', isUser: false});
-    this.messages.push({text: '1- Recomendaciónes para presupuesto' +
-        '2- Materiales frecuentes para cliente' +
-        '3- Ofertas vigentes' +
-        '4- Calcular costos adicionales' +
-        '5- Seguimiento de obra' +
-        '6- Sugerencias de optimización de costos' +
-        '7- Evaluación de proveedores' +
-        '8- Análisis de costos', isUser: false});
+    this.messages.push({text: '1. Recomendaciones para presupuesto\n' +
+        '2. Materiales frecuentes para cliente\n' +
+        '3. Ofertas vigentes\n' +
+        '4. Calcular costos adicionales\n' +
+        '5. Seguimiento de obra\n' +
+        '6. Sugerencias de optimización de costos\n' +
+        '7. Evaluación de proveedores\n' +
+        '8. Análisis de costos', isUser: false});
   }
 
   sendMessage() {
