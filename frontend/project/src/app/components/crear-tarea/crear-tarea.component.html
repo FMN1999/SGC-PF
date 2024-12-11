@@ -5,19 +5,19 @@
   <form [formGroup]="tareaForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="titulo">Título</label>
-      <input id="titulo" formControlName="titulo" type="text" />
+      <input id="titulo" formControlName="titulo" type="text" required />
     </div>
 
     <div class="form-group">
       <label for="descripcion">Descripción</label>
-      <input id="descripcion" formControlName="descripcion" type="text" />
+      <input id="descripcion" formControlName="descripcion" type="text" required/>
     </div>
 
     <div class="form-group">
       <label for="id_presupuesto_servicio">Presupuesto Servicio</label>
       <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio">
         <option value="">Seleccione un presupuesto</option>
-        <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio">
+        <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio" required>
           {{ presupuesto.desc_servicio }}
         </option>
       </select>
@@ -25,7 +25,7 @@
 
     <div class="form-group">
       <label for="id_area">Área</label>
-      <select id="id_area" formControlName="id_area" required>
+      <select id="id_area" formControlName="id_area">
         <option value="">Seleccione un área</option>
         <option *ngFor="let area of areas" [value]="area.id">
           {{ area.descripcion }}
@@ -33,14 +33,16 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="fecha_inicio">Fecha de Inicio</label>
-      <input id="fecha_inicio" formControlName="fecha_inicio" type="date" />
-    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fecha_inicio">Fecha de Inicio</label>
+        <input id="fecha_inicio" formControlName="fecha_inicio" type="date" />
+      </div>
 
-    <div class="form-group">
-      <label for="fecha_fin">Fecha de Fin</label>
-      <input id="fecha_fin" formControlName="fecha_fin" type="date" />
+      <div class="form-group">
+        <label for="fecha_fin">Fecha de Fin</label>
+        <input id="fecha_fin" formControlName="fecha_fin" type="date" />
+      </div>
     </div>
 
     <div class="form-group">
@@ -50,14 +52,14 @@
 
     <div class="form-group">
       <label for="id_vehiculo">Vehículo</label>
-      <select id="id_vehiculo" formControlName="id_vehiculo" required>
+      <select id="id_vehiculo" formControlName="id_vehiculo">
         <option value="">Seleccione un vehículo</option>
         <option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">
-          {{ vehiculo.modelo }}
+          {{ vehiculo.descripcion}} - Tipo: {{vehiculo.tipo}} - Modelo: {{vehiculo.modelo }}
         </option>
       </select>
     </div>
 
-    <button type="submit" class="submit-btn">Crear Tarea</button>
+    <button type="submit" class="submit-btn" [disabled]="tareaForm.invalid">Crear Tarea</button>
   </form>
 </div>

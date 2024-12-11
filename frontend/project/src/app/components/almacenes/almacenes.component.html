@@ -84,6 +84,33 @@
         </tbody>
       </table>
     </div>
+
+    <h4 class="section-title">Vehículos</h4>
+    <div class="section-empty" *ngIf="almacen.vehiculos.length === 0">
+      No hay vehículos registradas.
+    </div>
+    <div class="table-container">
+      <table *ngIf="almacen.vehiculos.length > 0" class="table">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Patente</th>
+            <th>Marca</th>
+            <th>Tipo de vehículo</th>
+            <th>Modelo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let v of almacen.vehiculos">
+            <td>{{ v.material.nombre }}</td>
+            <td>{{ v.patente }}</td>
+            <td>{{ v.marca }}</td>
+            <td>{{ v.tipo }}</td>
+            <td>{{ v.modelo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

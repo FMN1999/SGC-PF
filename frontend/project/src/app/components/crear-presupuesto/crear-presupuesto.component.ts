@@ -30,6 +30,7 @@ export class CrearPresupuestoComponent implements OnInit {
   obraId!: number;
   areas: any[] = [];
   clienteId!:number;
+  mensajeExito: string='';
 
   constructor(
     private fb: FormBuilder,
@@ -56,6 +57,7 @@ export class CrearPresupuestoComponent implements OnInit {
 
 
     this.inicializarFormulario();
+    this.agregarListeners();
 
     this.obraService.obtenerAreasPorObra(this.obraId).subscribe((data:any[]) =>{
       this.areas = data
@@ -65,7 +67,7 @@ export class CrearPresupuestoComponent implements OnInit {
   inicializarFormulario() {
     this.presupuestoForm = this.fb.group({
       total: [null, Validators.required],
-      moneda: ['', Validators.required],
+      moneda: ['ARS', Validators.required],
       fecha_creacion: [new Date().toISOString().split('T')[0]], // Fecha actual
       observaciones: [''],
       estado: ['Nuevo'],  // Estado inicial
@@ -77,16 +79,31 @@ export class CrearPresupuestoComponent implements OnInit {
     });
   }
 
+  agregarListeners() {
+    // Escuchar cambios en los materiales
+    this.materialesFormArray.valueChanges.subscribe(() => this.actualizarTotal());
+    this.serviciosFormArray.valueChanges.subscribe(() => this.actualizarTotal());
+    this.trabajadoresFormArray.valueChanges.subscribe(() => this.actualizarTotal());
+
+    // Escuchar cambios en el porcentaje de inflación
+    this.presupuestoForm.get('porc_inflacion')!.valueChanges.subscribe(() => this.actualizarTotal());
+  }
+
   // Agregar un material al presupuesto
   agregarMaterial() {
     const materialGroup = this.fb.group({
       desc_material: ['', Validators.required],
-      cantidad: [null, Validators.required],
-      precio_x_unidad_medida: [null, Validators.required],
+      cantidad: [0, Validators.required],
+      precio_x_unidad_medida: [0, Validators.required],
       unidad_medida: ['', Validators.required],
+      monto_linea: [0],
       id_area: [''],
-      monto_linea: [0]
     });
+
+    // Calcular monto_linea automáticamente
+    materialGroup.get('cantidad')!.valueChanges.subscribe(() => this.calcularMontoLinea(materialGroup));
+    materialGroup.get('precio_x_unidad_medida')!.valueChanges.subscribe(() => this.calcularMontoLinea(materialGroup));
+
     this.materialesFormArray.push(materialGroup);
   }
 
@@ -98,12 +115,17 @@ export class CrearPresupuestoComponent implements OnInit {
   agregarServicio() {
     const servicioGroup = this.fb.group({
       desc_servicio: ['', Validators.required],
-      precio_x_hora: [null, Validators.required],
-      horas: [null, Validators.required],
-      moneda: ['', Validators.required],
+      precio_x_hora: [0, Validators.required],
+      horas: [0, Validators.required],
+      monto_linea: [0],
       id_area: [''],
-      monto_linea: [0]
+      moneda: ['ARS', Validators.required],
     });
+
+    // Calcular monto_linea automáticamente
+    servicioGroup.get('horas')!.valueChanges.subscribe(() => this.calcularMontoLinea(servicioGroup));
+    servicioGroup.get('precio_x_hora')!.valueChanges.subscribe(() => this.calcularMontoLinea(servicioGroup));
+
     this.serviciosFormArray.push(servicioGroup);
   }
 
@@ -115,13 +137,48 @@ export class CrearPresupuestoComponent implements OnInit {
   agregarTrabajador() {
     const trabajadorGroup = this.fb.group({
       puesto: ['', Validators.required],
-      horas: [null, Validators.required],
-      precio_x_hora: [null, Validators.required],
-      moneda: ['', Validators.required],
+      horas: [0, Validators.required],
+      precio_x_hora: [0, Validators.required],
+      monto_linea: [0],
       id_area: [''],
-      monto_linea: [0]
+      moneda: ['ARS', Validators.required],
     });
+
+    // Calcular monto_linea automáticamente
+    trabajadorGroup.get('horas')!.valueChanges.subscribe(() => this.calcularMontoLinea(trabajadorGroup));
+    trabajadorGroup.get('precio_x_hora')!.valueChanges.subscribe(() => this.calcularMontoLinea(trabajadorGroup));
+
     this.trabajadoresFormArray.push(trabajadorGroup);
+  }
+
+  calcularMontoLinea(group: FormGroup) {
+    const cantidad = group.get('cantidad')?.value || group.get('horas')?.value || 0;
+    const precio = group.get('precio_x_unidad_medida')?.value || group.get('precio_x_hora')?.value || 0;
+    const monto = cantidad * precio;
+
+    group.get('monto_linea')?.setValue(monto, { emitEvent: false });
+  }
+
+
+  actualizarTotal() {
+    const materialesTotal = this.sumarMontos(this.materialesFormArray);
+    const serviciosTotal = this.sumarMontos(this.serviciosFormArray);
+    const trabajadoresTotal = this.sumarMontos(this.trabajadoresFormArray);
+
+    let total = materialesTotal + serviciosTotal + trabajadoresTotal;
+    const porcInflacion = this.presupuestoForm.get('porc_inflacion')!.value || 0;
+
+    if (porcInflacion > 0) {
+      total += total * (porcInflacion / 100);
+    }
+
+    this.presupuestoForm.get('total')!.setValue(total, { emitEvent: false });
+  }
+
+  sumarMontos(formArray: FormArray): number {
+    return formArray.controls.reduce((sum, group) => {
+      return sum + (group.get('monto_linea')?.value || 0);
+    }, 0);
   }
 
   get trabajadoresFormArray(): FormArray {
@@ -140,9 +197,13 @@ export class CrearPresupuestoComponent implements OnInit {
     };
 
     this.presupuestoService.crearPresupuesto(presupuestoData).subscribe((response: any) => {
-      console.log('Presupuesto guardado:', response);
+      this.mensajeExito = '¡El presupuesto se ha creado exitosamente!';
       this.presupuestoForm.reset();
+      setTimeout(() => {
+        this.mensajeExito = '';
+      }, 100000);
     });
+
   }
 
   removerMaterial(index: number) {

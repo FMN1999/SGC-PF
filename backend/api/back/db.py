@@ -111,15 +111,14 @@ class EmpresaData:
             vehiculos_return = [
                 {
                     'id':v.id,
-                    'descripcion': v.id_material.descripcion,
+                    'descripcion': v.id_material.tipo_material,
                     'tipo':v.tipo,
-                    'marca':v.marca,
+                    'marca':v.id_material.marca,
                     'modelo': v.modelo,
                     'precio_x_hora': v.precio_x_hora,
                     'id_material': v.id_material.id,
                 } for v in vehiculos
             ]
-            print(vehiculos_return)
             return vehiculos_return
         except Exception as e:
             print(f"Error al cargar las emrpesas: {e}")
@@ -451,14 +450,14 @@ class ServicioData:
                 descripcion=servicio_data.get('descripcion'),
                 precio_x_unidad=servicio_data.get('precio_x_unidad'),
                 unidad_medida=servicio_data.get('unidad_medida'),
-                monto_x_frecuencia=servicio_data.get('monto_x_frecuencia'),
+                monto_x_frecuencia=servicio_data.get('monto_x_frecuencia') if servicio_data.get('monto_x_frecuencia') else 0,
                 frecuencia_pago=servicio_data.get('frecuencia_pago'),
                 id_proveedor=proveedor,
                 moneda=servicio_data.get('moneda'),
-                impuestos_total = servicio_data.get('impuestos_total'),
+                impuestos_total = servicio_data.get('impuestos_total') if servicio_data.get('impuestos_total') else 0,
                 moneda_impuestos = servicio_data.get('moneda_impuestos'),
                 descripcion_impuestos = servicio_data.get('descripcion_impuestos'),
-                otros_gastos = servicio_data.get('otros_gastos'),
+                otros_gastos = servicio_data.get('otros_gastos') if servicio_data.get('otros_gastos') else 0,
                 moneda_otros_gastos = servicio_data.get('moneda_otros_gastos'),
                 descripcion_otros_gastos = servicio_data.get('descripcion_otros_gastos')
 

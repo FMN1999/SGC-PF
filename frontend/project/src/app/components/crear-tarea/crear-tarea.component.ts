@@ -4,7 +4,7 @@ import { TareaService } from '../../services/tarea/tarea.service';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { ObraService } from '../../services/obra/obra.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
 
@@ -34,7 +34,8 @@ export class CrearTareaComponent implements OnInit {
     private tareaService: TareaService,
     private presupuestoService: PresupuestoService,
     private obraService: ObraService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
+    private router: Router
   ) {
     this.tareaForm = this.fb.group({
       titulo: ['', Validators.required],
@@ -83,6 +84,7 @@ export class CrearTareaComponent implements OnInit {
           console.error('Error al crear la tarea:', error);
         }
       });
+      this.router.navigate(['/tareas'])
     } else {
       console.log('Formulario inválido');
     }

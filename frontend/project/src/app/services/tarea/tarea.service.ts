@@ -60,4 +60,8 @@ export class TareaService {
   actualizarCantDias(colaboradorId: number, cantDias: number, id_tarea: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}tarea/colaborador/${colaboradorId}/actualizar_cant_dias/`, { cant_dias: cantDias, id_tarea: id_tarea });
   }
+
+  obtenerTareasPorEmpresa(idEmpresa: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}tareas-empresa/${idEmpresa}/`);
+  }
 }

@@ -338,46 +338,51 @@ class OfertaDetalleView(View):
 class MaterialView(View):
 
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+            id_proveedor = data.get('id_proveedor')
+            print(id_proveedor)
 
-        # Crear el material
-        proveedor = get_object_or_404(Proveedor, id=data.get('id_proveedor'))
-        fecha =data.get('fecha_desde_precio')
-        material = Material.objects.create(
-            id_proveedor=proveedor,
-            tipo_material=data.get('tipo_material'),
-            unidad_medida=data.get('unidad_medida'),
-            descripcion=data.get('descripcion'),
-            marca=data.get('marca'),
-            precio=data.get('precio'),
-            moneda=data.get('moneda'),
-            impuestos_total=data.get('impuestos_total'),
-            moneda_impuestos=data.get('moneda_impuestos'),
-            descripcion_impuestos=data.get('descripcion_impuestos'),
-            otros_gastos=data.get('otros_gastos'),
-            moneda_otros_gastos=data.get('moneda_otros_gastos'),
-            descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
-            fecha_desde_precio=fecha if fecha else None
-        )
-
-        if data.get('tipo_asociacion') == 'vehiculo':
-            Vehiculo.objects.create(
-                id_material=material,
-                patente=data.get('patente'),
-                tipo=data.get('tipo'),
-                modelo=data.get('modelo'),
-                precio_x_hora=data.get('precio_x_hora'),
+            # Crear el material
+            proveedor = Proveedor.objects.get(id=id_proveedor)
+            fecha =data.get('fecha_desde_precio')
+            material = Material.objects.create(
+                id_proveedor=proveedor,
+                tipo_material=data.get('tipo_material'),
+                unidad_medida=data.get('unidad_medida'),
+                descripcion=data.get('descripcion'),
+                marca=data.get('marca'),
+                precio=data.get('precio'),
                 moneda=data.get('moneda'),
-                id_almacen_id=data.get('id_almacen')
-            )
-        elif data.get('tipo_asociacion') == 'herramienta':
-            Herramienta.objects.create(
-                id_material=material,
-                id_almacen_id=data.get('id_almacen'),
-                ubicacion=data.get('ubicacion')
+                impuestos_total=data.get('impuestos_total'),
+                moneda_impuestos=data.get('moneda_impuestos'),
+                descripcion_impuestos=data.get('descripcion_impuestos'),
+                otros_gastos=data.get('otros_gastos'),
+                moneda_otros_gastos=data.get('moneda_otros_gastos'),
+                descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
+                fecha_desde_precio=fecha if fecha else None
             )
 
-        return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
+            if data.get('tipo_asociacion') == 'vehiculo':
+                Vehiculo.objects.create(
+                    id_material=material,
+                    patente=data.get('patente'),
+                    tipo=data.get('tipo'),
+                    modelo=data.get('modelo'),
+                    precio_x_hora=data.get('precio_x_hora'),
+                    moneda=data.get('moneda'),
+                    id_almacen_id=data.get('id_almacen')
+                )
+            elif data.get('tipo_asociacion') == 'herramienta':
+                Herramienta.objects.create(
+                    id_material=material,
+                    id_almacen_id=data.get('id_almacen'),
+                    ubicacion=data.get('ubicacion')
+                )
+
+            return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
+        except Exception as e:
+            raise e
 
     def get(self, request, material_id):
         try:
@@ -983,7 +988,8 @@ class TareaView(View):
                 fecha_fin=data["fecha_fin"],
                 precio_total=data["precio_total"],
                 id_presupuesto_servicio=presupuesto_servicio,
-                id_vehiculo=vehiculo
+                id_vehiculo=vehiculo,
+                porcentaje_avance=0
             )
             return JsonResponse({"message": "Tarea creada"}, safe=False)
         except Exception as e:
@@ -1582,7 +1588,7 @@ class AlmacenesPorEmpresaView(View):
                         'fecha': ingreso.fecha,
                         'material': {
                             'id': ingreso.id_material.id,
-                            'nombre': ingreso.id_material.descripcion
+                            'nombre': ingreso.id_material.tipo_material
                         },
                         'unidad_medida': ingreso.unidad_medida,
                         'id_compra': ingreso.id_compra.id,
@@ -1601,15 +1607,31 @@ class AlmacenesPorEmpresaView(View):
                         'id': herramienta.id,
                         'material': {
                             'id': herramienta.id_material.id,
-                            'nombre': herramienta.id_material.descripcion
+                            'nombre': herramienta.id_material.tipo_material
                         },
                         'ubicacion': herramienta.ubicacion,
                         'marca': herramienta.id_material.marca,
                         'id_compra': herramienta.id_compra.id,
+                        'fecha_compra': herramienta.id_compra.fecha_compra
                     }
                     for herramienta in herramientas
                 ]
 
+                vehiculos = Vehiculo.objects.filter(id_almacen=almacen.id)
+                vehiculos_data = [
+                    {
+                        'id': v.id,
+                        'material': {
+                            'id': v.id_material.id,
+                            'nombre': v.id_material.tipo_material
+                        },
+                        'patente': v.patente,
+                        'marca': v.id_material.marca,
+                        'tipo':v.tipo,
+                        'modelo': v.modelo,
+                    }
+                    for v in vehiculos
+                ]
                 almacenes_return.append({
                     'id': almacen.id,
                     'descripcion': almacen.descripcion,
@@ -1619,6 +1641,7 @@ class AlmacenesPorEmpresaView(View):
                     'provincia': almacen.provincia,
                     'ingresos': ingresos_data,
                     'herramientas': herramientas_data,
+                    'vehiculos': vehiculos_data
                 })
 
             return JsonResponse({'almacenes': almacenes_return}, safe=False)
@@ -1806,6 +1829,16 @@ class TareasView(View):
                 "id": t.id,
                 "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
                 "tarea": t.titulo,
+                "area": t.id_area.descripcion if t.id_area.descripcion else None,
+                "fecha_inicio": t.fecha_inicio,
+                "fecha_fin": t.fecha_fin,
+                "precio_total": t.precio_total,
+                "servicio_presupuesto": t.id_presupuesto_servicio.desc_servicio,
+                "descripcion": t.descripcion,
+                "porcentaje_avance": t.porcentaje_avance if t.porcentaje_avance else 0,
+                "vehiculo":t.id_vehiculo.id_material.tipo_material,
+                "tipo_vehiculo": t.id_vehiculo.tipo,
+                "modelo_vehiculo":t.id_vehiculo.modelo
             }
             for t in tareas
         ]

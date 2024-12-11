@@ -59,6 +59,17 @@
     }
   }
 
+  .form-row {
+    display: flex;
+    flex-wrap: wrap; // Permite que los campos se ajusten en filas flexibles
+    gap: 15px; // Espaciado entre los campos
+
+    .form-group {
+      flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
+      min-width: 200px; // Ancho mínimo para mantener la legibilidad
+    }
+  }
+
   .success-message {
     color: $success-color;
     margin-top: 15px;

@@ -1,0 +1,32 @@
+<app-header></app-header>
+
+<div *ngIf="cargando" class="loading">
+  <p><span class="spinner"></span> Cargando tareas...</p>
+</div>
+
+<div *ngIf="error" class="error-message">
+  <p>⚠️ Ocurrió un error al cargar las tareas.</p>
+</div>
+
+<div *ngIf="!cargando && !error">
+  <div class="header-container">
+    <h1>Tareas Disponibles</h1>
+  </div>
+  <div class="tareas-container">
+    <div
+      *ngFor="let tarea of tareas"
+      class="tarea-card"
+      (click)="verDetalleTarea(tarea.id)">
+      <h3 class="tarea-header">
+        {{ tarea.tarea }}
+        <span class="tarea-avance">({{ tarea.porcentaje_avance }}% completado)</span>
+      </h3>
+      <p><strong>Área:</strong> {{ tarea.area}}</p>
+      <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
+      <p><strong>Inicio:</strong> {{ tarea.fecha_inicio }}</p>
+      <p><strong>Fin:</strong> {{ tarea.fecha_fin }}</p>
+      <p><strong>Precio Total:</strong> {{ tarea.precio_total | currency }}</p>
+    </div>
+  </div>
+</div>
+

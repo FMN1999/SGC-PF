@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProveedorService } from '../../services/proveedor/proveedor.service';  // Asegúrate de que la ruta del servicio sea correcta
-import {FormsModule} from '@angular/forms';
-import {NgIf} from "@angular/common";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { HeaderComponent } from '../header/header.component';
+import {NgIf} from "@angular/common";
+
 
 @Component({
-  standalone: true,
   selector: 'app-crear-servicio',
   templateUrl: './crear-servicio.component.html',
+  standalone: true,
   imports: [
-    FormsModule,
-    NgIf,
-    HeaderComponent
+    HeaderComponent,
+    ReactiveFormsModule,
+    NgIf
   ],
   styleUrls: ['./crear-servicio.component.scss']
 })
@@ -22,50 +23,53 @@ export class CrearServicioComponent implements OnInit {
   mensajeExito: string = '';  // Mensaje de éxito
   mensajeError: string = '';  // Mensaje de error
 
-  // Definimos la estructura del servicio que se va a crear
-  servicioData = {
-    descripcion: '',
-    precio_x_unidad: 0,
-    unidad_medida: '',
-    monto_x_frecuencia: 0,
-    frecuencia_pago: '',
-    moneda:'',
-    impuestos_total: 0,
-    moneda_impuestos:'',
-    descripcion_impuestos:'',
-    otros_gastos:0,
-    moneda_otros_gastos:'',
-    descripcion_otros_gastos:''
-  };
+  servicioForm: FormGroup;
 
   constructor(
-    private proveedorService: ProveedorService,  // Inyectamos el servicio
-    private route: ActivatedRoute,  // Para obtener el ID del proveedor de la URL
-    private router: Router  // Para redirigir después de crear el servicio
-  ) { }
-
-  ngOnInit(): void {
-    // Obtenemos el ID del proveedor desde la ruta
-    this.id_proveedor = +this.route.snapshot.params['id'];  // Asegurarse de que el ID es un número
-  }
-
-  // Método para crear el servicio
-  crearServicio() {
-    // Agregamos el id_proveedor al objeto que se va a enviar
-    const data = { ...this.servicioData, id_proveedor: this.id_proveedor };
-
-    // Llamamos al servicio que interactúa con el backend
-    this.proveedorService.crearServicio(data).subscribe({
-      next: (response) => {
-        // Si se crea correctamente, mostramos un mensaje y redirigimos
-        this.mensajeExito = 'Servicio creado con éxito';
-        this.router.navigate([`/proveedor/${this.id_proveedor}`]).then(r => {});  // Redirige al perfil del proveedor
-      },
-      error: (error) => {
-        // Si hay un error, mostramos un mensaje de error
-        this.mensajeError = 'Error al crear el servicio';
-      }
+    private proveedorService: ProveedorService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder  // Inyectamos FormBuilder
+  ) {
+    // Inicializamos el FormGroup
+    this.servicioForm = this.fb.group({
+      descripcion: ['', Validators.required],
+      precio_x_unidad: [0, Validators.required],
+      unidad_medida: ['', Validators.required],
+      monto_x_frecuencia: [0],
+      frecuencia_pago: [''],
+      moneda: [''],
+      impuestos_total: [0],
+      moneda_impuestos: [''],
+      descripcion_impuestos: [''],
+      otros_gastos: [0],
+      moneda_otros_gastos: [''],
+      descripcion_otros_gastos: ['']
     });
   }
 
+  ngOnInit(): void {
+    // Obtenemos el ID del proveedor desde la ruta
+    this.id_proveedor = +this.route.snapshot.params['id'];
+  }
+
+  crearServicio(): void {
+    if (this.servicioForm.valid) {
+      // Agregamos el id_proveedor al objeto del formulario
+      const data = { ...this.servicioForm.value, id_proveedor: this.id_proveedor };
+
+      // Llamamos al servicio que interactúa con el backend
+      this.proveedorService.crearServicio(data).subscribe({
+        next: (response) => {
+          this.mensajeExito = 'Servicio creado con éxito';
+        },
+        error: (error) => {
+          this.mensajeError = 'Error al crear el servicio';
+        }
+      });
+    } else {
+      this.mensajeError = 'Por favor, complete todos los campos requeridos.';
+    }
+  }
 }
+
