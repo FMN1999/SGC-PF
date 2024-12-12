@@ -40,11 +40,11 @@ export class CrearTareaComponent implements OnInit {
     this.tareaForm = this.fb.group({
       titulo: ['', Validators.required],
       descripcion: ['', Validators.required],
-      id_presupuesto_servicio: [null],
+      id_presupuesto_servicio: [null, Validators.required],
       id_area: [null],
-      fecha_inicio: ['', Validators.required],
-      fecha_fin: ['', Validators.required],
-      precio_total: [null, Validators.required],
+      fecha_inicio: [''],
+      fecha_fin: [''],
+      precio_total: [null],
       id_vehiculo: [null]
     });
   }
@@ -79,12 +79,12 @@ export class CrearTareaComponent implements OnInit {
       this.tareaService.crearTarea(this.tareaForm.value).subscribe({
         next: (response) => {
           console.log('Tarea creada con éxito:', response);
+          this.router.navigate(['/tareas'])
         },
         error: (error) => {
           console.error('Error al crear la tarea:', error);
         }
       });
-      this.router.navigate(['/tareas'])
     } else {
       console.log('Formulario inválido');
     }

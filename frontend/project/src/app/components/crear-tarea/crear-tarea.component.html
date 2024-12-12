@@ -15,9 +15,9 @@
 
     <div class="form-group">
       <label for="id_presupuesto_servicio">Presupuesto Servicio</label>
-      <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio">
-        <option value="">Seleccione un presupuesto</option>
-        <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio" required>
+      <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio" required>
+        <option value="">Seleccione una actividad</option>
+        <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio" >
           {{ presupuesto.desc_servicio }}
         </option>
       </select>

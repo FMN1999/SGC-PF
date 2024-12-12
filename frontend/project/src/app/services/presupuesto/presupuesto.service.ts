@@ -41,4 +41,8 @@ export class PresupuestoService {
     return this.http.get<any[]>(`${this.apiUrl}presupuestos/${idPresupuesto}/servicios/`);
   }
 
+  getTareas(idPresupuesto: number) {
+    return this.http.get<any[]>(`tareas-presupuesto/${idPresupuesto}/`);
+  }
+
 }

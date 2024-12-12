@@ -38,10 +38,9 @@
 
   <!-- Sección de Servicios -->
   <section class="services-section">
-    <h3>Servicios</h3>
+    <h3>Tareas / Servicios</h3>
     <div class="actions">
       <button (click)="solicitarServicios()">Solicitar servicios</button>
-      <button (click)="crearTarea()">Crear Tarea</button>
     </div>
     <div *ngIf="servicios.length > 0; else noServicios">
       <ul>
@@ -54,6 +53,27 @@
     </div>
     <ng-template #noServicios>
       <p>No hay servicios registrados.</p>
+    </ng-template>
+  </section>
+
+  <section class="tasks-section">
+    <h3>Tareas en curso</h3>
+    <div class="actions">
+      <button (click)="crearTarea()">Planificar Tarea</button>
+    </div>
+    <div *ngIf="tareas_data.length >0; else noTareas">
+      <ul>
+        <li *ngFor="let tarea of tareas_data">
+          <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion }}
+          <p><strong>Fecha Inicio:</strong> {{ tarea.fecha_inicio }}</p>
+          <p><strong>Fecha Fin:</strong> {{ tarea.fecha_fin }}</p>
+          <p><strong>Porcentaje de Avance:</strong> {{ tarea.porcentaje_avance }}%</p>
+          <p><strong>Precio Total:</strong> {{ tarea.precio_total }}</p>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noTareas>
+      <p>No hay tareas registradas.</p>
     </ng-template>
   </section>
 

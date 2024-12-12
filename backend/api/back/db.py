@@ -616,6 +616,10 @@ class PresupuestoData:
                 'monto_linea', 'id_area'
             )
 
+            tareas = Tarea.objects.filter(id_presupuesto_servicio__id_presupuesto=id_presupuesto).values(
+                'id', 'titulo', 'porcentaje_avance', 'fecha_inicio', 'fecha_fin', 'precio_total', 'descripcion'
+            )
+
             # Estructurar los datos en un diccionario para facilitar la conversión a JSON
             presupuesto_data = {
                 "id": presupuesto.id,
@@ -629,7 +633,8 @@ class PresupuestoData:
                 "porc_inflacion": presupuesto.porc_inflacion,
                 "materiales": list(materiales),
                 "servicios": list(servicios),
-                "trabajadores": list(trabajadores)
+                "trabajadores": list(trabajadores),
+                "tareas": list(tareas)
             }
             return presupuesto_data
 

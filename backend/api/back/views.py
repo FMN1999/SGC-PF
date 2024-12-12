@@ -973,20 +973,24 @@ class TareaView(View):
     def post(self, request):
         data = json.loads(request.body)
         presupuesto_servicio = None
+        area=None
+        vehiculo=None
         if data.get('id_presupuesto_servicio'):
-            presupuesto_servicio = get_object_or_404(Presupuesto_Servicio, id=data["id_presupuesto_servicio"])
+            presupuesto_servicio = Presupuesto_Servicio.objects.get(id=data["id_presupuesto_servicio"])
 
-        area = get_object_or_404(Area, id=data["id_area"])
-        vehiculo = get_object_or_404(Vehiculo, id=data["id_vehiculo"])
+        if data.get("id_area"):
+            area = Area.objects.get(id=data["id_area"])
+        if data.get("id_vehiculo"):
+            vehiculo = Vehiculo.objects.get(id=data["id_vehiculo"])
 
         try:
             tarea = Tarea.objects.create(
                 titulo=data["titulo"],
                 descripcion=data["descripcion"],
                 id_area=area,
-                fecha_inicio=data["fecha_inicio"],
-                fecha_fin=data["fecha_fin"],
-                precio_total=data["precio_total"],
+                fecha_inicio=data["fecha_inicio"] if data["fecha_inicio"] else None,
+                fecha_fin=data["fecha_fin"] if data["fecha_fin"] else None,
+                precio_total=data["precio_total"] if data["precio_total"] else None,
                 id_presupuesto_servicio=presupuesto_servicio,
                 id_vehiculo=vehiculo,
                 porcentaje_avance=0
@@ -1824,24 +1828,39 @@ class TareasView(View):
         tareas = Tarea.objects.filter(
             id_presupuesto_servicio__id_presupuesto__id_obra__id_empresa=id_empresa
         ).exclude(porcentaje_avance=100)
-        tareas_response = [
-            {
-                "id": t.id,
-                "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
-                "tarea": t.titulo,
-                "area": t.id_area.descripcion if t.id_area.descripcion else None,
-                "fecha_inicio": t.fecha_inicio,
-                "fecha_fin": t.fecha_fin,
-                "precio_total": t.precio_total,
-                "servicio_presupuesto": t.id_presupuesto_servicio.desc_servicio,
-                "descripcion": t.descripcion,
-                "porcentaje_avance": t.porcentaje_avance if t.porcentaje_avance else 0,
-                "vehiculo":t.id_vehiculo.id_material.tipo_material,
-                "tipo_vehiculo": t.id_vehiculo.tipo,
-                "modelo_vehiculo":t.id_vehiculo.modelo
-            }
-            for t in tareas
-        ]
+        tareas_response =[]
+
+        for t in tareas:
+            try:
+                area = t.id_area.descripcion if t.id_area else None
+            except Tarea.id_area.RelatedObjectDoesNotExist:
+                area= None
+
+            try:
+                vehiculo = t.id_vehiculo.id_material.tipo_material if t.id_vehiculo else None
+                tipo_vehiculo = t.id_vehiculo.tipo if t.id_vehiculo else None
+                modelo_vehiculo = t.id_vehiculo.modelo if t.id_vehiculo else None
+            except Tarea.id_vehiculo.RelatedObjectDoesNotExist:
+                vehiculo= None
+                tipo_vehiculo=None
+                modelo_vehiculo=None
+
+            tareas_response.append(
+                {
+                    "id": t.id,
+                    "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
+                    "tarea": t.titulo,
+                    "area": area,
+                    "fecha_inicio": t.fecha_inicio,
+                    "fecha_fin": t.fecha_fin,
+                    "precio_total": t.precio_total,
+                    "servicio_presupuesto": t.id_presupuesto_servicio.desc_servicio,
+                    "descripcion": t.descripcion,
+                    "porcentaje_avance": t.porcentaje_avance if t.porcentaje_avance else 0,
+                    "vehiculo":vehiculo,
+                    "tipo_vehiculo": tipo_vehiculo,
+                    "modelo_vehiculo":modelo_vehiculo
+                })
         return JsonResponse(tareas_response, safe=False)
 
 
@@ -1872,3 +1891,4 @@ class VerificarIngresosView(View):
             return JsonResponse(data, safe=False)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
