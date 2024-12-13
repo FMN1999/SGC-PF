@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ActivatedRoute } from '@angular/router';
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {HeaderComponent} from '../header/header.component';
 
@@ -14,7 +14,8 @@ import {HeaderComponent} from '../header/header.component';
     NgForOf,
     FormsModule,
     HeaderComponent,
-    NgIf
+    NgIf,
+    NgClass
   ]
 })
 export class GestionPermisosComponent implements OnInit {
@@ -22,6 +23,8 @@ export class GestionPermisosComponent implements OnInit {
   permisosUsuario: any[] = [];
   permisosDisponibles: any[] = [];
   nuevoPermisoId: number | null = null;
+  // @ts-ignore
+  mensaje: string;
 
   constructor(
     private permisosService: UsuarioService,
@@ -63,21 +66,38 @@ export class GestionPermisosComponent implements OnInit {
           next: () => {
             this.cargarPermisos(); // Recargar permisos
             this.nuevoPermisoId = null; // Resetear selección
+            this.mensaje = 'Permiso agregado exitosamente.'; // Establecer el mensaje
+            setTimeout(() => {
+              this.mensaje = ''; // Limpiar el mensaje después de unos segundos
+            }, 10000);
           },
           error: (error) => {
             console.error('Error al asignar permiso:', error);
+            this.mensaje = 'Error al asignar el permiso.';
+            setTimeout(() => {
+              this.mensaje = '';
+            }, 10000);
           },
         });
     }
   }
 
+
   eliminarPermiso(idPermiso: number): void {
     this.permisosService.eliminarPermiso(this.idUsuario, idPermiso).subscribe({
       next: () => {
         this.cargarPermisos(); // Recargar permisos
+        this.mensaje = 'Permiso eliminado exitosamente.'; // Establecer el mensaje
+        setTimeout(() => {
+          this.mensaje = ''; // Limpiar el mensaje después de unos segundos
+        }, 3000);
       },
       error: (error) => {
         console.error('Error al eliminar permiso:', error);
+        this.mensaje = 'Error al eliminar el permiso.';
+        setTimeout(() => {
+          this.mensaje = '';
+        }, 3000);
       },
     });
   }
