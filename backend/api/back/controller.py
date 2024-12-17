@@ -769,14 +769,16 @@ class IngresoController:
             realizado=data.get('realizado', False),
             en_obra=data.get('en_obra', False)
         )
+
         try:
+            # Verificar si el material también es una herramienta
             idMaterial = data.get('id_material')
-            h=Herramienta.objects.get(id=idMaterial)
-            h.id_almacen = almacen
-            h.save()
+            herramienta = Herramienta.objects.filter(id=idMaterial).first()  # Usar `filter` para evitar excepciones
+            if herramienta:
+                herramienta.id_almacen = almacen
+                herramienta.save()
         except Exception as e:
             print(f"Error al asignar almacén: {str(e)}")
-            raise
 
         ingreso.save()
         return ingreso

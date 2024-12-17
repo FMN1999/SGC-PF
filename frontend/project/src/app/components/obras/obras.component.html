@@ -10,21 +10,43 @@
 
 <div *ngIf="!cargando && !error">
   <div class="header-container">
-    <h1>Obras de la Empresa {{ idEmpresa }}</h1>
+    <h1>Obras de {{ idEmpresa }}</h1>
     <button (click)="irACrearObra()" class="create-obra-button">Crear Nueva Obra</button>
   </div>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="filtros-container">
+    <input
+      type="text"
+      placeholder="Buscar por cliente o dirección..."
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltros()"
+      class="search-bar"
+    />
+
+    <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" class="filter-select">
+      <option value="">Todos los estados</option>
+      <option value="Nuevo">Nuevo</option>
+      <option value="En curso">En Curso</option>
+      <option value="Finalizado">Finalizado</option>
+      <option value="En Pausa">En Pausa</option>
+    </select>
+  </div>
+
+  <!-- Listado de obras -->
   <div class="obras-container">
     <div
-      *ngFor="let obra of obras"
+      *ngFor="let obra of obrasFiltradas"
       class="obra-card"
-      (click)="irAObra(obra.id)">
+      (click)="irAObra(obra.id)"
+    >
       <h3 class="obra-header">
-        {{ obra.tipo_obra }} -
+        {{ obra.direccion }} -
         <span class="obra-estado" [class.activo]="obra.estado === 'Activo'">
           {{ obra.estado }}
         </span>
       </h3>
-      <p><strong>Dirección:</strong> {{ obra.direccion }}</p>
+      <p><strong>Tipo de obra:</strong> {{ obra.tipo_obra }}</p>
       <p><strong>Cliente:</strong> {{ obra.cliente_nombre }} {{ obra.cliente_apellido }}</p>
       <p><strong>Teléfono:</strong> {{ obra.telefono_contacto }}</p>
       <p><strong>Inicio Estimado:</strong> {{ obra.fecha_inicio_est }}</p>

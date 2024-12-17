@@ -396,37 +396,44 @@ class MaterialData:
     def actualizar_material(material_id, data):
         # Obtener el material desde la base de datos
         material = Material.objects.get(id=material_id)
+        almacen = None
 
-        # Actualizar los campos del material con los datos proporcionados
+        # Actualizar los campos comunes del material
         material.descripcion = data.get('descripcion', material.descripcion)
         material.marca = data.get('marca', material.marca)
         material.precio = data.get('precio', material.precio)
         material.moneda = data.get('moneda', material.moneda)
         material.unidad_medida = data.get('unidad_medida', material.unidad_medida)
-        material.impuestos_total = data.get('impuestos_total', material.impuestos_total)  # Quitando la coma
-        material.moneda_impuestos = data.get('moneda_impuestos', material.moneda_impuestos)  # Quitando la coma
-        material.descripcion_impuestos = data.get('descripcion_impuestos',
-                                                  material.descripcion_impuestos)  # Quitando la coma
-        material.otros_gastos = data.get('otros_gastos', material.otros_gastos)  # Quitando la coma
-        material.moneda_otros_gastos = data.get('moneda_otros_gastos', material.moneda_otros_gastos)  # Quitando la coma
-        material.descripcion_otros_gastos = data.get('descripcion_otros_gastos',
-                                                     material.descripcion_otros_gastos)  # Quitando la coma
+        material.impuestos_total = data.get('impuestos_total', material.impuestos_total)
+        material.moneda_impuestos = data.get('moneda_impuestos', material.moneda_impuestos)
+        material.descripcion_impuestos = data.get('descripcion_impuestos', material.descripcion_impuestos)
+        material.otros_gastos = data.get('otros_gastos', material.otros_gastos)
+        material.moneda_otros_gastos = data.get('moneda_otros_gastos', material.moneda_otros_gastos)
+        material.descripcion_otros_gastos = data.get('descripcion_otros_gastos', material.descripcion_otros_gastos)
+        material.fecha_desde_precio = data.get('fecha_desde_precio', material.fecha_desde_precio)
+        material.tipo_material = data.get('tipo_material', material.tipo_material)
+        material.save()
 
-        # Guardar los cambios en la base de datos
-        try:
-            material.save()
-        except Exception as e:
-            print(f"Error al buscar material: {e}")
-            raise
-        # Retornar el material actualizado (puedes convertirlo a dict si es necesario)
-        return {
-            'id': material.id,
-            'descripcion': material.descripcion,
-            'marca': material.marca,
-            'precio': material.precio,
-            'moneda': material.moneda,
-            'unidad_medida': material.unidad_medida
-        }
+        # Actualizar detalles adicionales para herramienta o vehículo
+        if data.get('tipo_material') == 'herramienta':
+            herramienta = Herramienta.objects.get(id_material=material)
+            if herramienta.almacen:
+                almacen = Almacen.objects.get(id=herramienta.almacen)
+            herramienta.almacen = data.get('almacen', almacen)
+            herramienta.ubicacion = data.get('ubicacion', herramienta.ubicacion)
+            herramienta.save()
+        elif data.get('tipo_material') == 'vehiculo':
+            vehiculo = Vehiculo.objects.get(id_material=material)
+            vehiculo.patente = data.get('patente', vehiculo.patente)
+            vehiculo.tipo = data.get('tipo', vehiculo.tipo)
+            vehiculo.modelo = data.get('modelo', vehiculo.modelo)
+            if vehiculo.almacen:
+                almacen = Almacen.objects.get(id=vehiculo.almacen)
+            vehiculo.almacen = data.get('almacen', almacen)
+            vehiculo.precio_x_hora = data.get('precio_x_hora', vehiculo.precio_x_hora)
+            vehiculo.save()
+
+        return material
 
     @staticmethod
     def get_by_empresa(id_emp):

@@ -34,10 +34,12 @@
 }
 
 .header-container {
+  max-width: 900px;
+  margin: 20px auto; // Centra el encabezado
+  padding: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 
   h1 {
     font-size: 2rem;
@@ -61,17 +63,44 @@
     }
   }
 }
+.filtros-container {
+  max-width: 900px; // Limita el ancho total
+  margin: 0 auto 20px; // Centra el contenedor y agrega margen inferior
+  padding: 0 15px; // Añade un pequeño margen interno en los lados
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  .search-bar {
+    flex: 2; // Ocupa más espacio que el select
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+  }
+
+  .filter-select {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+  }
+}
 
 .obras-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: $section-padding;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 0 10px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 15px;
   }
 }
+
 
 .obra-card {
   background: $section-bg-color;
@@ -81,6 +110,8 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.3s ease;
+  margin: 0 auto; // Centra las cards
+  max-width: 350px; // Limita el ancho máximo de cada card
 
   &:hover {
     transform: translateY(-3px);

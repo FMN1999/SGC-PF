@@ -1,26 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import {HeaderComponent} from '../header/header.component';
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
-import{HeaderComponent} from '../header/header.component';
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-obras-empresa',
   templateUrl: './obras.component.html',
-  imports: [
-    CurrencyPipe,
-    NgForOf,
-    NgIf,
-    HeaderComponent
-  ],
   standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    NgForOf,
+    HeaderComponent,
+    CurrencyPipe
+  ],
   styleUrls: ['./obras.component.scss']
 })
 export class ObrasComponent implements OnInit {
   idEmpresa: number | null = null;
   obras: any[] = [];
+  obrasFiltradas: any[] = [];
   cargando = true;
   error = false;
+
+  // Variables para los filtros
+  filtroBusqueda: string = '';
+  filtroEstado: string = '';
 
   constructor(
     private empresaService: EmpresaService,
@@ -42,6 +49,7 @@ export class ObrasComponent implements OnInit {
     this.empresaService.obtenerObrasPorEmpresa(this.idEmpresa!).subscribe({
       next: (response) => {
         this.obras = response.obras;
+        this.obrasFiltradas = this.obras; // Inicializamos con todas las obras
         this.cargando = false;
       },
       error: (err) => {
@@ -49,6 +57,21 @@ export class ObrasComponent implements OnInit {
         this.error = true;
         this.cargando = false;
       }
+    });
+  }
+
+  aplicarFiltros(): void {
+    this.obrasFiltradas = this.obras.filter(obra => {
+      const coincideBusqueda =
+        obra.direccion.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
+        `${obra.cliente_nombre} ${obra.cliente_apellido}`
+          .toLowerCase()
+          .includes(this.filtroBusqueda.toLowerCase());
+
+      const coincideEstado =
+        this.filtroEstado === '' || obra.estado === this.filtroEstado;
+
+      return coincideBusqueda && coincideEstado;
     });
   }
 
@@ -60,3 +83,4 @@ export class ObrasComponent implements OnInit {
     this.router.navigate([`/obra/${id}`]);
   }
 }
+

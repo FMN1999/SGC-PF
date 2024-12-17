@@ -3,8 +3,20 @@
 .ingreso-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px;
   background-color: $background-color;
+
+  .error-message {
+    color: #dc3545; /* Rojo de error */
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .success-message {
+    color: #218838; /* Verde de éxito */
+    font-weight: bold;
+    margin: 10px 0;
+  }
 
   .ingresos-section {
     .ingreso-item {
@@ -13,6 +25,17 @@
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap; // Permite que los campos se ajusten en filas flexibles
+        gap: 15px; // Espaciado entre los campos
+
+        .form-group {
+          flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
+          min-width: 200px; // Ancho mínimo para mantener la legibilidad
+        }
+      }
 
       h3 {
         font-size: 1.2rem;
@@ -58,6 +81,13 @@
             &:hover {
               background-color: darken($error-color, 10%);
             }
+
+            &:disabled {
+              background-color: lighten($error-color, 20%);
+              color: darken($white-color, 40%);
+              cursor: not-allowed;
+              opacity: 0.6; // Esto añade un efecto visual adicional para resaltar que está deshabilitado.
+            }
           }
 
           &.btn-secondary {
@@ -78,6 +108,7 @@
             }
           }
         }
+
       }
 
       .buttons {

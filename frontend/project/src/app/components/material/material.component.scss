@@ -3,8 +3,20 @@
 .material-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px;
   background-color: $background-color;
+
+  .error-message {
+    color: #dc3545; /* Rojo de error */
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .success-message {
+    color: #218838; /* Verde de éxito */
+    font-weight: bold;
+    margin: 10px 0;
+  }
 
   .material-details {
     p {
@@ -36,6 +48,7 @@
           &:hover {
             background-color: darken($primary-color, 10%);
           }
+
         }
 
         &.btn-secondary {
@@ -88,10 +101,56 @@
 
     .buttons {
       display: flex;
-      justify-content: space-between;
+      gap: 10px;
+      justify-content: flex-start;
+      margin-top: 20px;
 
       button {
-        width: 48%;
+        flex: 1; // Ajusta automáticamente el tamaño para que sea uniforme
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: $button-radius;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        &.btn-primary {
+          background-color: $primary-color;
+          color: $white-color;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+          }
+
+          &:disabled {
+            background-color: lighten($danger-color, 20%);
+            color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+          }
+        }
+
+        &.btn-secondary {
+          background-color: $secondary-color;
+          color: $white-color;
+
+          &:hover {
+            background-color: darken($secondary-color, 10%);
+          }
+        }
+
+        &.btn-danger {
+          background-color: $danger-color;
+          color: $white-color;
+
+          &:hover {
+            background-color: darken($danger-color, 10%);
+          }
+        }
       }
     }
   }

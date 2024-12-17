@@ -1,15 +1,48 @@
 <app-header></app-header>
 
 <div class="materiales-container">
-  <div *ngIf="materiales.length > 0; else noMateriales">
-    <h1>Lista de Materiales</h1>
-    <ul class="materiales-list">
-      <li *ngFor="let material of materiales" class="material-item">
-        <a [routerLink]="['/material', material.id]" class="material-link">
-          {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
-        </a>
-      </li>
-    </ul>
+  <h1>Materiales</h1>
+
+  <!-- Contenedor de filtros -->
+  <div class="filtros">
+    <input
+      type="text"
+      placeholder="Buscar materiales..."
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltros()"
+      class="busqueda"
+    />
+    <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()" class="tipo-filtro">
+      <option value="">Todos</option>
+      <option value="herramienta">Herramientas</option>
+      <option value="vehiculo">Vehículos</option>
+    </select>
+  </div>
+
+  <!-- Tabla de materiales -->
+  <div class="tabla-container" *ngIf="materialesFiltrados.length > 0; else noMateriales">
+    <table class="tabla-materiales">
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Marca</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Moneda</th>
+          <th>Tipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let material of materialesFiltrados" (click)="verDetalleMaterial(material.id)">
+          <td>{{ material.descripcion }}</td>
+          <td>{{ material.marca }}</td>
+          <td>{{ material.tipo_material }}</td>
+          <td>{{ material.precio }}</td>
+          <td>{{ material.moneda }}</td>
+          <td>{{ material.tipo }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <ng-template #noMateriales>

@@ -341,7 +341,6 @@ class MaterialView(View):
         try:
             data = json.loads(request.body)
             id_proveedor = data.get('id_proveedor')
-            print(id_proveedor)
 
             # Crear el material
             proveedor = Proveedor.objects.get(id=id_proveedor)
@@ -386,18 +385,85 @@ class MaterialView(View):
 
     def get(self, request, material_id):
         try:
-            material = MaterialController.get_by_id(material_id)
+            # Obtener material base
+            material = Material.objects.get(id=material_id)
             material_data = {
                 'id': material.id,
+                'id_proveedor': material.id_proveedor.id,
+                'tipo_material': material.tipo_material,
+                'unidad_medida': material.unidad_medida,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
                 'precio': material.precio,
                 'moneda': material.moneda,
-                'unidad_medida': material.unidad_medida
+                'impuestos_total': material.impuestos_total,
+                'moneda_impuestos': material.moneda_impuestos,
+                'descripcion_impuestos': material.descripcion_impuestos,
+                'otros_gastos': material.otros_gastos,
+                'moneda_otros_gastos': material.moneda_otros_gastos,
+                'descripcion_otros_gastos': material.descripcion_otros_gastos,
+                'fecha_desde_precio': material.fecha_desde_precio,
+                'herramienta': None,
+                'vehiculo': None
             }
+
+            # Verificar si el material está relacionado con una herramienta
+            try:
+                herramienta = Herramienta.objects.get(id_material=material)
+                almacen = None
+                id_almacen = None
+                fecha_compra= None
+                id_compra =None
+
+                if hasattr(herramienta, 'id_almacen') and herramienta.id_almacen:
+                    almacen = Almacen.objects.get(id=herramienta.id_almacen.id)
+                    id_almacen = almacen.id
+
+                if hasattr(herramienta, 'id_compra') and herramienta.id_compra:
+                    compra = Compra.objects.get(id=herramienta.id_compra.id)
+                    fecha_compra = compra.fecha_compra
+                    id_compra = compra.id
+
+                material_data['herramienta'] = {
+                    'id': herramienta.id,
+                    'id_almacen': id_almacen,
+                    'almacen': almacen.descripcion if almacen else None,
+                    'id_compra': id_compra,
+                    'fecha_compra': fecha_compra,
+                    'ubicacion': herramienta.ubicacion
+                }
+            except Herramienta.DoesNotExist:
+                pass
+
+            # Verificar si el material está relacionado con un vehículo
+            try:
+                vehiculo = Vehiculo.objects.get(id_material=material)
+                almacen = None
+                id_almacen = None
+
+                if hasattr(vehiculo, 'id_almacen') and vehiculo.id_almacen:
+                    almacen = Almacen.objects.get(id=vehiculo.id_almacen.id)
+                    id_almacen = almacen.id
+
+                material_data['vehiculo'] = {
+                    'id': vehiculo.id,
+                    'patente': vehiculo.patente,
+                    'tipo': vehiculo.tipo,
+                    'modelo': vehiculo.modelo,
+                    'moneda': vehiculo.moneda,
+                    'precio_x_hora': vehiculo.precio_x_hora,
+                    'id_almacen': id_almacen,
+                    'almacen': almacen.descripcion if almacen else None
+                }
+            except Vehiculo.DoesNotExist:
+                pass
+
             return JsonResponse(material_data, status=200)
+
         except Material.DoesNotExist:
             return JsonResponse({'error': 'Material no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
     def delete(self, request, material_id):
         try:
@@ -410,15 +476,13 @@ class MaterialView(View):
         try:
             # Obtener los datos enviados en el request
             data = json.loads(request.body)
-            print(data)
 
             # Llamar al método estático de MaterialData para actualizar el material
             updated_material = MaterialController.actualizar_material(material_id, data)
 
             # Retornar una respuesta con los datos actualizados
             return JsonResponse({
-                'message': 'Material actualizado con éxito',
-                'material': updated_material
+                'message': 'Material actualizado con éxito'
             }, status=200)
 
         except ValidationError as e:
@@ -561,13 +625,21 @@ class MaterialesPorEmpresa(View):
         data = []
 
         for material in materiales:
+            tipo = "material"  # Valor por defecto
+            if Herramienta.objects.filter(id_material=material).exists():
+                tipo = "herramienta"
+            elif Vehiculo.objects.filter(id_material=material).exists():
+                tipo = "vehículo"
+
             data.append({
                 'id': material.id,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
+                'tipo_material': material.tipo_material,  # Nombre del material
                 'precio': material.precio,
                 'moneda': material.moneda,
-                'id_proveedor': material.id_proveedor.id
+                'tipo': tipo,  # Añadimos el tipo
+                'id_proveedor': material.id_proveedor.id,
             })
 
         return JsonResponse(data, safe=False)

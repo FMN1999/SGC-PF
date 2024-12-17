@@ -1,10 +1,88 @@
 @import '../home/home.component';
 
 .container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border: 1px solid $border-color;
   border-radius: $button-radius;
+
+  .detalle-obra {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: $section-padding;
+    background-color: $section-bg-color;
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+      color: $text-color;
+
+      strong {
+        color: darken($text-color, 15%);
+      }
+    }
+
+    // Opcional: alternar colores para mayor claridad visual
+    p:nth-child(odd) {
+      background-color: lighten($section-bg-color, 5%);
+      padding: 5px;
+      border-radius: $button-radius;
+    }
+  }
+
+
+  .areas, .presupuestos, .documentos {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .areas.ng-animating,
+  .presupuestos.ng-animating,
+  .documentos.ng-animating {
+    max-height: 500px; // Altura máxima deseada
+    opacity: 1;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // Distribuye el título y el botón a extremos opuestos
+    background-color: $section-bg-color;
+    padding: 10px $section-padding;
+    border-radius: $button-radius;
+    border: 1px solid $border-color;
+    margin-bottom: 10px;
+
+    .title {
+      font-size: 1.5rem;
+      color: $text-color;
+      margin: 0;
+    }
+
+    .btn-toggle {
+      background-color: $secondary-color;
+      color: $white-color;
+      padding: 8px 12px;
+      border: none;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 5px lighten($secondary-color, 30%);
+      }
+    }
+  }
 
   .details {
     padding: 15px;
@@ -41,8 +119,17 @@
   .form-container {
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid $border-color; // Separador entre secciones
+    border-bottom: 1px solid $border-color;
 
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+
+      .form-group {
+        flex: 1;
+      }
+    }
     .form-group {
       margin-bottom: 15px;
 
@@ -59,8 +146,6 @@
         padding: 8px;
         border: 1px solid $border-color;
         border-radius: $button-radius;
-        background-color: $background-color;
-        color: $text-color;
 
         &:focus {
           border-color: $primary-color;
@@ -68,11 +153,12 @@
         }
 
         &:read-only {
-          background-color: lighten($background-color, 5%);
+          background-color: $background-color;
           color: darken($text-color, 20%);
         }
       }
     }
+
   }
 
   .section {
@@ -110,6 +196,11 @@
       &:hover {
         background-color: $hover-color;
       }
+
+      &:disabled {
+        background-color: lighten($secondary-color, 20%);
+        cursor: not-allowed;
+      }
     }
 
     &.btn-success {
@@ -118,6 +209,11 @@
 
       &:hover {
         background-color: darken($success-color, 10%);
+      }
+
+      &:disabled {
+        background-color: lighten($success-color, 20%);
+        cursor: not-allowed;
       }
     }
 
@@ -173,7 +269,44 @@
     }
   }
 
-  .nota-item, .area-item, .documento-item, .presupuesto-item {
+  .nota-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: lighten($section-bg-color, 5%);
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    p {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: $text-color;
+    }
+
+    .foto-item {
+      display: block;
+      margin: 10px 0;
+      max-width: 200px; // Ajustar tamaño de imagen
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+    }
+
+    a.btn-info {
+      margin-top: 5px;
+      text-decoration: none;
+      background-color: $loading-color;
+      color: $white-color;
+      padding: 5px 10px;
+      font-size: 0.85em;
+      border-radius: $button-radius;
+      display: inline-block;
+
+      &:hover {
+        background-color: darken($loading-color, 10%);
+      }
+    }
+  }
+
+  .area-item, .documento-item, .presupuesto-item {
     margin-bottom: 20px;
     padding: 10px;
     background-color: lighten($section-bg-color, 5%);
@@ -215,5 +348,26 @@
       color: darken($text-color, 20%);
       font-style: italic;
     }
+  }
+
+  .presupuesto-item-link {
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: inherit; /* Usa el color de texto por defecto */
+    display: block; /* Hace que todo el contenido sea clicable */
+    transition: background-color 0.3s ease; /* Efecto visual al pasar el cursor */
+    border-radius: $button-radius; /* Opcional: Para que coincida con el diseño */
+
+    &:hover {
+      background-color: lighten($primary-color, 40%); /* Cambia el color de fondo al pasar el cursor */
+      cursor: pointer; /* Cambia el cursor a "mano" */
+    }
+  }
+
+  .presupuesto-item {
+    padding: 15px;
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+    background-color: $section-bg-color;
+    margin-bottom: 10px;
   }
 }

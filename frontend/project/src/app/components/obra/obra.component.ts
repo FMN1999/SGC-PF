@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
 
 @Component({
@@ -14,7 +14,8 @@ import {HeaderComponent} from '../header/header.component';
     NgForOf,
     DatePipe,
     RouterLink,
-    HeaderComponent
+    HeaderComponent,
+    CurrencyPipe
   ],
   standalone: true,
   styleUrls: ['./obra.component.scss']
@@ -33,6 +34,9 @@ export class ObraComponent implements OnInit {
   areasMode: boolean=false;
   documentoMode: boolean=false;
   obra: any;
+  mostrarAreas = false;
+  mostrarPresupuestos = false;
+  mostrarDocumentos = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,7 +56,7 @@ export class ObraComponent implements OnInit {
       monto_total_real: [{ value: '', disabled: true }],
       moneda: [{ value: '', disabled: true }],
       pisos: [{ value: '', disabled: true }, Validators.required],
-      dimensions: [{ value: '', disabled: true }, Validators.required],
+      dimensiones: [{ value: '', disabled: true }, Validators.required],
       estado: [{ value: '', disabled: true }, Validators.required],
       ganancias: [{ value: '', disabled: true }],
       perdidas: [{ value: '', disabled: true }]
@@ -91,8 +95,23 @@ export class ObraComponent implements OnInit {
     },
     (error) => {
       console.error('Error al obtener presupuestos:', error);
+    });
+  }
+
+  toggleSeccion(seccion: string): void {
+    switch (seccion) {
+      case 'areas':
+        this.mostrarAreas = !this.mostrarAreas;
+        break;
+      case 'presupuestos':
+        this.mostrarPresupuestos = !this.mostrarPresupuestos;
+        break;
+      case 'documentos':
+        this.mostrarDocumentos = !this.mostrarDocumentos;
+        break;
+      default:
+        break;
     }
-  );
   }
 
   cargarObra(): void {
@@ -110,7 +129,7 @@ export class ObraComponent implements OnInit {
         monto_total_real: obra.monto_total_real,
         moneda: obra.moneda,
         pisos: obra.pisos,
-        dimensions: obra.dimensions,
+        dimensiones: obra.dimensiones,
         estado: obra.estado,
         ganancias: obra.ganancias,
         perdidas: obra.perdidas
@@ -139,7 +158,7 @@ export class ObraComponent implements OnInit {
       this.obraForm.get('monto_total_real')?.enable();
       this.obraForm.get('moneda')?.enable();
       this.obraForm.get('pisos')?.enable();
-      this.obraForm.get('dimensions')?.enable();
+      this.obraForm.get('dimensiones')?.enable();
       this.obraForm.get('estado')?.enable();
       this.obraForm.get('ganancias')?.enable();
       this.obraForm.get('perdidas')?.enable();
@@ -150,7 +169,6 @@ export class ObraComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('actualiza')
     if (this.obraForm.valid && this.editMode) {
       this.obraService.actualizarObra(this.obra_id, this.obraForm.value).subscribe(
           (response: any) => {
@@ -162,6 +180,7 @@ export class ObraComponent implements OnInit {
         }
       );
     }
+    this.cargarObra()
   }
 
   cargarAreas(): void {
@@ -186,7 +205,7 @@ export class ObraComponent implements OnInit {
         }
       );
     }
-
+    window.location.reload();
   }
 
   eliminarArea(areaId: number): void {
@@ -230,6 +249,7 @@ export class ObraComponent implements OnInit {
         });
         this.notaForm.reset();
     });
+    window.location.reload();
   }
 
   cargarNotas(): void {
@@ -249,6 +269,7 @@ export class ObraComponent implements OnInit {
         console.error('Error al eliminar la nota:', error);
       }
     );
+    this.cargarNotas();
   }
 
   guardarDocumento(): void {
@@ -264,6 +285,7 @@ export class ObraComponent implements OnInit {
         console.error('Error al guardar el documento:', error);
       }
     );
+    window.location.reload();
   }
 
   cargarDocumentos(): void {
@@ -287,6 +309,7 @@ export class ObraComponent implements OnInit {
         console.error('Error al eliminar el documento:', error);
       }
     );
+    this.cargarDocumentos();
   }
 
   crearPresupuesto(): void {
