@@ -26,4 +26,12 @@ export class PagoService {
   registrarCobro(pagoData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}registrar-pago/`, pagoData);
   }
+
+  getComprasPendientes(idEmpresa: number) {
+    return this.http.post<{ compras: any[] }>(`${this.baseUrl}compras-pendientes/`, { id_empresa: idEmpresa });
+  }
+
+  getSubcontrataciones(idEmpresa: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}subcontrataciones/${idEmpresa}/`);
+  }
 }

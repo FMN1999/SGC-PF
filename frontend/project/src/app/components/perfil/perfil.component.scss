@@ -1,7 +1,7 @@
 @import '../../components/home/home.component';
 
 .perfil-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $background-color;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -61,12 +61,24 @@
   .formulario-edicion {
     form {
       display: flex;
+      padding:50px;
       flex-direction: column;
       gap: $section-padding;
 
       label {
         font-weight: bold;
         color: $text-color;
+      }
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap; // Permite que los campos se ajusten en filas flexibles
+        gap: 15px; // Espaciado entre los campos
+
+        .form-group {
+          flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
+          min-width: 200px; // Ancho mínimo para mantener la legibilidad
+        }
       }
 
       input,

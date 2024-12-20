@@ -49,17 +49,17 @@
 
   .create-obra-button {
     padding: 10px 20px;
-    background-color: $success-color;
-    color: $white-color;
+    background-color: $primary-color;
+    color: white;
     border: none;
-    border-radius: $button-radius;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
     font-size: 1rem;
     font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: darken($success-color, 10%);
+      background-color: darken($primary-color, 10%);
     }
   }
 }

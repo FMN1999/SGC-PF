@@ -2,24 +2,27 @@
 <div class="perfil-container">
   <div *ngIf="perfil && !editMode">
     <h1>Perfil de {{ perfil.nombre }} {{ perfil.apellido }}</h1>
-    <p>Email: {{ perfil.email }}</p>
-    <p>Teléfono: {{ perfil.telefono }}</p>
-    <p>Dirección: {{ perfil.direccion }}</p>
+    <p><strong>Email: </strong> {{ perfil.email }}</p>
+    <p><strong>Celular: </strong>{{ perfil.celular }}</p>
+    <p><strong>Teléfono: </strong>{{ perfil.telefono }}</p>
+    <p><strong>Dirección: </strong>{{ perfil.direccion }}</p>
+    <p><strong>Sexo: </strong>{{ perfil.sexo }}</p>
+    <p><strong>Fecha de Nacimiento: </strong>{{ perfil.fecha_nacimiento }}</p>
 
     <div class="colaborador-info" *ngIf="perfil.puesto!==null">
-      <p>Puesto: {{ perfil.puesto }}</p>
-      <p>Rol: {{ perfil.rol }}</p>
-      <p>Fecha de alta: {{ perfil.fecha_alta }}</p>
-      <p>Empresa: {{perfil.empresa_col}}</p>
+      <p><strong>Puesto: </strong>{{ perfil.puesto }}</p>
+      <p><strong>Rol: </strong>{{ perfil.rol }}</p>
+      <p><strong>Fecha de alta: </strong>{{ perfil.fecha_alta }}</p>
+      <p><strong>Empresa: </strong>{{perfil.empresa_col}}</p>
       <button (click)="gestionarPermisos(perfil.id)">Gestionar Permisos</button>
     </div>
 
     <div class="cliente-info" *ngIf="perfil.cuit!==null">
-      <p>CUIT: {{ perfil.cuit }}</p>
-      <p>Ciudad: {{ perfil.ciudad }}</p>
-      <p>Provincia: {{ perfil.provincia }}</p>
-      <p>Deuda: {{ perfil.monto_deuda }} {{ perfil.moneda_deuda }}</p>
-      <p>Empresa: {{perfil.empresa_cl}}</p>
+      <p><strong>CUIT: </strong>{{ perfil.cuit }}</p>
+      <p><strong>Ciudad: </strong>{{ perfil.ciudad }}</p>
+      <p><strong>Provincia: </strong>{{ perfil.provincia }}</p>
+      <p><strong>Deuda: </strong>{{ perfil.monto_deuda }} {{ perfil.moneda_deuda }}</p>
+      <p><strong>Empresa: </strong>{{perfil.empresa_cl}}</p>
     </div>
 
     <button *ngIf="esUsuarioActual()" (click)="activarEdicion()">Editar Perfil</button>
@@ -28,11 +31,17 @@
   <div class="formulario-edicion" *ngIf="editMode">
     <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()">
       <!-- Campos de edición -->
-      <label for="nombre">Nombre</label>
-      <input id="nombre" type="text" formControlName="nombre">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" type="text" formControlName="nombre">
+        </div>
 
-      <label for="apellido">Apellido</label>
-      <input id="apellido" type="text" formControlName="apellido">
+        <div class="form-group">
+          <label for="apellido">Apellido</label>
+          <input id="apellido" type="text" formControlName="apellido">
+        </div>
+      </div>
 
       <label for="email">Email</label>
       <input id="email" type="email" formControlName="email">
@@ -82,7 +91,7 @@
     </ul>
   </div>
 
-  <div class="tareas" *ngIf="tareas !== null">
+  <div class="tareas" *ngIf="perfil">
     <h2>Tareas</h2>
     <ul>
       <li *ngFor="let t of tareas; let i = index">

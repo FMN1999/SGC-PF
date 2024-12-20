@@ -28,7 +28,7 @@
     <button
       [disabled]="estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado'"
       class="btn-accion"
-      (click)="registrarPagoCompra(compra.id, compra.id_proveedor)">
+      (click)="registrarPagoCompra(compra.id, compra.id_proveedor, compra.monto_total)">
       Registrar Pago
     </button>
 

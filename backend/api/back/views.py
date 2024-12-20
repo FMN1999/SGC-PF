@@ -146,6 +146,7 @@ class PerfilView(View):
                 'celular': usuario.celular,
                 'telefono': usuario.telefono,
                 'direccion': usuario.direccion,
+                'fecha_nacimiento': usuario.fecha_nacimiento,
                 'fecha_alta': colaborador.fecha_alta if colaborador else cliente.fecha_alta,
                 'puesto': colaborador.puesto if colaborador else None,
                 'rol': colaborador.rol if colaborador else None,
@@ -858,8 +859,6 @@ class PresupuestoView(View):
 class PresupuestosView(View):
     def get(self, request, id_obra):
         try:
-            print('entre')
-            print(id_obra)
             presupuestos = PresupuestoController.get_by_obra(id_obra)
             presupuestos_data = [
                 {
@@ -1172,23 +1171,40 @@ class PagoView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            tipo = data.get('tipo_pago')
             monto = data.get('monto')
             moneda = data.get('moneda')
             cuota = data.get('cuota')
             id_proveedor = data.get('id_proveedor')
-            id_compra = data.get('id_compra')
-            id_subcontratacion = data.get('id_subcontratacion')
+            id_compra = data.get('id_compra') if tipo == 'compra' else None
+            id_subcontratacion = data.get('id_subcontratacion') if tipo == 'subcontratacion' else None
             fecha_pago = data.get('fecha_pago')
 
-            # Validar que solo uno de id_compra o id_subcontratacion esté presente
-            if (id_compra and id_subcontratacion) or (not id_compra and not id_subcontratacion):
-                return JsonResponse(
-                    {'error': 'Debe especificar solo una compra o una subcontratación, no ambas o ninguna.'},
-                    status=400)
 
             # Llamada al controlador para crear el pago
             resultado = PagoController.crear_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion,
                                                   fecha_pago)
+
+            if id_compra:
+                compra = Compra.objects.get(id=id_compra)
+                obra = Obra.objects.filter(id=compra.id_obra.id).first()
+                if obra:
+                    obra.monto_total_real += monto
+                    real = obra.monto_total_real
+                    estimado = obra.monto_total_est
+                    obra.ganancias = estimado - real if estimado > real else 0
+                    obra.perdidas = real - estimado if real > estimado else 0
+                    obra.save()
+
+            if id_subcontratacion:
+                sub = Subcontratacion.objects.get(id=id_subcontratacion)
+                obra = Obra.objects.filter(id=sub.id_obra.id).first()
+                obra.monto_total_real +=monto
+                real = obra.monto_total_real
+                estimado = obra.monto_total_est
+                obra.ganancias = estimado - real if estimado > real else 0
+                obra.perdidas = real - estimado if real > estimado else 0
+                obra.save()
 
             if resultado['status'] == 'success':
                 return JsonResponse({'message': 'Pago registrado exitosamente', 'pago_id': resultado['pago_id']},
@@ -1578,6 +1594,9 @@ class CobroView(View):
                 cantidad_recargo=data["cantidad_recargo"],
                 unidad_recargo=data["unidad_recargo"]
             )
+            modificacion = cliente.deuda
+            cliente.deuda = modificacion - pago.cobro
+            cliente.save()
             return JsonResponse({"message": "Tarea creada"}, safe=False)
         except Exception as e:
             print(e)
@@ -1964,3 +1983,17 @@ class VerificarIngresosView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ComprasPagosView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        id_empresa = data.get('id_empresa')
+        compras = CompraController.get_compras_pendientes(id_empresa)
+        return JsonResponse({'compras': compras}, status=200)
+
+
+class SubcontratacionesView(View):
+    def get(self, request, id_empresa):
+        subcontrataciones = SubcontratacionController.get_validas(id_empresa)
+        return JsonResponse({'subcontrataciones': subcontrataciones})

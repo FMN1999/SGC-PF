@@ -180,7 +180,7 @@ export class ObraComponent implements OnInit {
         }
       );
     }
-    this.cargarObra()
+    window.location.reload();
   }
 
   cargarAreas(): void {

@@ -16,8 +16,10 @@
     <h3>Materiales Incluidos</h3>
     <ul *ngIf="materiales.length > 0; else noMateriales">
       <li *ngFor="let material of materiales">
-        {{ material.descripcion }} ({{ material.marca }}), {{ material.cantidad_of }} {{ material.unidad_of }} -
-        {{ material.monto | currency: material.moneda }} ({{ material.porc_desc }}% descuento)
+        <a [routerLink]="['/material', material.id]" class="material-link">
+          {{ material.descripcion }} ({{ material.marca }}), {{ material.cantidad_of }} {{ material.unidad_of }} -
+          {{ material.monto | currency: material.moneda }} ({{ material.porc_desc }}% descuento)
+        </a>
       </li>
     </ul>
     <ng-template #noMateriales>
@@ -29,8 +31,10 @@
     <h3>Servicios Incluidos</h3>
     <ul *ngIf="servicios.length > 0; else noServicios">
       <li *ngFor="let servicio of servicios">
-        {{ servicio.descripcion }} - {{ servicio.cantidad_of }} {{ servicio.unidad_tiempo }} -
-        {{ servicio.monto | currency: servicio.moneda }} ({{ servicio.porc_desc }}% descuento)
+        <a [routerLink]="['/servicio', servicio.id]" class="servicio-link">
+          {{ servicio.descripcion }} - {{ servicio.cantidad_of }} {{ servicio.unidad_tiempo }} -
+          {{ servicio.monto | currency: servicio.moneda }} ({{ servicio.porc_desc }}% descuento)
+        </a>
       </li>
     </ul>
     <ng-template #noServicios>

@@ -158,9 +158,6 @@ class ProveedorController:
             materiales = ProveedorData.get_material_by_prov(proveedor)
             servicios = ProveedorData.get_servicio_by_prov(proveedor)
             ofertas = ProveedorData.get_oferta_by_prov(proveedor)
-            print(materiales)
-            print(servicios)
-            print(ofertas)
 
             # Convertir los objetos a diccionarios
             materiales_list = [
@@ -371,6 +368,10 @@ class ObraController:
         id_empresa = data.get('id_empresa')  # Viene del sessionStorage
 
         cliente = ClienteData.get_by_id(id_cliente)
+        deuda = cliente.deuda
+        cliente.deuda = deuda + monto_total_est
+        cliente.save()
+
         empresa = EmpresaData.obtener_empresa_por_id(id_empresa)
 
         nueva_obra = Obra.objects.create(
@@ -380,12 +381,15 @@ class ObraController:
             fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d') if fecha_inicio_est else None,
             fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d') if fecha_fin_est else None,
             monto_total_est= 0 if monto_total_est == '' else monto_total_est,
+            monto_total_real=0,
             moneda=moneda,
             pisos=pisos if pisos else 0,
             dimensiones=dimensiones,
             estado=estado,
             id_empresa=empresa,
-            tipo_obra=tipo_obra
+            tipo_obra=tipo_obra,
+            ganancias=0,
+            perdidas=0
         )
         return ObraData.guardar(nueva_obra)
 
@@ -421,6 +425,9 @@ class ObraController:
 
     @staticmethod
     def actualizar(obra: Obra, data):
+        estimado = data.get('monto_total_est')
+        real = data.get('monto_total_real')
+
         obra.direccion = data.get('direccion')
         obra.telefono_contacto = data.get('telefono_contacto')
         obra.fecha_inicio_real = data.get('fecha_inicio_real')
@@ -431,8 +438,8 @@ class ObraController:
         obra.pisos = data.get('pisos')
         obra.dimensiones = data.get('dimensiones')
         obra.estado = data.get('estado')
-        obra.ganancias = data.get('ganancias')
-        obra.perdidas = data.get('perdidas')
+        obra.ganancias = estimado - real if estimado > real else 0
+        obra.perdidas = real - estimado if real > estimado else 0
         return ObraData.guardar(obra)
 
     @staticmethod
@@ -665,8 +672,6 @@ class CompraController:
                 lineas_por_proveedor[id_proveedor] = []
             lineas_por_proveedor[id_proveedor].append(linea)
 
-        print(lineas_por_proveedor)
-
         # Crear una compra para cada proveedor con sus líneas correspondientes
         for id_proveedor, lineas in lineas_por_proveedor.items():
             proveedor = Proveedor.objects.get(id=id_proveedor)
@@ -749,6 +754,40 @@ class CompraController:
     def cambiar_estado_compra(compra_id, nuevo_estado):
         compra = CompraData.actualizar_estado_compra(compra_id, nuevo_estado)
         return compra is not None
+
+    @staticmethod
+    def get_compras_pendientes(id_empresa):
+        # Obtener compras con estado distinto de "Cancelada"
+        compras = Compra.objects.exclude(
+            estado__in=["Cancelada", "Pendiente", "Rechazada"]
+        )
+
+        # Filtrar compras cuyo proveedor pertenezca a la empresa y cuyo monto total no esté cubierto
+        compras_pendientes = []
+        for compra in compras:
+            if compra.id_proveedor.id_empresa.id != id_empresa:
+                continue  # Saltar compras de otras empresas
+
+            # Calcular el total pagado
+            total_pagado = Pago.objects.filter(id_compra=compra.id).aggregate(Sum('monto'))['monto__sum'] or 0
+            if total_pagado < compra.monto_total:
+                # Contar las líneas de material y obtener los nombres de los materiales
+                lineas = LineaCompra.objects.filter(id_compra=compra.id)
+                cantidad_lineas = lineas.count()
+                nombres_materiales = [linea.id_material.tipo_material.split()[0] for linea in lineas[:3]]
+
+                # Preparar los detalles de la compra
+                compras_pendientes.append({
+                    'id': compra.id,
+                    'direccion_obra': compra.id_obra.direccion if compra.id_obra else None,
+                    'fecha_compra': compra.fecha_compra,
+                    'cantidad_lineas': cantidad_lineas,
+                    'materiales': nombres_materiales,
+                    'monto_pendiente': compra.monto_total - total_pagado,
+                    'id_proveedor': compra.id_proveedor.id
+                })
+
+        return compras_pendientes
 
 
 class IngresoController:
@@ -1234,3 +1273,26 @@ class ReporteObra:
         }
 
         return data_return
+
+class SubcontratacionController:
+    @staticmethod
+    def get_validas(id_empresa):
+        subcontrataciones = Subcontratacion.objects.filter(id_obra__id_empresa=id_empresa)
+        subcontrataciones_validas = []
+
+        for sub in subcontrataciones:
+            total_pagos = Pago.objects.filter(id_subcontratacion=sub.id).aggregate(Sum('monto'))['monto__sum'] or 0
+
+            # Verificar que el monto total de los pagos no supere el monto contratado
+            if total_pagos < sub.monto_contratacion:
+                subcontrataciones_validas.append({
+                    'id': sub.id,
+                    'obra': sub.id_obra.direccion if sub.id_obra else None,  # Si existe la obra
+                    'fecha_contrato': sub.fecha_contrato,
+                    'descripcion_servicio': sub.id_servicio.descripcion,
+                    'monto_contratacion': sub.monto_contratacion - total_pagos,
+                    'moneda_contratacion': sub.moneda_contratacion,
+                    'id_proveedor': sub.id_servicio.id_proveedor.id
+                })
+
+        return subcontrataciones_validas
