@@ -45,4 +45,7 @@ export class PresupuestoService {
     return this.http.get<any[]>(`tareas-presupuesto/${idPresupuesto}/`);
   }
 
+  actualizaPresupuesto(id: number, payload: any) {
+    return this.http.patch(`${this.apiUrl}actualizar-presupuesto/${id}/`, payload);
+  }
 }

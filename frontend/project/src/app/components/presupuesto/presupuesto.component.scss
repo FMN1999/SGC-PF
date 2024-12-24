@@ -2,7 +2,7 @@
 
 
 .presupuesto-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -25,15 +25,58 @@
     }
   }
 
+  .presupuesto-info{
+    .actions-right {
+      display: flex;
+      justify-content: center; /* Alinea los elementos al centro*/
+      gap: 10px; /* Espaciado entre los botones */
+      margin-top: 15px;
+
+      button {
+        padding: 8px 15px;
+        background-color: $secondary-color;
+        color: $white-color;
+        border: none;
+        border-radius: $button-radius;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $hover-color;
+        }
+
+        &.btn-aprobar {
+          background-color: $success-color;
+
+          &:hover {
+            background-color: darken($success-color, 10%);
+          }
+        }
+
+        &.btn-rechazar {
+          background-color: $error-color;
+
+          &:hover {
+            background-color: darken($error-color, 10%);
+          }
+        }
+      }
+    }
+  }
+
   .presupuesto-info p {
     font-size: 1rem;
     margin-bottom: 10px;
     color: $text-color;
+
   }
 
   .actions {
-    margin: $section-padding 0;
     text-align: center;
+    display: flex;
+    justify-content: flex-end; /* Alinea los elementos a la derecha */
+    gap: 10px; /* Espaciado entre los botones */
+    margin-top: 15px;
 
     button {
       margin-right: 10px;
@@ -43,6 +86,7 @@
       border: none;
       border-radius: $button-radius;
       cursor: pointer;
+
 
       &.btn-editar {
         background-color: $secondary-color;
@@ -74,20 +118,26 @@
     list-style: none;
     padding: 0;
 
-    .item {
-      background: $table-header-bg-color;
-      padding: 10px;
+    li {
+      padding: 15px;
       margin-bottom: 10px;
+      border: 1px solid $border-color;
       border-radius: $button-radius;
+      background-color: $table-header-bg-color;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+      &:nth-child(odd) {
+        background-color: lighten($section-bg-color, 5%);
+      }
+
       p {
-        margin: 5px 0 0;
-        color: $text-color;
+        margin: 5px 0;
         font-size: 0.9rem;
+        color: $text-color;
       }
     }
   }
+
 
   .mensaje-vacio, .mensaje-carga {
     text-align: center;
@@ -103,6 +153,26 @@
       font-size: 1.25rem;
       color: $primary-color;
       margin-bottom: 15px;
+    }
+
+    .btn-guardar {
+        background-color: $success-color;
+        padding: 10px 20px;
+        border: none;
+        color: $white-color;
+        border-radius: $button-radius;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($success-color, 10%);
+        }
+
+        &:disabled {
+          background-color: lighten($success-color, 20%);
+          cursor: not-allowed;
+        }
     }
 
     .form-group {
@@ -128,13 +198,26 @@
           box-shadow: 0 0 5px rgba($primary-color, 0.5);
         }
       }
+
+      .btn-eliminar {
+        background-color: $danger-color;
+        color: $white-color;
+        padding: 8px 15px;
+        border-radius: $button-radius;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+      }
     }
 
     .form-actions {
       display: flex;
       justify-content: space-between;
       margin-top: $section-padding;
-
       .btn-guardar {
         background-color: $success-color;
         padding: 10px 20px;
@@ -142,6 +225,8 @@
         color: $white-color;
         border-radius: $button-radius;
         cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
 
         &:hover {
           background-color: darken($success-color, 10%);
@@ -155,3 +240,5 @@
     }
   }
 }
+
+

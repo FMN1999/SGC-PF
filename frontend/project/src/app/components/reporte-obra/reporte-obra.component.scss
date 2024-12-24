@@ -1,7 +1,7 @@
 @import '../../components/home/home.component';
 
 .reporte-obra {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
 
   .loading-spinner {
@@ -67,9 +67,15 @@
 
     .chart {
       margin-top: $section-padding;
+      display: flex; /* Utilizamos Flexbox */
+      justify-content: center; /* Centramos horizontalmente */
+      align-items: center; /* Alineamos verticalmente (opcional) */
+
       canvas {
-        width: 100%;
-        max-height: 400px;
+        width: 100%; /* Ocupa el ancho completo disponible */
+        max-width: 600px; /* Limita el tamaño máximo en pantallas grandes */
+        height: auto; /* Mantén la proporción */
+        max-height: 400px; /* Evita que el gráfico sea demasiado alto */
       }
     }
   }

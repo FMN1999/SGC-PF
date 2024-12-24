@@ -1,7 +1,7 @@
 @import '../../components/home/home.component';
 
 .subcontratacion-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -24,6 +24,26 @@
     }
   }
 
+  .mensaje-exito {
+    background-color: $success-color;
+    color: $white-color;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: $button-radius;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .mensaje-error {
+    background-color: $error-color;
+    color: $white-color;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: $button-radius;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
   .mensaje-carga {
     text-align: center;
     color: $loading-color;
@@ -37,6 +57,21 @@
     background-color: $table-header-bg-color;
     border-radius: $button-radius;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .form-row {
+      display: flex;
+      gap: 20px; // Espaciado entre los campos
+
+      .form-group {
+        flex: 1; // Hacer que ambos campos tengan el mismo ancho
+        display: flex;
+        flex-direction: column; // Mantener el diseño vertical interno
+      }
+
+      input {
+        width: 100%; // Asegura que los campos ocupen el espacio disponible
+      }
+    }
 
     .form-group {
       margin-bottom: $section-padding;
@@ -72,6 +107,11 @@
 
       &:hover {
         background-color: darken($error-color, 10%);
+      }
+
+      &:disabled {
+        background-color: lighten($error-color, 20%);
+        cursor: not-allowed;
       }
     }
   }

@@ -64,7 +64,7 @@
     }
 
     .btn-toggle {
-      background-color: $secondary-color;
+      background-color: $primary-color;
       color: $white-color;
       padding: 8px 12px;
       border: none;
@@ -74,7 +74,7 @@
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: $hover-color;
+        background-color: darken($primary-color, 10%);
       }
 
       &:focus {

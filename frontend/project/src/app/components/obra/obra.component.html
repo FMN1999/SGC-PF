@@ -3,7 +3,7 @@
 <div class="container">
   <h2>Detalles de Obra en {{ obra?.direccion }}</h2>
   <div class="action-buttons">
-    <button (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
+    <button *ngIf="abrirReporte" (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
     <button class="btn btn-info" (click)="irAPagosCobros()">Ver Pagos y Cobros</button>
   </div>
   <div class="detalle-obra" *ngIf="!editMode" >

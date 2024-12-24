@@ -37,6 +37,7 @@ export class ObraComponent implements OnInit {
   mostrarAreas = false;
   mostrarPresupuestos = false;
   mostrarDocumentos = false;
+  abrirReporte: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -89,12 +90,18 @@ export class ObraComponent implements OnInit {
     });
     this.cargarNotas();  // Cargar las notas de la obra
     this.cargarDocumentos();
-    this.obraService.getPresupuestosPorObra(this.obra_id).subscribe(
-    (data) => {
+    this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
       this.presupuestos = data;
-    },
-    (error) => {
-      console.error('Error al obtener presupuestos:', error);
+      console.log(this.presupuestos)
+
+      // Verificar si algún presupuesto tiene aprobado = true
+      const existePresupuestoAprobado = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
+
+      if (existePresupuestoAprobado) {
+        this.abrirReporte = true; // Cambia esta línea por el nombre de tu variable
+      } else {
+        this.abrirReporte = false; // O el valor por defecto que quieras asignar
+      }
     });
   }
 
@@ -245,11 +252,14 @@ export class ObraComponent implements OnInit {
         const fotos = this.notaForm.get('fotos')?.value;
         // @ts-ignore
         fotos.forEach((url: string) => {
+          console.log(url)
+          if (url !== ''){
             this.obraService.agregarFoto(nota.id, url).subscribe();
+          }
         });
         this.notaForm.reset();
     });
-    window.location.reload();
+    this.cargarNotas();
   }
 
   cargarNotas(): void {

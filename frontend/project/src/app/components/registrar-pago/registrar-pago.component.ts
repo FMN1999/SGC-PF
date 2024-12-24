@@ -22,18 +22,21 @@ export class RegistrarPagoComponent implements OnInit {
   pagoForm!: FormGroup;
   clientes: any;
   obras: any;
+  obras2: any;
   // @ts-ignore
   id_empresa: number;
+  mensajeSuccess: string = '';
+  mensajeError: string = '';
 
   constructor(private fb: FormBuilder,
-              private http: HttpClient,
               private pagoService: PagoService,
               private empresaService: EmpresaService
   ) {}
 
   ngOnInit(): void {
     // @ts-ignore
-    this.id_empresa = +sessionStorage.getItem('id_empresa')
+    this.id_empresa = +sessionStorage.getItem('id_empresa');
+
     this.pagoForm = this.fb.group({
       id_cliente: [null, Validators.required],
       id_obra: [null],
@@ -47,6 +50,15 @@ export class RegistrarPagoComponent implements OnInit {
     });
 
     this.cargarClientesYObras();
+
+    // Filtrar obras cuando cambia el cliente
+    this.pagoForm.get('id_cliente')?.valueChanges.subscribe((clienteId) => {
+      if (clienteId) {
+        this.filtrarObrasPorCliente(clienteId);
+      } else {
+        this.obras = []; // Limpia las obras si no hay cliente seleccionado
+      }
+    });
   }
 
   cargarClientesYObras(): void {
@@ -56,34 +68,69 @@ export class RegistrarPagoComponent implements OnInit {
     });
 
     this.empresaService.obtenerObrasPorEmpresa(this.id_empresa).subscribe({
-      next: (data) => (this.obras = data.obras),
+      next: (data) => {this.obras = data.obras; this.obras2=data.obras;}, // Carga todas las obras inicialmente
       error: (err) => console.error('Error al cargar obras', err)
     });
-
-    console.log(this.obras);
   }
+
 
   /**
    * Registrar el pago
    */
   submitPago(): void {
+    const clienteId = this.pagoForm.get('id_cliente')?.value;
+    const obraId = this.pagoForm.get('id_obra')?.value;
+
+    // Validar si la obra pertenece al cliente seleccionado
+    const obraSeleccionada = this.obras.find((obra: any) => obra.id === Number(obraId));
+
+    if (obraSeleccionada.id_cliente !== Number(clienteId)) {
+      this.mensajeError = 'La obra seleccionada no pertenece al cliente seleccionado.';
+      this.mensajeSuccess = '';
+      return;
+    }
+
     if (this.pagoForm.valid) {
       const pagoData = this.pagoForm.value;
 
       this.pagoService.registrarCobro(pagoData).subscribe({
         next: (response) => {
-          console.log('Pago registrado:', response);
-          alert('Pago registrado exitosamente');
+          this.mensajeSuccess = 'Pago registrado correctamente.';
+          this.mensajeError = ''; // Limpia el mensaje de error
           this.pagoForm.reset();
         },
         error: (err) => {
-          console.error('Error al registrar pago', err);
-          alert('Ocurrió un error al registrar el pago');
+          this.mensajeError = 'Ocurrió un error durante el registro. Intenta nuevamente.';
+          this.mensajeSuccess = ''; // Limpia el mensaje de éxito
         }
       });
     } else {
-      alert('Por favor, complete todos los campos obligatorios');
+      this.mensajeError = 'Por favor complete todos los datos obligatorios.';
+      this.mensajeSuccess = ''; // Limpia el mensaje de éxito
     }
   }
+
+
+  filtrarObrasPorCliente(clienteId: number): void {
+    this.empresaService.obtenerObrasPorEmpresa(this.id_empresa).subscribe({
+      next: (data) => {
+        console.log('Cliente seleccionado:', clienteId);
+        console.log('Obras devueltas por el backend:', data.obras);
+
+        // Filtro para obtener solo las obras del cliente seleccionado
+        this.obras = data.obras.filter((obra: any) => {
+          console.log(`Obra: ${obra.id}, Cliente ID en obra: ${obra.id_cliente}, Coincide: ${obra.id_cliente === clienteId}`);
+          return obra.id_cliente === Number(clienteId);
+        });
+
+        console.log('Obras filtradas:', this.obras);
+      },
+      error: (err) => {
+        console.error('Error al cargar obras', err);
+        this.obras = []; // Limpia las obras si hay un error
+      }
+    });
+  }
+
 
 }

@@ -221,4 +221,24 @@ export class PresupuestoComponent implements OnInit {
     this.router.navigate(['/crear-tarea', { idPresupuesto: this.presupuesto.id, idObra: this.presupuesto.id_obra }]);
   }
 
+  aprobarPresupuesto() {
+    const payload = { estado: 'Aprobado', aprobado: true };
+    this.presupuestoService.actualizarPresupuesto(this.idPresupuesto, payload)
+      .subscribe(() => {
+        this.presupuesto.estado = 'Aprobado';
+        this.presupuesto.aprobado = true;
+        window.location.reload();
+      });
+  }
+
+  rechazarPresupuesto() {
+    const payload = { estado: 'Rechazado', aprobado: false };
+    this.presupuestoService.actualizaPresupuesto(this.idPresupuesto, payload)
+      .subscribe(() => {
+        this.presupuesto.estado = 'Rechazado';
+        this.presupuesto.aprobado = false;
+        window.location.reload();
+      });
+  }
+
 }

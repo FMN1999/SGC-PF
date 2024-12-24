@@ -38,7 +38,7 @@ class UsuarioData:
 
     @staticmethod
     def valida_usuario_user(user):
-        Usuario.objects.filter(usuario=user).exists()
+        return Usuario.objects.filter(usuario=user).exists()
 
     @staticmethod
     def guardar_cambios(usuario):

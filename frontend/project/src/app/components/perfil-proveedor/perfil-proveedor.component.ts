@@ -25,6 +25,12 @@ export class PerfilProveedorComponent implements OnInit {
   ofertas: any[] = [];
   mensajeError: string = '';
   isEditing = false; // Bandera para controlar el modo de edición
+  searchMateriales = '';
+  searchServicios = '';
+  searchOfertas = '';
+  showMateriales = true;
+  showServicios = true;
+  showOfertas = true;
 
   constructor(
     private proveedorService: ProveedorService,
@@ -115,6 +121,37 @@ export class PerfilProveedorComponent implements OnInit {
         console.error('Error al eliminar la oferta');
       }
     });
+  }
+    // Métodos de búsqueda
+  filteredMateriales() {
+    return this.materiales.filter(m => m.descripcion.toLowerCase().includes(this.searchMateriales.toLowerCase()));
+  }
+
+  filteredServicios() {
+    return this.servicios.filter(s => s.descripcion.toLowerCase().includes(this.searchServicios.toLowerCase()));
+  }
+
+  filteredOfertas() {
+    return this.ofertas.filter(o => o.descripcion.toLowerCase().includes(this.searchOfertas.toLowerCase()));
+  }
+
+  // Alternar visibilidad de secciones
+  toggleSection(section: string) {
+    if (section === 'materiales') this.showMateriales = !this.showMateriales;
+    if (section === 'servicios') this.showServicios = !this.showServicios;
+    if (section === 'ofertas') this.showOfertas = !this.showOfertas;
+  }
+
+  navigateToMaterial(id: number): void {
+    this.router.navigate(['/material', id]);
+  }
+
+  navigateToServicio(id: number): void {
+    this.router.navigate(['/servicio', id]);
+  }
+
+  navigateToOferta(id: number): void {
+    this.router.navigate(['/oferta', id]);
   }
 }
 

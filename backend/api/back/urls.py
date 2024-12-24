@@ -100,4 +100,5 @@ urlpatterns = [
     path('crear-almacen/', views.AlmacenesPorEmpresaView.as_view(), name='actualiza-en-obra'),
     path('compras-pendientes/', views.ComprasPagosView.as_view(), name='compras-pendientes'),
     path('subcontrataciones/<int:id_empresa>/', views.SubcontratacionesView.as_view(), name='contrataciones-pendientes'),
+    path('actualizar-presupuesto/<int:pk>/', views.PresupuestoView.as_view(), name='actualizar-presupuesto'),
 ]

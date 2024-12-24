@@ -341,7 +341,7 @@ class ServicioController:
     @staticmethod
     def eliminar_servicio(id_serv):
         ServicioData.eliminar_servicio(id_serv)
-        
+
     @staticmethod
     def actualizar_servicio(id_serv, data):
         return ServicioData.actualizar_servicio(id_serv, data)
@@ -380,7 +380,7 @@ class ObraController:
             telefono_contacto=telefono_contacto,
             fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d') if fecha_inicio_est else None,
             fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d') if fecha_fin_est else None,
-            monto_total_est= 0 if monto_total_est == '' else monto_total_est,
+            monto_total_est=0 if monto_total_est == '' else monto_total_est,
             monto_total_real=0,
             moneda=moneda,
             pisos=pisos if pisos else 0,
@@ -449,7 +449,7 @@ class ObraController:
         nota = Nota(
             id=random.randint(0000, 9999),
             descripcion=data.get('descripcion'),
-            id_usuario= user,  # id_usuario desde el frontend
+            id_usuario=user,  # id_usuario desde el frontend
             fecha=datetime.now().date(),
             id_obra=obra
         )
@@ -458,9 +458,10 @@ class ObraController:
 
     @staticmethod
     def agregar_foto(nota_id, url):
+        nota = Nota.objects.get(id=nota_id)
         foto = FotoAvances(
-            id= random.randint(0000, 9999),
-            id_avance_id=nota_id,
+            id=random.randint(0000, 999999),
+            id_avance=nota,
             url=url
         )
         foto.save()
@@ -522,7 +523,7 @@ class PresupuestoController:
         total = data.get('total')
         moneda = data.get('moneda')
         observaciones = data.get('observaciones', '')
-        porc_inflacion= data.get('porc_inflacion',0)
+        porc_inflacion = data.get('porc_inflacion', 0)
 
         # Crear el presupuesto principal
         presupuesto = Presupuesto.objects.create(
@@ -695,7 +696,9 @@ class CompraController:
             # Crear LineaCompra para cada material en la lista del proveedor
             for linea_data in lineas:
                 material = Material.objects.get(id=linea_data['id_material'])
-                pres_mat = Presupuesto_Material.objects.get(id=linea_data.get('id_presupuesto_material')) if linea_data.get('id_presupuesto_material') is not None else None
+                pres_mat = Presupuesto_Material.objects.get(
+                    id=linea_data.get('id_presupuesto_material')) if linea_data.get(
+                    'id_presupuesto_material') is not None else None
                 try:
                     LineaCompra.objects.create(
                         nr_posicion=nro,
@@ -880,7 +883,7 @@ class ChatController:
             "direccion": obra.direccion,
             "total": obra.monto_total_est,
             "moneda": obra.moneda,
-            "materiales": list(materiales.values('id', 'descripcion','unidad_medida', 'marca', 'precio', 'moneda')),
+            "materiales": list(materiales.values('id', 'descripcion', 'unidad_medida', 'marca', 'precio', 'moneda')),
             "servicios": list(
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
@@ -1025,17 +1028,19 @@ class ChatController:
                 "tarea_id": tarea.id,
                 "descripcion": tarea.descripcion,
                 "porcentaje_avance": porcentaje_avance,
-                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre, "apellido":col.id_colaborador.id_usuario.apellido } for col in
+                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre,
+                                   "apellido": col.id_colaborador.id_usuario.apellido} for col in
                                   colaboradores],
                 "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.descripcion} for mat in materiales],
-                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for her in
+                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for
+                                 her in
                                  herramientas]
             })
 
         # Cálculo del avance general de la obra
         avance_general = avance_total / len(tareas) if tareas else 0
 
-        data_return={
+        data_return = {
             "obra_id": obra_id,
             "nombre_obra": obra.direccion,
             "avance_general": avance_general,
@@ -1175,8 +1180,10 @@ class ChatController:
         obras_previas = Obra.objects.exclude(id=obra_id)  # Excluir la obra actual
 
         # Cálculos para encontrar el costo promedio de materiales y subcontratistas
-        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(compras) if compras else 0
-        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))['monto_contratacion__sum'] / len(
+        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
+            compras) if compras else 0
+        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))[
+                                             'monto_contratacion__sum'] / len(
             subcontrataciones) if subcontrataciones else 0
 
         # Análisis comparativo con el historial de obras
@@ -1194,7 +1201,8 @@ class ChatController:
         comparativa_subcontratacion = []
         for obra_prev in obras_previas:
             subcontrataciones_previas = Subcontratacion.objects.filter(id_obra=obra_prev.id)
-            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('monto_contratacion'))['monto_contratacion__sum'] / len(
+            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('monto_contratacion'))[
+                                             'monto_contratacion__sum'] / len(
                 subcontrataciones_previas) if subcontrataciones_previas else 0
             comparativa_subcontratacion.append({
                 'obra': obra_prev.nombre,
@@ -1208,7 +1216,7 @@ class ChatController:
             "subcontrataciones": f"El costo promedio de subcontratación en esta obra es de {costo_subcontratacion_promedio}. Verificar las subcontrataciones previas puede ayudar a reducir costos."
         }
 
-        data_return={
+        data_return = {
             "obra_id": obra_id,
             "nombre_obra": obra.direccion,
             "comparativa_materiales": comparativa_materiales,
@@ -1223,16 +1231,20 @@ class ReporteObra:
     def reporte_gastos_avance(obra_id):
         # Obtener la obra y presupuesto
         obra = Obra.objects.get(id=obra_id)
-        presupuesto = Presupuesto.objects.filter(id_obra=obra_id).first()
+        presupuesto = Presupuesto.objects.filter(id_obra=obra_id, aprobado=True, estado='Aprobado').first()
         if not presupuesto:
             return {"error": "No hay un presupuesto asociado a esta obra."}
 
         # Compras realizadas
+        contrataciones = Subcontratacion.objects.filter(id_obra=obra_id)
         compras = LineaCompra.objects.filter(id_compra__id_obra=obra_id)
-        total_compras = sum([compra.precio_total for compra in compras])
+        total_contratacion = sum([cont.monto_contratacion for cont in contrataciones if
+                                  cont.monto_contratacion is not None]) if contrataciones else 0
+        total_compras = sum(
+            [compra.precio_total for compra in compras if compra.precio_total is not None]) if compras else 0
 
         # Comparativa compras vs presupuesto
-        diferencia_compras_presupuesto = presupuesto.total - total_compras
+        diferencia_compras_presupuesto = presupuesto.total - (total_compras + total_contratacion)
 
         # Materiales utilizados en tareas
         materiales_usados_ids = Tarea_Material.objects.filter(id_tarea__id_area__id_obra=obra_id).values_list(
@@ -1241,7 +1253,7 @@ class ReporteObra:
         # Materiales comprados no utilizados
         materiales_comprados_ids = compras.values_list('id_material', flat=True)
         materiales_no_usados_ids = set(materiales_comprados_ids) - set(materiales_usados_ids)
-        materiales_no_usados = Material.objects.filter(id__in=materiales_no_usados_ids)
+        #materiales_no_usados = Material.objects.filter(id__in=materiales_no_usados_ids)
 
         # Porcentaje de avance general
         tareas = Tarea.objects.filter(id_area__id_obra=obra_id)
@@ -1265,14 +1277,22 @@ class ReporteObra:
             "obra_id": obra.id,
             "nombre_obra": obra.direccion,
             "presupuesto_total": presupuesto.total,
+            "total_contratacion": total_contratacion,
             "total_compras": total_compras,
             "diferencia_compras_presupuesto": diferencia_compras_presupuesto,
-            "materiales_no_usados": [{"id": mat.id, "descripcion": mat.descripcion} for mat in materiales_no_usados],
+            "materiales_no_usados": [{"id": mat.id_material.id, "descripcion": mat.id_material.descripcion,
+                                      "comprado": True, "usado": mat.id_material.id not in materiales_no_usados_ids,
+                                      "costo": mat.precio_total, "moneda": mat.id_material.moneda} for mat in compras],
+            "contrataciones": [{"id": cont.id_servicio.id, "descripcion": cont.id_servicio.descripcion,
+                                "fecha_comienzo": cont.fecha_contrato, "fecha_fin": cont.fecha_contrato_hasta,
+                                "costo": cont.monto_contratacion, "moneda": cont.moneda_contratacion} for cont in
+                               contrataciones],
             "avance_general": avance_general,
             "avance_por_area": avance_por_area
         }
 
         return data_return
+
 
 class SubcontratacionController:
     @staticmethod

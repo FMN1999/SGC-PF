@@ -86,32 +86,39 @@
     <h2>Obras</h2>
     <ul>
       <li *ngFor="let o of obras">
-        <a [routerLink]="['/obra', o.id]">{{ o.direccion }} - {{ o.estado }}</a>
+        <a [routerLink]="['/obra', o.id]" class="obra-enlace">
+          <p><strong>Dirección: </strong>{{ o.direccion }}</p>
+          <p><strong>Estado: </strong>{{ o.estado }}</p>
+        </a>
       </li>
     </ul>
   </div>
 
-  <div class="tareas" *ngIf="perfil">
+  <div class="tareas" *ngIf="perfil && perfil.puesto">
     <h2>Tareas</h2>
     <ul>
       <li *ngFor="let t of tareas; let i = index">
-        <a [routerLink]="['/tarea', t.id]">{{ t.titulo }} - {{ t.descripcion }}</a>
-        <p>Estado: {{ t.estado }}</p>
-
+        <a [routerLink]="['/tarea', t.id]" class="tarea-enlace">
+          <p><strong>Título: </strong>{{ t.TAREA }}</p>
+          <p><strong>Descripción: </strong>{{ t.descripcion }}</p>
+          <p><strong>Estado: </strong>{{ t.estado }}</p>
+          <p><strong>Cantidad de días: </strong>{{ t.cant_dias }}</p>
+        </a>
         <div *ngIf="!editTareas[i]">
-          <p>Cantidad de días: {{ t.cant_dias }}</p>
           <button (click)="activarEdicionTarea(i)">Editar</button>
         </div>
-
-        <div *ngIf="editTareas[i]">
-          <label for="cant_dias_{{i}}">Cantidad de días</label>
+        <div *ngIf="editTareas[i]" class="tarea-edicion">
+          <label for="cant_dias_{{i}}"><strong>Cantidad de días:</strong></label>
           <input id="cant_dias_{{i}}" type="number" [(ngModel)]="tareas[i].cant_dias">
-          <button (click)="guardarCambiosTarea(i, t)">Guardar</button>
-          <button (click)="cancelarEdicionTarea(i)">Cancelar</button>
+          <div class="botones-tarea">
+            <button class="guardar" (click)="guardarCambiosTarea(i, t)">Guardar Cambios</button>
+            <button class="cancelar" (click)="cancelarEdicionTarea(i)">Cancelar</button>
+          </div>
         </div>
       </li>
     </ul>
   </div>
+
 
   <div class="loading-message" *ngIf="!perfil && !editMode">
     Cargando perfil...

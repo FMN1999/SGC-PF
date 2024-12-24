@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { SubcontratacionService } from '../../services/subcontratacion/subcontratacion.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {EmpresaService} from "../../services/empresa/empresa.service";
 import {HeaderComponent} from '../header/header.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class PresupuestoServicioComponent implements OnInit {
   servicios_data: any;
   idObra: number | undefined;
   idUsuario = sessionStorage.getItem('id_usuario');
+  mensajeSuccess: string='';
+  mensajeError: string='';
 
   constructor(
     private fb: FormBuilder,
@@ -34,7 +37,7 @@ export class PresupuestoServicioComponent implements OnInit {
     private presupuestoService: PresupuestoService,
     private empresaService: EmpresaService,
     private subcontratacionService: SubcontratacionService,
-    private router: Router
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -55,51 +58,69 @@ export class PresupuestoServicioComponent implements OnInit {
 
   cargarDatosIniciales() {
     if (this.idPresupuesto) {
-      this.presupuestoService.getServiciosPorPresupuesto(this.idPresupuesto)
-        .subscribe((servicios) => {
+      this.presupuestoService.getServiciosPorPresupuesto(this.idPresupuesto).subscribe((servicios) => {
+        setTimeout(() => {
           servicios.forEach((servicio) => {
             this.agregarLineaSubcontratacion(servicio);
           });
         });
+      });
     }
 
     const idEmpresa = sessionStorage.getItem('id_empresa');
     if (idEmpresa) {
       this.empresaService.obtenerServiciosPorEmpresa(parseInt(idEmpresa)).subscribe({
         next: (data) => {
-          this.servicios_data = data;
-          console.log(this.servicios_data);
+          setTimeout(() => {
+            this.servicios_data = data;
+            console.log(this.servicios_data);
+          });
         }
       });
     }
   }
 
+
   agregarLineaSubcontratacion(servicio?: any) {
     const nuevaLinea = this.fb.group({
-      id_presupuesto_servicio:[servicio?.id_presupuesto_servicio],
-      horas: [servicio?.horas || ''],
-      precio_x_hora: [servicio?.precio_x_hora || ''],
+      id_presupuesto_servicio: [servicio?.id_presupuesto_servicio],
+      horas: [servicio?.horas || '', [Validators.min(0)]],
+      precio_x_hora: [servicio?.precio_x_hora || '', [Validators.min(0)]],
       moneda: [servicio?.moneda || ''],
       id_servicio: [servicio?.id_servicio || ''],
       desc_servicio: [servicio?.desc_servicio || ''],
       nro_contrato: [''],
       fecha_contrato: [''],
       fecha_contrato_hasta: [''],
-      monto_contratacion: ['']
+      monto_contratacion: [{ value: 0, disabled: true }]
     });
+
+    // Escuchar cambios en 'horas' y 'precio_x_hora' para actualizar 'monto_contratacion'
+    nuevaLinea.get('horas')?.valueChanges.subscribe(() => this.calcularMontoLinea(nuevaLinea));
+    nuevaLinea.get('precio_x_hora')?.valueChanges.subscribe(() => this.calcularMontoLinea(nuevaLinea));
+
     this.lineasSubcontratacion.push(nuevaLinea);
   }
 
-  eliminarLineaSubcontratacion(index: number) {
-    this.lineasSubcontratacion.removeAt(index);
+  calcularMontoLinea(linea: FormGroup) {
+    const horas = linea.get('horas')?.value || 0;
+    const precioXHora = linea.get('precio_x_hora')?.value || 0;
+    const monto = horas * precioXHora;
+    linea.get('monto_contratacion')?.setValue(monto, { emitEvent: false });
   }
 
+
   onSubmit() {
+    if (this.subcontratacionForm.invalid) {
+      this.mensajeError = 'Por favor, complete todos los campos requeridos.';
+      this.mensajeSuccess = '';
+      return;
+    }
+
     const formValues = this.subcontratacionForm.value;
     const lineasSubcontratacion = formValues.lineasSubcontratacion;
+
     this.crearSubcontratacion(lineasSubcontratacion, formValues);
-    console.log('Creado')
-    ///this.router.navigate(['/subcontrataciones']).then(() => {});
   }
 
   crearSubcontratacion(lineas: any[], formValues: any) {
@@ -122,13 +143,23 @@ export class PresupuestoServicioComponent implements OnInit {
     };
 
     this.subcontratacionService.crearSubcontratacion(nuevaSubcontratacion).subscribe({
-      next: (response: any) => {
-        console.log('Subcontratación creada con éxito:', response);
+      next: () => {
+        this.mensajeSuccess = '¡Contratación efectuada con éxito!';
+        this.mensajeError = '';
+        this.subcontratacionForm.reset(); // Opcional: reinicia el formulario.
+        console.log('Subcontratación creada con éxito');
       },
       error: (error: any) => {
+        this.mensajeError = 'Hubo un error al procesar la contratación. Intente nuevamente.';
+        this.mensajeSuccess = '';
         console.error('Error al crear la subcontratación:', error);
       }
     });
+  }
+
+  eliminarLineaSubcontratacion(index: number) {
+    this.lineasSubcontratacion.removeAt(index);
+    this.cdr.detectChanges(); // Asegura que Angular detecte los cambios
   }
 }
 

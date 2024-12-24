@@ -17,8 +17,12 @@
           <p>{{ reporte.presupuesto_total | currency }}</p>
         </div>
         <div class="indicator">
-          <h3>Gastos Realizados</h3>
+          <h3>Gastos en Compras</h3>
           <p>{{ reporte.total_compras | currency }}</p>
+        </div>
+        <div class="indicator">
+          <h3>Gastos en Contrataciones</h3>
+          <p>{{ reporte.total_contratacion | currency }}</p>
         </div>
         <div class="indicator">
           <h3>Diferencia</h3>
@@ -39,12 +43,11 @@
 
     <!-- Materiales y Compras -->
     <section class="materiales">
-      <h2>Materiales no Utilizados</h2>
+      <h2>Materiales Comprados sin utilizar</h2>
       <table>
         <thead>
           <tr>
             <th>Material</th>
-            <th>Comprado</th>
             <th>Usado</th>
             <th>Costo</th>
           </tr>
@@ -52,9 +55,31 @@
         <tbody>
           <tr *ngFor="let material of reporte.materiales_no_usados">
             <td>{{ material.descripcion }}</td>
-            <td>??</td> <!-- Completar con datos si se envía cantidad -->
-            <td>??</td>
-            <td>{{ material.costo | currency }}</td>
+            <td>{{ material.usado }}</td>
+            <td>{{ material.costo | currency }} {{material.moneda}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+     <!-- Materiales y Compras -->
+    <section class="materiales">
+      <h2>Contrataciónes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>Fecha Comienzo</th>
+            <th>Fecha Fin</th>
+            <th>Costo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cont of reporte.contrataciones">
+            <td>{{ cont.descripcion }}</td>
+            <td>{{ cont.fecha_comienzo }}</td>
+            <td>{{ cont.fecha_fin }}</td>
+            <td>{{ cont.costo | currency }} {{cont.moneda}}</td>
           </tr>
         </tbody>
       </table>
