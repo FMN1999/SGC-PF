@@ -1,30 +1,47 @@
 <app-header></app-header>
 
 <div class="solicitudes-container">
-  <!-- Iteramos sobre los estados disponibles -->
-  <div *ngFor="let estado of estadosCompras" class="estado-section">
-    <h2 class="titulo">Compras: {{ estado }}s</h2>
+  <h1>Solicitudes / Compras</h1>
 
-    <!-- Lista de solicitudes para el estado actual -->
-    <ul class="lista-solicitudes">
-      <li *ngFor="let solicitud of solicitudesPorEstado[estado]" class="solicitud-item">
-        <a [routerLink]="['/compra', solicitud.id]" class="solicitud-link">
-          <div class="detalle">
-            <p><strong>ID de Compra:</strong> {{ solicitud.id }}</p>
-            <p><strong>Fecha de Compra:</strong> {{ solicitud.fecha }}</p>
-            <p><strong>Monto Total:</strong> {{ solicitud.monto }}</p>
-            <p><strong>Proveedor:</strong> {{ solicitud.proveedor }}</p>
-            <!-- Otros campos relevantes -->
-          </div>
-        </a>
-      </li>
-    </ul>
+  <!-- Contenedor de filtros -->
+  <div class="filtros">
+    <input
+      type="text"
+      placeholder="Buscar solicitudes..."
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltros()"
+      class="busqueda"
+    />
+    <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" class="estado-filtro">
+      <option value="">Todos los Estados</option>
+      <option *ngFor="let estado of estadosCompras" [value]="estado">
+        {{ estado }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Sección de solicitudes por estado -->
+  <div *ngIf="tieneSolicitudesFiltradas(); else noSolicitudes">
+    <div *ngFor="let estado of estadosFiltrados" class="estado-section">
+      <h2 class="titulo">Compras: {{ estado }}s</h2>
+      <ul class="lista-solicitudes">
+        <li *ngFor="let solicitud of solicitudesFiltradas[estado]" class="solicitud-item">
+          <a [routerLink]="['/compra', solicitud.id]" class="solicitud-link">
+            <div class="detalle">
+              <p><strong>Fecha de Compra:</strong> {{ solicitud.fecha }}</p>
+              <p><strong>Monto Total:</strong> {{ solicitud.monto }}</p>
+              <p><strong>Proveedor:</strong> {{ solicitud.proveedor }}</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <!-- Template para cuando no hay solicitudes -->
   <ng-template #noSolicitudes>
     <div class="no-solicitudes">
-      <p>No hay solicitudes disponibles.</p>
+      <p>No se encontraron solicitudes para los filtros aplicados.</p>
     </div>
   </ng-template>
 </div>

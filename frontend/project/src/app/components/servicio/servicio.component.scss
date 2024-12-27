@@ -1,25 +1,28 @@
 @import '../../components/home/home.component';
 
 .detalle-servicio {
-  padding: $section-padding;
-  background-color: $section-bg-color;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 50px;
+  background-color: $background-color;
 
   .titulo {
-    font-size: 1.8rem;
     color: $primary-color;
+    font-size: 1.5rem;
     margin-bottom: 20px;
   }
+  .form-row {
+    display: flex;
+    gap: 20px; // Espaciado entre los campos
 
-  .vista-detalles,
-  .vista-edicion {
-    margin-top: $section-padding;
+    .form-group {
+      flex: 1; // Hacer que ambos campos tengan el mismo ancho
+      display: flex;
+      flex-direction: column; // Mantener el diseño vertical interno
+    }
 
-    p {
-      font-size: 1rem;
-      margin-bottom: 10px;
-      strong {
-        color: $secondary-color;
-      }
+    input {
+      width: 100%; // Asegura que los campos ocupen el espacio disponible
     }
   }
 
@@ -28,64 +31,47 @@
 
     label {
       display: block;
-      font-weight: bold;
+      color: $secondary-color;
       margin-bottom: 5px;
-      color: $text-color;
     }
 
     input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       border: 1px solid $border-color;
       border-radius: $button-radius;
-      font-size: 1rem;
-      color: $text-color;
-
-      &:focus {
-        outline: none;
-        border-color: $primary-color;
-        box-shadow: 0 0 5px $primary-color;
-      }
     }
   }
 
   .acciones {
-    margin-top: 20px;
     display: flex;
     gap: 10px;
+    margin-top: 20px;
 
-    .btn {
+    button {
       padding: 10px 15px;
-      font-size: 1rem;
       border-radius: $button-radius;
-      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
 
       &.btn-primary {
-        background-color: $secondary-color;
+        background-color: $primary-color;
         color: $white-color;
-        border: none;
 
         &:hover {
-          background-color: $hover-color;
+          background-color: darken($primary-color, 10%);
         }
       }
 
       &.btn-secondary {
-        background-color: $border-color;
-        color: $text-color;
-        border: 1px solid $border-color;
+        background-color: $secondary-color;
+        color: $white-color;
 
         &:hover {
-          background-color: lighten($border-color, 10%);
+          background-color: darken($secondary-color, 10%);
         }
       }
     }
   }
-
-  .loading {
-    text-align: center;
-    color: $loading-color;
-    font-size: 1.2rem;
-    margin: $section-padding 0;
-  }
 }
+

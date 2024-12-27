@@ -622,9 +622,9 @@ class PresupuestoController:
     @staticmethod
     def get_materiales_por_presupuesto(id_presupuesto):
         presupuesto_materiales = Presupuesto_Material.objects.filter(id_presupuesto=id_presupuesto)
-        print(presupuesto_materiales)
         return [
             {
+                "id": pm.id,
                 "cantidad": pm.cantidad,
                 "precio_total": pm.precio_x_unidad_medida,
                 "unidad_medida": pm.unidad_medida,

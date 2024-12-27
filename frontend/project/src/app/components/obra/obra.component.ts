@@ -92,7 +92,6 @@ export class ObraComponent implements OnInit {
     this.cargarDocumentos();
     this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
       this.presupuestos = data;
-      console.log(this.presupuestos)
 
       // Verificar si algún presupuesto tiene aprobado = true
       const existePresupuestoAprobado = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);

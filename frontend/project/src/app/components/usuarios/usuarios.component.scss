@@ -1,7 +1,7 @@
 @import '../../components/home/home.component';
 
 .entidades-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border: 1px solid $border-color;
   border-radius: $button-radius;
@@ -77,6 +77,51 @@
           }
         }
       }
+    }
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: $primary-color; // Usamos el color primario del proyecto
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .search-actions {
+    display: flex;
+    justify-content: center; // Centra horizontalmente
+    align-items: center; // Centra verticalmente
+    margin-bottom: 20px;
+    padding: 0 20px; // Opcional: margen interno para evitar que quede pegado a los bordes en pantallas pequeñas
+
+    .search-bar {
+      width: 100%;
+      max-width: 500px; // Limita el tamaño máximo
+      padding: 10px 15px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      color: $text-color;
+      background-color: $background-color;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+        box-shadow: 0 0 5px lighten($primary-color, 40%);
+      }
+
+      &::placeholder {
+        color: lighten($text-color, 20%);
+      }
+    }
+  }
+
+
+  .entidad-item {
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten($table-header-bg-color, 10%);
     }
   }
 }

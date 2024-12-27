@@ -151,11 +151,11 @@ class EmpresaData:
                 {
                     'id': h.id,
                     'descripcion': h.id_material.descripcion,
-                    'marca': h.marca,
-                    'id_almacen': h.id_almacen.id,
-                    'almacen': h.id_almacen.descripcion,
+                    'marca': h.id_material.marca,
+                    'id_almacen': h.id_almacen.id if h.id_almacen else None,
+                    'almacen': h.id_almacen.descripcion if h.id_almacen else None,
                     'ubicacion': h.ubicacion,
-                    'id_compra': h.id_compra.id,
+                    'id_compra': h.id_compra.id if h.id_compra else None,
                     'id_material': h.id_material.id,
                 } for h in herramientas
             ]

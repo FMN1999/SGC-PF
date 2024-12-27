@@ -313,8 +313,8 @@ class Almacen(models.Model):
 
 class Herramienta(models.Model):
     id = models.AutoField(primary_key=True)
-    id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen')
-    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra')
+    id_almacen = models.ForeignKey(Almacen, on_delete=models.CASCADE, db_column='id_almacen', null=True, blank=True)
+    id_compra = models.ForeignKey(Compra, on_delete=models.CASCADE, db_column='id_compra', null=True, blank=True)
     id_material = models.ForeignKey(Material, on_delete=models.CASCADE, db_column='id_material')
     ubicacion = models.CharField()
 
@@ -372,12 +372,12 @@ class Subcontratacion(models.Model):
 
 class Tarea(models.Model):
     id = models.AutoField(primary_key=True)
-    id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column='id_area')
+    id_area = models.ForeignKey(Area, on_delete=models.CASCADE, db_column='id_area', null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     precio_total = models.FloatField()
     id_presupuesto_servicio = models.ForeignKey(Presupuesto_Servicio, on_delete=models.CASCADE, db_column='id_presupuesto_servicio')
-    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo')
+    id_vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, db_column='id_vehiculo', null=True, blank=True)
     descripcion = models.CharField()
     titulo = models.CharField()
     porcentaje_avance = models.FloatField()

@@ -13,8 +13,8 @@
         </div>
         <div class="form-group">
 
-          <label>Servicio a contratar:</label>
-          <select formControlName="id_servicio" required>
+          <label>Descripción de material:</label>
+          <select formControlName="id_presupuesto material" required>
             <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
           </select>
         </div>

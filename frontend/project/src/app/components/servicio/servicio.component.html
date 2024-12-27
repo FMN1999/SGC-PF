@@ -4,94 +4,106 @@
   <ng-container *ngIf="servicio; else loading">
     <h2 class="titulo">Detalle del Servicio</h2>
 
-    <!-- Mostrar detalles cuando no está en modo edición -->
+    <!-- Modo de visualización -->
     <div *ngIf="!isEditing" class="vista-detalles">
       <p><strong>Descripción:</strong> {{ servicio.descripcion }}</p>
       <p><strong>Precio por Unidad:</strong> {{ servicio.precio_x_unidad }} {{ servicio.moneda }}</p>
       <p><strong>Unidad de Medida:</strong> {{ servicio.unidad_medida }}</p>
       <p><strong>Frecuencia de Pago:</strong> {{ servicio.frecuencia_pago }}</p>
       <p><strong>Monto por Frecuencia:</strong> {{ servicio.monto_x_frecuencia }} {{ servicio.moneda }}</p>
+      <p><strong>Impuestos:</strong> {{ servicio.impuestos_total }} {{ servicio.moneda_impuestos }}</p>
+      <p><strong>Descripción de Impuestos:</strong> {{ servicio.descripcion_impuestos }}</p>
+      <p><strong>Otros Gastos:</strong> {{ servicio.otros_gastos }} {{ servicio.moneda_otros_gastos }}</p>
+      <p><strong>Descripción de Otros Gastos:</strong> {{ servicio.descripcion_otros_gastos }}</p>
+      <p><strong>Proveedor:</strong> {{ servicio.proveedor }}</p>
 
       <div class="acciones">
         <button class="btn btn-primary" (click)="enableEditing()">Editar</button>
-        <button class="btn btn-secondary" (click)="navigateBack()">Volver al Perfil del Proveedor</button>
       </div>
     </div>
 
-    <!-- Formulario de edición -->
-    <div *ngIf="isEditing" class="vista-edicion">
+    <!-- Modo de edición -->
+    <form *ngIf="isEditing" class="vista-edicion" (ngSubmit)="updateServicio()">
       <h3>Editar Servicio</h3>
 
       <div class="form-group">
         <label for="descripcion">Descripción:</label>
-        <input id="descripcion" [(ngModel)]="servicio.descripcion" />
+        <input id="descripcion" [(ngModel)]="servicio.descripcion" name="descripcion" required />
       </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="precio_x_unidad">Precio:</label>
+          <input id="precio_x_unidad" [(ngModel)]="servicio.precio_x_unidad" name="precio_x_unidad" type="number" required />
+        </div>
+
+        <div class="form-group">
+          <label for="unidad_medida">Unidad de Medida:</label>
+          <input id="unidad_medida" [(ngModel)]="servicio.unidad_medida" name="unidad_medida" required />
+        </div>
+      </div>
+
 
       <div class="form-group">
-        <label for="precio">Precio por Unidad:</label>
-        <input id="precio" type="number" [(ngModel)]="servicio.precio_x_unidad" />
+        <label for="frecuencia_pago">Frecuencia de Pago:</label>
+        <input id="frecuencia_pago" [(ngModel)]="servicio.frecuencia_pago" name="frecuencia_pago" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="monto_x_frecuencia">Monto por Frecuencia:</label>
+          <input id="monto_x_frecuencia" [(ngModel)]="servicio.monto_x_frecuencia" name="monto_x_frecuencia" type="number" required />
+        </div>
+
+        <div class="form-group">
+          <label for="moneda">Moneda:</label>
+          <input id="moneda" [(ngModel)]="servicio.moneda" name="moneda" required />
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="unidad">Unidad de Medida:</label>
-        <input id="unidad" [(ngModel)]="servicio.unidad_medida" />
-      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="impuestos_total">Impuestos:</label>
+          <input id="impuestos_total" [(ngModel)]="servicio.impuestos_total" name="impuestos_total" type="number" />
+        </div>
 
-      <div class="form-group">
-        <label for="frecuencia">Frecuencia de Pago:</label>
-        <input id="frecuencia" [(ngModel)]="servicio.frecuencia_pago" />
+        <div class="form-group">
+          <label for="moneda_impuestos">Moneda Impuestos:</label>
+          <input id="moneda_impuestos" [(ngModel)]="servicio.moneda_impuestos" name="moneda_impuestos" />
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="monto">Monto por Frecuencia:</label>
-        <input id="monto" type="number" [(ngModel)]="servicio.monto_x_frecuencia" />
-      </div>
-
-      <div class="form-group">
-        <label for="moneda">Moneda:</label>
-        <input id="moneda" [(ngModel)]="servicio.moneda" />
-      </div>
-
-      <div class="form-group">
-        <label for="impuestos_total">Impuestos:</label>
-        <input type="number" id="impuestos_total" [(ngModel)]="servicio.impuestos_total" />
-      </div>
-
-      <div class="form-group">
-        <label for="moneda_impuestos">Moneda Impuestos:</label>
-        <input type="text" id="moneda_impuestos" [(ngModel)]="servicio.moneda_impuestos" />
-      </div>
-
       <div class="form-group">
         <label for="descripcion_impuestos">Descripción Impuestos:</label>
-        <input type="text" id="descripcion_impuestos" [(ngModel)]="servicio.descripcion_impuestos" />
+        <input id="descripcion_impuestos" [(ngModel)]="servicio.descripcion_impuestos" name="descripcion_impuestos" />
       </div>
 
-      <div class="form-group">
-        <label for="otros_gastos">Otros Gastos:</label>
-        <input type="number" id="otros_gastos" [(ngModel)]="servicio.otros_gastos" />
-      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="otros_gastos">Otros Gastos:</label>
+          <input id="otros_gastos" [(ngModel)]="servicio.otros_gastos" name="otros_gastos" type="number" />
+        </div>
 
-      <div class="form-group">
-        <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
-        <input type="text" id="moneda_otros_gastos" [(ngModel)]="servicio.moneda_otros_gastos" />
+        <div class="form-group">
+          <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
+          <input id="moneda_otros_gastos" [(ngModel)]="servicio.moneda_otros_gastos" name="moneda_otros_gastos" />
+        </div>
       </div>
 
       <div class="form-group">
         <label for="descripcion_otros_gastos">Descripción Otros Gastos:</label>
-        <input type="text" id="descripcion_otros_gastos" [(ngModel)]="servicio.descripcion_otros_gastos" />
+        <input id="descripcion_otros_gastos" [(ngModel)]="servicio.descripcion_otros_gastos" name="descripcion_otros_gastos" />
       </div>
 
       <div class="acciones">
-        <button class="btn btn-primary" (click)="updateServicio()">Guardar</button>
-        <button class="btn btn-secondary" (click)="cancelEditing()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelEditing()">Cancelar</button>
       </div>
-    </div>
+    </form>
   </ng-container>
 
   <ng-template #loading>
     <p class="loading">Cargando detalles del servicio...</p>
   </ng-template>
 </div>
+
 
 

@@ -58,6 +58,5 @@ export class MaterialesComponent implements OnInit {
   verDetalleMaterial(idMaterial: number): void {
     this.router.navigate(['/material', idMaterial]);
   }
-
 }
 

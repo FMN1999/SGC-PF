@@ -12,16 +12,36 @@
   <div class="header-container">
     <h1>Tareas Disponibles</h1>
   </div>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="filtros-container">
+    <input
+      type="text"
+      placeholder="Buscar por cliente o descripción..."
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltros()"
+      class="search-bar"
+    />
+
+    <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" class="filter-select">
+      <option value="">Todos los estados</option>
+      <option value="Nuevo">Nuevo</option>
+      <option value="En curso">En curso</option>
+      <option value="En pausa">En pausa</option>
+    </select>
+  </div>
+
+  <!-- Listado de tareas -->
   <div class="tareas-container">
     <div
-      *ngFor="let tarea of tareas"
+      *ngFor="let tarea of tareasFiltradas"
       class="tarea-card"
       (click)="verDetalleTarea(tarea.id)">
       <h3 class="tarea-header">
         {{ tarea.tarea }}
         <span class="tarea-avance">({{ tarea.porcentaje_avance }}% completado)</span>
       </h3>
-      <p><strong>Área:</strong> {{ tarea.area}}</p>
+      <p><strong>Área:</strong> {{ tarea.area }}</p>
       <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
       <p><strong>Inicio:</strong> {{ tarea.fecha_inicio }}</p>
       <p><strong>Fin:</strong> {{ tarea.fecha_fin }}</p>
@@ -29,4 +49,5 @@
     </div>
   </div>
 </div>
+
 

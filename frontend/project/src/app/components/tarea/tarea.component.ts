@@ -111,6 +111,7 @@ export class TareaComponent implements OnInit {
         console.log('Colaborador agregado', response);
       });
     }
+    window.location.reload();
   }
 
   // Método para agregar herramienta a la tarea
@@ -126,6 +127,7 @@ export class TareaComponent implements OnInit {
         console.log('Herramienta agregada', response);
       });
     }
+    window.location.reload();
   }
 
   // Método para agregar material a la tarea
@@ -141,6 +143,7 @@ export class TareaComponent implements OnInit {
         console.log('Material agregado', response);
       });
     }
+    window.location.reload();
   }
 
   // Método para actualizar la tarea
@@ -155,9 +158,10 @@ export class TareaComponent implements OnInit {
       titulo: this.titulo
     };
     this.tareaService.actualizarTarea(this.tareaId, tareaData).subscribe((response: any) => {
-      console.log('Tarea actualizada', response);
+
       this.modoEdicion = false;
     });
+    window.location.reload();
   }
 
   eliminarColaborador(colaboradorId: number): void {
@@ -194,4 +198,9 @@ export class TareaComponent implements OnInit {
     });
   }
 
+  cancelarEdicionCantDias(colaboradorId: number): void {
+    this.editandoCantDias[colaboradorId] = false;
+    delete this.cantDiasTemp[colaboradorId]; // Elimina el cambio temporal
+  }
 }
+

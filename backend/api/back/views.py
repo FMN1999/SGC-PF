@@ -522,7 +522,16 @@ class ServicioView(View):
                 'precio_x_unidad': servicio.precio_x_unidad,
                 'unidad_medida': servicio.unidad_medida,
                 'monto_x_frecuencia': servicio.monto_x_frecuencia,
-                'frecuencia_pago': servicio.frecuencia_pago
+                'frecuencia_pago': servicio.frecuencia_pago,
+                'id_proveedor': servicio.id_proveedor.id,
+                'proveedor': servicio.id_proveedor.denominacion,
+                'moneda': servicio.moneda,
+                'impuestos_total': servicio.impuestos_total,
+                'moneda_impuestos': servicio.moneda_impuestos,
+                'descripcion_impuestos': servicio.descripcion_impuestos,
+                'otros_gastos': servicio.otros_gastos,
+                'moneda_otros_gastos': servicio.moneda_otros_gastos,
+                'descripcion_otros_gastos': servicio.descripcion_otros_gastos
             }
             return JsonResponse(servicio_data, status=200)
         except Servicio.DoesNotExist:
@@ -656,7 +665,8 @@ class ServiciosPorEmpresa(View):
                 'id': servicio.id,
                 'descripcion': servicio.descripcion,
                 'precio': servicio.precio_x_unidad,
-                'unidad_medida': servicio.unidad_medida
+                'unidad_medida': servicio.unidad_medida,
+                'moneda': servicio.moneda
             })
 
         return JsonResponse(data, safe=False)
@@ -1101,10 +1111,10 @@ class TareaView(View):
                 'precio_total': tarea.precio_total,
                 'descripcion': tarea.descripcion,
                 'titulo': tarea.titulo,
-                'id_area': tarea.id_area.id,
-                'area': tarea.id_area.descripcion,
-                'id_vehiculo': tarea.id_vehiculo.id,
-                'vehiculo': tarea.id_vehiculo.tipo,
+                'id_area': tarea.id_area.id if tarea.id_area else None,
+                'area': tarea.id_area.descripcion if tarea.id_area else None,
+                'id_vehiculo': tarea.id_vehiculo.id if tarea.id_vehiculo else None,
+                'vehiculo': tarea.id_vehiculo.tipo if tarea.id_vehiculo else None,
             }
             return JsonResponse(tarea_data, safe=False)
         except Tarea.DoesNotExist:
@@ -1265,7 +1275,9 @@ class TareaColaboradorView(View):
             'id_colaborador': colaborador.id,
             'estado': tarea_colaborador.estado,
             'cant_dias': tarea_colaborador.cant_dias,
-            'titulo': tarea.titulo
+            'titulo': tarea.titulo,
+            'nombre': colaborador.id_usuario.nombre,
+            'apellido': colaborador.id_usuario.apellido
         }
 
         return JsonResponse(response_data, status=201)
