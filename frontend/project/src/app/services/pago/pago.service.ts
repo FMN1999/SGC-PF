@@ -2,17 +2,19 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class PagoService {
-    private baseUrl = 'http://localhost:8000/api/';  // URL base del backend
+    private apiUrl = environment.apiUrl;
     private datosPago: any = null;
 
   constructor(private http: HttpClient) {}
 
   registrarPago(pago: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}pago/`, pago);
+    return this.http.post(`${this.apiUrl}/pago/`, pago);
   }
 
   setDatosPago(datos: any): void {
@@ -24,14 +26,14 @@ export class PagoService {
   }
 
   registrarCobro(pagoData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}registrar-pago/`, pagoData);
+    return this.http.post(`${this.apiUrl}/registrar-pago/`, pagoData);
   }
 
   getComprasPendientes(idEmpresa: number) {
-    return this.http.post<{ compras: any[] }>(`${this.baseUrl}compras-pendientes/`, { id_empresa: idEmpresa });
+    return this.http.post<{ compras: any[] }>(`${this.apiUrl}/compras-pendientes/`, { id_empresa: idEmpresa });
   }
 
   getSubcontrataciones(idEmpresa: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}subcontrataciones/${idEmpresa}/`);
+    return this.http.get(`${this.apiUrl}/subcontrataciones/${idEmpresa}/`);
   }
 }
