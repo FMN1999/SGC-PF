@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'reemplaza-esto-por-tu-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']  # Ajusta según tus necesidades, por ejemplo: ['tu-dominio.com', 'localhost']
 
@@ -85,7 +85,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',  # Agrega el origen de tu frontend
+    'http://localhost:4200',
+    'https://sgc-construccion-caf8a528c50c.herokuapp.com'# Agrega el origen de tu frontend
 ]
 
 # Permitir ciertos métodos HTTP
