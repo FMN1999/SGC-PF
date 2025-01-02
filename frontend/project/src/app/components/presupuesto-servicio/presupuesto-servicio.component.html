@@ -13,7 +13,7 @@
         </div>
         <div class="form-group">
 
-          <label>Descripción de material:</label>
+          <label>Descripción de material: <span class="required-asterisk">*</span></label>
           <select formControlName="id_presupuesto material" required>
             <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
           </select>
@@ -26,12 +26,12 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Precio por Hora:</label>
+            <label>Precio por Hora: <span class="required-asterisk">*</span></label>
             <input formControlName="precio_x_hora" type="number" required/>
           </div>
 
           <div class="form-group">
-            <label>Moneda:</label>
+            <label>Moneda: <span class="required-asterisk">*</span></label>
             <input formControlName="moneda" type="text" required/>
           </div>
         </div>
@@ -43,7 +43,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Fecha de Contrato:</label>
+            <label>Fecha de Contrato: <span class="required-asterisk">*</span></label>
             <input formControlName="fecha_contrato" type="date" required/>
           </div>
 

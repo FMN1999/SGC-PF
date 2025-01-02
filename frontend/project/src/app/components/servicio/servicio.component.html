@@ -27,35 +27,35 @@
       <h3>Editar Servicio</h3>
 
       <div class="form-group">
-        <label for="descripcion">Descripción:</label>
+        <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
         <input id="descripcion" [(ngModel)]="servicio.descripcion" name="descripcion" required />
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="precio_x_unidad">Precio:</label>
+          <label for="precio_x_unidad">Precio: <span class="required-asterisk">*</span></label>
           <input id="precio_x_unidad" [(ngModel)]="servicio.precio_x_unidad" name="precio_x_unidad" type="number" required />
         </div>
 
         <div class="form-group">
-          <label for="unidad_medida">Unidad de Medida:</label>
+          <label for="unidad_medida">Unidad de Medida: <span class="required-asterisk">*</span></label>
           <input id="unidad_medida" [(ngModel)]="servicio.unidad_medida" name="unidad_medida" required />
         </div>
       </div>
 
 
       <div class="form-group">
-        <label for="frecuencia_pago">Frecuencia de Pago:</label>
+        <label for="frecuencia_pago">Frecuencia de Pago: <span class="required-asterisk">*</span></label>
         <input id="frecuencia_pago" [(ngModel)]="servicio.frecuencia_pago" name="frecuencia_pago" required />
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="monto_x_frecuencia">Monto por Frecuencia:</label>
+          <label for="monto_x_frecuencia">Monto por Frecuencia: <span class="required-asterisk">*</span></label>
           <input id="monto_x_frecuencia" [(ngModel)]="servicio.monto_x_frecuencia" name="monto_x_frecuencia" type="number" required />
         </div>
 
         <div class="form-group">
-          <label for="moneda">Moneda:</label>
+          <label for="moneda">Moneda: <span class="required-asterisk">*</span></label>
           <input id="moneda" [(ngModel)]="servicio.moneda" name="moneda" required />
         </div>
       </div>

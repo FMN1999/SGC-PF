@@ -17,6 +17,11 @@
   .form-group {
     margin-bottom: 15px;
 
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
+
     label {
       font-weight: bold;
       color: $text-color;
@@ -67,6 +72,11 @@
     .form-group {
       flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
       min-width: 200px; // Ancho mínimo para mantener la legibilidad
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
     }
   }
 
@@ -86,7 +96,7 @@
 /* Adaptabilidad para móviles */
 @media (max-width: 768px) {
   .crear-servicio-container {
-    padding: 15px;
+    padding: 50px;
 
     .form-group {
       input {

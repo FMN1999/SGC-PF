@@ -108,12 +108,12 @@
 
     <form [formGroup]="presupuestoForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="total">Total:</label>
+        <label for="total">Total: <span class="required-asterisk">*</span></label>
         <input id="total" formControlName="total" type="number" />
       </div>
 
       <div class="form-group">
-        <label for="moneda">Moneda:</label>
+        <label for="moneda">Moneda: <span class="required-asterisk">*</span></label>
         <input id="moneda" formControlName="moneda" type="text" />
       </div>
 
@@ -123,7 +123,7 @@
       </div>
 
       <div class="form-group">
-        <label for="porc_inflacion">Porcentaje de Inflación:</label>
+        <label for="porc_inflacion">Porcentaje de Inflación: <span class="required-asterisk">*</span></label>
         <input id="porc_inflacion" formControlName="porc_inflacion" type="number" />
       </div>
 
@@ -135,19 +135,19 @@
       <div formArrayName="materiales">
         <div *ngFor="let material of materiales.controls; let i=index" [formGroupName]="i" class="form-group">
           <div class="form-group">
-            <label>Descripción del material:</label>
+            <label>Descripción del material: <span class="required-asterisk">*</span></label>
             <input formControlName="desc_material" placeholder="Descripción del Material" required />
           </div>
           <div class="form-group">
-            <label>Cantidad:</label>
+            <label>Cantidad: <span class="required-asterisk">*</span></label>
             <input formControlName="cantidad" type="number" placeholder="Cantidad" />
           </div>
           <div class="form-group">
-            <label>Unidad de Medida:</label>
+            <label>Unidad de Medida: <span class="required-asterisk">*</span></label>
             <input formControlName="unidad_medida" placeholder="Unidad de Medida" />
           </div>
           <div class="form-group">
-            <label>Precio por Unidad de Medida:</label>
+            <label>Precio por Unidad de Medida: <span class="required-asterisk">*</span></label>
             <input formControlName="precio_x_unidad_medida" type="number" placeholder="Precio por Unidad" />
           </div>
           <button type="button" class="btn-eliminar" (click)="eliminarMaterial(i, material.value.id)">Eliminar</button>
@@ -163,15 +163,15 @@
       <div formArrayName="servicios">
         <div *ngFor="let servicio of servicios.controls; let i=index" [formGroupName]="i" class="form-group">
           <div class="form-group">
-            <label>Descripción del servicio:</label>
+            <label>Descripción del servicio: <span class="required-asterisk">*</span></label>
             <input formControlName="desc_servicio" placeholder="Descripción del Servicio" />
           </div>
           <div class="form-group">
-            <label>Cantidad de horas:</label>
+            <label>Cantidad de horas: <span class="required-asterisk">*</span></label>
             <input formControlName="horas" type="number" placeholder="Horas" />
           </div>
           <div class="form-group">
-            <label>Precio por hora:</label>
+            <label>Precio por hora: <span class="required-asterisk">*</span></label>
             <input formControlName="precio_x_hora" type="number" placeholder="Precio por Hora" />
           </div>
           <button type="button" class="btn-eliminar" (click)="eliminarServicio(i, servicio.value.id)">Eliminar</button>
@@ -179,22 +179,22 @@
       </div>
 
       <!-- Trabajadores -->
-      <h3>Trabajadores</h3>
+      <h3>Colaboradores</h3>
       <div class="actions">
         <button type="button" (click)="agregarTrabajador()">Añadir Trabajador</button>
       </div>
       <div formArrayName="trabajadores">
         <div *ngFor="let trabajador of trabajadores.controls; let i=index" [formGroupName]="i" class="form-group">
           <div class="form-group">
-            <label>Puesto:</label>
+            <label>Puesto: <span class="required-asterisk">*</span></label>
             <input formControlName="puesto" placeholder="Puesto" />
           </div>
           <div class="form-group">
-            <label>Horas:</label>
+            <label>Horas: <span class="required-asterisk">*</span></label>
             <input formControlName="horas" type="number" placeholder="Horas" />
           </div>
           <div class="form-group">
-            <label>Precio por hora:</label>
+            <label>Precio por hora: <span class="required-asterisk">*</span></label>
             <input formControlName="precio_x_hora" type="number" placeholder="Precio por Hora" />
           </div>
           <button type="button" class="btn-eliminar" (click)="eliminarTrabajador(i, trabajador.value.id)">Eliminar</button>

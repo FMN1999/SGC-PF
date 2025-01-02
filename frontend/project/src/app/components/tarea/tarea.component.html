@@ -13,10 +13,10 @@
 
   <form *ngIf="modoEdicion" (ngSubmit)="actualizarTarea()" class="tarea-form">
     <h3>Editar Tarea</h3>
-    <label for="titulo">Título de la tarea</label>
+    <label for="titulo">Título de la tarea <span class="required-asterisk">*</span></label>
     <input id="titulo" [(ngModel)]="titulo" name="titulo" required />
 
-    <label for="descripcion">Descripción de la tarea</label>
+    <label for="descripcion">Descripción de la tarea <span class="required-asterisk">*</span></label>
     <textarea id="descripcion" [(ngModel)]="descripcion" name="descripcion" required></textarea>
 
     <label for="fechaInicio">Fecha de inicio</label>
@@ -79,14 +79,14 @@
         </li>
       </ul>
       <div class="form-group">
-        <label for="herramientaSeleccionada">Herramienta</label>
+        <label for="herramientaSeleccionada">Herramienta <span class="required-asterisk">*</span></label>
         <select id="herramientaSeleccionada" [(ngModel)]="herramientaSeleccionada" name="herramientaSeleccionada">
           <option *ngFor="let herramienta of herramientas" [value]="herramienta.id">{{ herramienta.descripcion }}</option>
         </select>
         <div class="d-flex">
-          <label for="usoDesde">Uso desde</label>
+          <label for="usoDesde">Uso desde <span class="required-asterisk">*</span></label>
           <input type="date" id="usoDesde" [(ngModel)]="fechaInicio" name="usoDesde" required />
-          <label for="usoHasta">Uso hasta</label>
+          <label for="usoHasta">Uso hasta <span class="required-asterisk">*</span></label>
           <input type="date" id="usoHasta" [(ngModel)]="fechaFin" name="usoHasta" required />
         </div>
         <button class="btn btn-primary btn-small" (click)="agregarHerramienta()" [disabled]="!herramientaSeleccionada">Agregar Herramienta</button>
@@ -103,7 +103,7 @@
         </li>
       </ul>
       <div class="form-group">
-        <label for="materialSeleccionado">Material</label>
+        <label for="materialSeleccionado">Material <span class="required-asterisk">*</span></label>
         <select id="materialSeleccionado" [(ngModel)]="materialSeleccionado" name="materialSeleccionado">
           <option *ngFor="let material of materiales" [value]="material.id">{{ material.descripcion }}</option>
         </select>
