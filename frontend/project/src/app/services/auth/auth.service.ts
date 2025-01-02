@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import {  HttpClient } from '@angular/common/http';  // Asegúrate de importar HttpClient
+import { HttpClient } from '@angular/common/http';  // Asegúrate de importar HttpClient
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';   // Importar tap desde rxjs/operators
+
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000/api'; // Ajusta esta URL a la de tu API
+  private apiUrl = environment.apiUrl;
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(private http: HttpClient) {}  // Asegúrate de inyectar HttpClient
@@ -25,7 +27,7 @@ export class AuthService {
 
   // Función de login que actualiza el estado
   login(usuario: string, contrasenia: string) {
-    return this.http.post('http://localhost:8000/api/login/', { usuario, contrasenia }).pipe(
+    return this.http.post(`${this.apiUrl}/login/`, { usuario, contrasenia }).pipe(
       tap((response: any) => {
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('id_usuario',response.user_id);
@@ -46,7 +48,7 @@ export class AuthService {
   }
 
   register(user: any): Observable<any> {
-    const url = `${this.apiUrl}/register/`;  // Asegúrate de que coincida con el endpoint en el backend
+    const url = `${this.apiUrl}/register/`;
     return this.http.post(url, user);
   }
 

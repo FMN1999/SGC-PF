@@ -86,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
-    'https://sgc-construccion-caf8a528c50c.herokuapp.com'# Agrega el origen de tu frontend
+    'https://sgc-contruccion.vercel.app',  # Agrega el origen de tu frontend
 ]
 
 # Permitir ciertos métodos HTTP

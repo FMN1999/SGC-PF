@@ -51,10 +51,6 @@ build/
 dist/
 .eslintcache
 
-# Angular specific
-/src/environments/environment.prod.ts
-/src/environments/environment.ts
-
 # JetBrains (PyCharm, WebStorm)
 .idea/
 *.iml
