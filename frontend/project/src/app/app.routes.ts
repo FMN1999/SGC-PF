@@ -38,6 +38,7 @@ import {CrearEmpresaComponent} from "./components/crear-empresa/crear-empresa.co
 import {GestionPermisosComponent} from "./components/gestion-permisos/gestion-permisos.component";
 import {CrearAlmacenComponent} from "./components/crear-almacen/crear-almacen.component";
 import {TareasComponent} from "./components/tareas/tareas.component";
+import {NoPermissionsComponent} from "./components/no-permissions/no-permissions.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -81,6 +82,7 @@ export const routes: Routes = [
   { path: 'usuario/:id/permisos', component: GestionPermisosComponent },
   { path: 'crear-almacen', component: CrearAlmacenComponent },
   { path: 'tareas', component: TareasComponent },
+  { path: 'no-permissions', component: NoPermissionsComponent },
 ];
 
 export const routerProviders = [provideRouter(routes)];
