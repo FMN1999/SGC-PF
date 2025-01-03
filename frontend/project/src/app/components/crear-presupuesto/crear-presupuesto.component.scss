@@ -91,6 +91,11 @@
   .form-group {
     margin-bottom: 15px;
 
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
+
     label {
       font-weight: bold;
       color: $text-color;

@@ -1,6 +1,15 @@
 <app-header></app-header>
 
 <div class="entidades-container">
+    <!-- Botones para crear -->
+  <div class="acciones">
+    <button class="btn btn-primary" [routerLink]="['/crear-colaborador']">
+      Crear Colaborador
+    </button>
+    <button class="btn btn-primary" [routerLink]="['/crear-proveedor']">
+      Crear Proveedor
+    </button>
+  </div>
   <h1>Buscar por nombre</h1>
   <div class="search-actions">
     <input

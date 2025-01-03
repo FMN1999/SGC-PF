@@ -42,11 +42,11 @@
   <!-- Modo de edición -->
   <form [formGroup]="materialForm" *ngIf="editMode" (ngSubmit)="onSubmit()" class="material-form">
     <div class="form-group">
-      <label for="tipo_material">Nombre:</label>
+      <label for="tipo_material">Nombre: <span class="required-asterisk">*</span></label>
       <input id="tipo_material" formControlName="tipo_material" type="text" required/>
     </div>
     <div class="form-group">
-      <label for="descripcion">Descripción:</label>
+      <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
       <input id="descripcion" formControlName="descripcion" type="text" required/>
     </div>
 
@@ -127,7 +127,7 @@
     <div *ngIf="material.vehiculo && material.vehiculo.id">
       <h3>Detalles de Vehículo</h3>
       <div class="form-group">
-        <label for="patente">Patente:</label>
+        <label for="patente">Patente: <span class="required-asterisk">*</span></label>
         <input id="patente" formControlName="patente" type="text" required/>
       </div>
 

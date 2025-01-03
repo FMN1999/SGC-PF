@@ -128,10 +128,20 @@
 
       .form-group {
         flex: 1;
+
+        .required-asterisk {
+          color: red;
+          font-weight: bold;
+        }
       }
     }
     .form-group {
       margin-bottom: 15px;
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
 
       label {
         display: block;
@@ -340,6 +350,11 @@
 
     .form-group {
       margin-bottom: 15px;
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
     }
   }
 

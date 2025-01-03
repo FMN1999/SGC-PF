@@ -16,7 +16,7 @@
             <th>Cantidad</th>
             <th>Precio Unidad</th>
             <th>Unidad Medida</th>
-            <th>Área</th>
+            <th>Sección (Opc.)</th>
             <th>Monto Línea</th>
             <th>Acciones</th>
           </tr>
@@ -50,7 +50,7 @@
             <th>Precio Hora</th>
             <th>Horas</th>
             <th>Moneda</th>
-            <th>Área</th>
+            <th>Sección (Opc.)</th>
             <th>Monto Línea</th>
             <th>Acciones</th>
           </tr>
@@ -59,7 +59,7 @@
           <tr *ngFor="let servicio of serviciosFormArray.controls; let i = index" [formGroupName]="i">
             <td><input formControlName="desc_servicio" type="text" required /></td>
             <td><input formControlName="precio_x_hora" type="number" required /></td>
-            <td><input formControlName="horas" type="number"/></td>
+            <td><input formControlName="horas" type="number" required/></td>
             <td><input formControlName="moneda" type="text" required /></td>
             <td>
               <select formControlName="id_area">
@@ -84,7 +84,7 @@
             <th>Horas</th>
             <th>Precio Hora</th>
             <th>Moneda</th>
-            <th>Área</th>
+            <th>Sección (Opc.)</th>
             <th>Monto Línea</th>
             <th>Acciones</th>
           </tr>
@@ -109,12 +109,12 @@
     <div class="form-section">
       <h3>Datos Generales</h3>
       <div class="form-group">
-        <label for="total">Total</label>
+        <label for="total">Total <span class="required-asterisk">*</span></label>
         <input id="total" formControlName="total" type="number" required />
       </div>
 
       <div class="form-group">
-        <label for="moneda">Moneda</label>
+        <label for="moneda">Moneda <span class="required-asterisk">*</span></label>
         <input id="moneda" formControlName="moneda" type="text" required />
       </div>
 

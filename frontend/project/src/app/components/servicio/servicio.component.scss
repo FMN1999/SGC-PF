@@ -19,6 +19,12 @@
       flex: 1; // Hacer que ambos campos tengan el mismo ancho
       display: flex;
       flex-direction: column; // Mantener el diseño vertical interno
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
+
     }
 
     input {
@@ -28,6 +34,11 @@
 
   .form-group {
     margin-bottom: 15px;
+
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
 
     label {
       display: block;

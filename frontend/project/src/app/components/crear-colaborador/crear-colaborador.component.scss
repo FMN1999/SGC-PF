@@ -32,6 +32,12 @@
       .form-group {
         margin-bottom: 15px;
 
+        .required-asterisk {
+          color: red;
+          font-weight: bold;
+        }
+
+
         label {
           display: block;
           margin-bottom: 5px;
@@ -56,6 +62,11 @@
         .form-group {
           flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
           min-width: 200px; // Ancho mínimo para mantener la legibilidad
+
+          .required-asterisk {
+            color: red;
+            font-weight: bold;
+          }
         }
       }
     }

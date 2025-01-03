@@ -4,17 +4,17 @@
   <h2>Crear Tarea</h2>
   <form [formGroup]="tareaForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="titulo">Título</label>
+      <label for="titulo">Título <span class="required-asterisk">*</span></label>
       <input id="titulo" formControlName="titulo" type="text" required />
     </div>
 
     <div class="form-group">
-      <label for="descripcion">Descripción</label>
+      <label for="descripcion">Descripción <span class="required-asterisk">*</span></label>
       <input id="descripcion" formControlName="descripcion" type="text" required/>
     </div>
 
     <div class="form-group">
-      <label for="id_presupuesto_servicio">Presupuesto Actividad</label>
+      <label for="id_presupuesto_servicio">Presupuesto Actividad <span class="required-asterisk">*</span></label>
       <select id="id_presupuesto_servicio" formControlName="id_presupuesto_servicio" required>
         <option value="">Seleccione una actividad</option>
         <option *ngFor="let presupuesto of presupuestosServicio" [value]="presupuesto.id_presupuesto_servicio" >
@@ -26,7 +26,7 @@
     <div class="form-group">
       <label for="id_area">Área</label>
       <select id="id_area" formControlName="id_area">
-        <option value="">Seleccione un área</option>
+        <option value="">Seleccione una sección</option>
         <option *ngFor="let area of areas" [value]="area.id">
           {{ area.descripcion }}
         </option>

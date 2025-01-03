@@ -4,7 +4,7 @@
 
   <form #ofertaForm="ngForm" (submit)="agregarOferta()">
     <div class="form-group">
-      <label for="descripcion">Descripción:</label>
+      <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
       <input
         id="descripcion"
         [(ngModel)]="ofertaData.descripcion"
@@ -20,7 +20,7 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label for="monto_total">Monto Total:</label>
+        <label for="monto_total">Monto Total: <span class="required-asterisk">*</span></label>
         <input
           id="monto_total"
           type="number"
@@ -35,7 +35,7 @@
       </div>
 
       <div class="form-group">
-        <label for="moneda">Moneda:</label>
+        <label for="moneda">Moneda: <span class="required-asterisk">*</span></label>
         <input
           id="moneda"
           [(ngModel)]="ofertaData.moneda"
@@ -53,7 +53,7 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label for="fecha_desde">Fecha Desde:</label>
+        <label for="fecha_desde">Fecha Desde: <span class="required-asterisk">*</span></label>
         <input
           id="fecha_desde"
           type="date"
@@ -68,7 +68,7 @@
       </div>
 
       <div class="form-group">
-        <label for="fecha_hasta">Fecha Hasta:</label>
+        <label for="fecha_hasta">Fecha Hasta: <span class="required-asterisk">*</span></label>
         <input
           id="fecha_hasta"
           type="date"
@@ -100,7 +100,7 @@
       <div class="nested-form" *ngIf="material.selected">
         <div class="form-row">
           <div class="form-group">
-            <label>Cantidad:</label>
+            <label>Cantidad: <span class="required-asterisk">*</span></label>
             <input
               type="number"
               [(ngModel)]="material.cantidad_of"
@@ -109,13 +109,13 @@
             />
           </div>
           <div class="form-group">
-            <label>Unidad:</label>
+            <label>Unidad: <span class="required-asterisk">*</span></label>
             <input type="text" [(ngModel)]="material.unidad_of" name="unidad_{{material.id}}" required />
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Monto:</label>
+            <label>Monto: <span class="required-asterisk">*</span></label>
             <input
               type="number"
               [(ngModel)]="material.monto"
@@ -125,7 +125,7 @@
             />
           </div>
           <div class="form-group">
-            <label>Moneda:</label>
+            <label>Moneda: <span class="required-asterisk">*</span></label>
             <input type="text" [(ngModel)]="material.moneda" name="moneda_{{material.id}}" required />
           </div>
           <div class="form-group">
@@ -156,7 +156,7 @@
       <div class="nested-form" *ngIf="servicio.selected">
         <div class="form-row">
           <div class="form-group">
-            <label>Cantidad:</label>
+            <label>Cantidad: <span class="required-asterisk">*</span></label>
             <input
               type="number"
               [(ngModel)]="servicio.cantidad_of"
@@ -165,7 +165,7 @@
             />
           </div>
           <div class="form-group">
-            <label>Unidad de Tiempo:</label>
+            <label>Unidad de Tiempo: <span class="required-asterisk">*</span></label>
             <input
               type="text"
               [(ngModel)]="servicio.unidad_tiempo"
@@ -176,7 +176,7 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Monto:</label>
+            <label>Monto: <span class="required-asterisk">*</span></label>
             <input
               type="number"
               [(ngModel)]="servicio.monto"
@@ -186,7 +186,7 @@
             />
           </div>
           <div class="form-group">
-            <label>Moneda:</label>
+            <label>Moneda: <span class="required-asterisk">*</span></label>
             <input type="text" [(ngModel)]="servicio.moneda" name="moneda_{{servicio.id}}" required />
           </div>
           <div class="form-group">

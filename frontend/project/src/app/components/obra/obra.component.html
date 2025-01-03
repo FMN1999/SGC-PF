@@ -25,7 +25,7 @@
 
   <form *ngIf="editMode" [formGroup]="obraForm" (ngSubmit)="onSubmit()" class="form-container">
     <div class="form-group">
-      <label for="direccion">Dirección:</label>
+      <label for="direccion">Dirección: <span class="required-asterisk">*</span></label>
       <input id="direccion" formControlName="direccion" class="form-control" [readonly]="!editMode" required/>
     </div>
 
@@ -150,19 +150,19 @@
   <div *ngIf="areasMode" class="areas">
     <form [formGroup]="areaForm" (ngSubmit)="crearArea()" class="form-container">
       <div class="form-group">
-        <label for="descripcion">Descripción:</label>
+        <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
         <input id="descripcion" formControlName="descripcion" class="form-control" required />
       </div>
       <div class="form-group">
-        <label for="dimensiones">Dimensiones:</label>
+        <label for="dimensiones">Dimensiones: <span class="required-asterisk">*</span></label>
         <input id="dimensiones" formControlName="dimensiones" class="form-control" required />
       </div>
       <div class="form-group">
-        <label for="estado">Estado:</label>
+        <label for="estado">Estado: <span class="required-asterisk">*</span></label>
         <input id="area-estado" formControlName="estado" class="form-control" required />
       </div>
       <div class="form-group">
-        <label for="porcentaje">Porcentaje:</label>
+        <label for="porcentaje">Porcentaje: <span class="required-asterisk">*</span></label>
         <input id="porcentaje" type="number" formControlName="porcentaje" class="form-control" required />
       </div>
       <button type="submit" class="btn btn-primary" [disabled]="areaForm.invalid">Crear Área</button>
@@ -229,19 +229,19 @@
   <!-- Formulario para Agregar Documentos -->
   <form *ngIf="documentoMode" [formGroup]="documentoForm" (ngSubmit)="guardarDocumento()" class="form-container">
     <div class="form-group">
-      <label>Nombre:</label>
+      <label>Nombre: <span class="required-asterisk">*</span></label>
       <input formControlName="nombre" class="form-control" required />
     </div>
     <div class="form-group">
-      <label>Link:</label>
+      <label>Link: <span class="required-asterisk">*</span></label>
       <input formControlName="link" class="form-control" required />
     </div>
     <div class="form-group">
-      <label>Descripción (Opcional):</label>
+      <label>Descripción:</label>
       <input formControlName="descripcion" class="form-control" />
     </div>
     <div class="form-group">
-      <label>Tipo de Archivo (Opcional):</label>
+      <label>Tipo de Archivo:</label>
       <input formControlName="tipo_archivo" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary" [disabled]="documentoForm.invalid">Guardar Documento</button>
@@ -267,7 +267,7 @@
     <h3>Agregar Nota</h3>
     <form class="notas" [formGroup]="notaForm" (ngSubmit)="guardarNota()">
       <div class="form-group">
-        <label for="descripcion">Descripción:</label>
+        <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
         <textarea formControlName="descripcion" class="form-control" required></textarea>
       </div>
 

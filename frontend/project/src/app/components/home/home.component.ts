@@ -17,7 +17,7 @@ export class HomeComponent {
   isLoggedIn: boolean = false;
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;
-  usuarioActualId: string | null = sessionStorage.getItem('id_user');  // Obtener el ID del usuario
+  usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
   protected userMenuVisible: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {

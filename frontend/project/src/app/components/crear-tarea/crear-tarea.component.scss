@@ -19,6 +19,11 @@
   .form-group {
     margin-bottom: 20px;
 
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
+
     label {
       font-weight: bold;
       color: $text-color;
@@ -80,7 +85,7 @@
 /* Adaptabilidad para móviles */
 @media (max-width: 768px) {
   .crear-tarea-container {
-    padding: 15px;
+    padding: 50px;
 
     .form-group {
       input,

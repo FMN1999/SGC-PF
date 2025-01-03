@@ -5,7 +5,7 @@
     <h3>Registrar Pago</h3>
 
     <div class="form-group">
-      <label for="id_cliente">Cliente</label>
+      <label for="id_cliente">Cliente <span class="required-asterisk">*</span></label>
       <select formControlName="id_cliente" id="id_cliente" required>
         <option *ngFor="let cliente of clientes" [value]="cliente.id">
           {{ cliente.nombre }} {{ cliente.apellido }}
@@ -14,7 +14,7 @@
     </div>
 
     <div class="form-group">
-      <label for="id_obra">Obra</label>
+      <label for="id_obra">Obra <span class="required-asterisk">*</span></label>
       <select formControlName="id_obra" id="id_obra" required>
         <option *ngFor="let obra of obras" [value]="obra.id">
           {{ obra.direccion }} - {{ obra.cliente_nombre }} {{ obra.cliente_apellido }}
@@ -24,18 +24,18 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label for="monto">Monto</label>
+        <label for="monto">Monto <span class="required-asterisk">*</span></label>
         <input type="number" formControlName="monto" id="monto" required />
       </div>
 
       <div class="form-group">
-        <label for="moneda">Moneda</label>
+        <label for="moneda">Moneda <span class="required-asterisk">*</span></label>
         <input type="text" formControlName="moneda" id="moneda" required />
       </div>
     </div>
 
     <div class="form-group">
-      <label for="fecha_pago">Fecha de Pago</label>
+      <label for="fecha_pago">Fecha de Pago <span class="required-asterisk">*</span></label>
       <input type="date" formControlName="fecha_pago" id="fecha_pago" required />
     </div>
 

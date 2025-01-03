@@ -30,6 +30,11 @@
     flex-direction: column;
     gap: 15px;
 
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
+
     h3 {
       color: $primary-color;
     }
@@ -105,6 +110,11 @@
         flex-direction: column;
         gap: 10px;
 
+        .required-asterisk {
+          color: red;
+          font-weight: bold;
+        }
+
         label {
           font-weight: bold;
           color: $text-color;
@@ -121,6 +131,11 @@
         .d-flex {
           display: flex;
           gap: 10px;
+
+          .required-asterisk {
+            color: red;
+            font-weight: bold;
+          }
 
           label {
             margin: auto 0;
