@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
-import {NgForOf, NgIf} from "@angular/common";
-import {Router} from "@angular/router";
-import {HeaderComponent} from '../header/header.component'
+import { NgForOf, NgIf } from "@angular/common";
+import { Router } from "@angular/router";
+import { HeaderComponent } from '../header/header.component'
+import {NgxPaginationModule} from "ngx-pagination";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-listado-empresas',
@@ -12,12 +14,19 @@ import {HeaderComponent} from '../header/header.component'
   imports: [
     NgIf,
     NgForOf,
-    HeaderComponent
+    HeaderComponent,
+    NgxPaginationModule,
+    FormsModule
   ]
 })
 export class EmpresasComponent implements OnInit {
   empresas: any[] = [];
-  loading = true;
+  filteredEmpresas: any[] = [];
+  searchTerm: string = '';
+  selectedFilter: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  loading: boolean = false;
   error: string | null = null;
 
   constructor(private empresaService: EmpresaService, private router: Router) {}
@@ -27,9 +36,13 @@ export class EmpresasComponent implements OnInit {
   }
 
   obtenerEmpresas(): void {
+    this.loading = true;
+    this.error = null;
+
     this.empresaService.obtenerEmpresas().subscribe({
       next: (data) => {
         this.empresas = data;
+        this.filteredEmpresas = [...this.empresas]; // Inicializar la lista filtrada
       },
       error: (error) => {
         console.error('Error al obtener las empresas:', error);
@@ -41,7 +54,26 @@ export class EmpresasComponent implements OnInit {
     });
   }
 
+  applyFilters(): void {
+    this.filteredEmpresas = this.empresas.filter((empresa) => {
+      const matchesSearch =
+        empresa.denominacion.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        empresa.cuit.includes(this.searchTerm);
+
+      const matchesFilter =
+        !this.selectedFilter || empresa.estado === this.selectedFilter;
+
+      return matchesSearch && matchesFilter;
+    });
+
+    this.currentPage = 1; // Resetear a la primera página después de aplicar filtros
+  }
+
   irACrearEmpresa(): void {
     this.router.navigate(['/crear-empresa']);
+  }
+
+  cambiarPagina(event: number): void {
+    this.currentPage = event;
   }
 }

@@ -2,36 +2,38 @@
 
 <div class="formulario-compra">
   <form [formGroup]="compraForm" (ngSubmit)="onSubmit()">
-    <h3 class="titulo-form">Materiales</h3>
-    <p *ngIf="idPresupuesto" class="cargando">Cargando materiales del presupuesto...</p>
+    <h3 class="titulo-form">Solicitar Materiales</h3>
+    <p *ngIf="!idPresupuesto" class="cargando" >Cargando materiales del presupuesto...</p>
 
     <div formArrayName="lineasCompra">
       <div *ngFor="let linea of lineasCompra.controls; let i = index" [formGroupName]="i" class="linea-compra">
         <div class="form-group">
-          <label for="cantidad-{{ i }}">Cantidad:</label>
-          <input id="cantidad-{{ i }}" formControlName="cantidad" type="number" />
-        </div>
-
-        <div class="form-group">
-          <label for="precio-{{ i }}">Precio Total:</label>
-          <input id="precio-{{ i }}" formControlName="precio_total" type="number" />
-        </div>
-
-        <div class="form-group">
-          <label for="unidad-{{ i }}">Unidad de Medida:</label>
-          <input id="unidad-{{ i }}" formControlName="unidad_medida" type="text" />
+          <label>Descripción a comprar:</label>
+          <select formControlName="id_presupuesto_material" required>
+            <option *ngFor="let m of materiales" [value]="m.id">{{ m.id_material }}</option>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="material-{{ i }}">Material:</label>
-          <select id="material-{{ i }}" formControlName="id_material">
+          <select id="material-{{ i }}" formControlName="id_material" required>
             <option *ngFor="let material of materiales_data" [value]="material.id">{{ material.descripcion }}</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="presupuesto-{{ i }}">ID Presupuesto Material:</label>
-          <input id="presupuesto-{{ i }}" formControlName="id_presupuesto_material" type="number" />
+          <label for="cantidad-{{ i }}">Cantidad:</label>
+          <input id="cantidad-{{ i }}" formControlName="cantidad" type="number" required />
+        </div>
+
+        <div class="form-group">
+          <label for="unidad-{{ i }}">Unidad de Medida:</label>
+          <input id="unidad-{{ i }}" formControlName="unidad_medida" type="text" required/>
+        </div>
+
+        <div class="form-group">
+          <label for="precio-{{ i }}">Precio Total:</label>
+          <input id="precio-{{ i }}" formControlName="precio_total" type="number" required/>
         </div>
 
         <div class="form-group">
@@ -44,7 +46,7 @@
           <input id="serie-{{ i }}" formControlName="nro_serie" type="text" />
         </div>
 
-        <button type="button" class="btn btn-danger" (click)="eliminarLineaCompra(i)">Eliminar</button>
+        <button type="button" class="btn btn-danger" (click)="eliminarLineaCompra(i)" [disabled]="lineasCompra.length===1" >Eliminar</button>
       </div>
     </div>
 

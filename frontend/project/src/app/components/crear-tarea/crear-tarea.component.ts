@@ -4,7 +4,7 @@ import { TareaService } from '../../services/tarea/tarea.service';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { ObraService } from '../../services/obra/obra.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
 
@@ -34,16 +34,17 @@ export class CrearTareaComponent implements OnInit {
     private tareaService: TareaService,
     private presupuestoService: PresupuestoService,
     private obraService: ObraService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
+    private router: Router
   ) {
     this.tareaForm = this.fb.group({
       titulo: ['', Validators.required],
       descripcion: ['', Validators.required],
-      id_presupuesto_servicio: [null],
+      id_presupuesto_servicio: [null, Validators.required],
       id_area: [null],
-      fecha_inicio: ['', Validators.required],
-      fecha_fin: ['', Validators.required],
-      precio_total: [null, Validators.required],
+      fecha_inicio: [''],
+      fecha_fin: [''],
+      precio_total: [null],
       id_vehiculo: [null]
     });
   }
@@ -78,6 +79,7 @@ export class CrearTareaComponent implements OnInit {
       this.tareaService.crearTarea(this.tareaForm.value).subscribe({
         next: (response) => {
           console.log('Tarea creada con éxito:', response);
+          this.router.navigate(['/tareas'])
         },
         error: (error) => {
           console.error('Error al crear la tarea:', error);

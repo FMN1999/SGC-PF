@@ -1,30 +1,34 @@
 <div class="register-container">
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <h3>Registro de Usuario</h3>
+    <h3>Registro de Cliente en Empresa</h3>
 
-    <div class="form-group">
-      <label for="nombre_usuario">Usuario:</label>
-      <input id="nombre_usuario" formControlName="nombre_usuario" type="text" />
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nombre_usuario">Usuario:</label>
+        <input id="nombre_usuario" formControlName="nombre_usuario" type="text" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input id="password" formControlName="password" type="password" required />
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="password">Contraseña:</label>
-      <input id="password" formControlName="password" type="password" />
-    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input id="nombre" formControlName="nombre" type="text" required />
+      </div>
 
-    <div class="form-group">
-      <label for="nombre">Nombre:</label>
-      <input id="nombre" formControlName="nombre" type="text" />
-    </div>
-
-    <div class="form-group">
-      <label for="apellido">Apellido:</label>
-      <input id="apellido" formControlName="apellido" type="text" />
+      <div class="form-group">
+        <label for="apellido">Apellido:</label>
+        <input id="apellido" formControlName="apellido" type="text" required />
+      </div>
     </div>
 
     <div class="form-group">
       <label for="email">Email:</label>
-      <input id="email" formControlName="email" type="email" />
+      <input id="email" formControlName="email" type="email" required />
     </div>
 
     <div class="form-group">
@@ -32,14 +36,16 @@
       <input id="fecha_nacimiento" formControlName="fecha_nacimiento" type="date" />
     </div>
 
-    <div class="form-group">
-      <label for="celular">Celular:</label>
-      <input id="celular" formControlName="celular" type="text" />
-    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="celular">Celular:</label>
+        <input id="celular" formControlName="celular" type="text" />
+      </div>
 
-    <div class="form-group">
-      <label for="telefono">Teléfono:</label>
-      <input id="telefono" formControlName="telefono" type="text" />
+      <div class="form-group">
+        <label for="telefono">Teléfono:</label>
+        <input id="telefono" formControlName="telefono" type="text" />
+      </div>
     </div>
 
     <div class="form-group">
@@ -49,12 +55,12 @@
 
     <div class="form-group">
       <label for="ciudad">Ciudad:</label>
-      <input id="ciudad" formControlName="ciudad" type="text" />
+      <input id="ciudad" formControlName="ciudad" type="text" required />
     </div>
 
     <div class="form-group">
       <label for="provincia">Provincia:</label>
-      <input id="provincia" formControlName="provincia" type="text" />
+      <input id="provincia" formControlName="provincia" type="text" required />
     </div>
 
     <div class="form-group">
@@ -64,13 +70,19 @@
 
     <div class="form-group">
       <label for="empresa">Empresa:</label>
-      <select id="empresa" formControlName="empresa">
+      <select id="empresa" formControlName="empresa" required>
         <option *ngFor="let empresa of empresas" [value]="empresa.id">{{ empresa.denominacion }}</option>
       </select>
     </div>
 
     <div class="actions">
-      <button type="submit" class="btn-registrar">Registrar</button>
+      <button type="submit" class="btn-registrar" [disabled]="registerForm.invalid">Registrar</button>
+    </div>
+    <div *ngIf="mensajeSuccess" class="mensaje-exito">
+      {{ mensajeSuccess }}
+    </div>
+    <div *ngIf="mensajeError" class="mensaje-error">
+      {{ mensajeError }}
     </div>
   </form>
 </div>

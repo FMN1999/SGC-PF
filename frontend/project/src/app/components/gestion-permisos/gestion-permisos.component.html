@@ -42,4 +42,10 @@
       <button type="submit" class="btn-primary">Agregar</button>
     </form>
   </section>
+  <div *ngIf="mensaje" [ngClass]="{'mensaje-notificacion': true, 'error': mensaje.includes('Error')}">
+    {{ mensaje }}
+  </div>
+
 </div>
+
+

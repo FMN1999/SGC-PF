@@ -76,11 +76,12 @@ export class CompraComponent implements OnInit {
     this.router.navigate(['/ingreso', this.compra.id]);  // Ejemplo de navegación a un componente de ingreso
   }
 
-  registrarPagoCompra(compraId: number, proveedorId: number): void {
+  registrarPagoCompra(compraId: number, proveedorId: number, monto_total: number): void {
     this.pagoService.setDatosPago({
       tipo_pago: 'compra',
       id_proveedor: proveedorId,
-      id_compra: compraId
+      id_compra: compraId,
+      monto: monto_total,
     });
     this.router.navigate(['/registrar-pago']);
   }

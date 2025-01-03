@@ -2,14 +2,19 @@
 
 <div class="subcontratacion-container">
   <form [formGroup]="subcontratacionForm" (ngSubmit)="onSubmit()">
-    <h3>Servicios</h3>
+    <h3>Contratación de servicios</h3>
     <p *ngIf="!idPresupuesto" class="mensaje-carga">Cargando servicios del presupuesto...</p>
 
     <div formArrayName="lineasSubcontratacion">
       <div *ngFor="let linea of lineasSubcontratacion.controls; let i = index" [formGroupName]="i" class="linea-subcontratacion">
         <div class="form-group">
-          <label>Servicio:</label>
-          <select formControlName="id_servicio">
+          <label>Descripción del Servicio:</label>
+          <input formControlName="desc_servicio" type="text" readonly />
+        </div>
+        <div class="form-group">
+
+          <label>Descripción de material:</label>
+          <select formControlName="id_presupuesto material" required>
             <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
           </select>
         </div>
@@ -19,19 +24,16 @@
           <input formControlName="horas" type="number" />
         </div>
 
-        <div class="form-group">
-          <label>Precio por Hora:</label>
-          <input formControlName="precio_x_hora" type="number" />
-        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio por Hora:</label>
+            <input formControlName="precio_x_hora" type="number" required/>
+          </div>
 
-        <div class="form-group">
-          <label>Moneda:</label>
-          <input formControlName="moneda" type="text" />
-        </div>
-
-        <div class="form-group">
-          <label>Descripción del Servicio:</label>
-          <input formControlName="desc_servicio" type="text" />
+          <div class="form-group">
+            <label>Moneda:</label>
+            <input formControlName="moneda" type="text" required/>
+          </div>
         </div>
 
         <div class="form-group">
@@ -39,14 +41,16 @@
           <input formControlName="nro_contrato" type="number" />
         </div>
 
-        <div class="form-group">
-          <label>Fecha de Contrato:</label>
-          <input formControlName="fecha_contrato" type="date" />
-        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fecha de Contrato:</label>
+            <input formControlName="fecha_contrato" type="date" required/>
+          </div>
 
-        <div class="form-group">
-          <label>Fecha de Vencimiento del Contrato:</label>
-          <input formControlName="fecha_contrato_hasta" type="date" />
+          <div class="form-group">
+            <label>Fecha de Vencimiento del Contrato:</label>
+            <input formControlName="fecha_contrato_hasta" type="date" />
+          </div>
         </div>
 
         <div class="form-group">
@@ -55,7 +59,7 @@
         </div>
 
         <!-- Botón para eliminar línea de subcontratación -->
-        <button type="button" class="btn-eliminar" (click)="eliminarLineaSubcontratacion(i)">Eliminar</button>
+        <button type="button" class="btn-eliminar" (click)="eliminarLineaSubcontratacion(i)" [disabled]="lineasSubcontratacion.length === 1">Eliminar</button>
       </div>
     </div>
 
@@ -63,6 +67,12 @@
     <div class="actions">
       <button type="button" class="btn-agregar" (click)="agregarLineaSubcontratacion()">Agregar Servicio</button>
       <button type="submit" class="btn-confirmar" [disabled]="subcontratacionForm.invalid">Confirmar Contratación</button>
+    </div>
+    <div *ngIf="mensajeSuccess" class="mensaje-exito">
+      {{ mensajeSuccess }}
+    </div>
+    <div *ngIf="mensajeError" class="mensaje-error">
+      {{ mensajeError }}
     </div>
   </form>
 </div>

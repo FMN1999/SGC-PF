@@ -11,7 +11,24 @@
 <div *ngIf="!loading && !error">
   <div class="container">
     <h2>Listado de Empresas</h2>
+
+    <div class="filters">
+      <input
+        type="text"
+        placeholder="Buscar por denominación o CUIT..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        class="search-bar"
+      />
+      <select [(ngModel)]="selectedFilter" (change)="applyFilters()" class="filter-select">
+        <option value="">Filtrar por estado</option>
+        <option value="activa">Activa</option>
+        <option value="inactiva">Inactiva</option>
+      </select>
+    </div>
+
     <button (click)="irACrearEmpresa()" class="create-button">Crear Nueva Empresa</button>
+
     <table class="empresas-table">
       <thead>
         <tr>
@@ -22,7 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let empresa of empresas">
+        <tr *ngFor="let empresa of filteredEmpresas | paginate: { itemsPerPage: 10, currentPage: currentPage }">
           <td>{{ empresa.denominacion }}</td>
           <td>{{ empresa.cuit }}</td>
           <td>{{ empresa.telefono }}</td>
@@ -30,5 +47,7 @@
         </tr>
       </tbody>
     </table>
+
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
   </div>
 </div>

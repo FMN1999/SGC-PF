@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
 
@@ -23,37 +23,9 @@ import { HeaderComponent } from '../header/header.component';
 
 export class CrearMaterialComponent implements OnInit{
   tipoAsociacion: string = '';  // Para seleccionar entre material, vehículo o herramienta
-
-  materialData = {
-    tipo_material: '',
-    unidad_medida: '',
-    descripcion: '',
-    marca: '',
-    precio: 0,
-    moneda: '',
-    impuestos_total: 0,
-    moneda_impuestos: '',
-    descripcion_impuestos: '',
-    otros_gastos: 0,
-    moneda_otros_gastos: '',
-    descripcion_otros_gastos: '',
-    fecha_desde_precio: '',
-    id_proveedor: null,
-  };
-
-  vehiculoData = {
-    patente: '',
-    tipo: '',
-    moneda: '',
-    modelo: '',
-    precio_x_hora: 0,
-    id_almacen: null
-  };
-
-  herramientaData = {
-    ubicacion: '',
-    id_almacen: null
-  };
+  materialForm: FormGroup;
+  vehiculoForm: FormGroup;
+  herramientaForm: FormGroup;
   // @ts-ignore
   idEmpresa: number;
   // @ts-ignore
@@ -65,14 +37,43 @@ export class CrearMaterialComponent implements OnInit{
 
   constructor(
     private route: ActivatedRoute,
+    private fb: FormBuilder,
     private usuariosService: UsuarioService,
     private proveedorService: ProveedorService,
     private empresaService: EmpresaService,
     private router: Router
   ) {
-    this.id_proveedor = this.route.snapshot.params['id'];
-    // @ts-ignore
-    this.materialData.id_proveedor = this.id_proveedor;
+      this.id_proveedor = this.route.snapshot.params['id'];
+      this.materialForm = this.fb.group({
+        tipo_material: ['', Validators.required],
+        unidad_medida: ['', Validators.required],
+        descripcion: ['', Validators.required],
+        precio: [0],
+        moneda: [''],
+        marca: [''],
+        fecha_desde_precio: [''],
+        impuestos_total: [0],
+        moneda_impuestos: [''],
+        descripcion_impuestos: [''],
+        otros_gastos: [0],
+        moneda_otros_gastos: [''],
+        descripcion_otros_gastos: [''],
+        tipoAsociacion: [''],
+        id_proveedor: this.id_proveedor, // Conserva el id_proveedor
+      });
+
+    this.vehiculoForm = this.fb.group({
+      patente: [''],
+      tipo: [''],
+      modelo: [''],
+      precio_x_hora: [0, Validators.min(0)],
+      id_almacen: ['']
+    });
+
+    this.herramientaForm = this.fb.group({
+      ubicacion: [''],
+      id_almacen: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -95,65 +96,33 @@ export class CrearMaterialComponent implements OnInit{
     });
   }
   crearMaterial() {
-    if (!this.materialData.tipo_material || !this.materialData.unidad_medida || !this.materialData.descripcion) {
-      this.mensajeError = 'Por favor, complete los campos obligatorios: Tipo de Material, Unidad de Medida y Descripción.';
-      setTimeout(() => this.mensajeError = '', 5000); // Oculta el mensaje después de 5 segundos
+    if (this.materialForm.invalid) {
+      this.mensajeError = 'Por favor, complete todos los campos obligatorios.';
+      setTimeout(() => (this.mensajeError = ''), 5000);
       return;
     }
 
-    const data = {
-      ...this.materialData,
-      tipo_asociacion: this.tipoAsociacion,
-      ...(this.tipoAsociacion === 'vehiculo' ? this.vehiculoData : {}),
-      ...(this.tipoAsociacion === 'herramienta' ? this.herramientaData : {})
-    };
+    const materialData = { ...this.materialForm.value };
+    if (materialData.tipoAsociacion === 'vehiculo') {
+      materialData.vehiculo = this.vehiculoForm.value;
+    } else if (materialData.tipoAsociacion === 'herramienta') {
+      materialData.herramienta = this.herramientaForm.value;
+    }
 
-    this.proveedorService.crearMaterial(data).subscribe({
-      next: (response) => {
+    this.proveedorService.crearMaterial(materialData).subscribe({
+      next: () => {
         this.mensajeSuccess = 'Material creado con éxito.';
-        this.limpiarFormulario();
-        setTimeout(() => this.mensajeSuccess = '', 5000); // Oculta el mensaje después de 5 segundos
+        this.materialForm.reset({
+          id_proveedor: this.id_proveedor // Conserva el id_proveedor al resetear
+        });
+        this.vehiculoForm.reset();
+        this.herramientaForm.reset();
+        setTimeout(() => (this.mensajeSuccess = ''), 5000);
       },
       error: () => {
         this.mensajeError = 'Error al crear el material. Intente nuevamente.';
-        setTimeout(() => this.mensajeError = '', 5000); // Oculta el mensaje después de 5 segundos
+        setTimeout(() => (this.mensajeError = ''), 5000);
       }
     });
   }
-
- limpiarFormulario() {
-  this.materialData = {
-    tipo_material: '',
-    unidad_medida: '',
-    descripcion: '',
-    marca: '',
-    precio: 0,
-    moneda: '',
-    impuestos_total: 0,
-    moneda_impuestos: '',
-    descripcion_impuestos: '',
-    otros_gastos: 0,
-    moneda_otros_gastos: '',
-    descripcion_otros_gastos: '',
-    fecha_desde_precio: '',
-    id_proveedor: this.id_proveedor, // Conserva el id_proveedor asignado previamente
-  };
-
-  this.tipoAsociacion = '';
-
-  this.vehiculoData = {
-    patente: '',
-    tipo: '',
-    moneda: '',
-    modelo: '',
-    precio_x_hora: 0,
-    id_almacen: null
-  };
-
-  this.herramientaData = {
-    ubicacion: '',
-    id_almacen: null
-  };
-}
-
 }

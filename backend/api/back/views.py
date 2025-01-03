@@ -101,7 +101,6 @@ class RegistroClienteView(View):
             }
 
             empresa_id = data.get('id_empresa')
-            print(datos_cliente)
 
             # Llamar a la lógica de negocio para registrar al cliente
             cliente = ClienteController.registrar_cliente(datos_usuario, datos_cliente, empresa_id)
@@ -146,11 +145,13 @@ class PerfilView(View):
                 'celular': usuario.celular,
                 'telefono': usuario.telefono,
                 'direccion': usuario.direccion,
+                'fecha_nacimiento': usuario.fecha_nacimiento,
                 'fecha_alta': colaborador.fecha_alta if colaborador else cliente.fecha_alta,
                 'puesto': colaborador.puesto if colaborador else None,
                 'rol': colaborador.rol if colaborador else None,
                 'id_empresa': colaborador.id_empresa.id if colaborador else cliente.id_empresa.id,
                 'empresa_col': colaborador.id_empresa.denominacion if colaborador else cliente.id_empresa.denominacion,
+                'empresa_cl': cliente.id_empresa.denominacion if cliente else colaborador.id_empresa.denominacion,
                 'ciudad': cliente.ciudad if cliente else None,
                 'provincia': cliente.provincia if cliente else None,
                 'cuit': cliente.cuit if cliente else None,
@@ -338,61 +339,132 @@ class OfertaDetalleView(View):
 class MaterialView(View):
 
     def post(self, request):
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+            id_proveedor = data.get('id_proveedor')
 
-        # Crear el material
-        proveedor = get_object_or_404(Proveedor, id=data.get('id_proveedor'))
-        fecha =data.get('fecha_desde_precio')
-        material = Material.objects.create(
-            id_proveedor=proveedor,
-            tipo_material=data.get('tipo_material'),
-            unidad_medida=data.get('unidad_medida'),
-            descripcion=data.get('descripcion'),
-            marca=data.get('marca'),
-            precio=data.get('precio'),
-            moneda=data.get('moneda'),
-            impuestos_total=data.get('impuestos_total'),
-            moneda_impuestos=data.get('moneda_impuestos'),
-            descripcion_impuestos=data.get('descripcion_impuestos'),
-            otros_gastos=data.get('otros_gastos'),
-            moneda_otros_gastos=data.get('moneda_otros_gastos'),
-            descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
-            fecha_desde_precio=fecha if fecha else None
-        )
-
-        if data.get('tipo_asociacion') == 'vehiculo':
-            Vehiculo.objects.create(
-                id_material=material,
-                patente=data.get('patente'),
-                tipo=data.get('tipo'),
-                modelo=data.get('modelo'),
-                precio_x_hora=data.get('precio_x_hora'),
+            # Crear el material
+            proveedor = Proveedor.objects.get(id=id_proveedor)
+            fecha = data.get('fecha_desde_precio')
+            material = Material.objects.create(
+                id_proveedor=proveedor,
+                tipo_material=data.get('tipo_material'),
+                unidad_medida=data.get('unidad_medida'),
+                descripcion=data.get('descripcion'),
+                marca=data.get('marca'),
+                precio=data.get('precio'),
                 moneda=data.get('moneda'),
-                id_almacen_id=data.get('id_almacen')
-            )
-        elif data.get('tipo_asociacion') == 'herramienta':
-            Herramienta.objects.create(
-                id_material=material,
-                id_almacen_id=data.get('id_almacen'),
-                ubicacion=data.get('ubicacion')
+                impuestos_total=data.get('impuestos_total'),
+                moneda_impuestos=data.get('moneda_impuestos'),
+                descripcion_impuestos=data.get('descripcion_impuestos'),
+                otros_gastos=data.get('otros_gastos'),
+                moneda_otros_gastos=data.get('moneda_otros_gastos'),
+                descripcion_otros_gastos=data.get('descripcion_otros_gastos'),
+                fecha_desde_precio=fecha if fecha else None
             )
 
-        return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
+            if data.get('tipo_asociacion') == 'vehiculo':
+                Vehiculo.objects.create(
+                    id_material=material,
+                    patente=data.get('patente'),
+                    tipo=data.get('tipo'),
+                    modelo=data.get('modelo'),
+                    precio_x_hora=data.get('precio_x_hora'),
+                    moneda=data.get('moneda'),
+                    id_almacen_id=data.get('id_almacen')
+                )
+            elif data.get('tipo_asociacion') == 'herramienta':
+                Herramienta.objects.create(
+                    id_material=material,
+                    id_almacen_id=data.get('id_almacen'),
+                    ubicacion=data.get('ubicacion')
+                )
+
+            return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
+        except Exception as e:
+            raise e
 
     def get(self, request, material_id):
         try:
-            material = MaterialController.get_by_id(material_id)
+            # Obtener material base
+            material = Material.objects.get(id=material_id)
             material_data = {
                 'id': material.id,
+                'id_proveedor': material.id_proveedor.id,
+                'tipo_material': material.tipo_material,
+                'unidad_medida': material.unidad_medida,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
                 'precio': material.precio,
                 'moneda': material.moneda,
-                'unidad_medida': material.unidad_medida
+                'impuestos_total': material.impuestos_total,
+                'moneda_impuestos': material.moneda_impuestos,
+                'descripcion_impuestos': material.descripcion_impuestos,
+                'otros_gastos': material.otros_gastos,
+                'moneda_otros_gastos': material.moneda_otros_gastos,
+                'descripcion_otros_gastos': material.descripcion_otros_gastos,
+                'fecha_desde_precio': material.fecha_desde_precio,
+                'herramienta': None,
+                'vehiculo': None
             }
+
+            # Verificar si el material está relacionado con una herramienta
+            try:
+                herramienta = Herramienta.objects.get(id_material=material)
+                almacen = None
+                id_almacen = None
+                fecha_compra = None
+                id_compra = None
+
+                if hasattr(herramienta, 'id_almacen') and herramienta.id_almacen:
+                    almacen = Almacen.objects.get(id=herramienta.id_almacen.id)
+                    id_almacen = almacen.id
+
+                if hasattr(herramienta, 'id_compra') and herramienta.id_compra:
+                    compra = Compra.objects.get(id=herramienta.id_compra.id)
+                    fecha_compra = compra.fecha_compra
+                    id_compra = compra.id
+
+                material_data['herramienta'] = {
+                    'id': herramienta.id,
+                    'id_almacen': id_almacen,
+                    'almacen': almacen.descripcion if almacen else None,
+                    'id_compra': id_compra,
+                    'fecha_compra': fecha_compra,
+                    'ubicacion': herramienta.ubicacion
+                }
+            except Herramienta.DoesNotExist:
+                pass
+
+            # Verificar si el material está relacionado con un vehículo
+            try:
+                vehiculo = Vehiculo.objects.get(id_material=material)
+                almacen = None
+                id_almacen = None
+
+                if hasattr(vehiculo, 'id_almacen') and vehiculo.id_almacen:
+                    almacen = Almacen.objects.get(id=vehiculo.id_almacen.id)
+                    id_almacen = almacen.id
+
+                material_data['vehiculo'] = {
+                    'id': vehiculo.id,
+                    'patente': vehiculo.patente,
+                    'tipo': vehiculo.tipo,
+                    'modelo': vehiculo.modelo,
+                    'moneda': vehiculo.moneda,
+                    'precio_x_hora': vehiculo.precio_x_hora,
+                    'id_almacen': id_almacen,
+                    'almacen': almacen.descripcion if almacen else None
+                }
+            except Vehiculo.DoesNotExist:
+                pass
+
             return JsonResponse(material_data, status=200)
+
         except Material.DoesNotExist:
             return JsonResponse({'error': 'Material no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
     def delete(self, request, material_id):
         try:
@@ -405,15 +477,13 @@ class MaterialView(View):
         try:
             # Obtener los datos enviados en el request
             data = json.loads(request.body)
-            print(data)
 
             # Llamar al método estático de MaterialData para actualizar el material
             updated_material = MaterialController.actualizar_material(material_id, data)
 
             # Retornar una respuesta con los datos actualizados
             return JsonResponse({
-                'message': 'Material actualizado con éxito',
-                'material': updated_material
+                'message': 'Material actualizado con éxito'
             }, status=200)
 
         except ValidationError as e:
@@ -452,7 +522,16 @@ class ServicioView(View):
                 'precio_x_unidad': servicio.precio_x_unidad,
                 'unidad_medida': servicio.unidad_medida,
                 'monto_x_frecuencia': servicio.monto_x_frecuencia,
-                'frecuencia_pago': servicio.frecuencia_pago
+                'frecuencia_pago': servicio.frecuencia_pago,
+                'id_proveedor': servicio.id_proveedor.id,
+                'proveedor': servicio.id_proveedor.denominacion,
+                'moneda': servicio.moneda,
+                'impuestos_total': servicio.impuestos_total,
+                'moneda_impuestos': servicio.moneda_impuestos,
+                'descripcion_impuestos': servicio.descripcion_impuestos,
+                'otros_gastos': servicio.otros_gastos,
+                'moneda_otros_gastos': servicio.moneda_otros_gastos,
+                'descripcion_otros_gastos': servicio.descripcion_otros_gastos
             }
             return JsonResponse(servicio_data, status=200)
         except Servicio.DoesNotExist:
@@ -556,13 +635,21 @@ class MaterialesPorEmpresa(View):
         data = []
 
         for material in materiales:
+            tipo = "material"  # Valor por defecto
+            if Herramienta.objects.filter(id_material=material).exists():
+                tipo = "herramienta"
+            elif Vehiculo.objects.filter(id_material=material).exists():
+                tipo = "vehículo"
+
             data.append({
                 'id': material.id,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
+                'tipo_material': material.tipo_material,  # Nombre del material
                 'precio': material.precio,
                 'moneda': material.moneda,
-                'id_proveedor': material.id_proveedor.id
+                'tipo': tipo,  # Añadimos el tipo
+                'id_proveedor': material.id_proveedor.id,
             })
 
         return JsonResponse(data, safe=False)
@@ -578,7 +665,8 @@ class ServiciosPorEmpresa(View):
                 'id': servicio.id,
                 'descripcion': servicio.descripcion,
                 'precio': servicio.precio_x_unidad,
-                'unidad_medida': servicio.unidad_medida
+                'unidad_medida': servicio.unidad_medida,
+                'moneda': servicio.moneda
             })
 
         return JsonResponse(data, safe=False)
@@ -655,13 +743,17 @@ class AreaView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class NotaView(View):
     def post(self, request):
-        data = json.loads(request.body)
-        nota = ObraController.agregar_nota(data)
+        try:
+
+            data = json.loads(request.body)
+            nota = ObraController.agregar_nota(data)
+        except Exception as e:
+            print(e)
+            raise
         return JsonResponse({'id': nota.id, 'descripcion': nota.descripcion, 'fecha': nota.fecha}, status=201)
 
     def get(self, request, id_obra):
         notas = ObraController.obtener_notas(int(id_obra))
-        print(notas)
 
         # Crear una lista con las notas y sus fotos
         notas_data = []
@@ -777,12 +869,25 @@ class PresupuestoView(View):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
+    def patch(self, request, pk):
+        try:
+            data = json.loads(request.body)
+            presupuesto = Presupuesto.objects.get(pk=pk)
+            estado = data.get('estado')
+            aprobado = data.get('aprobado')
+
+            presupuesto.estado = estado
+            presupuesto.aprobado = aprobado
+            presupuesto.save()
+
+            return JsonResponse({"message": "Presupuesto actualizado correctamente"}, status=200)
+        except Presupuesto.DoesNotExist:
+            return JsonResponse({"error": "Presupuesto no encontrado"}, status=400)
+
 
 class PresupuestosView(View):
     def get(self, request, id_obra):
         try:
-            print('entre')
-            print(id_obra)
             presupuestos = PresupuestoController.get_by_obra(id_obra)
             presupuestos_data = [
                 {
@@ -791,7 +896,8 @@ class PresupuestosView(View):
                     "fecha_creacion": pres.fecha_creacion,
                     "total": pres.total,
                     "moneda": pres.moneda,
-                    "estado": pres.estado
+                    "estado": pres.estado,
+                    "aprobado": pres.aprobado
                 } for pres in presupuestos
             ]
             # Convertir a lista y retornar como JSON
@@ -926,13 +1032,15 @@ class SubcontratacionView(View):
                 presupuesto_servicio = Presupuesto_Servicio.objects.get(
                     id=id_presupuesto_servicio) if id_presupuesto_servicio is not None else None  # Ajusta si el ID es diferente
 
+                nro_contrato = linea.get('nro_contrato')
+                fecha_hasta = linea.get('fecha_contrato_hasta')
                 Subcontratacion.objects.create(
                     id_servicio=servicio,
                     fecha_contrato=linea.get('fecha_contrato'),
-                    nro_contrato=linea.get('nro_contrato'),
-                    fecha_contrato_hasta=linea.get('fecha_contrato_hasta'),
+                    nro_contrato=nro_contrato if nro_contrato != '' else None,
+                    fecha_contrato_hasta=fecha_hasta if fecha_hasta != '' else None,
                     monto_contratacion=linea.get('monto_contratacion'),
-                    moneda_contratacion=linea.get('moneda'),
+                    moneda_contratacion=str(linea.get('moneda')),
                     estado=estado,
                     id_usuario=usuario,
                     id_obra=obra,
@@ -968,22 +1076,27 @@ class TareaView(View):
     def post(self, request):
         data = json.loads(request.body)
         presupuesto_servicio = None
+        area = None
+        vehiculo = None
         if data.get('id_presupuesto_servicio'):
-            presupuesto_servicio = get_object_or_404(Presupuesto_Servicio, id=data["id_presupuesto_servicio"])
+            presupuesto_servicio = Presupuesto_Servicio.objects.get(id=data["id_presupuesto_servicio"])
 
-        area = get_object_or_404(Area, id=data["id_area"])
-        vehiculo = get_object_or_404(Vehiculo, id=data["id_vehiculo"])
+        if data.get("id_area"):
+            area = Area.objects.get(id=data["id_area"])
+        if data.get("id_vehiculo"):
+            vehiculo = Vehiculo.objects.get(id=data["id_vehiculo"])
 
         try:
             tarea = Tarea.objects.create(
                 titulo=data["titulo"],
                 descripcion=data["descripcion"],
                 id_area=area,
-                fecha_inicio=data["fecha_inicio"],
-                fecha_fin=data["fecha_fin"],
-                precio_total=data["precio_total"],
+                fecha_inicio=data["fecha_inicio"] if data["fecha_inicio"] else None,
+                fecha_fin=data["fecha_fin"] if data["fecha_fin"] else None,
+                precio_total=data["precio_total"] if data["precio_total"] else None,
                 id_presupuesto_servicio=presupuesto_servicio,
-                id_vehiculo=vehiculo
+                id_vehiculo=vehiculo,
+                porcentaje_avance=0
             )
             return JsonResponse({"message": "Tarea creada"}, safe=False)
         except Exception as e:
@@ -998,10 +1111,10 @@ class TareaView(View):
                 'precio_total': tarea.precio_total,
                 'descripcion': tarea.descripcion,
                 'titulo': tarea.titulo,
-                'id_area': tarea.id_area.id,
-                'area': tarea.id_area.descripcion,
-                'id_vehiculo': tarea.id_vehiculo.id,
-                'vehiculo': tarea.id_vehiculo.tipo,
+                'id_area': tarea.id_area.id if tarea.id_area else None,
+                'area': tarea.id_area.descripcion if tarea.id_area else None,
+                'id_vehiculo': tarea.id_vehiculo.id if tarea.id_vehiculo else None,
+                'vehiculo': tarea.id_vehiculo.tipo if tarea.id_vehiculo else None,
             }
             return JsonResponse(tarea_data, safe=False)
         except Tarea.DoesNotExist:
@@ -1090,23 +1203,39 @@ class PagoView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            tipo = data.get('tipo_pago')
             monto = data.get('monto')
             moneda = data.get('moneda')
             cuota = data.get('cuota')
             id_proveedor = data.get('id_proveedor')
-            id_compra = data.get('id_compra')
-            id_subcontratacion = data.get('id_subcontratacion')
+            id_compra = data.get('id_compra') if tipo == 'compra' else None
+            id_subcontratacion = data.get('id_subcontratacion') if tipo == 'subcontratacion' else None
             fecha_pago = data.get('fecha_pago')
-
-            # Validar que solo uno de id_compra o id_subcontratacion esté presente
-            if (id_compra and id_subcontratacion) or (not id_compra and not id_subcontratacion):
-                return JsonResponse(
-                    {'error': 'Debe especificar solo una compra o una subcontratación, no ambas o ninguna.'},
-                    status=400)
 
             # Llamada al controlador para crear el pago
             resultado = PagoController.crear_pago(monto, moneda, cuota, id_proveedor, id_compra, id_subcontratacion,
                                                   fecha_pago)
+
+            if id_compra:
+                compra = Compra.objects.get(id=id_compra)
+                obra = Obra.objects.filter(id=compra.id_obra.id).first()
+                if obra:
+                    obra.monto_total_real += monto
+                    real = obra.monto_total_real
+                    estimado = obra.monto_total_est
+                    obra.ganancias = estimado - real if estimado > real else 0
+                    obra.perdidas = real - estimado if real > estimado else 0
+                    obra.save()
+
+            if id_subcontratacion:
+                sub = Subcontratacion.objects.get(id=id_subcontratacion)
+                obra = Obra.objects.filter(id=sub.id_obra.id).first()
+                obra.monto_total_real += monto
+                real = obra.monto_total_real
+                estimado = obra.monto_total_est
+                obra.ganancias = estimado - real if estimado > real else 0
+                obra.perdidas = real - estimado if real > estimado else 0
+                obra.save()
 
             if resultado['status'] == 'success':
                 return JsonResponse({'message': 'Pago registrado exitosamente', 'pago_id': resultado['pago_id']},
@@ -1146,12 +1275,14 @@ class TareaColaboradorView(View):
             'id_colaborador': colaborador.id,
             'estado': tarea_colaborador.estado,
             'cant_dias': tarea_colaborador.cant_dias,
+            'titulo': tarea.titulo,
+            'nombre': colaborador.id_usuario.nombre,
+            'apellido': colaborador.id_usuario.apellido
         }
 
         return JsonResponse(response_data, status=201)
 
     def get(self, request, tarea_id):
-        print(tarea_id)
         colaboradores = Tarea_Colaborador.objects.filter(id_tarea=tarea_id)
         data = [
             {
@@ -1161,6 +1292,7 @@ class TareaColaboradorView(View):
                 'apellido': c.id_colaborador.id_usuario.apellido,
                 'estado': c.estado,
                 'cant_dias': c.cant_dias,
+                'titulo': c.id_tarea.titulo
             } for c in colaboradores
         ]
 
@@ -1174,15 +1306,10 @@ class TareaColaboradorView(View):
         data = json.loads(request.body)
         cant_dias = data.get('cant_dias')
         tarea = data.get('id_tarea')
-        print(colaborador_id)
-        print(tarea)
-        if cant_dias is not None:
-            colaborador = Colaborador.objects.get(id_usuario=colaborador_id)
-            tarea = Tarea_Colaborador.objects.get(id_colaborador=colaborador.id, id_tarea=tarea)
-            tarea.cant_dias = cant_dias
-            return JsonResponse({'message': 'Cantidad de días actualizada', 'cant_dias': cant_dias}, status=200)
-        else:
-            return JsonResponse({'error': 'Cantidad de días no proporcionada'}, status=400)
+        tarea = Tarea_Colaborador.objects.get(id=tarea)
+        tarea.cant_dias = cant_dias
+        tarea.save()
+        return JsonResponse({'message': 'Cantidad de días actualizada', 'cant_dias': cant_dias}, status=200)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1496,6 +1623,9 @@ class CobroView(View):
                 cantidad_recargo=data["cantidad_recargo"],
                 unidad_recargo=data["unidad_recargo"]
             )
+            modificacion = cliente.monto_deuda
+            cliente.monto_deuda = modificacion - pago.monto
+            cliente.save()
             return JsonResponse({"message": "Tarea creada"}, safe=False)
         except Exception as e:
             print(e)
@@ -1555,7 +1685,7 @@ class TareasPerfilView(View):
                     'descripcion': t.id_tarea.descripcion,
                     'cant_dias': t.cant_dias,
                     'estado': t.estado,
-                    'id_tarea': t.id_tarea.id,
+                    'id_tarea': t.id_tarea.id
                 } for t in tareas
             ]
             return JsonResponse(tareas_return, safe=False)
@@ -1582,7 +1712,7 @@ class AlmacenesPorEmpresaView(View):
                         'fecha': ingreso.fecha,
                         'material': {
                             'id': ingreso.id_material.id,
-                            'nombre': ingreso.id_material.descripcion
+                            'nombre': ingreso.id_material.tipo_material
                         },
                         'unidad_medida': ingreso.unidad_medida,
                         'id_compra': ingreso.id_compra.id,
@@ -1601,15 +1731,31 @@ class AlmacenesPorEmpresaView(View):
                         'id': herramienta.id,
                         'material': {
                             'id': herramienta.id_material.id,
-                            'nombre': herramienta.id_material.descripcion
+                            'nombre': herramienta.id_material.tipo_material
                         },
                         'ubicacion': herramienta.ubicacion,
                         'marca': herramienta.id_material.marca,
                         'id_compra': herramienta.id_compra.id,
+                        'fecha_compra': herramienta.id_compra.fecha_compra
                     }
                     for herramienta in herramientas
                 ]
 
+                vehiculos = Vehiculo.objects.filter(id_almacen=almacen.id)
+                vehiculos_data = [
+                    {
+                        'id': v.id,
+                        'material': {
+                            'id': v.id_material.id,
+                            'nombre': v.id_material.tipo_material
+                        },
+                        'patente': v.patente,
+                        'marca': v.id_material.marca,
+                        'tipo': v.tipo,
+                        'modelo': v.modelo,
+                    }
+                    for v in vehiculos
+                ]
                 almacenes_return.append({
                     'id': almacen.id,
                     'descripcion': almacen.descripcion,
@@ -1619,6 +1765,7 @@ class AlmacenesPorEmpresaView(View):
                     'provincia': almacen.provincia,
                     'ingresos': ingresos_data,
                     'herramientas': herramientas_data,
+                    'vehiculos': vehiculos_data
                 })
 
             return JsonResponse({'almacenes': almacenes_return}, safe=False)
@@ -1801,14 +1948,39 @@ class TareasView(View):
         tareas = Tarea.objects.filter(
             id_presupuesto_servicio__id_presupuesto__id_obra__id_empresa=id_empresa
         ).exclude(porcentaje_avance=100)
-        tareas_response = [
-            {
-                "id": t.id,
-                "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
-                "tarea": t.titulo,
-            }
-            for t in tareas
-        ]
+        tareas_response = []
+
+        for t in tareas:
+            try:
+                area = t.id_area.descripcion if t.id_area else None
+            except Tarea.id_area.RelatedObjectDoesNotExist:
+                area = None
+
+            try:
+                vehiculo = t.id_vehiculo.id_material.tipo_material if t.id_vehiculo else None
+                tipo_vehiculo = t.id_vehiculo.tipo if t.id_vehiculo else None
+                modelo_vehiculo = t.id_vehiculo.modelo if t.id_vehiculo else None
+            except Tarea.id_vehiculo.RelatedObjectDoesNotExist:
+                vehiculo = None
+                tipo_vehiculo = None
+                modelo_vehiculo = None
+
+            tareas_response.append(
+                {
+                    "id": t.id,
+                    "obra": t.id_presupuesto_servicio.id_presupuesto.id_obra.direccion,
+                    "tarea": t.titulo,
+                    "area": area,
+                    "fecha_inicio": t.fecha_inicio,
+                    "fecha_fin": t.fecha_fin,
+                    "precio_total": t.precio_total,
+                    "servicio_presupuesto": t.id_presupuesto_servicio.desc_servicio,
+                    "descripcion": t.descripcion,
+                    "porcentaje_avance": t.porcentaje_avance if t.porcentaje_avance else 0,
+                    "vehiculo": vehiculo,
+                    "tipo_vehiculo": tipo_vehiculo,
+                    "modelo_vehiculo": modelo_vehiculo
+                })
         return JsonResponse(tareas_response, safe=False)
 
 
@@ -1839,3 +2011,18 @@ class VerificarIngresosView(View):
             return JsonResponse(data, safe=False)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ComprasPagosView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        id_empresa = data.get('id_empresa')
+        compras = CompraController.get_compras_pendientes(id_empresa)
+        return JsonResponse({'compras': compras}, status=200)
+
+
+class SubcontratacionesView(View):
+    def get(self, request, id_empresa):
+        subcontrataciones = SubcontratacionController.get_validas(id_empresa)
+        return JsonResponse({'subcontrataciones': subcontrataciones})

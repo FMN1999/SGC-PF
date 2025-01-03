@@ -1,7 +1,7 @@
-@import '../../components/home/home.component';
+@import '../../../styles';
 
 .register-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -21,6 +21,21 @@
       background-color: $secondary-color;
       margin-top: 5px;
       border-radius: $button-radius;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 20px; // Espaciado entre los campos
+
+    .form-group {
+      flex: 1; // Hacer que ambos campos tengan el mismo ancho
+      display: flex;
+      flex-direction: column; // Mantener el diseño vertical interno
+    }
+
+    input {
+      width: 100%; // Asegura que los campos ocupen el espacio disponible
     }
   }
 
@@ -69,5 +84,25 @@
         cursor: not-allowed;
       }
     }
+  }
+
+  .mensaje-exito {
+    background-color: $success-color;
+    color: $white-color;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: $button-radius;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .mensaje-error {
+    background-color: $error-color;
+    color: $white-color;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: $button-radius;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 }

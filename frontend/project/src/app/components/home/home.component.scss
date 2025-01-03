@@ -1,23 +1,4 @@
-/* Variables de colores */
-$primary-color: #2c3e50; // Azul oscuro profesional
-$secondary-color: #e67e22; // Naranja para botones y acciones
-$background-color: #ecf0f1; // Gris claro para fondos
-$text-color: #333; // Texto oscuro para buena legibilidad
-$white-color: #ffffff;
-$hover-color: darken($secondary-color, 10%);
-$header-height: 50px; /* Reducimos la altura del header */
-$success-color: #218838;
-$error-color: #dc3545; // Rojo Bootstrap
-$loading-color: #007bff;
-$border-color: #ddd;
-$section-padding: 20px;
-$section-bg-color: #fff;
-$table-header-bg-color: #f2f2f2;
-$table-border-color: #ccc;
-$button-radius: 4px;
-$danger-color: #dc3545;
-
-
+@import '../../../styles';
 
 /* Tipografía */
 body {
@@ -84,6 +65,57 @@ body {
 
     &:hover {
       color: $secondary-color;
+    }
+  }
+
+  .right-section {
+    position: relative; // Necesario para posicionar el menú desplegable respecto a esta sección
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    i {
+      font-size: 1.5em;
+      color: $white-color;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $secondary-color;
+      }
+    }
+
+    .user-menu {
+      position: absolute;
+      top: calc(100% + 10px); // Debajo del ícono
+      right: 0; // Alineado al borde derecho
+      background-color: $white-color;
+      border: 1px solid $border-color;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: $button-radius;
+      padding: 10px 0;
+      list-style: none;
+      min-width: 150px;
+      display: none; // Oculto por defecto
+      z-index: 1000;
+
+      li {
+        padding: 10px 20px;
+        font-size: 0.9em;
+        color: $text-color;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        &:hover {
+          background-color: $secondary-color;
+          color: $white-color;
+        }
+      }
+    }
+
+    // Mostrar el menú si `userMenuVisible` es verdadero
+    &.menu-open .user-menu {
+      display: block;
     }
   }
 }
@@ -198,7 +230,7 @@ body {
 /* Servicios */
 .services {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 
   .service {
@@ -206,6 +238,13 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
     h3 {
       font-size: 1.5em;
@@ -219,6 +258,7 @@ body {
     }
   }
 }
+
 
 .menu-toggle-btn {
   background: none;

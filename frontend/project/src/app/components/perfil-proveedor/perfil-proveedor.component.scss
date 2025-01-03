@@ -1,7 +1,7 @@
-@import '../../components/home/home.component';
+@import '../../../styles';
 
 .proveedor-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -30,38 +30,74 @@
   .ofertas {
     margin-bottom: $section-padding;
 
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $section-padding;
+
+      .section-controls {
+        display: flex;
+        gap: 10px;
+
+        input {
+          padding: 10px;
+          border: 1px solid $border-color;
+          border-radius: $button-radius;
+        }
+
+        .btn-toggle {
+          background-color: $primary-color;
+          color: $white-color;
+          padding: 8px 15px;
+          border-radius: $button-radius;
+          border: none;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+          }
+        }
+      }
+    }
+
     p {
       font-size: 1rem;
       color: $text-color;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: $table-header-bg-color;
+      border-radius: $button-radius;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
 
-      li {
-        background: $table-header-bg-color;
-        padding: 10px;
-        margin-bottom: 10px;
+      &:hover {
+        background-color: lighten($table-header-bg-color, 10%);
+      }
+
+      .item-content {
+        flex: 1;
+      }
+
+      .btn-eliminar {
+        background-color: $danger-color;
+        color: $white-color;
+        padding: 8px 15px;
         border-radius: $button-radius;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
 
-        a {
-          text-decoration: none;
-          color: $primary-color;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-
-        .btn-eliminar {
-          margin-left: 10px;
-          background-color: $error-color;
-
-          &:hover {
-            background-color: darken($error-color, 10%);
-          }
+        &:hover {
+          background-color: darken($danger-color, 10%);
         }
       }
     }
@@ -93,16 +129,26 @@
       display: flex;
       gap: 10px;
 
-      .btn-guardar {
+      .guardar {
         background-color: $success-color;
+        color: $white-color;
+        border: none;
+        padding: 8px 15px;
+        border-radius: $button-radius;
+        cursor: pointer;
 
         &:hover {
           background-color: darken($success-color, 10%);
         }
       }
 
-      .btn-cancelar {
+      .cancelar {
         background-color: $error-color;
+        color: $white-color;
+        border: none;
+        padding: 8px 15px;
+        border-radius: $button-radius;
+        cursor: pointer;
 
         &:hover {
           background-color: darken($error-color, 10%);

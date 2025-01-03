@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
@@ -12,7 +12,8 @@ import {HeaderComponent} from '../header/header.component';
     DatePipe,
     NgForOf,
     HeaderComponent,
-    CurrencyPipe
+    CurrencyPipe,
+    RouterLink
   ],
   standalone: true,
   styleUrls: ['./oferta.component.scss']

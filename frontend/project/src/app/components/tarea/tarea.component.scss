@@ -1,7 +1,7 @@
-@import '../../components/home/home.component';
+@import '../../../styles';
 
 .tarea-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $section-bg-color;
   border: 1px solid $border-color;
   border-radius: $button-radius;
@@ -124,6 +124,27 @@
 
           label {
             margin: auto 0;
+          }
+
+          .btn-small {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: $button-radius;
+            &.btn-primary {
+              background-color: $secondary-color;
+              color: $white-color;
+              &:hover {
+                background-color: $hover-color;
+              }
+            }
+            &.btn-secondary {
+              background-color: $background-color;
+              color: $text-color;
+              border: 1px solid $border-color;
+              &:hover {
+                background-color: darken($background-color, 5%);
+              }
+            }
           }
         }
       }

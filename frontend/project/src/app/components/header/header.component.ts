@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service'
-import {NgIf} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faUser } from '@fortawesome/free-solid-svg-icons'; // Importa los íconos necesarios
@@ -14,11 +14,13 @@ import { faHome, faUser } from '@fortawesome/free-solid-svg-icons'; // Importa l
   standalone: true,
   imports: [
     NgIf,
-    FaIconComponent
+    FaIconComponent,
+    NgClass
   ]
 })
 export class HeaderComponent implements OnInit {
   userMenuVisible = false; // Controla la visibilidad del menú desplegable
+  isScrolled = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
@@ -43,5 +45,10 @@ export class HeaderComponent implements OnInit {
   cerrarSesion(): void {
     this.authService.logout();
     this.router.navigate(['/home']); // Redirige a la página de login
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50; // Cambia la clase si se desplaza más de 50px
   }
 }

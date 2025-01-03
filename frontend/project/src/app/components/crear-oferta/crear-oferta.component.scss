@@ -1,9 +1,9 @@
-@import '../home/home.component';
+@import '../../../styles';
 
 .crear-oferta-container {
   max-width: 900px;
   margin: 20px auto;
-  padding: 20px;
+  padding: 50px;
   background-color: $white-color;
   border: 1px solid $background-color;
   border-radius: 8px;

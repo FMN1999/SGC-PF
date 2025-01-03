@@ -159,9 +159,6 @@ class ProveedorController:
             materiales = ProveedorData.get_material_by_prov(proveedor)
             servicios = ProveedorData.get_servicio_by_prov(proveedor)
             ofertas = ProveedorData.get_oferta_by_prov(proveedor)
-            print(materiales)
-            print(servicios)
-            print(ofertas)
 
             # Convertir los objetos a diccionarios
             materiales_list = [
@@ -345,7 +342,7 @@ class ServicioController:
     @staticmethod
     def eliminar_servicio(id_serv):
         ServicioData.eliminar_servicio(id_serv)
-        
+
     @staticmethod
     def actualizar_servicio(id_serv, data):
         return ServicioData.actualizar_servicio(id_serv, data)
@@ -372,6 +369,10 @@ class ObraController:
         id_empresa = data.get('id_empresa')  # Viene del sessionStorage
 
         cliente = ClienteData.get_by_id(id_cliente)
+        deuda = cliente.deuda
+        cliente.deuda = deuda + monto_total_est
+        cliente.save()
+
         empresa = EmpresaData.obtener_empresa_por_id(id_empresa)
 
         nueva_obra = Obra.objects.create(
@@ -380,13 +381,16 @@ class ObraController:
             telefono_contacto=telefono_contacto,
             fecha_inicio_est=datetime.strptime(fecha_inicio_est, '%Y-%m-%d') if fecha_inicio_est else None,
             fecha_fin_est=datetime.strptime(fecha_fin_est, '%Y-%m-%d') if fecha_fin_est else None,
-            monto_total_est= 0 if monto_total_est == '' else monto_total_est,
+            monto_total_est=0 if monto_total_est == '' else monto_total_est,
+            monto_total_real=0,
             moneda=moneda,
             pisos=pisos if pisos else 0,
             dimensiones=dimensiones,
             estado=estado,
             id_empresa=empresa,
-            tipo_obra=tipo_obra
+            tipo_obra=tipo_obra,
+            ganancias=0,
+            perdidas=0
         )
         return ObraData.guardar(nueva_obra)
 
@@ -422,6 +426,9 @@ class ObraController:
 
     @staticmethod
     def actualizar(obra: Obra, data):
+        estimado = data.get('monto_total_est')
+        real = data.get('monto_total_real')
+
         obra.direccion = data.get('direccion')
         obra.telefono_contacto = data.get('telefono_contacto')
         obra.fecha_inicio_real = data.get('fecha_inicio_real')
@@ -432,8 +439,8 @@ class ObraController:
         obra.pisos = data.get('pisos')
         obra.dimensiones = data.get('dimensiones')
         obra.estado = data.get('estado')
-        obra.ganancias = data.get('ganancias')
-        obra.perdidas = data.get('perdidas')
+        obra.ganancias = estimado - real if estimado > real else 0
+        obra.perdidas = real - estimado if real > estimado else 0
         return ObraData.guardar(obra)
 
     @staticmethod
@@ -443,7 +450,7 @@ class ObraController:
         nota = Nota(
             id=random.randint(0000, 9999),
             descripcion=data.get('descripcion'),
-            id_usuario= user,  # id_usuario desde el frontend
+            id_usuario=user,  # id_usuario desde el frontend
             fecha=datetime.now().date(),
             id_obra=obra
         )
@@ -452,9 +459,10 @@ class ObraController:
 
     @staticmethod
     def agregar_foto(nota_id, url):
+        nota = Nota.objects.get(id=nota_id)
         foto = FotoAvances(
-            id= random.randint(0000, 9999),
-            id_avance_id=nota_id,
+            id=random.randint(0000, 999999),
+            id_avance=nota,
             url=url
         )
         foto.save()
@@ -516,7 +524,7 @@ class PresupuestoController:
         total = data.get('total')
         moneda = data.get('moneda')
         observaciones = data.get('observaciones', '')
-        porc_inflacion= data.get('porc_inflacion',0)
+        porc_inflacion = data.get('porc_inflacion', 0)
 
         # Crear el presupuesto principal
         presupuesto = Presupuesto.objects.create(
@@ -615,9 +623,9 @@ class PresupuestoController:
     @staticmethod
     def get_materiales_por_presupuesto(id_presupuesto):
         presupuesto_materiales = Presupuesto_Material.objects.filter(id_presupuesto=id_presupuesto)
-        print(presupuesto_materiales)
         return [
             {
+                "id": pm.id,
                 "cantidad": pm.cantidad,
                 "precio_total": pm.precio_x_unidad_medida,
                 "unidad_medida": pm.unidad_medida,
@@ -629,18 +637,25 @@ class PresupuestoController:
     @staticmethod
     def get_servicios_por_presupuesto(id_presupuesto):
         presupuesto_servicios = Presupuesto_Servicio.objects.filter(id_presupuesto=id_presupuesto)
-        return [
-            {
+        servicios = []
+
+        for ps in presupuesto_servicios:
+            try:
+                id_area = ps.id_area.id if ps.id_area else None
+            except Presupuesto_Servicio.id_area.RelatedObjectDoesNotExist:
+                id_area = None
+
+            servicios.append({
                 "id_presupuesto_servicio": ps.id,
                 "precio_x_hora": ps.precio_x_hora,
                 "horas": ps.horas,
                 "moneda": ps.moneda,
                 "monto_linea": ps.monto_linea,
-                "id_area": ps.id_area.id,  # Suponiendo que deseas devolver el ID del área
+                "id_area": id_area,
                 "desc_servicio": ps.desc_servicio,
-            }
-            for ps in presupuesto_servicios
-        ]
+            })
+
+        return servicios
 
 
 # controller.py
@@ -658,8 +673,6 @@ class CompraController:
             if id_proveedor not in lineas_por_proveedor:
                 lineas_por_proveedor[id_proveedor] = []
             lineas_por_proveedor[id_proveedor].append(linea)
-
-        print(lineas_por_proveedor)
 
         # Crear una compra para cada proveedor con sus líneas correspondientes
         for id_proveedor, lineas in lineas_por_proveedor.items():
@@ -684,7 +697,9 @@ class CompraController:
             # Crear LineaCompra para cada material en la lista del proveedor
             for linea_data in lineas:
                 material = Material.objects.get(id=linea_data['id_material'])
-                pres_mat = Presupuesto_Material.objects.get(id=linea_data.get('id_presupuesto_material')) if linea_data.get('id_presupuesto_material') is not None else None
+                pres_mat = Presupuesto_Material.objects.get(
+                    id=linea_data.get('id_presupuesto_material')) if linea_data.get(
+                    'id_presupuesto_material') is not None else None
                 try:
                     LineaCompra.objects.create(
                         nr_posicion=nro,
@@ -744,6 +759,40 @@ class CompraController:
         compra = CompraData.actualizar_estado_compra(compra_id, nuevo_estado)
         return compra is not None
 
+    @staticmethod
+    def get_compras_pendientes(id_empresa):
+        # Obtener compras con estado distinto de "Cancelada"
+        compras = Compra.objects.exclude(
+            estado__in=["Cancelada", "Pendiente", "Rechazada"]
+        )
+
+        # Filtrar compras cuyo proveedor pertenezca a la empresa y cuyo monto total no esté cubierto
+        compras_pendientes = []
+        for compra in compras:
+            if compra.id_proveedor.id_empresa.id != id_empresa:
+                continue  # Saltar compras de otras empresas
+
+            # Calcular el total pagado
+            total_pagado = Pago.objects.filter(id_compra=compra.id).aggregate(Sum('monto'))['monto__sum'] or 0
+            if total_pagado < compra.monto_total:
+                # Contar las líneas de material y obtener los nombres de los materiales
+                lineas = LineaCompra.objects.filter(id_compra=compra.id)
+                cantidad_lineas = lineas.count()
+                nombres_materiales = [linea.id_material.tipo_material.split()[0] for linea in lineas[:3]]
+
+                # Preparar los detalles de la compra
+                compras_pendientes.append({
+                    'id': compra.id,
+                    'direccion_obra': compra.id_obra.direccion if compra.id_obra else None,
+                    'fecha_compra': compra.fecha_compra,
+                    'cantidad_lineas': cantidad_lineas,
+                    'materiales': nombres_materiales,
+                    'monto_pendiente': compra.monto_total - total_pagado,
+                    'id_proveedor': compra.id_proveedor.id
+                })
+
+        return compras_pendientes
+
 
 class IngresoController:
     @staticmethod
@@ -763,14 +812,16 @@ class IngresoController:
             realizado=data.get('realizado', False),
             en_obra=data.get('en_obra', False)
         )
+
         try:
+            # Verificar si el material también es una herramienta
             idMaterial = data.get('id_material')
-            h=Herramienta.objects.get(id=idMaterial)
-            h.id_almacen = almacen
-            h.save()
+            herramienta = Herramienta.objects.filter(id=idMaterial).first()  # Usar `filter` para evitar excepciones
+            if herramienta:
+                herramienta.id_almacen = almacen
+                herramienta.save()
         except Exception as e:
             print(f"Error al asignar almacén: {str(e)}")
-            raise
 
         ingreso.save()
         return ingreso
@@ -974,17 +1025,19 @@ class ChatController:
                 "tarea_id": tarea.id,
                 "descripcion": tarea.descripcion,
                 "porcentaje_avance": porcentaje_avance,
-                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre, "apellido":col.id_colaborador.id_usuario.apellido } for col in
+                "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre,
+                                   "apellido": col.id_colaborador.id_usuario.apellido} for col in
                                   colaboradores],
                 "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.descripcion} for mat in materiales],
-                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for her in
+                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for
+                                 her in
                                  herramientas]
             })
 
         # Cálculo del avance general de la obra
         avance_general = avance_total / len(tareas) if tareas else 0
 
-        data_return={
+        data_return = {
             "obra_id": obra_id,
             "nombre_obra": obra.direccion,
             "avance_general": avance_general,
@@ -1124,8 +1177,10 @@ class ChatController:
         obras_previas = Obra.objects.exclude(id=obra_id)  # Excluir la obra actual
 
         # Cálculos para encontrar el costo promedio de materiales y subcontratistas
-        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(compras) if compras else 0
-        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))['monto_contratacion__sum'] / len(
+        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
+            compras) if compras else 0
+        costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))[
+                                             'monto_contratacion__sum'] / len(
             subcontrataciones) if subcontrataciones else 0
 
         # Análisis comparativo con el historial de obras
@@ -1143,7 +1198,8 @@ class ChatController:
         comparativa_subcontratacion = []
         for obra_prev in obras_previas:
             subcontrataciones_previas = Subcontratacion.objects.filter(id_obra=obra_prev.id)
-            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('monto_contratacion'))['monto_contratacion__sum'] / len(
+            costo_subcontratacion_prev = subcontrataciones_previas.aggregate(Sum('monto_contratacion'))[
+                                             'monto_contratacion__sum'] / len(
                 subcontrataciones_previas) if subcontrataciones_previas else 0
             comparativa_subcontratacion.append({
                 'obra': obra_prev.nombre,
@@ -1157,7 +1213,7 @@ class ChatController:
             "subcontrataciones": f"El costo promedio de subcontratación en esta obra es de {costo_subcontratacion_promedio}. Verificar las subcontrataciones previas puede ayudar a reducir costos."
         }
 
-        data_return={
+        data_return = {
             "obra_id": obra_id,
             "nombre_obra": obra.direccion,
             "comparativa_materiales": comparativa_materiales,
@@ -1179,16 +1235,20 @@ class ReporteObra:
     def reporte_gastos_avance(obra_id):
         # Obtener la obra y presupuesto
         obra = Obra.objects.get(id=obra_id)
-        presupuesto = Presupuesto.objects.filter(id_obra=obra_id).first()
+        presupuesto = Presupuesto.objects.filter(id_obra=obra_id, aprobado=True, estado='Aprobado').first()
         if not presupuesto:
             return {"error": "No hay un presupuesto asociado a esta obra."}
 
         # Compras realizadas
+        contrataciones = Subcontratacion.objects.filter(id_obra=obra_id)
         compras = LineaCompra.objects.filter(id_compra__id_obra=obra_id)
-        total_compras = sum([compra.precio_total for compra in compras])
+        total_contratacion = sum([cont.monto_contratacion for cont in contrataciones if
+                                  cont.monto_contratacion is not None]) if contrataciones else 0
+        total_compras = sum(
+            [compra.precio_total for compra in compras if compra.precio_total is not None]) if compras else 0
 
         # Comparativa compras vs presupuesto
-        diferencia_compras_presupuesto = presupuesto.total - total_compras
+        diferencia_compras_presupuesto = presupuesto.total - (total_compras + total_contratacion)
 
         # Materiales utilizados en tareas
         materiales_usados_ids = Tarea_Material.objects.filter(id_tarea__id_area__id_obra=obra_id).values_list(
@@ -1197,7 +1257,7 @@ class ReporteObra:
         # Materiales comprados no utilizados
         materiales_comprados_ids = compras.values_list('id_material', flat=True)
         materiales_no_usados_ids = set(materiales_comprados_ids) - set(materiales_usados_ids)
-        materiales_no_usados = Material.objects.filter(id__in=materiales_no_usados_ids)
+        #materiales_no_usados = Material.objects.filter(id__in=materiales_no_usados_ids)
 
         # Porcentaje de avance general
         tareas = Tarea.objects.filter(id_area__id_obra=obra_id)
@@ -1221,11 +1281,42 @@ class ReporteObra:
             "obra_id": obra.id,
             "nombre_obra": obra.direccion,
             "presupuesto_total": presupuesto.total,
+            "total_contratacion": total_contratacion,
             "total_compras": total_compras,
             "diferencia_compras_presupuesto": diferencia_compras_presupuesto,
-            "materiales_no_usados": [{"id": mat.id, "descripcion": mat.descripcion} for mat in materiales_no_usados],
+            "materiales_no_usados": [{"id": mat.id_material.id, "descripcion": mat.id_material.descripcion,
+                                      "comprado": True, "usado": mat.id_material.id not in materiales_no_usados_ids,
+                                      "costo": mat.precio_total, "moneda": mat.id_material.moneda} for mat in compras],
+            "contrataciones": [{"id": cont.id_servicio.id, "descripcion": cont.id_servicio.descripcion,
+                                "fecha_comienzo": cont.fecha_contrato, "fecha_fin": cont.fecha_contrato_hasta,
+                                "costo": cont.monto_contratacion, "moneda": cont.moneda_contratacion} for cont in
+                               contrataciones],
             "avance_general": avance_general,
             "avance_por_area": avance_por_area
         }
 
         return data_return
+
+
+class SubcontratacionController:
+    @staticmethod
+    def get_validas(id_empresa):
+        subcontrataciones = Subcontratacion.objects.filter(id_obra__id_empresa=id_empresa)
+        subcontrataciones_validas = []
+
+        for sub in subcontrataciones:
+            total_pagos = Pago.objects.filter(id_subcontratacion=sub.id).aggregate(Sum('monto'))['monto__sum'] or 0
+
+            # Verificar que el monto total de los pagos no supere el monto contratado
+            if total_pagos < sub.monto_contratacion:
+                subcontrataciones_validas.append({
+                    'id': sub.id,
+                    'obra': sub.id_obra.direccion if sub.id_obra else None,  # Si existe la obra
+                    'fecha_contrato': sub.fecha_contrato,
+                    'descripcion_servicio': sub.id_servicio.descripcion,
+                    'monto_contratacion': sub.monto_contratacion - total_pagos,
+                    'moneda_contratacion': sub.moneda_contratacion,
+                    'id_proveedor': sub.id_servicio.id_proveedor.id
+                })
+
+        return subcontrataciones_validas

@@ -38,7 +38,7 @@ class UsuarioData:
 
     @staticmethod
     def valida_usuario_user(user):
-        Usuario.objects.filter(usuario=user).exists()
+        return Usuario.objects.filter(usuario=user).exists()
 
     @staticmethod
     def guardar_cambios(usuario):
@@ -111,15 +111,14 @@ class EmpresaData:
             vehiculos_return = [
                 {
                     'id':v.id,
-                    'descripcion': v.id_material.descripcion,
+                    'descripcion': v.id_material.tipo_material,
                     'tipo':v.tipo,
-                    'marca':v.marca,
+                    'marca':v.id_material.marca,
                     'modelo': v.modelo,
                     'precio_x_hora': v.precio_x_hora,
                     'id_material': v.id_material.id,
                 } for v in vehiculos
             ]
-            print(vehiculos_return)
             return vehiculos_return
         except Exception as e:
             print(f"Error al cargar las emrpesas: {e}")
@@ -152,11 +151,11 @@ class EmpresaData:
                 {
                     'id': h.id,
                     'descripcion': h.id_material.descripcion,
-                    'marca': h.marca,
-                    'id_almacen': h.id_almacen.id,
-                    'almacen': h.id_almacen.descripcion,
+                    'marca': h.id_material.marca,
+                    'id_almacen': h.id_almacen.id if h.id_almacen else None,
+                    'almacen': h.id_almacen.descripcion if h.id_almacen else None,
                     'ubicacion': h.ubicacion,
-                    'id_compra': h.id_compra.id,
+                    'id_compra': h.id_compra.id if h.id_compra else None,
                     'id_material': h.id_material.id,
                 } for h in herramientas
             ]
@@ -397,37 +396,44 @@ class MaterialData:
     def actualizar_material(material_id, data):
         # Obtener el material desde la base de datos
         material = Material.objects.get(id=material_id)
+        almacen = None
 
-        # Actualizar los campos del material con los datos proporcionados
+        # Actualizar los campos comunes del material
         material.descripcion = data.get('descripcion', material.descripcion)
         material.marca = data.get('marca', material.marca)
         material.precio = data.get('precio', material.precio)
         material.moneda = data.get('moneda', material.moneda)
         material.unidad_medida = data.get('unidad_medida', material.unidad_medida)
-        material.impuestos_total = data.get('impuestos_total', material.impuestos_total)  # Quitando la coma
-        material.moneda_impuestos = data.get('moneda_impuestos', material.moneda_impuestos)  # Quitando la coma
-        material.descripcion_impuestos = data.get('descripcion_impuestos',
-                                                  material.descripcion_impuestos)  # Quitando la coma
-        material.otros_gastos = data.get('otros_gastos', material.otros_gastos)  # Quitando la coma
-        material.moneda_otros_gastos = data.get('moneda_otros_gastos', material.moneda_otros_gastos)  # Quitando la coma
-        material.descripcion_otros_gastos = data.get('descripcion_otros_gastos',
-                                                     material.descripcion_otros_gastos)  # Quitando la coma
+        material.impuestos_total = data.get('impuestos_total', material.impuestos_total)
+        material.moneda_impuestos = data.get('moneda_impuestos', material.moneda_impuestos)
+        material.descripcion_impuestos = data.get('descripcion_impuestos', material.descripcion_impuestos)
+        material.otros_gastos = data.get('otros_gastos', material.otros_gastos)
+        material.moneda_otros_gastos = data.get('moneda_otros_gastos', material.moneda_otros_gastos)
+        material.descripcion_otros_gastos = data.get('descripcion_otros_gastos', material.descripcion_otros_gastos)
+        material.fecha_desde_precio = data.get('fecha_desde_precio', material.fecha_desde_precio)
+        material.tipo_material = data.get('tipo_material', material.tipo_material)
+        material.save()
 
-        # Guardar los cambios en la base de datos
-        try:
-            material.save()
-        except Exception as e:
-            print(f"Error al buscar material: {e}")
-            raise
-        # Retornar el material actualizado (puedes convertirlo a dict si es necesario)
-        return {
-            'id': material.id,
-            'descripcion': material.descripcion,
-            'marca': material.marca,
-            'precio': material.precio,
-            'moneda': material.moneda,
-            'unidad_medida': material.unidad_medida
-        }
+        # Actualizar detalles adicionales para herramienta o vehículo
+        if data.get('tipo_material') == 'herramienta':
+            herramienta = Herramienta.objects.get(id_material=material)
+            if herramienta.almacen:
+                almacen = Almacen.objects.get(id=herramienta.almacen)
+            herramienta.almacen = data.get('almacen', almacen)
+            herramienta.ubicacion = data.get('ubicacion', herramienta.ubicacion)
+            herramienta.save()
+        elif data.get('tipo_material') == 'vehiculo':
+            vehiculo = Vehiculo.objects.get(id_material=material)
+            vehiculo.patente = data.get('patente', vehiculo.patente)
+            vehiculo.tipo = data.get('tipo', vehiculo.tipo)
+            vehiculo.modelo = data.get('modelo', vehiculo.modelo)
+            if vehiculo.almacen:
+                almacen = Almacen.objects.get(id=vehiculo.almacen)
+            vehiculo.almacen = data.get('almacen', almacen)
+            vehiculo.precio_x_hora = data.get('precio_x_hora', vehiculo.precio_x_hora)
+            vehiculo.save()
+
+        return material
 
     @staticmethod
     def get_by_empresa(id_emp):
@@ -451,14 +457,14 @@ class ServicioData:
                 descripcion=servicio_data.get('descripcion'),
                 precio_x_unidad=servicio_data.get('precio_x_unidad'),
                 unidad_medida=servicio_data.get('unidad_medida'),
-                monto_x_frecuencia=servicio_data.get('monto_x_frecuencia'),
+                monto_x_frecuencia=servicio_data.get('monto_x_frecuencia') if servicio_data.get('monto_x_frecuencia') else 0,
                 frecuencia_pago=servicio_data.get('frecuencia_pago'),
                 id_proveedor=proveedor,
                 moneda=servicio_data.get('moneda'),
-                impuestos_total = servicio_data.get('impuestos_total'),
+                impuestos_total = servicio_data.get('impuestos_total') if servicio_data.get('impuestos_total') else 0,
                 moneda_impuestos = servicio_data.get('moneda_impuestos'),
                 descripcion_impuestos = servicio_data.get('descripcion_impuestos'),
-                otros_gastos = servicio_data.get('otros_gastos'),
+                otros_gastos = servicio_data.get('otros_gastos') if servicio_data.get('otros_gastos') else 0,
                 moneda_otros_gastos = servicio_data.get('moneda_otros_gastos'),
                 descripcion_otros_gastos = servicio_data.get('descripcion_otros_gastos')
 
@@ -617,6 +623,10 @@ class PresupuestoData:
                 'monto_linea', 'id_area'
             )
 
+            tareas = Tarea.objects.filter(id_presupuesto_servicio__id_presupuesto=id_presupuesto).values(
+                'id', 'titulo', 'porcentaje_avance', 'fecha_inicio', 'fecha_fin', 'precio_total', 'descripcion'
+            )
+
             # Estructurar los datos en un diccionario para facilitar la conversión a JSON
             presupuesto_data = {
                 "id": presupuesto.id,
@@ -630,7 +640,8 @@ class PresupuestoData:
                 "porc_inflacion": presupuesto.porc_inflacion,
                 "materiales": list(materiales),
                 "servicios": list(servicios),
-                "trabajadores": list(trabajadores)
+                "trabajadores": list(trabajadores),
+                "tareas": list(tareas)
             }
             return presupuesto_data
 

@@ -1,62 +1,69 @@
 <app-header></app-header>
 
 <div class="entidades-container">
-  <!-- Botones para crear -->
-  <div class="acciones">
-    <button class="btn btn-primary" [routerLink]="['/crear-colaborador']">
-      Crear Colaborador
-    </button>
-    <button class="btn btn-primary" [routerLink]="['/crear-proveedor']">
-      Crear Proveedor
-    </button>
+  <h1>Buscar por nombre</h1>
+  <div class="search-actions">
+    <input
+      type="text"
+      class="search-bar"
+      placeholder="Buscar..."
+      [(ngModel)]="searchTerm"
+      (input)="filtrarEntidades()"
+    />
   </div>
 
-  <section class="entidad">
-    <h2>Clientes</h2>
-    <ul class="entidad-lista">
-      <li *ngFor="let cliente of clientes" class="entidad-item">
-        <a class="entidad-link" [routerLink]="['/perfil', cliente.id_usuario]">
-          {{ cliente.nombre }} {{ cliente.apellido }}
-        </a>
-        <button
-          *ngIf="cliente.fecha_baja === null"
-          class="btn btn-danger btn-small"
-          (click)="darDeBajaCliente(cliente.id)"
-        >
-          Dar de baja
-        </button>
-      </li>
-    </ul>
-  </section>
+  <div *ngIf="mostrarEntidades">
+    <!-- Clientes -->
+    <section class="entidad">
+      <h2>Clientes</h2>
+      <ul class="entidad-lista">
+        <li *ngFor="let cliente of clientesFiltrados" class="entidad-item" [routerLink]="['/perfil', cliente.id_usuario]">
+          <div class="entidad-link">
+            {{ cliente.nombre }} {{ cliente.apellido }}
+          </div>
+          <button
+            *ngIf="cliente.fecha_baja === null"
+            class="btn btn-danger btn-small"
+            (click)="darDeBajaCliente(cliente.id); $event.stopPropagation()"
+          >
+            Dar de baja
+          </button>
+        </li>
+      </ul>
+    </section>
 
-  <section class="entidad">
-    <h2>Colaboradores</h2>
-    <ul class="entidad-lista">
-      <li *ngFor="let colaborador of colaboradores" class="entidad-item">
-        <a class="entidad-link" [routerLink]="['/perfil', colaborador.id_usuario]">
-          {{ colaborador.nombre }} {{ colaborador.apellido }}
-        </a>
-        <button
-          *ngIf="colaborador.fecha_baja === null"
-          class="btn btn-danger btn-small"
-          (click)="darDeBajaColaborador(colaborador.id)"
-        >
-          Dar de baja
-        </button>
-      </li>
-    </ul>
-  </section>
+    <!-- Colaboradores -->
+    <section class="entidad">
+      <h2>Colaboradores</h2>
+      <ul class="entidad-lista">
+        <li *ngFor="let colaborador of colaboradoresFiltrados" class="entidad-item" [routerLink]="['/perfil', colaborador.id_usuario]">
+          <div class="entidad-link">
+            {{ colaborador.nombre }} {{ colaborador.apellido }}
+          </div>
+          <button
+            *ngIf="colaborador.fecha_baja === null"
+            class="btn btn-danger btn-small"
+            (click)="darDeBajaColaborador(colaborador.id); $event.stopPropagation()"
+          >
+            Dar de baja
+          </button>
+        </li>
+      </ul>
+    </section>
 
-  <section class="entidad">
-    <h2>Proveedores</h2>
-    <ul class="entidad-lista">
-      <li *ngFor="let proveedor of proveedores" class="entidad-item">
-        <a class="entidad-link" [routerLink]="['/proveedor', proveedor.id]">
-          {{ proveedor.denominacion }}
-        </a>
-      </li>
-    </ul>
-  </section>
+    <!-- Proveedores -->
+    <section class="entidad">
+      <h2>Proveedores</h2>
+      <ul class="entidad-lista">
+        <li *ngFor="let proveedor of proveedoresFiltrados" class="entidad-item" [routerLink]="['/proveedor', proveedor.id]">
+          <div class="entidad-link">
+            {{ proveedor.denominacion }}
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
 </div>
+
 
 

@@ -1,27 +1,31 @@
-/* Estilos para el contenedor principal */
+@import '../../../styles';
+
+/* Contenedor principal */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f4f4;
+  background-color: $background-color; /* Gris claro */
+  padding: $section-padding;
 }
 
 /* Caja de login */
 .login-box {
-  background-color: white;
+  background-color: $white-color; /* Blanco puro */
   padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   width: 100%;
   text-align: center;
 }
 
+/* Títulos */
 h2 {
   margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
+  font-size: 1.5rem;
+  color: $primary-color; /* Azul oscuro profesional */
 }
 
 /* Estilos para los inputs */
@@ -31,52 +35,50 @@ h2 {
 }
 
 .input-group label {
-  font-size: 14px;
-  color: #666;
+  font-size: 0.9rem;
+  color: $text-color; /* Texto oscuro */
   margin-bottom: 5px;
   display: block;
 }
 
 .input-group input {
   width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.9rem;
+  border: 1px solid $border-color;
+  border-radius: 4px;
   box-sizing: border-box;
   outline: none;
 }
 
 .input-group input:focus {
-  border-color: #007bff;
+  border-color: $primary-color; /* Azul oscuro */
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
 }
 
-/* Estilos para el botón de iniciar sesión */
-.actions {
-  margin-top: 20px;
-}
-
-.btn-login {
-  background-color: #007bff;
-  color: white;
-  padding: 12px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
+/* Botón de iniciar sesión */
+.actions .btn {
   width: 100%;
-  cursor: pointer;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: $button-radius;
 }
 
-.btn-login:hover {
-  background-color: #0056b3;
+.actions .btn-primary {
+  background-color: $primary-color; /* Azul oscuro */
+  color: $white-color;
+}
+
+.actions .btn-primary:hover {
+  background-color: lighten($primary-color, 10%);
 }
 
 /* Enlace para olvidar la contraseña */
 .forgot-password {
   display: block;
   margin-top: 10px;
-  font-size: 14px;
-  color: #007bff;
+  font-size: 0.85rem;
+  color: $primary-color;
   text-decoration: none;
 }
 
@@ -90,17 +92,24 @@ h2 {
 }
 
 .register-link p {
-  font-size: 14px;
-  color: #666;
+  font-size: 0.9rem;
+  color: $text-color; /* Texto oscuro */
 }
 
 .register-link a {
-  color: #007bff;
+  color: $primary-color;
   text-decoration: none;
 }
 
 .register-link a:hover {
   text-decoration: underline;
+}
+
+/* Mensaje de error */
+.error-message {
+  margin-top: 15px;
+  color: $error-color; /* Rojo */
+  font-size: 0.9rem;
 }
 
 /* Estilos responsivos */
@@ -110,10 +119,10 @@ h2 {
   }
 
   h2 {
-    font-size: 20px;
+    font-size: 1.2rem;
   }
 
-  .btn-login {
-    font-size: 14px;
+  .actions .btn-primary {
+    font-size: 0.9rem;
   }
 }

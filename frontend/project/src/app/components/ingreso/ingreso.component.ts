@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
 import { IngresoService } from '../../services/ingresos/ingresos.service';
@@ -25,6 +25,10 @@ export class IngresoComponent implements OnInit {
   materialesDisponibles: any[] = [];
   almacenes: any[] = [];
   empresaId: string = '';
+  // @ts-ignore
+  mensajeError: string;
+  // @ts-ignore
+  mensajeExito: string;
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +65,7 @@ export class IngresoComponent implements OnInit {
   }
 
   // Método para eliminar un ingreso del FormArray
+
   eliminarIngreso(index: number): void {
     this.ingresos.removeAt(index);
   }
@@ -104,27 +109,32 @@ export class IngresoComponent implements OnInit {
     ingresosFormArray.push(ingresoFormGroup);
   }
 
-  // Método para enviar el formulario
   onSubmit(): void {
-    // Validamos que el formulario sea válido antes de enviarlo
-    if (this.ingresoForm.invalid) {
-      console.log('Formulario inválido');
-      return;
+    // Reiniciar los mensajes al iniciar la validación
+    this.mensajeError = '';
+    this.mensajeExito = '';
+
+    const ingresosData = this.ingresoForm.value.ingresos;
+
+    // Validar que cada ingreso tenga al menos un almacén o esté marcado como "en obra"
+    const esValido = ingresosData.every(
+      (ingreso: any) => (ingreso.id_almacen && !ingreso.en_obra) || (!ingreso.id_almacen && ingreso.en_obra)
+    );
+
+    if (!esValido) {
+      this.mensajeError = 'Elija entre indicar un Almacén o llevarlo a la obra.';
+    } else {
+      // Enviar los datos al servicio
+      this.ingresoService.crearIngresos(ingresosData).subscribe({
+        next: (response: any) => {
+          this.mensajeExito = 'Los ingresos se han registrado correctamente.';
+        },
+        error: (error: any) => {
+          console.error('Error al registrar ingresos:', error);
+          this.mensajeError = 'Hubo un error al registrar los ingresos. Intente nuevamente.';
+        }
+      });
     }
-
-    const ingresosData = this.ingresoForm.value.ingresos;  // Extraemos los ingresos
-
-    // Aseguramos que la estructura sea la esperada (en caso de que sea necesario agregar validaciones adicionales)
-    console.log('Datos de ingresos:', ingresosData);
-
-    // Llamamos al servicio para crear los ingresos
-    this.ingresoService.crearIngresos(ingresosData).subscribe({
-      next: (response: any) => {
-        console.log('Ingresos registrados:', response);
-      },
-      error: (error: any) => {
-        console.error('Error al registrar ingresos:', error);
-      }
-    });
   }
+
 }

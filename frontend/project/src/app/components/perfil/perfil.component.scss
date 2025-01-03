@@ -1,7 +1,7 @@
-@import '../../components/home/home.component';
+@import '../../../styles';
 
 .perfil-container {
-  padding: $section-padding;
+  padding: 50px;
   background-color: $background-color;
   border-radius: $button-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -61,12 +61,24 @@
   .formulario-edicion {
     form {
       display: flex;
+      padding:50px;
       flex-direction: column;
       gap: $section-padding;
 
       label {
         font-weight: bold;
         color: $text-color;
+      }
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap; // Permite que los campos se ajusten en filas flexibles
+        gap: 15px; // Espaciado entre los campos
+
+        .form-group {
+          flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
+          min-width: 200px; // Ancho mínimo para mantener la legibilidad
+        }
       }
 
       input,
@@ -135,6 +147,117 @@
 
         button {
           margin-top: 10px;
+        }
+      }
+    }
+  }
+
+  .obras ul li {
+    position: relative;
+    margin: 10px 0;
+    padding: 15px;
+    background-color: $section-bg-color;
+    border-radius: $button-radius;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .obra-enlace,
+    .tarea-enlace {
+      display: block; // Permite que todo el contenido sea clicable
+      text-decoration: none;
+      color: inherit; // Hereda el color del contexto
+      padding: 10px;
+
+      &:hover {
+        background-color: lighten($secondary-color, 40%);
+        text-decoration: none;
+        border-radius: $button-radius;
+      }
+
+      p {
+        margin: 5px 0;
+        font-size: 1rem;
+      }
+    }
+
+    .tarea-edicion {
+      margin-top: 15px;
+    }
+  }
+
+  .tareas ul li {
+    position: relative;
+    padding: 15px;
+    background-color: $section-bg-color;
+    border-radius: $button-radius;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .tarea-enlace {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 10px;
+
+      &:hover {
+        background-color: lighten($secondary-color, 40%);
+        text-decoration: none;
+        border-radius: $button-radius;
+      }
+    }
+
+    button {
+      margin-top: 10px;
+    }
+
+    .tarea-edicion {
+      margin-top: 15px;
+    }
+  }
+
+  .tareas {
+    .tarea-edicion {
+      display: flex;
+      flex-direction: column;
+      gap: 15px; // Espaciado entre los elementos de edición
+
+      input {
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid $border-color;
+        border-radius: $button-radius;
+      }
+
+      .botones-tarea {
+        display: flex;
+        gap: 10px; // Espaciado entre los botones
+
+        button {
+          padding: 10px 20px;
+          border: none;
+          border-radius: $button-radius;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &.guardar {
+            background-color: $success-color;
+            color: $white-color;
+
+            &:hover {
+              background-color: darken($success-color, 10%);
+            }
+          }
+
+          &.cancelar {
+            background-color: $error-color;
+            color: $white-color;
+
+            &:hover {
+              background-color: darken($error-color, 10%);
+            }
+          }
         }
       }
     }

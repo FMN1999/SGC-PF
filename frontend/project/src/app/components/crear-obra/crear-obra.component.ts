@@ -7,7 +7,7 @@ import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-crear-obra',
-    standalone: true,
+  standalone: true,
   templateUrl: './crear-obra.component.html',
   imports: [
     ReactiveFormsModule,

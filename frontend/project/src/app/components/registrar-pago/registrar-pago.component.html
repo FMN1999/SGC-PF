@@ -22,14 +22,16 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="monto">Monto</label>
-      <input type="number" formControlName="monto" id="monto" required />
-    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="monto">Monto</label>
+        <input type="number" formControlName="monto" id="monto" required />
+      </div>
 
-    <div class="form-group">
-      <label for="moneda">Moneda</label>
-      <input type="text" formControlName="moneda" id="moneda" required />
+      <div class="form-group">
+        <label for="moneda">Moneda</label>
+        <input type="text" formControlName="moneda" id="moneda" required />
+      </div>
     </div>
 
     <div class="form-group">
@@ -49,18 +51,26 @@
       <input type="date" formControlName="fecha_limite" id="fecha_limite" />
     </div>
 
-    <div class="form-group">
-      <label for="cantidad_recargo">Recargo</label>
-      <input type="number" formControlName="cantidad_recargo" id="cantidad_recargo" />
-    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cantidad_recargo">Recargo</label>
+        <input type="number" formControlName="cantidad_recargo" id="cantidad_recargo" />
+      </div>
 
-    <div class="form-group">
-      <label for="unidad_recargo">Unidad de Recargo</label>
-      <input type="text" formControlName="unidad_recargo" id="unidad_recargo" />
+      <div class="form-group">
+        <label for="unidad_recargo">Unidad de Recargo</label>
+        <input type="text" formControlName="unidad_recargo" id="unidad_recargo" />
+      </div>
     </div>
 
     <div class="actions">
-      <button type="submit" class="btn-registrar-pago">Registrar Pago</button>
+      <button type="submit" class="btn-registrar-pago" [disabled]="pagoForm.invalid">Registrar Pago</button>
+    </div>
+    <div *ngIf="mensajeSuccess" class="mensaje-exito">
+      {{ mensajeSuccess }}
+    </div>
+    <div *ngIf="mensajeError" class="mensaje-error">
+      {{ mensajeError }}
     </div>
   </form>
 </div>

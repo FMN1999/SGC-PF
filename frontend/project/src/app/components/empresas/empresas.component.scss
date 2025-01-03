@@ -1,9 +1,9 @@
-@import '../home/home.component';
+@import '../../../styles';
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px;
   background-color: $background-color;
 }
 
@@ -70,4 +70,49 @@ h2 {
 
 .error {
   color: $error-color;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid $border-color;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.filter-select {
+  padding: 10px;
+  border: 1px solid $border-color;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.pagination-controls {
+  margin-top: 20px;
+  text-align: center;
+
+  button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: $button-radius;
+    cursor: pointer;
+    background-color: $primary-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+
+    &.active {
+      background-color: $secondary-color;
+    }
+  }
 }

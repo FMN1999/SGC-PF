@@ -5,10 +5,11 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @Component({
-    selector: 'app-home',
-    imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass, NgOptimizedImage],
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss']
+  selector: 'app-home',
+  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass, NgOptimizedImage],
+  templateUrl: './home.component.html',
+  standalone: true,
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   // @ts-ignore
@@ -17,6 +18,7 @@ export class HomeComponent {
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;
   usuarioActualId: string | null = sessionStorage.getItem('id_user');  // Obtener el ID del usuario
+  protected userMenuVisible: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {
     this.checkScreenSize();
@@ -54,6 +56,21 @@ export class HomeComponent {
     if (this.usuarioActualId) {
       this.router.navigate([`/perfil/${this.usuarioActualId}`]);  // Redirigir al perfil con el ID del usuario actual
     }
+  }
+
+  navigateTo(route: string, param?: any): void {
+    const fullPath = param ? `${route}/${param}` : route;
+    this.router.navigate([fullPath]);
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuVisible = !this.userMenuVisible;
+  }
+
+  cerrarSesion(): void {
+    // Lógica de cierre de sesión
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
 

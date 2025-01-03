@@ -1,9 +1,9 @@
-@import '../home/home.component';
+@import '../../../styles';
 
 .crear-colaborador-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px;
   background-color: $white-color;
   border: 1px solid $background-color;
   border-radius: 8px;
@@ -45,6 +45,17 @@
           border: 1px solid $background-color;
           border-radius: 4px;
           font-size: 1rem;
+        }
+      }
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap; // Permite que los campos se ajusten en filas flexibles
+        gap: 15px; // Espaciado entre los campos
+
+        .form-group {
+          flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
+          min-width: 200px; // Ancho mínimo para mantener la legibilidad
         }
       }
     }

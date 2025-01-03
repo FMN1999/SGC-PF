@@ -26,12 +26,14 @@ export class PresupuestoComponent implements OnInit {
   protected servicios_data: any[] = [];
   protected trabajadores_data: any[] = [];
   protected idEditar: boolean = false;
+  tareas_data: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
-    private router: Router
+    private router: Router,
+
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +41,6 @@ export class PresupuestoComponent implements OnInit {
     this.initForm();
     this.cargarDatosPresupuesto();
   }
-
   initForm() {
     this.presupuestoForm = this.fb.group({
       total: ['', Validators.required],
@@ -71,6 +72,7 @@ export class PresupuestoComponent implements OnInit {
       this.materiales_data = this.presupuesto.materiales
       this.servicios_data = this.presupuesto.servicios
       this.trabajadores_data = this.presupuesto.trabajadores
+      this.tareas_data = this.presupuesto.tareas
 
       // Rellenar materiales, servicios y trabajadores
       this.presupuesto.materiales.forEach((material: null | undefined) => this.addMaterial(material));
@@ -78,6 +80,7 @@ export class PresupuestoComponent implements OnInit {
       this.presupuesto.trabajadores.forEach((trabajador: null | undefined) => this.addTrabajador(trabajador));
     });
   }
+
 
   get materiales(): FormArray {
     // @ts-ignore
@@ -216,6 +219,26 @@ export class PresupuestoComponent implements OnInit {
 
   crearTarea() {
     this.router.navigate(['/crear-tarea', { idPresupuesto: this.presupuesto.id, idObra: this.presupuesto.id_obra }]);
+  }
+
+  aprobarPresupuesto() {
+    const payload = { estado: 'Aprobado', aprobado: true };
+    this.presupuestoService.actualizarPresupuesto(this.idPresupuesto, payload)
+      .subscribe(() => {
+        this.presupuesto.estado = 'Aprobado';
+        this.presupuesto.aprobado = true;
+        window.location.reload();
+      });
+  }
+
+  rechazarPresupuesto() {
+    const payload = { estado: 'Rechazado', aprobado: false };
+    this.presupuestoService.actualizaPresupuesto(this.idPresupuesto, payload)
+      .subscribe(() => {
+        this.presupuesto.estado = 'Rechazado';
+        this.presupuesto.aprobado = false;
+        window.location.reload();
+      });
   }
 
 }

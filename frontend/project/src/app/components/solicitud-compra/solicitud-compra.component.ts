@@ -26,6 +26,7 @@ export class SolicitudCompraComponent implements OnInit {
   protected materiales_data: any;
   protected idObra: number | undefined;
   protected idSolicitante= sessionStorage.getItem('id_usuario');
+  materiales: any;
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +64,7 @@ export class SolicitudCompraComponent implements OnInit {
         materiales.forEach((material) => {
           this.agregarLineaCompra(material);
         });
+        this.materiales=materiales;
       });
     }
 
@@ -71,7 +73,6 @@ export class SolicitudCompraComponent implements OnInit {
       this.empresaService.listarMaterialesPorEmpresa(parseInt(idEmpresa)).subscribe({
         next: (data) => {
           this.materiales_data = data;
-          console.log(this.materiales_data);
         }
       });
     }
@@ -100,6 +101,7 @@ export class SolicitudCompraComponent implements OnInit {
     const formValues = this.compraForm.value;
     const lineasCompra = formValues.lineasCompra;
     this.crearCompra(lineasCompra, formValues);
+    window.location.reload();
     this.router.navigate(['/solicitudes'] ).then(r =>{});
 
   }

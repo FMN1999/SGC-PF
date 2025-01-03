@@ -1,9 +1,9 @@
-@import '../home/home.component';
+@import '../../../styles';
 
 .gestion-permisos-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px;
   background-color: $background-color;
 
   h2 {
@@ -121,4 +121,20 @@
       }
     }
   }
+
+  .mensaje-notificacion {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    background-color: $success-color; // Verde por defecto
+    color: $white-color;
+
+    &.error {
+      background-color: $error-color; // Rojo si es un error
+    }
+  }
+
 }

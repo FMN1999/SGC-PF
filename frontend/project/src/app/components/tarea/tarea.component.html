@@ -20,13 +20,13 @@
     <textarea id="descripcion" [(ngModel)]="descripcion" name="descripcion" required></textarea>
 
     <label for="fechaInicio">Fecha de inicio</label>
-    <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio" required />
+    <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" name="fechaInicio" />
 
     <label for="fechaFin">Fecha de fin</label>
-    <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin" required />
+    <input type="date" id="fechaFin" [(ngModel)]="fechaFin" name="fechaFin" />
 
     <label for="precioTotal">Precio total</label>
-    <input type="number" id="precioTotal" [(ngModel)]="precioTotal" name="precioTotal" required />
+    <input type="number" id="precioTotal" [(ngModel)]="precioTotal" name="precioTotal" />
 
     <label for="vehiculoSeleccionado">Vehículo</label>
     <select id="vehiculoSeleccionado" [(ngModel)]="vehiculoSeleccionado" name="vehiculoSeleccionado">
@@ -46,15 +46,16 @@
       <ul class="lista">
         <li *ngFor="let colaborador of colaboradoresTarea" class="lista-item">
           <p>
-            {{ colaborador.id_colaborador__nombre }} - Estado: {{ colaborador.estado }}
+            <strong>{{ colaborador.nombre }} {{ colaborador.apellido }} - Estado: </strong>{{ colaborador.estado }}
           </p>
           <div *ngIf="!editandoCantDias[colaborador.id]" class="d-flex">
-            <span>Días trabajados: {{ colaborador.cant_dias }}</span>
-            <button class="btn btn-small" (click)="habilitarEdicionCantDias(colaborador.id, colaborador.cant_dias)">Editar</button>
+            <span><strong>Días trabajados: </strong>{{ colaborador.cant_dias }}</span>
+            <button class="btn btn-small btn-primary" (click)="habilitarEdicionCantDias(colaborador.id, colaborador.cant_dias)">Editar</button>
           </div>
           <div *ngIf="editandoCantDias[colaborador.id]" class="d-flex">
             <input type="number" [(ngModel)]="cantDiasTemp[colaborador.id]" step="0.5" />
-            <button class="btn btn-small" (click)="guardarCantDias(colaborador.id)">Guardar</button>
+            <button class="btn btn-small btn-primary" (click)="guardarCantDias(colaborador.id)">Guardar</button>
+            <button class="btn btn-small btn-secondary" (click)="cancelarEdicionCantDias(colaborador.id)">Cancelar</button>
           </div>
           <button class="btn btn-danger btn-small" (click)="eliminarColaborador(colaborador.id)">Eliminar</button>
         </li>
@@ -62,9 +63,9 @@
       <div class="form-group">
         <label for="colaboradorSeleccionado">Colaborador</label>
         <select id="colaboradorSeleccionado" [(ngModel)]="colaboradorSeleccionado" name="colaboradorSeleccionado">
-          <option *ngFor="let colaborador of colaboradores" [value]="colaborador.id">{{ colaborador.nombre }} {{colaborador.apellido}}</option>
+          <option *ngFor="let colaborador of colaboradores" [value]="colaborador.id"><strong>{{ colaborador.nombre }} {{colaborador.apellido}}</strong></option>
         </select>
-        <button class="btn btn-primary btn-small" (click)="agregarColaborador()">Agregar</button>
+        <button class="btn btn-primary btn-small" (click)="agregarColaborador()" [disabled]="!colaboradorSeleccionado">Agregar</button>
       </div>
     </section>
 
@@ -73,7 +74,7 @@
       <h3>Herramientas asignadas</h3>
       <ul class="lista">
         <li *ngFor="let herramienta of herramientasTarea" class="lista-item">
-          <p>{{ herramienta.herramienta }} - Uso desde: {{ herramienta.uso_desde }} hasta: {{ herramienta.uso_hasta }}</p>
+          <p><strong>{{ herramienta.herramienta }} - Uso desde: </strong>{{ herramienta.uso_desde }} <strong> - hasta: </strong>{{ herramienta.uso_hasta }}</p>
           <button class="btn btn-danger btn-small" (click)="eliminarHerramienta(herramienta.id)">Eliminar</button>
         </li>
       </ul>
@@ -88,7 +89,7 @@
           <label for="usoHasta">Uso hasta</label>
           <input type="date" id="usoHasta" [(ngModel)]="fechaFin" name="usoHasta" required />
         </div>
-        <button class="btn btn-primary btn-small" (click)="agregarHerramienta()">Agregar Herramienta</button>
+        <button class="btn btn-primary btn-small" (click)="agregarHerramienta()" [disabled]="!herramientaSeleccionada">Agregar Herramienta</button>
       </div>
     </section>
 
@@ -97,7 +98,7 @@
       <h3>Materiales asignados</h3>
       <ul class="lista">
         <li *ngFor="let material of materialesTarea" class="lista-item">
-          <p>{{ material.material }} - Utilizado: {{ material.cant_utilizada }} No Utilizado: {{ material.cant_no_utilizada }}</p>
+          <p><strong>{{ material.material }} - Utilizado: </strong>{{ material.cant_utilizada }}- <strong>No Utilizado: </strong>{{ material.cant_no_utilizada }}</p>
           <button class="btn btn-danger btn-small" (click)="eliminarMaterial(material.id)">Eliminar</button>
         </li>
       </ul>
@@ -112,7 +113,7 @@
           <label for="cantidadNoUtilizada">Cantidad no utilizada</label>
           <input type="number" id="cantidadNoUtilizada" [(ngModel)]="cantidadNoUtilizada" name="cantidadNoUtilizada" />
         </div>
-        <button class="btn btn-primary btn-small" (click)="agregarMaterial()">Agregar Material</button>
+        <button class="btn btn-primary btn-small" (click)="agregarMaterial()" [disabled]="!materialSeleccionado">Agregar Material</button>
       </div>
     </section>
   </div>

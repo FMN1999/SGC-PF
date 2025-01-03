@@ -121,7 +121,7 @@ export class PerfilComponent implements OnInit {
 
     this.tareaService
       // @ts-ignore
-      .actualizarCantDias(this.perfilIdUrl, tarea.cant_dias, tarea.id_tarea)
+      .actualizarCantDias(this.perfilIdUrl, tarea.cant_dias, tarea.id)
       .subscribe({
         next: () => {
           this.editTareas[index] = false;

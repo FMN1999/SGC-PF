@@ -1,14 +1,17 @@
-<header class="generic-header">
+<header class="generic-header" [ngClass]="{ 'scrolled': isScrolled }">
   <div class="left-section">
-    <i class="fas fa-home" (click)="irAlHome()"></i>
+    <button class="icon-btn" (click)="irAlHome()">
+      <i class="fas fa-home"></i>
+    </button>
   </div>
 
   <div class="right-section">
-    <i class="fas fa-user" (click)="toggleUserMenu()"></i>
-    <ul class="user-menu" *ngIf="userMenuVisible">
+    <button class="icon-btn" (click)="toggleUserMenu()">
+      <i class="fas fa-user"></i>
+    </button>
+    <ul class="user-menu" [ngClass]="{ 'visible': userMenuVisible }">
       <li (click)="irAlPerfil()">Mi Perfil</li>
       <li (click)="cerrarSesion()">Cerrar Sesión</li>
     </ul>
   </div>
 </header>
-
