@@ -1,0 +1,5 @@
+Django ~= 5.1
+django-cors-headers ~= 4.6
+dj-database-url ~= 2.2
+psycopg ~= 3.2
+geopy ~= 2.4
