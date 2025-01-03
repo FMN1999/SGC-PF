@@ -81,5 +81,74 @@
       </div>
     </section>
   </div>
+
 </section>
 
+<section *ngIf="isLoggedIn" class="stats">
+  <div class="stat">
+    <h3>120</h3>
+    <p>Usuarios activos</p>
+  </div>
+  <div class="stat">
+    <h3>$45,000</h3>
+    <p>Ingresos del mes</p>
+  </div>
+  <div class="stat">
+    <h3>15</h3>
+    <p>Pagos pendientes</p>
+  </div>
+  <div class="stat">
+    <h3>8</h3>
+    <p>Proyectos en curso</p>
+  </div>
+</section>
+
+<section class="news">
+  <h2>Próximas actualizaciones</h2>
+  <div class="news-item">
+    <h4>Migración de materiales y servicios entre empresas</h4>
+    <p>Se está trabajando en poder compartir información de materiales, servicios y ofertas entre distintas empresas para agilizar su carga.</p>
+    <a href="/features">Leer más</a>
+  </div>
+  <div class="news-item">
+    <h4>Pago a colaboradores</h4>
+    <p>Se está incorporando la posibilidad de registrar el pago de haberes a los colaboradores.</p>
+    <a href="/updates">Leer más</a>
+  </div>
+</section>
+
+<section *ngIf="isLoggedIn" class="calendar">
+  <h2>Eventos próximos</h2>
+  <ul>
+    <li>
+      <span class="date">30 Dic</span>
+      <span class="event">Reunión con proveedores</span>
+    </li>
+    <li>
+      <span class="date">05 Ene</span>
+      <span class="event">Entrega de materiales</span>
+    </li>
+    <li>
+      <span class="date">10 Ene</span>
+      <span class="event">Revisión de proyectos</span>
+    </li>
+  </ul>
+</section>
+
+<section *ngIf="!isLoggedIn" class="testimonials">
+  <h2>Lo que dicen nuestros clientes</h2>
+  <div class="testimonial">
+    <p>"El sistema es increíble, ha optimizado nuestra gestión de compras."</p>
+    <span>- Juan Pérez, CEO de Ejemplo S.A.</span>
+  </div>
+  <div class="testimonial">
+    <p>"La interfaz es muy intuitiva y fácil de usar. ¡Gran trabajo!"</p>
+    <span>- María Gómez, Gerente de Operaciones</span>
+  </div>
+</section>
+
+<section *ngIf="!isLoggedIn" class="cta">
+  <h2>Registrese como cliente en su empresa</h2>
+  <p>Regístrate ahora y comience a comprobar el avance de sus obras.</p>
+  <button (click)="navigateTo('/register')">Comenzar</button>
+</section>
