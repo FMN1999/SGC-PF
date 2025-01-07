@@ -1,0 +1,180 @@
+@import '../../../styles';
+
+.proveedor-container {
+  padding: 50px;
+  background-color: $section-bg-color;
+  border-radius: $button-radius;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 0 auto;
+
+  h1, h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    margin-bottom: 20px;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background-color: $secondary-color;
+      margin-top: 10px;
+      border-radius: $button-radius;
+    }
+  }
+
+  .info-proveedor,
+  .materiales,
+  .servicios,
+  .ofertas {
+    margin-bottom: $section-padding;
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $section-padding;
+
+      .section-controls {
+        display: flex;
+        gap: 10px;
+
+        input {
+          padding: 10px;
+          border: 1px solid $border-color;
+          border-radius: $button-radius;
+        }
+
+        .btn-toggle {
+          background-color: $primary-color;
+          color: $white-color;
+          padding: 8px 15px;
+          border-radius: $button-radius;
+          border: none;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+          }
+        }
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      color: $text-color;
+    }
+
+    ul li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: $table-header-bg-color;
+      border-radius: $button-radius;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: lighten($table-header-bg-color, 10%);
+      }
+
+      .item-content {
+        flex: 1;
+      }
+
+      .btn-eliminar {
+        background-color: $danger-color;
+        color: $white-color;
+        padding: 8px 15px;
+        border-radius: $button-radius;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($danger-color, 10%);
+        }
+      }
+    }
+  }
+
+  .formulario-edicion {
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: $section-padding;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+        box-shadow: 0 0 5px rgba($primary-color, 0.5);
+      }
+    }
+
+    .form-botones {
+      display: flex;
+      gap: 10px;
+
+      .guardar {
+        background-color: $success-color;
+        color: $white-color;
+        border: none;
+        padding: 8px 15px;
+        border-radius: $button-radius;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken($success-color, 10%);
+        }
+      }
+
+      .cancelar {
+        background-color: $error-color;
+        color: $white-color;
+        border: none;
+        padding: 8px 15px;
+        border-radius: $button-radius;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken($error-color, 10%);
+        }
+      }
+    }
+  }
+
+  .btn-editar,
+  .btn-agregar {
+    background-color: $secondary-color;
+    padding: 10px 20px;
+    border: none;
+    color: $white-color;
+    border-radius: $button-radius;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $hover-color;
+    }
+  }
+
+  .loading-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: $loading-color;
+    margin-top: $section-padding;
+  }
+}

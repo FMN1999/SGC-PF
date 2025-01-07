@@ -1,0 +1,53 @@
+<app-header></app-header>
+
+<div *ngIf="loading" class="loading">
+  Cargando empresas...
+</div>
+
+<div *ngIf="error" class="error">
+  {{ error }}
+</div>
+
+<div *ngIf="!loading && !error">
+  <div class="container">
+    <h2>Listado de Empresas</h2>
+
+    <div class="filters">
+      <input
+        type="text"
+        placeholder="Buscar por denominación o CUIT..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilters()"
+        class="search-bar"
+      />
+      <select [(ngModel)]="selectedFilter" (change)="applyFilters()" class="filter-select">
+        <option value="">Filtrar por estado</option>
+        <option value="activa">Activa</option>
+        <option value="inactiva">Inactiva</option>
+      </select>
+    </div>
+
+    <button (click)="irACrearEmpresa()" class="create-button">Crear Nueva Empresa</button>
+
+    <table class="empresas-table">
+      <thead>
+        <tr>
+          <th>Denominación</th>
+          <th>CUIT</th>
+          <th>Teléfono</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let empresa of filteredEmpresas | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+          <td>{{ empresa.denominacion }}</td>
+          <td>{{ empresa.cuit }}</td>
+          <td>{{ empresa.telefono }}</td>
+          <td>{{ empresa.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+  </div>
+</div>

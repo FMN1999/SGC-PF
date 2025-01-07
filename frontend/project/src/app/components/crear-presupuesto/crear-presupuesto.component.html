@@ -1,0 +1,142 @@
+<app-header></app-header>
+<div class="crear-presupuesto-container">
+  <h2>Crear Presupuesto</h2>
+  <form [formGroup]="presupuestoForm" (ngSubmit)="guardarPresupuesto()">
+
+    <!-- Datos del presupuesto -->
+
+    <!-- Materiales -->
+    <div class="form-section">
+      <h3>Materiales</h3>
+      <button type="button" class="add-btn" (click)="agregarMaterial()">Agregar Material</button>
+      <table *ngIf="materialesFormArray.length > 0" class="data-table">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Cantidad</th>
+            <th>Precio Unidad</th>
+            <th>Unidad Medida</th>
+            <th>Sección (Opc.)</th>
+            <th>Monto Línea</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="materiales">
+          <tr *ngFor="let material of materialesFormArray.controls; let i = index" [formGroupName]="i">
+            <td><input formControlName="desc_material" type="text" required/></td>
+            <td><input formControlName="cantidad" type="number" required/></td>
+            <td><input formControlName="precio_x_unidad_medida" type="number" required/></td>
+            <td><input formControlName="unidad_medida" type="text" required/></td>
+            <td>
+              <select formControlName="id_area">
+                <option *ngFor="let area of areas" [value]="area.id">{{ area.descripcion }}</option>
+              </select>
+            </td>
+            <td><input formControlName="monto_linea" type="number" /></td>
+            <td><button class="eliminar-btn" (click)="removerMaterial(i)">Eliminar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Servicios -->
+    <div class="form-section">
+      <h3>Actividades / Servicios</h3>
+      <button type="button" class="add-btn" (click)="agregarServicio()">Agregar Actividad</button>
+      <table *ngIf="serviciosFormArray.length > 0" class="data-table">
+        <thead>
+          <tr>
+            <th>Actividad / Servicio</th>
+            <th>Precio Hora</th>
+            <th>Horas</th>
+            <th>Moneda</th>
+            <th>Sección (Opc.)</th>
+            <th>Monto Línea</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="servicios">
+          <tr *ngFor="let servicio of serviciosFormArray.controls; let i = index" [formGroupName]="i">
+            <td><input formControlName="desc_servicio" type="text" required /></td>
+            <td><input formControlName="precio_x_hora" type="number" required /></td>
+            <td><input formControlName="horas" type="number" required/></td>
+            <td><input formControlName="moneda" type="text" required /></td>
+            <td>
+              <select formControlName="id_area">
+                <option *ngFor="let area of areas" [value]="area.id">{{ area.descripcion }}</option>
+              </select>
+            </td>
+            <td><input formControlName="monto_linea" type="number" /></td>
+            <td><button class="eliminar-btn" (click)="removerServicio(i)">Eliminar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Trabajadores -->
+    <div class="form-section">
+      <h3>Trabajadores</h3>
+      <button type="button" class="add-btn" (click)="agregarTrabajador()">Agregar Trabajador</button>
+      <table *ngIf="trabajadoresFormArray.length > 0" class="data-table">
+        <thead>
+          <tr>
+            <th>Puesto</th>
+            <th>Horas</th>
+            <th>Precio Hora</th>
+            <th>Moneda</th>
+            <th>Sección (Opc.)</th>
+            <th>Monto Línea</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="trabajadores">
+          <tr *ngFor="let trabajador of trabajadoresFormArray.controls; let i = index" [formGroupName]="i">
+            <td><input formControlName="puesto" type="text" required /></td>
+            <td><input formControlName="horas" type="number" required /></td>
+            <td><input formControlName="precio_x_hora" type="number" required /></td>
+            <td><input formControlName="moneda" type="text" required /></td>
+            <td>
+              <select formControlName="id_area">
+                <option *ngFor="let area of areas" [value]="area.id">{{ area.descripcion }}</option>
+              </select>
+            </td>
+            <td><input formControlName="monto_linea" type="number" /></td>
+            <td><button class="eliminar-btn" (click)="removerTrabajador(i)">Eliminar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-section">
+      <h3>Datos Generales</h3>
+      <div class="form-group">
+        <label for="total">Total <span class="required-asterisk">*</span></label>
+        <input id="total" formControlName="total" type="number" required />
+      </div>
+
+      <div class="form-group">
+        <label for="moneda">Moneda <span class="required-asterisk">*</span></label>
+        <input id="moneda" formControlName="moneda" type="text" required />
+      </div>
+
+      <div class="form-group">
+        <label for="observaciones">Observaciones</label>
+        <textarea id="observaciones" formControlName="observaciones"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="porc_inflacion">Porcentaje de Inflación</label>
+        <input id="porc_inflacion" formControlName="porc_inflacion" type="number" />
+      </div>
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="presupuestoForm.invalid">Guardar Presupuesto</button>
+  </form>
+  <div *ngIf="mensajeExito" class="mensaje-exito">
+    {{ mensajeExito }}
+  </div>
+  <button class="floating-chat-button" (click)="showChat()">💬</button>
+  <app-chat></app-chat>
+</div>
+
+
+

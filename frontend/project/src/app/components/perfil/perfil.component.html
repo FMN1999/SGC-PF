@@ -1,0 +1,127 @@
+<app-header></app-header>
+<div class="perfil-container">
+  <div *ngIf="perfil && !editMode">
+    <h1>Perfil de {{ perfil.nombre }} {{ perfil.apellido }}</h1>
+    <p><strong>Email: </strong> {{ perfil.email }}</p>
+    <p><strong>Celular: </strong>{{ perfil.celular }}</p>
+    <p><strong>Teléfono: </strong>{{ perfil.telefono }}</p>
+    <p><strong>Dirección: </strong>{{ perfil.direccion }}</p>
+    <p><strong>Sexo: </strong>{{ perfil.sexo }}</p>
+    <p><strong>Fecha de Nacimiento: </strong>{{ perfil.fecha_nacimiento }}</p>
+
+    <div class="colaborador-info" *ngIf="perfil.puesto!==null">
+      <p><strong>Puesto: </strong>{{ perfil.puesto }}</p>
+      <p><strong>Rol: </strong>{{ perfil.rol }}</p>
+      <p><strong>Fecha de alta: </strong>{{ perfil.fecha_alta }}</p>
+      <p><strong>Empresa: </strong>{{perfil.empresa_col}}</p>
+      <button (click)="gestionarPermisos(perfil.id)">Gestionar Permisos</button>
+    </div>
+
+    <div class="cliente-info" *ngIf="perfil.cuit!==null">
+      <p><strong>CUIT: </strong>{{ perfil.cuit }}</p>
+      <p><strong>Ciudad: </strong>{{ perfil.ciudad }}</p>
+      <p><strong>Provincia: </strong>{{ perfil.provincia }}</p>
+      <p><strong>Deuda: </strong>{{ perfil.monto_deuda }} {{ perfil.moneda_deuda }}</p>
+      <p><strong>Empresa: </strong>{{perfil.empresa_cl}}</p>
+    </div>
+
+    <button *ngIf="esUsuarioActual()" (click)="activarEdicion()">Editar Perfil</button>
+  </div>
+
+  <div class="formulario-edicion" *ngIf="editMode">
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()">
+      <!-- Campos de edición -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre <span class="required-asterisk">*</span></label>
+          <input id="nombre" type="text" formControlName="nombre">
+        </div>
+
+        <div class="form-group">
+          <label for="apellido">Apellido <span class="required-asterisk">*</span></label>
+          <input id="apellido" type="text" formControlName="apellido">
+        </div>
+      </div>
+
+      <label for="email">Email <span class="required-asterisk">*</span></label>
+      <input id="email" type="email" formControlName="email">
+
+      <label for="fecha_nacimiento">Fecha de Nacimiento <span class="required-asterisk">*</span></label>
+      <input id="fecha_nacimiento" type="date" formControlName="fecha_nacimiento">
+
+      <label for="sexo">Sexo</label>
+      <input id="sexo" type="text" formControlName="sexo">
+
+      <!-- Campos adicionales -->
+      <div *ngIf="perfil.puesto!==null">
+        <label for="puesto">Puesto</label>
+        <input id="puesto" type="text" formControlName="puesto">
+
+        <label for="rol">Rol</label>
+        <input id="rol" type="text" formControlName="rol">
+      </div>
+
+      <div *ngIf="perfil.cuit!==null">
+        <label for="ciudad">Ciudad</label>
+        <input id="ciudad" type="text" formControlName="ciudad">
+
+        <label for="provincia">Provincia</label>
+        <input id="provincia" type="text" formControlName="provincia">
+
+        <label for="cuit">CUIT</label>
+        <input id="cuit" type="text" formControlName="cuit">
+
+        <label for="deuda">Deuda</label>
+        <input id="deuda" type="text" formControlName="deuda">
+      </div>
+
+      <div class="form-botones">
+        <button type="submit" [disabled]="perfilForm.invalid">Guardar Cambios</button>
+        <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="obras" *ngIf="obras !== null">
+    <h2>Obras</h2>
+    <ul>
+      <li *ngFor="let o of obras">
+        <a [routerLink]="['/obra', o.id]" class="obra-enlace">
+          <p><strong>Dirección: </strong>{{ o.direccion }}</p>
+          <p><strong>Estado: </strong>{{ o.estado }}</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tareas" *ngIf="perfil && perfil.puesto">
+    <h2>Tareas</h2>
+    <ul>
+      <li *ngFor="let t of tareas; let i = index">
+        <a [routerLink]="['/tarea', t.id]" class="tarea-enlace">
+          <p><strong>Título: </strong>{{ t.TAREA }}</p>
+          <p><strong>Descripción: </strong>{{ t.descripcion }}</p>
+          <p><strong>Estado: </strong>{{ t.estado }}</p>
+          <p><strong>Cantidad de días: </strong>{{ t.cant_dias }}</p>
+        </a>
+        <div *ngIf="!editTareas[i]">
+          <button (click)="activarEdicionTarea(i)">Editar</button>
+        </div>
+        <div *ngIf="editTareas[i]" class="tarea-edicion">
+          <label for="cant_dias_{{i}}"><strong>Cantidad de días:</strong></label>
+          <input id="cant_dias_{{i}}" type="number" [(ngModel)]="tareas[i].cant_dias">
+          <div class="botones-tarea">
+            <button class="guardar" (click)="guardarCambiosTarea(i, t)">Guardar Cambios</button>
+            <button class="cancelar" (click)="cancelarEdicionTarea(i)">Cancelar</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="loading-message" *ngIf="!perfil && !editMode">
+    Cargando perfil...
+  </div>
+</div>
+

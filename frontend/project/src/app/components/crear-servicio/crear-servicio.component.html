@@ -1,0 +1,77 @@
+<app-header></app-header>
+<div class="crear-servicio-container">
+  <h1>Crear Servicio</h1>
+  <form [formGroup]="servicioForm" (ngSubmit)="crearServicio()">
+    <div class="form-group">
+      <label for="descripcion">Descripción <span class="required-asterisk">*</span></label>
+      <input type="text" id="descripcion" formControlName="descripcion" required />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="precio_x_unidad">Precio por Unidad <span class="required-asterisk">*</span></label>
+        <input type="number" id="precio_x_unidad" formControlName="precio_x_unidad" required />
+      </div>
+
+      <div class="form-group">
+        <label for="unidad_medida">Unidad de Medida <span class="required-asterisk">*</span></label>
+        <input type="text" id="unidad_medida" formControlName="unidad_medida" required />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="monto_x_frecuencia">Monto por Frecuencia</label>
+        <input type="number" id="monto_x_frecuencia" formControlName="monto_x_frecuencia" />
+      </div>
+
+      <div class="form-group">
+        <label for="frecuencia_pago">Frecuencia de Pago</label>
+        <input type="text" id="frecuencia_pago" formControlName="frecuencia_pago" />
+      </div>
+
+      <div class="form-group">
+        <label for="moneda">Moneda</label>
+        <input type="text" id="moneda" formControlName="moneda" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="impuestos_total">Impuestos</label>
+        <input type="number" id="impuestos_total" formControlName="impuestos_total" />
+      </div>
+
+      <div class="form-group">
+        <label for="moneda_impuestos">Moneda Impuestos</label>
+        <input type="text" id="moneda_impuestos" formControlName="moneda_impuestos" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="descripcion_impuestos">Descripción Impuestos</label>
+      <input type="text" id="descripcion_impuestos" formControlName="descripcion_impuestos" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="otros_gastos">Otros Gastos</label>
+        <input type="number" id="otros_gastos" formControlName="otros_gastos" />
+      </div>
+
+      <div class="form-group">
+        <label for="moneda_otros_gastos">Moneda Otros Gastos</label>
+        <input type="text" id="moneda_otros_gastos" formControlName="moneda_otros_gastos" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="descripcion_otros_gastos">Descripción Otros Gastos</label>
+      <input type="text" id="descripcion_otros_gastos" formControlName="descripcion_otros_gastos" />
+    </div>
+
+    <button type="submit" class="submit-btn" [disabled]="servicioForm.invalid">Crear Servicio</button>
+  </form>
+
+  <p *ngIf="mensajeExito" class="success-message">{{ mensajeExito }}</p>
+  <p *ngIf="mensajeError" class="error-message">{{ mensajeError }}</p>
+</div>
+
+
+

@@ -1,0 +1,177 @@
+<app-header></app-header>
+
+<div *ngIf="material$ | async as material; else loading" class="material-container">
+  <h2>Detalle del Material</h2>
+
+  <!-- Modo de visualización -->
+  <div *ngIf="!editMode" class="material-details">
+    <p><strong>Nombre:</strong> {{ material.tipo_material }}</p>
+    <p><strong>Descripcion:</strong> {{ material.descripcion }}</p>
+    <p><strong>Marca:</strong> {{ material.marca }}</p>
+    <p><strong>Precio:</strong> {{ material.precio }} {{ material.moneda }}</p>
+    <p><strong>Impuestos:</strong> {{ material.impuestos_total }} {{ material.moneda_impuestos }}</p>
+    <p><strong>Descripcion de impuestos:</strong> {{ material.descripcion_impuestos }}</p>
+    <p><strong>Otros gastos:</strong> {{ material.otros_gastos }} {{ material.moneda_otros_gastos }}</p>
+    <p><strong>Descripcion de otros gastos:</strong> {{ material.moneda_otros_gastos }}</p>
+    <p><strong>Fecha desde precio:</strong> {{ material.fecha_desde_precio | date }}</p>
+    <p><strong>Unidad de Medida:</strong> {{ material.unidad_medida }}</p>
+
+    <!-- Detalles adicionales para Herramienta -->
+    <div *ngIf="material.herramienta">
+      <h3>Detalles de Herramienta</h3>
+      <p><strong>Almacén:</strong> {{ material.herramienta.almacen }}</p>
+      <p><strong>Fecha de compra:</strong> {{ material.herramienta.fecha_compra }}</p>
+      <p><strong>Ubicación:</strong> {{ material.herramienta.ubicacion }}</p>
+    </div>
+
+    <!-- Detalles adicionales para Vehículo -->
+    <div *ngIf="material.vehiculo">
+      <h3>Detalles de Vehículo</h3>
+      <p><strong>Patente:</strong> {{ material.vehiculo.patente }}</p>
+      <p><strong>Tipo:</strong> {{ material.vehiculo.tipo }}</p>
+      <p><strong>Modelo:</strong> {{ material.vehiculo.modelo }}</p>
+      <p><strong>Precio por hora:</strong> {{ material.vehiculo.precio_x_hora }} {{ material.vehiculo.moneda }}</p>
+      <p><strong>Almacén:</strong> {{ material.vehiculo.almacen }}</p>
+    </div>
+
+    <div class="buttons">
+      <button (click)="toggleEditMode()" class="btn-secondary">Editar Material</button>
+    </div>
+  </div>
+
+  <!-- Modo de edición -->
+  <form [formGroup]="materialForm" *ngIf="editMode" (ngSubmit)="onSubmit()" class="material-form">
+    <div class="form-group">
+      <label for="tipo_material">Nombre: <span class="required-asterisk">*</span></label>
+      <input id="tipo_material" formControlName="tipo_material" type="text" required/>
+    </div>
+    <div class="form-group">
+      <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
+      <input id="descripcion" formControlName="descripcion" type="text" required/>
+    </div>
+
+    <div class="form-group">
+      <label for="marca">Marca:</label>
+      <input id="marca" formControlName="marca" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="precio">Precio:</label>
+      <input id="precio" formControlName="precio" type="number" />
+    </div>
+
+    <div class="form-group">
+      <label for="moneda">Moneda:</label>
+      <input id="moneda" formControlName="moneda" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="fecha_caducidad">Fecha de Caducidad:</label>
+      <input id="fecha_caducidad" formControlName="fecha_caducidad" type="date" />
+    </div>
+
+    <div class="form-group">
+      <label for="unidad_medida">Unidad de Medida:</label>
+      <input id="unidad_medida" formControlName="unidad_medida" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="impuestos_total">Impuestos:</label>
+      <input id="impuestos_total" formControlName="impuestos_total" type="number" />
+    </div>
+
+    <div class="form-group">
+      <label for="moneda_impuestos">Moneda Impuestos:</label>
+      <input id="moneda_impuestos" formControlName="moneda_impuestos"  />
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion_impuestos">Descripción de Impuestos:</label>
+      <input id="descripcion_impuestos" formControlName="descripcion_impuestos"  />
+    </div>
+
+    <div class="form-group">
+      <label for="otros_gastos">Otros Gastos:</label>
+      <input id="otros_gastos" formControlName="otros_gastos" type="number" />
+    </div>
+
+    <div class="form-group">
+      <label for="moneda_otros_gastos">Moneda Otros Gastos:</label>
+      <input id="moneda_otros_gastos" formControlName="moneda_otros_gastos"  />
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion_otros_gastos">Descripción de Otros Gastos:</label>
+      <input id="descripcion_otros_gastos" formControlName="descripcion_otros_gastos"  />
+    </div>
+
+    <!-- Datos adicionales para Herramienta -->
+    <div *ngIf="material.herramienta && material.herramienta.id">
+      <h3>Detalles de Herramienta</h3>
+      <div class="form-group">
+        <label>Almacén:</label>
+        <select formControlName="almacen" id="almacen_h">
+          <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+            {{ almacen.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ubicacion">Ubicación:</label>
+        <input id="ubicacion" formControlName="ubicacion" type="text" />
+      </div>
+    </div>
+
+    <!-- Datos adicionales para Vehículo -->
+    <div *ngIf="material.vehiculo && material.vehiculo.id">
+      <h3>Detalles de Vehículo</h3>
+      <div class="form-group">
+        <label for="patente">Patente: <span class="required-asterisk">*</span></label>
+        <input id="patente" formControlName="patente" type="text" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="tipo">Tipo:</label>
+        <input id="tipo" formControlName="tipo" type="text" />
+      </div>
+
+      <div class="form-group">
+        <label for="modelo">Modelo:</label>
+        <input id="modelo" formControlName="modelo" type="text" />
+      </div>
+
+      <div class="form-group">
+        <label for="precio_x_hora">Precio por Hora:</label>
+        <input id="precio_x_hora" formControlName="precio_x_hora" type="number" />
+      </div>
+
+      <div class="form-group">
+        <label>Almacén:</label>
+        <select formControlName="almacen" id="almacen_v">
+          <option *ngFor="let almacen of almacenes" [value]="almacen.id">
+            {{ almacen.descripcion }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button type="submit" class="btn-primary" [attr.disabled]="materialForm.invalid ? true : null">
+        Guardar Cambios
+      </button>
+      <button type="button" (click)="toggleEditMode()" class="btn-danger">Cancelar</button>
+    </div>
+
+  </form>
+  <div *ngIf="mensajeError" class="error-message">
+    {{ mensajeError }}
+  </div>
+  <div *ngIf="mensajeExito" class="success-message">
+    {{ mensajeExito }}
+  </div>
+</div>
+
+<ng-template #loading>
+  <p>Cargando detalles del material...</p>
+</ng-template>

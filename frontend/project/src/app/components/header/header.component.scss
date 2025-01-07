@@ -1,0 +1,82 @@
+@import '../../../styles';
+
+.generic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2c3e50; // Azul oscuro profesional
+  color: #fff;
+  padding: 5px 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  // Agregamos una animación al header cuando se hace scroll
+  transition: all 0.3s ease;
+  &.scrolled {
+    background-color: lighten(#2c3e50, 10%);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: #fff; // Blanco para mejor visibilidad
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    color: #e67e22; // Naranja
+    transform: scale(1.2); // Efecto de zoom al pasar el mouse
+  }
+
+  &:active {
+    transform: scale(1); // Reducimos el zoom al hacer clic
+  }
+}
+
+.right-section {
+  position: relative;
+
+  .user-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #fff;
+    color: #333;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0; // Oculta el menú por defecto
+    visibility: hidden; // Evita que ocupe espacio
+    transform: translateY(-10px); // Animación inicial
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0); // Muestra el menú con una animación
+    }
+
+    li {
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+      padding: 8px 15px; // Más compacto
+      font-size: 0.9em; // Texto más pequeño
+      white-space: nowrap; // Evitamos saltos de línea
+
+      &:hover {
+          background-color: $secondary-color;
+          color: $white-color;
+      }
+    }
+  }
+}

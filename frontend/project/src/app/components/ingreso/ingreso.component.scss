@@ -1,0 +1,150 @@
+@import '../../../styles';
+
+.ingreso-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px;
+  background-color: $background-color;
+
+  .error-message {
+    color: #dc3545; /* Rojo de error */
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .success-message {
+    color: #218838; /* Verde de éxito */
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .ingresos-section {
+    .ingreso-item {
+      background-color: $section-bg-color;
+      padding: $section-padding;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap; // Permite que los campos se ajusten en filas flexibles
+        gap: 15px; // Espaciado entre los campos
+
+        .form-group {
+          flex: 1 1 45%; // Cada grupo toma hasta el 45% del ancho en pantallas grandes
+          min-width: 200px; // Ancho mínimo para mantener la legibilidad
+
+          .required-asterisk {
+            color: red;
+            font-weight: bold;
+          }
+        }
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $secondary-color;
+        margin-bottom: 15px;
+      }
+
+      .form-group {
+        margin-bottom: 12px;
+
+        .required-asterisk {
+          color: red;
+          font-weight: bold;
+        }
+
+        label {
+          display: block;
+          font-size: 1rem;
+          color: $secondary-color;
+          margin-bottom: 5px;
+        }
+
+        input, select {
+          width: 100%;
+          padding: 10px;
+          font-size: 1rem;
+          border: 1px solid $border-color;
+          border-radius: 4px;
+        }
+
+        input[type="checkbox"] {
+          width: auto;
+        }
+
+        button {
+          cursor: pointer;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          font-size: 1rem;
+          transition: background-color 0.3s;
+
+          &.btn-danger {
+            background-color: $error-color;
+            color: white;
+
+            &:hover {
+              background-color: darken($error-color, 10%);
+            }
+
+            &:disabled {
+              background-color: lighten($error-color, 20%);
+              color: darken($white-color, 40%);
+              cursor: not-allowed;
+              opacity: 0.6; // Esto añade un efecto visual adicional para resaltar que está deshabilitado.
+            }
+          }
+
+          &.btn-secondary {
+            background-color: #6c757d;
+            color: white;
+
+            &:hover {
+              background-color: darken(#6c757d, 10%);
+            }
+          }
+
+          &.btn-primary {
+            background-color: $primary-color;
+            color: white;
+
+            &:hover {
+              background-color: darken($primary-color, 10%);
+            }
+          }
+        }
+
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+
+        button {
+          width: 48%;
+        }
+      }
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background-color: $primary-color;
+    color: white;
+    padding: 15px;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}

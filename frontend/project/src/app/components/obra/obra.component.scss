@@ -1,0 +1,388 @@
+@import '../../../styles';
+
+.container {
+  padding: 50px;
+  background-color: $section-bg-color;
+  border: 1px solid $border-color;
+  border-radius: $button-radius;
+
+  .detalle-obra {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: $section-padding;
+    background-color: $section-bg-color;
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+      color: $text-color;
+
+      strong {
+        color: darken($text-color, 15%);
+      }
+    }
+
+    // Opcional: alternar colores para mayor claridad visual
+    p:nth-child(odd) {
+      background-color: lighten($section-bg-color, 5%);
+      padding: 5px;
+      border-radius: $button-radius;
+    }
+  }
+
+
+  .areas, .presupuestos, .documentos {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .areas.ng-animating,
+  .presupuestos.ng-animating,
+  .documentos.ng-animating {
+    max-height: 500px; // Altura máxima deseada
+    opacity: 1;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // Distribuye el título y el botón a extremos opuestos
+    background-color: $section-bg-color;
+    padding: 10px $section-padding;
+    border-radius: $button-radius;
+    border: 1px solid $border-color;
+    margin-bottom: 10px;
+
+    .title {
+      font-size: 1.5rem;
+      color: $text-color;
+      margin: 0;
+    }
+
+    .btn-toggle {
+      background-color: $primary-color;
+      color: $white-color;
+      padding: 8px 12px;
+      border: none;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 5px lighten($secondary-color, 30%);
+      }
+    }
+  }
+
+  .details {
+    padding: 15px;
+    margin-top: 20px;
+    background-color: lighten($section-bg-color, 5%);
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    p {
+      margin-bottom: 10px;
+      font-size: 0.9em;
+      line-height: 1.5;
+      color: $text-color;
+
+      strong {
+        font-weight: bold;
+        color: $primary-color;
+      }
+    }
+
+    // Opcional: Alinear texto para valores largos.
+    p span {
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+
+  h2, h3 {
+    color: $primary-color;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .form-container {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $border-color;
+
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+
+      .form-group {
+        flex: 1;
+
+        .required-asterisk {
+          color: red;
+          font-weight: bold;
+        }
+      }
+    }
+    .form-group {
+      margin-bottom: 15px;
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        font-weight: bold;
+        color: $text-color;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid $border-color;
+        border-radius: $button-radius;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
+
+        &:read-only {
+          background-color: $background-color;
+          color: darken($text-color, 20%);
+        }
+      }
+    }
+
+  }
+
+  .section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: lighten($section-bg-color, 3%);
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    h3 {
+      margin-bottom: 10px;
+      border-bottom: 2px solid lighten($primary-color, 30%);
+      padding-bottom: 5px;
+    }
+
+    &.datos-obra, &.notas, &.areas, &.documentos {
+      border-left: 4px solid $primary-color;
+    }
+
+    &.presupuestos {
+      border-left: 4px solid $success-color;
+    }
+  }
+
+  .btn {
+    margin-right: 10px;
+    border-radius: $button-radius;
+    padding: 8px 15px;
+    font-size: 0.9em;
+
+    &.btn-primary {
+      background-color: $secondary-color;
+      color: $white-color;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+
+      &:disabled {
+        background-color: lighten($secondary-color, 20%);
+        cursor: not-allowed;
+      }
+    }
+
+    &.btn-success {
+      background-color: $success-color;
+      color: $white-color;
+
+      &:hover {
+        background-color: darken($success-color, 10%);
+      }
+
+      &:disabled {
+        background-color: lighten($success-color, 20%);
+        cursor: not-allowed;
+      }
+    }
+
+    &.btn-danger {
+      background-color: $error-color;
+      color: $white-color;
+
+      &:hover {
+        background-color: darken($error-color, 10%);
+      }
+    }
+
+    &.btn-info {
+      background-color: $loading-color;
+      color: $white-color;
+
+      &:hover {
+        background-color: darken($loading-color, 10%);
+      }
+    }
+
+    &.btn-sm {
+      padding: 5px 10px;
+      font-size: 0.85em;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: flex-end; // Alineación a la derecha para acciones
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+      background-color: $table-header-bg-color;
+      margin-bottom: 10px;
+
+      strong {
+        color: $text-color;
+      }
+
+      .btn {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .nota-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: lighten($section-bg-color, 5%);
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    p {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: $text-color;
+    }
+
+    .foto-item {
+      display: block;
+      margin: 10px 0;
+      max-width: 200px; // Ajustar tamaño de imagen
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+    }
+
+    a.btn-info {
+      margin-top: 5px;
+      text-decoration: none;
+      background-color: $loading-color;
+      color: $white-color;
+      padding: 5px 10px;
+      font-size: 0.85em;
+      border-radius: $button-radius;
+      display: inline-block;
+
+      &:hover {
+        background-color: darken($loading-color, 10%);
+      }
+    }
+  }
+
+  .area-item, .documento-item, .presupuesto-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: lighten($section-bg-color, 5%);
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+
+    strong {
+      color: $primary-color;
+    }
+
+    img {
+      display: block;
+      margin: 10px 0;
+      width: 100px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+    }
+  }
+
+  .notas {
+    margin-top: 20px;
+
+    textarea {
+      width: 100%;
+      resize: vertical;
+      min-height: 100px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+      background-color: $background-color;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
+    }
+  }
+
+  ng-template {
+    p {
+      color: darken($text-color, 20%);
+      font-style: italic;
+    }
+  }
+
+  .presupuesto-item-link {
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: inherit; /* Usa el color de texto por defecto */
+    display: block; /* Hace que todo el contenido sea clicable */
+    transition: background-color 0.3s ease; /* Efecto visual al pasar el cursor */
+    border-radius: $button-radius; /* Opcional: Para que coincida con el diseño */
+
+    &:hover {
+      background-color: lighten($primary-color, 40%); /* Cambia el color de fondo al pasar el cursor */
+      cursor: pointer; /* Cambia el cursor a "mano" */
+    }
+  }
+
+  .presupuesto-item {
+    padding: 15px;
+    border: 1px solid $border-color;
+    border-radius: $button-radius;
+    background-color: $section-bg-color;
+    margin-bottom: 10px;
+  }
+}

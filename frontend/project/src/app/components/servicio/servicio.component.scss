@@ -1,0 +1,88 @@
+@import '../../../styles';
+
+.detalle-servicio {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 50px;
+  background-color: $background-color;
+
+  .titulo {
+    color: $primary-color;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  .form-row {
+    display: flex;
+    gap: 20px; // Espaciado entre los campos
+
+    .form-group {
+      flex: 1; // Hacer que ambos campos tengan el mismo ancho
+      display: flex;
+      flex-direction: column; // Mantener el diseño vertical interno
+
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
+
+    }
+
+    input {
+      width: 100%; // Asegura que los campos ocupen el espacio disponible
+    }
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      color: $secondary-color;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+    }
+  }
+
+  .acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+
+    button {
+      padding: 10px 15px;
+      border-radius: $button-radius;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+
+      &.btn-primary {
+        background-color: $primary-color;
+        color: $white-color;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+
+      &.btn-secondary {
+        background-color: $secondary-color;
+        color: $white-color;
+
+        &:hover {
+          background-color: darken($secondary-color, 10%);
+        }
+      }
+    }
+  }
+}
+

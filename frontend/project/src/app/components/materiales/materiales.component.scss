@@ -1,0 +1,65 @@
+@import '../../../styles';
+
+
+.materiales-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 50px;
+  background-color: $white-color;
+  border: 1px solid $background-color;
+  border-radius: 8px;
+
+  .filtros {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    .busqueda {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+    }
+
+    .tipo-filtro {
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+      background-color: $white-color;
+    }
+  }
+
+  .tabla-container {
+    overflow-x: auto;
+
+    .tabla-materiales {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+
+      th, td {
+        padding: 10px;
+        border: 1px solid $border-color;
+      }
+
+      th {
+        background-color: $table-header-bg-color;
+        color: $primary-color;
+        font-weight: bold;
+      }
+
+      tr {
+        &:hover {
+          background-color: $hover-color;
+        }
+      }
+    }
+  }
+
+  .no-materiales-message {
+    text-align: center;
+    color: $text-color;
+    font-size: 1.2rem;
+  }
+}
+

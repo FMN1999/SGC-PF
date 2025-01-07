@@ -1,0 +1,79 @@
+@import '../../../styles';
+
+.financiera-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px;
+  background-color: $background-color;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: $secondary-color;
+    margin-bottom: 20px;
+  }
+
+  .pagos-section,
+  .cobros-section {
+    background-color: $section-bg-color;
+    padding: $section-padding;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $secondary-color;
+      margin-bottom: 15px;
+    }
+
+    .no-records {
+      text-align: center;
+      font-size: 1.2rem;
+      color: $secondary-color;
+      padding: 20px;
+    }
+
+    .table-container {
+      overflow-x: auto; /* Permite el desplazamiento horizontal */
+      -webkit-overflow-scrolling: touch; /* Habilita el desplazamiento suave en dispositivos iOS */
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid $table-border-color;
+        font-size: 1rem;
+      }
+
+      th {
+        background-color: $table-header-bg-color;
+        font-weight: 600;
+        color: $secondary-color;
+      }
+
+      tbody tr {
+        transition: background-color 0.3s ease;
+      }
+
+      tbody tr:hover {
+        background-color: $hover-color;
+      }
+
+      /* Estilo para pantallas más pequeñas */
+      @media (max-width: 768px) {
+        th,
+        td {
+          font-size: 0.9rem; /* Reducir el tamaño de la fuente para pantallas más pequeñas */
+          padding: 8px; /* Reducir el padding */
+        }
+      }
+    }
+  }
+}

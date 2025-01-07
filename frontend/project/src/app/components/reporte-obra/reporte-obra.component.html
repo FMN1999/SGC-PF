@@ -1,0 +1,99 @@
+<app-header></app-header>
+
+<div class="reporte-obra">
+  <div *ngIf="loading" class="loading-spinner">
+    <p>Cargando reporte de obra...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <h1 class="titulo-reporte">Reporte de la Obra: {{ reporte.nombre_obra }}</h1>
+
+    <!-- Dashboard General -->
+    <section class="dashboard">
+      <h2>Resumen General</h2>
+      <div class="indicators">
+        <div class="indicator">
+          <h3>Presupuesto Total</h3>
+          <p>{{ reporte.presupuesto_total | currency }}</p>
+        </div>
+        <div class="indicator">
+          <h3>Gastos en Compras</h3>
+          <p>{{ reporte.total_compras | currency }}</p>
+        </div>
+        <div class="indicator">
+          <h3>Gastos en Contrataciones</h3>
+          <p>{{ reporte.total_contratacion | currency }}</p>
+        </div>
+        <div class="indicator">
+          <h3>Diferencia</h3>
+          <p [class.positive]="reporte.diferencia_compras_presupuesto > 0"
+             [class.negative]="reporte.diferencia_compras_presupuesto < 0">
+            {{ reporte.diferencia_compras_presupuesto | currency }}
+          </p>
+        </div>
+        <div class="indicator">
+          <h3>Avance General</h3>
+          <p>{{ reporte.avance_general | percent }}</p>
+        </div>
+      </div>
+      <div class="chart">
+        <canvas baseChart [data]="barChartData" [type]="'bar'"></canvas>
+      </div>
+    </section>
+
+    <!-- Materiales y Compras -->
+    <section class="materiales">
+      <h2>Materiales Comprados sin utilizar</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Usado</th>
+            <th>Costo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let material of reporte.materiales_no_usados">
+            <td>{{ material.descripcion }}</td>
+            <td>{{ material.usado }}</td>
+            <td>{{ material.costo | currency }} {{material.moneda}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+     <!-- Materiales y Compras -->
+    <section class="materiales">
+      <h2>Contrataciónes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>Fecha Comienzo</th>
+            <th>Fecha Fin</th>
+            <th>Costo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cont of reporte.contrataciones">
+            <td>{{ cont.descripcion }}</td>
+            <td>{{ cont.fecha_comienzo }}</td>
+            <td>{{ cont.fecha_fin }}</td>
+            <td>{{ cont.costo | currency }} {{cont.moneda}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Avance de la Obra -->
+    <section class="avance-obra">
+      <h2>Avance de la Obra</h2>
+      <div *ngFor="let area of reporte.avance_por_area" class="area">
+        <h3>{{ area.nombre_area }}</h3>
+        <progress [value]="area.avance" max="100"></progress>
+        <p>{{ area.avance | percent }}</p>
+      </div>
+    </section>
+  </div>
+</div>
+

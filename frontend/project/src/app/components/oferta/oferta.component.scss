@@ -1,0 +1,103 @@
+@import '../../../styles';
+
+.oferta-container {
+  padding: 50px;
+  background-color: $background-color;
+  border-radius: $button-radius;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .oferta-header {
+    text-align: center;
+    margin-bottom: $section-padding;
+
+    h2 {
+      font-size: 2rem;
+      color: $primary-color;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: $secondary-color;
+        margin: 10px auto 0;
+        border-radius: $button-radius;
+      }
+    }
+  }
+
+  .oferta-info {
+    p {
+      font-size: 1rem;
+      color: $text-color;
+      margin: 10px 0;
+
+      strong {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .oferta-materiales,
+  .oferta-servicios {
+    margin-top: $section-padding;
+
+    h3 {
+      font-size: 1.5rem;
+      color: $primary-color;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 8px;
+
+        .material-link,
+        .servicio-link {
+          font-size: 1rem;
+          color: $secondary-color;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: $hover-color;
+          }
+        }
+      }
+    }
+
+    .oferta-empty {
+      font-size: 1rem;
+      color: darken($text-color, 10%);
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+
+  .btn {
+    display: block;
+    margin: $section-padding auto 0;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: $button-radius;
+    background-color: $secondary-color;
+    color: $white-color;
+    text-align: center;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $hover-color;
+    }
+  }
+
+  .loading {
+    font-size: 1.2rem;
+    color: $loading-color;
+    text-align: center;
+    margin: $section-padding 0;
+  }
+}

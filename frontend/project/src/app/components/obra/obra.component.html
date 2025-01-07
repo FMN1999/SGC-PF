@@ -1,0 +1,302 @@
+<app-header></app-header>
+
+<div class="container">
+  <h2>Detalles de Obra en {{ obra?.direccion }}</h2>
+  <div class="action-buttons">
+    <button *ngIf="abrirReporte" (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
+    <button class="btn btn-info" (click)="irAPagosCobros()">Ver Pagos y Cobros</button>
+  </div>
+  <div class="detalle-obra" *ngIf="!editMode" >
+    <p><strong>Cliente:</strong> {{ obra?.cliente.nombre }}</p>
+    <p><strong>Contacto (Tel.):</strong> {{ obra?.telefono_contacto }}</p>
+    <p><strong>Fecha de inicio (est.):</strong> {{ obra?.fecha_inicio_est | date }}</p>
+    <p><strong>Fecha de fin (est.):</strong> {{ obra?.fecha_fin_est | date }}</p>
+    <p><strong>Fecha de inicio (real):</strong> {{ obra?.fecha_inicio_real | date }}</p>
+    <p><strong>Fecha de fin (real):</strong> {{ obra?.fecha_fin_real | date }}</p>
+    <p><strong>Monto total (est.):</strong> {{ obra?.monto_total_est | currency: obra?.moneda }}</p>
+    <p><strong>Monto total (real):</strong> {{ obra?.monto_total_real | currency: obra?.moneda }}</p>
+    <p><strong>Moneda:</strong> {{ obra?.moneda }}</p>
+    <p><strong>Pisos:</strong> {{ obra?.pisos }}</p>
+    <p><strong>Dimensiones:</strong> {{ obra?.dimensiones }}</p>
+    <p><strong>Estado:</strong> {{ obra?.estado }}</p>
+    <p><strong>Ganancias:</strong> {{ obra?.ganancias | currency: obra?.moneda }}</p>
+    <p><strong>Pérdidas:</strong> {{ obra?.perdidas | currency: obra?.moneda }}</p>
+  </div>
+
+  <form *ngIf="editMode" [formGroup]="obraForm" (ngSubmit)="onSubmit()" class="form-container">
+    <div class="form-group">
+      <label for="direccion">Dirección: <span class="required-asterisk">*</span></label>
+      <input id="direccion" formControlName="direccion" class="form-control" [readonly]="!editMode" required/>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="id_cliente">Cliente:</label>
+        <input id="id_cliente" formControlName="id_cliente" class="form-control" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="telefono_contacto">Teléfono de contacto:</label>
+        <input id="telefono_contacto" formControlName="telefono_contacto" class="form-control" [readonly]="!editMode" required/>
+      </div>
+    </div>
+
+    <div class ="form-row">
+      <div class="form-group">
+        <label for="fecha_inicio_est">Fecha de inicio estimada:</label>
+        <input id="fecha_inicio_est" type="date" formControlName="fecha_inicio_est" class="form-control" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_fin_est">Fecha de fin estimada:</label>
+        <input id="fecha_fin_est" type="date" formControlName="fecha_fin_est" class="form-control" readonly />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fecha_inicio_real">Fecha de inicio real:</label>
+        <input id="fecha_inicio_real" type="date" formControlName="fecha_inicio_real" class="form-control" [readonly]="!editMode" />
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_fin_real">Fecha de fin real:</label>
+        <input id="fecha_fin_real" type="date" formControlName="fecha_fin_real" class="form-control" [readonly]="!editMode" />
+      </div>
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="monto_total_est">Monto total estimado:</label>
+        <input id="monto_total_est" formControlName="monto_total_est" class="form-control" [readonly]="!editMode" />
+      </div>
+      <div class="form-group">
+        <label for="moneda">Moneda:</label>
+        <input id="moneda" formControlName="moneda" class="form-control" [readonly]="!editMode" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="monto_total_real">Monto total real:</label>
+      <input id="monto_total_real" formControlName="monto_total_real" class="form-control" [readonly]="!editMode" />
+    </div>
+
+
+    <div class="form-group">
+      <label for="pisos">Pisos:</label>
+      <input id="pisos" formControlName="pisos" class="form-control" [readonly]="!editMode" />
+    </div>
+
+    <div class="form-group">
+      <label for="dimensiones">Dimensiones:</label>
+      <input id="dimensiones_obra" formControlName="dimensiones" class="form-control" [readonly]="!editMode" />
+    </div>
+
+    <div class="form-group">
+      <label for="estado">Estado:</label>
+      <input id="estado" formControlName="estado" class="form-control" [readonly]="!editMode" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="ganancias">Ganancias:</label>
+        <input id="ganancias" formControlName="ganancias" class="form-control" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="perdidas">Pérdidas:</label>
+        <input id="perdidas" formControlName="perdidas" class="form-control" readonly />
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button type="button" class="btn btn-primary" (click)="toggleEditMode()">
+        Cancelar edición
+      </button>
+      <button  type="submit" class="btn btn-success" [disabled]="obraForm.invalid">
+        Guardar cambios
+      </button>
+    </div>
+  </form>
+  <div *ngIf="!editMode" class="action-buttons">
+    <button type="button" class="btn btn-primary" (click)="toggleEditMode()">
+      Editar
+    </button>
+  </div>
+
+
+  <h3 class="section-header">
+    <span class="title">Áreas de la Obra</span>
+    <button type="button" class="btn-toggle" (click)="toggleSeccion('areas')">
+      {{ mostrarAreas ? 'Ocultar' : 'Mostrar' }}
+    </button>
+  </h3>
+
+  <div class="areas" *ngIf="mostrarAreas">
+    <button *ngIf="!areasMode" type="button" class="btn btn-primary" (click)="toggleNewAreaMode()">Nueva Área</button>
+    <ul>
+      <li *ngFor="let area of areas">
+        <div class="area-item">
+          <h3>{{ area.descripcion }} </h3><br />
+          <strong>Dimensiones:</strong> {{ area.dimensiones }}<br />
+          <strong>Estado:</strong> {{ area.estado }}<br />
+          <strong>Porcentaje:</strong> {{ area.porcentaje }}%
+          <button (click)="eliminarArea(area.id)" class="btn btn-danger btn-sm mt-2">Eliminar Área</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="areasMode" class="areas">
+    <form [formGroup]="areaForm" (ngSubmit)="crearArea()" class="form-container">
+      <div class="form-group">
+        <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
+        <input id="descripcion" formControlName="descripcion" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="dimensiones">Dimensiones: <span class="required-asterisk">*</span></label>
+        <input id="dimensiones" formControlName="dimensiones" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="estado">Estado: <span class="required-asterisk">*</span></label>
+        <input id="area-estado" formControlName="estado" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="porcentaje">Porcentaje: <span class="required-asterisk">*</span></label>
+        <input id="porcentaje" type="number" formControlName="porcentaje" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="areaForm.invalid">Crear Área</button>
+      <button *ngIf="areasMode" (click)="toggleNewAreaMode()" class="btn btn-danger">Cancelar</button>
+    </form>
+
+  </div>
+
+  <ng-template #noAreas>
+    <p>No hay áreas registradas para esta obra.</p>
+  </ng-template>
+
+  <h3 class="section-header">
+    <span class="title">Presupuestos de la Obra</span>
+    <button type="button" class="btn-toggle" (click)="toggleSeccion('presupuestos')">
+      {{ mostrarPresupuestos ? 'Ocultar' : 'Mostrar' }}
+    </button>
+  </h3>
+  <div class="presupuestos" *ngIf="mostrarPresupuestos">
+    <button type="button" class="btn btn-primary" (click)="crearPresupuesto()">Crear presupuesto</button>
+    <ul>
+      <li *ngFor="let presupuesto of presupuestos">
+        <a [routerLink]="['/presupuestos', presupuesto.id]" class="presupuesto-item-link">
+          <div class="presupuesto-item">
+            <strong>Estado:</strong> {{ presupuesto.estado }} <br />
+            <strong>Observaciones:</strong> {{ presupuesto.observaciones }} <br />
+            <strong>Fecha Creación:</strong> {{ presupuesto.fecha_creacion | date }} <br />
+            <strong>Monto Total:</strong> {{ presupuesto.total }} {{ presupuesto.moneda }}
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noPresupuestos>
+    <p>No hay presupuestos asociados a esta obra.</p>
+  </ng-template>
+
+
+  <h3 class="section-header">
+    <span class="title">Documentos de la Obra</span>
+    <button type="button" class="btn-toggle" (click)="toggleSeccion('documentos')">
+      {{ mostrarDocumentos ? 'Ocultar' : 'Mostrar' }}
+    </button>
+  </h3>
+  <div class="documentos" *ngIf="mostrarDocumentos">
+    <button *ngIf="!documentoMode" type="button" class="btn btn-primary" (click)="toggleNewDocumentoMode()">Nuevo Documento</button>
+    <ul>
+      <li *ngFor="let documento of documentos">
+        <div class="documento-item">
+          <strong> Nombre: </strong> <a [href]="documento.link" target="_blank">{{ documento.nombre }} </a> <br />
+          <strong>Descripción:</strong> {{ documento.descripcion || 'N/A' }} <br />
+          <strong>Tipo de Archivo:</strong> {{ documento.tipo_archivo || 'N/A' }} <br />
+          <button class="btn btn-danger btn-sm" (click)="eliminarDocumento(documento.id)">Eliminar</button>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+  <ng-template #noDocumentos>
+    <p>No hay documentos asociados a esta obra.</p>
+  </ng-template>
+
+  <!-- Formulario para Agregar Documentos -->
+  <form *ngIf="documentoMode" [formGroup]="documentoForm" (ngSubmit)="guardarDocumento()" class="form-container">
+    <div class="form-group">
+      <label>Nombre: <span class="required-asterisk">*</span></label>
+      <input formControlName="nombre" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label>Link: <span class="required-asterisk">*</span></label>
+      <input formControlName="link" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label>Descripción:</label>
+      <input formControlName="descripcion" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Tipo de Archivo:</label>
+      <input formControlName="tipo_archivo" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="documentoForm.invalid">Guardar Documento</button>
+    <button *ngIf="documentoMode" (click)="toggleNewDocumentoMode()" class="btn btn-danger">Cancelar</button>
+  </form>
+
+
+  <div *ngIf="notas.length > 0">
+    <h3>Notas de la Obra</h3>
+    <div *ngFor="let nota of notas" class="nota-item">
+      <p>{{ nota.descripcion }} - {{ nota.fecha | date }}</p>
+      <div *ngFor="let foto of nota.fotos">
+        <img [src]="foto.url" alt="Foto de Avance" class="foto-item" />
+        <a [href]="foto.url" target="_blank" rel="noopener noreferrer" download class="btn btn-info btn-sm">
+          Ver Foto
+        </a>
+      </div>
+      <button class="btn btn-danger" (click)="eliminarNota(nota.id)">Eliminar Nota</button>
+    </div>
+  </div>
+
+  <div class="nota-section">
+    <h3>Agregar Nota</h3>
+    <form class="notas" [formGroup]="notaForm" (ngSubmit)="guardarNota()">
+      <div class="form-group">
+        <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
+        <textarea formControlName="descripcion" class="form-control" required></textarea>
+      </div>
+
+      <div class="fotos-item" formArrayName="fotos">
+        <div *ngFor="let foto of fotos.controls; let i = index" class="foto-section">
+          <div class="foto-input-group">
+            <input [formControlName]="i" class="form-control" placeholder="URL de la foto" />
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              (click)="eliminarFoto(i)"
+              aria-label="Eliminar foto">
+              Eliminar
+            </button>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary agregar-foto-btn"
+          (click)="agregarFoto()"
+          [disabled]="notaForm.invalid">
+          Agregar Foto
+        </button>
+      </div>
+
+
+      <button type="submit" class="btn btn-primary" [disabled]="!notaForm.valid">Guardar Nota</button>
+    </form>
+  </div>
+</div>
+
+

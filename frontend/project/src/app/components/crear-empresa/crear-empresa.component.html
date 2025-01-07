@@ -1,0 +1,47 @@
+<app-header></app-header>
+<div class="crear-empresa-container">
+  <h2>Alta de Empresa</h2>
+
+  <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="denominacion">Denominación:</label>
+      <input id="denominacion" formControlName="denominacion" />
+      <div class="error" *ngIf="empresaForm.get('denominacion')?.invalid && empresaForm.get('denominacion')?.touched">
+        La denominación es obligatoria.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="cuit">CUIT:</label>
+      <input id="cuit" formControlName="cuit" />
+      <div class="error" *ngIf="empresaForm.get('cuit')?.invalid && empresaForm.get('cuit')?.touched">
+        CUIT inválido. Debe tener 11 dígitos.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono:</label>
+      <input id="telefono" formControlName="telefono" />
+      <div class="error" *ngIf="empresaForm.get('telefono')?.invalid && empresaForm.get('telefono')?.touched">
+        El teléfono es obligatorio.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input id="email" formControlName="email" />
+      <div class="error" *ngIf="empresaForm.get('email')?.invalid && empresaForm.get('email')?.touched">
+        Email inválido.
+      </div>
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="empresaForm.invalid">Crear Empresa</button>
+  </form>
+
+  <div *ngIf="successMessage" class="success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+</div>

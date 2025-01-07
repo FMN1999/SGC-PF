@@ -1,0 +1,92 @@
+@import '../../../styles';
+
+
+.container {
+  padding: 50px;
+
+  h2, h3 {
+    color: $primary-color;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: $text-color;
+    margin-bottom: 8px;
+  }
+
+  // Ajustes responsivos para pantallas pequeñas
+  @media (max-width: 768px) {
+    .row {
+      flex-direction: column;
+    }
+
+    .col-md-6 {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+#chart-ingresos-egresos, #chart-balance-mensual {
+  margin-top: 20px;
+  background-color: $white-color;
+  border: 1px solid $background-color;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+// Estilo adicional para gráficos
+.apexcharts-canvas {
+  max-width: 100%;
+}
+
+// Estilos para títulos de gráficos
+.chart-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+// Estilos para la tabla de detalle financiero
+.detalle-financiero {
+  margin-top: 20px;
+
+  h3 {
+    color: $primary-color;
+    margin-bottom: 15px;
+  }
+
+  .table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+    text-align: left;
+
+    th, td {
+      padding: 10px;
+      border: 1px solid $border-color;
+      text-align: center;
+    }
+
+    th {
+      background-color: $primary-color;
+      color: $white-color;
+    }
+
+    td {
+      font-size: 0.95rem;
+
+      &.positivo {
+        color: $success-color;
+        font-weight: bold;
+      }
+
+      &.negativo {
+        color: $error-color;
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+<app-header></app-header>
+<div class="financiera-container">
+  <h2>Pagos y Cobros de la Obra</h2>
+
+  <!-- Pagos -->
+  <section class="pagos-section">
+    <h3>Pagos</h3>
+    <div *ngIf="!pagos" class="no-records">No hay pagos registrados para esta obra.</div>
+    <div class="table-container" *ngIf="pagos">
+      <table class="table pagos-table">
+        <thead>
+          <tr>
+            <th>Monto</th>
+            <th>Moneda</th>
+            <th>Cuota</th>
+            <th>Proveedor</th>
+            <th>Compra</th>
+            <th>Contratación</th>
+            <th>Fecha de Pago</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pago of pagos">
+            <td>{{ pago.monto }}</td>
+            <td>{{ pago.moneda }}</td>
+            <td>{{ pago.cuota }}</td>
+            <td>{{ pago.proveedor_nombre }}</td>
+            <td>{{ pago.id_compra }}</td>
+            <td>{{ pago.id_subcontratacion || 'N/A' }}</td>
+            <td>{{ pago.fecha_pago }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Cobros -->
+  <section class="cobros-section">
+    <h3>Cobros</h3>
+    <div *ngIf="!cobros" class="no-records">No hay cobros registrados para esta obra.</div>
+    <div class="table-container" *ngIf="cobros">
+      <table class="table cobros-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Monto</th>
+            <th>Moneda</th>
+            <th>Fecha de Pago</th>
+            <th>Realizado</th>
+            <th>Fecha Límite</th>
+            <th>Recargo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cobro of cobros">
+            <td>{{ cobro.cliente_nombre }} {{ cobro.cliente_apellido }}</td>
+            <td>{{ cobro.monto }}</td>
+            <td>{{ cobro.moneda }}</td>
+            <td>{{ cobro.fecha_pago }}</td>
+            <td>{{ cobro.realizado ? 'Sí' : 'No' }}</td>
+            <td>{{ cobro.fecha_limite }}</td>
+            <td>{{ cobro.cantidad_recargo }} {{ cobro.unidad_recargo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

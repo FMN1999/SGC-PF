@@ -1,0 +1,44 @@
+<app-header></app-header>
+<div class="crear-proveedor-container">
+  <h1>Crear Proveedor</h1>
+  <form [formGroup]="proveedorForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
+
+    <div class="form-group">
+      <label for="denominacion">Denominación <span class="required-asterisk">*</span></label>
+      <input id="denominacion" formControlName="denominacion" type="text" required />
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono <span class="required-asterisk">*</span></label>
+      <input id="telefono" formControlName="telefono" type="text" required />
+    </div>
+
+    <div class="form-group">
+      <label for="direccion">Dirección <span class="required-asterisk">*</span></label>
+      <input id="direccion" formControlName="direccion" type="text" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email <span class="required-asterisk">*</span></label>
+      <input id="email" formControlName="email" type="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="cuil">CUIT <span class="required-asterisk">*</span></label>
+      <input id="cuil" formControlName="cuil" type="text" required />
+    </div>
+
+    <div class="form-group">
+      <label for="ciudad">Ciudad <span class="required-asterisk">*</span></label>
+      <input id="ciudad" formControlName="ciudad" type="text" required />
+    </div>
+
+    <div class="form-group">
+      <label for="provincia">Provincia <span class="required-asterisk">*</span></label>
+      <input id="provincia" formControlName="provincia" type="text" required />
+    </div>
+
+    <button type="submit" class="submit-btn" [disabled]="proveedorForm.invalid">Crear Proveedor</button>
+  </form>
+</div>

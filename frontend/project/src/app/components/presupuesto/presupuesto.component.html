@@ -1,0 +1,207 @@
+<app-header></app-header>
+
+<div *ngIf="presupuesto" class="presupuesto-container">
+  <div *ngIf="!idEditar">
+    <h2>Detalles del Presupuesto</h2>
+    <div class="presupuesto-info">
+      <p><strong>Total:</strong> {{ presupuesto.total }} {{ presupuesto.moneda }}</p>
+      <p><strong>Fecha de Creación:</strong> {{ presupuesto.fecha_creacion }}</p>
+      <p><strong>Observaciones:</strong> {{ presupuesto.observaciones }}</p>
+      <p><strong>Estado:</strong> {{ presupuesto.estado }}</p>
+      <p><strong>Aprobado:</strong> {{ presupuesto.aprobado ? 'Sí' : 'No' }}</p>
+      <p><strong>Porcentaje de Inflación:</strong> {{ presupuesto.porc_inflacion }}%</p>
+
+      <div class="actions-right">
+        <button *ngIf="presupuesto.estado === 'Nuevo'" class="btn-aprobar" (click)="aprobarPresupuesto()">Aprobar</button>
+        <button *ngIf="presupuesto.estado === 'Nuevo'" class="btn-rechazar" (click)="rechazarPresupuesto()">Rechazar</button>
+        <button *ngIf="(!(presupuesto.estado === 'Rechazado') || (presupuesto.estado === 'Aprobado') && !idEditar)" type="button" (click)="editar()">Editar</button>
+      </div>
+    </div>
+
+    <!-- Sección de Materiales -->
+    <section class="materials-section">
+      <h3>Materiales</h3>
+      <div class="actions">
+       <button *ngIf="presupuesto.estado === 'Aprobado'" (click)="solicitarMateriales()">Solicitar materiales</button>
+      </div>
+      <div *ngIf="materiales.length > 0; else noMateriales">
+        <ul>
+          <li *ngFor="let material of materiales_data">
+            {{ material.desc_material }} - {{ material.cantidad }} {{ material.unidad_medida }}
+            a {{ material.precio_x_unidad_medida }} por unidad
+            <p><strong>Monto Línea:</strong> {{ material.monto_linea }}</p>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noMateriales>
+        <p>No hay materiales registrados.</p>
+      </ng-template>
+    </section>
+
+
+
+    <!-- Sección de Servicios -->
+    <section class="services-section">
+      <h3>Actividades / Servicios</h3>
+      <div class="actions">
+        <button *ngIf="presupuesto.estado === 'Aprobado'" (click)="solicitarServicios()">Solicitar servicios</button>
+      </div>
+      <div *ngIf="servicios.length > 0; else noServicios">
+        <ul>
+          <li *ngFor="let servicio of servicios_data">
+            {{ servicio.desc_servicio }} - {{ servicio.horas }} horas
+            a {{ servicio.precio_x_hora }} {{ servicio.moneda }} por hora
+            <p><strong>Monto Línea:</strong> {{ servicio.monto_linea }}</p>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noServicios>
+        <p>No hay servicios registrados.</p>
+      </ng-template>
+    </section>
+
+    <section class="tasks-section">
+      <h3>Tareas en curso</h3>
+      <div class="actions">
+        <button *ngIf="presupuesto.estado === 'Aprobado'" (click)="crearTarea()">Planificar Tarea</button>
+      </div>
+      <div *ngIf="tareas_data.length >0; else noTareas">
+        <ul>
+          <li *ngFor="let tarea of tareas_data">
+            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion }}
+            <p><strong>Fecha Inicio:</strong> {{ tarea.fecha_inicio }}</p>
+            <p><strong>Fecha Fin:</strong> {{ tarea.fecha_fin }}</p>
+            <p><strong>Porcentaje de Avance:</strong> {{ tarea.porcentaje_avance }}%</p>
+            <p><strong>Precio Total:</strong> {{ tarea.precio_total }}</p>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noTareas>
+        <p>No hay tareas registradas.</p>
+      </ng-template>
+    </section>
+
+    <!-- Sección de Trabajadores -->
+    <section class="workers-section">
+      <h3>Trabajadores</h3>
+      <div *ngIf="trabajadores.length > 0; else noTrabajadores">
+        <ul>
+          <li *ngFor="let trabajador of trabajadores_data">
+            {{ trabajador.puesto }} - {{ trabajador.horas }} horas
+            a {{ trabajador.precio_x_hora }} {{ trabajador.moneda }} por hora
+            <p><strong>Monto Línea:</strong> {{ trabajador.monto_linea }}</p>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noTrabajadores>
+        <p>No hay trabajadores registrados.</p>
+      </ng-template>
+    </section>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="idEditar" class="edit-form">
+    <h3>Editar Presupuesto</h3>
+    <div class="actions">
+      <button *ngIf="idEditar" type="button" class="btn-cancelar" (click)="editar()">Cancelar</button>
+    </div>
+
+    <form [formGroup]="presupuestoForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="total">Total: <span class="required-asterisk">*</span></label>
+        <input id="total" formControlName="total" type="number" />
+      </div>
+
+      <div class="form-group">
+        <label for="moneda">Moneda: <span class="required-asterisk">*</span></label>
+        <input id="moneda" formControlName="moneda" type="text" />
+      </div>
+
+      <div class="form-group">
+        <label for="observaciones">Observaciones:</label>
+        <textarea id="observaciones" formControlName="observaciones"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="porc_inflacion">Porcentaje de Inflación: <span class="required-asterisk">*</span></label>
+        <input id="porc_inflacion" formControlName="porc_inflacion" type="number" />
+      </div>
+
+      <!-- Materiales -->
+      <h3>Materiales</h3>
+      <div class="actions">
+        <button type="button" (click)="agregarMaterial()">Añadir Material</button>
+      </div>
+      <div formArrayName="materiales">
+        <div *ngFor="let material of materiales.controls; let i=index" [formGroupName]="i" class="form-group">
+          <div class="form-group">
+            <label>Descripción del material: <span class="required-asterisk">*</span></label>
+            <input formControlName="desc_material" placeholder="Descripción del Material" required />
+          </div>
+          <div class="form-group">
+            <label>Cantidad: <span class="required-asterisk">*</span></label>
+            <input formControlName="cantidad" type="number" placeholder="Cantidad" />
+          </div>
+          <div class="form-group">
+            <label>Unidad de Medida: <span class="required-asterisk">*</span></label>
+            <input formControlName="unidad_medida" placeholder="Unidad de Medida" />
+          </div>
+          <div class="form-group">
+            <label>Precio por Unidad de Medida: <span class="required-asterisk">*</span></label>
+            <input formControlName="precio_x_unidad_medida" type="number" placeholder="Precio por Unidad" />
+          </div>
+          <button type="button" class="btn-eliminar" (click)="eliminarMaterial(i, material.value.id)">Eliminar</button>
+
+        </div>
+      </div>
+
+      <!-- Servicios -->
+      <h3>Servicios</h3>
+      <div class="actions">
+        <button type="button" (click)="agregarServicio()">Añadir Servicio</button>
+      </div>
+      <div formArrayName="servicios">
+        <div *ngFor="let servicio of servicios.controls; let i=index" [formGroupName]="i" class="form-group">
+          <div class="form-group">
+            <label>Descripción del servicio: <span class="required-asterisk">*</span></label>
+            <input formControlName="desc_servicio" placeholder="Descripción del Servicio" />
+          </div>
+          <div class="form-group">
+            <label>Cantidad de horas: <span class="required-asterisk">*</span></label>
+            <input formControlName="horas" type="number" placeholder="Horas" />
+          </div>
+          <div class="form-group">
+            <label>Precio por hora: <span class="required-asterisk">*</span></label>
+            <input formControlName="precio_x_hora" type="number" placeholder="Precio por Hora" />
+          </div>
+          <button type="button" class="btn-eliminar" (click)="eliminarServicio(i, servicio.value.id)">Eliminar</button>
+        </div>
+      </div>
+
+      <!-- Trabajadores -->
+      <h3>Colaboradores</h3>
+      <div class="actions">
+        <button type="button" (click)="agregarTrabajador()">Añadir Trabajador</button>
+      </div>
+      <div formArrayName="trabajadores">
+        <div *ngFor="let trabajador of trabajadores.controls; let i=index" [formGroupName]="i" class="form-group">
+          <div class="form-group">
+            <label>Puesto: <span class="required-asterisk">*</span></label>
+            <input formControlName="puesto" placeholder="Puesto" />
+          </div>
+          <div class="form-group">
+            <label>Horas: <span class="required-asterisk">*</span></label>
+            <input formControlName="horas" type="number" placeholder="Horas" />
+          </div>
+          <div class="form-group">
+            <label>Precio por hora: <span class="required-asterisk">*</span></label>
+            <input formControlName="precio_x_hora" type="number" placeholder="Precio por Hora" />
+          </div>
+          <button type="button" class="btn-eliminar" (click)="eliminarTrabajador(i, trabajador.value.id)">Eliminar</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-guardar" [disabled]="presupuestoForm.invalid">Guardar Cambios</button>
+    </form>
+  </div>
+</div>

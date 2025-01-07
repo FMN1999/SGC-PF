@@ -1,0 +1,119 @@
+<app-header></app-header>
+<div class="proveedor-container" *ngIf="proveedor; else noProveedor">
+  <h1>Perfil de {{ proveedor.denominacion }}</h1>
+
+  <!-- Información del proveedor -->
+  <div class="info-proveedor" *ngIf="!isEditing">
+    <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
+    <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+    <p><strong>Email:</strong> {{ proveedor.email }}</p>
+    <p><strong>CUIL:</strong> {{ proveedor.cuil }}</p>
+    <p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
+    <p><strong>Provincia:</strong> {{ proveedor.provincia }}</p>
+
+    <button class="btn-editar" (click)="enableEditing()">Editar</button>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div class="formulario-edicion" *ngIf="isEditing">
+    <h2>Editar Proveedor</h2>
+    <label for="denominacion">Denominación:</label>
+    <input id="denominacion" [(ngModel)]="proveedor.denominacion" />
+
+    <label for="telefono">Teléfono:</label>
+    <input id="telefono" [(ngModel)]="proveedor.telefono" />
+
+    <label for="direccion">Dirección:</label>
+    <input id="direccion" [(ngModel)]="proveedor.direccion" />
+
+    <label for="email">Email:</label>
+    <input id="email" [(ngModel)]="proveedor.email" />
+
+    <label for="cuil">CUIL:</label>
+    <input id="cuil" [(ngModel)]="proveedor.cuil" />
+
+    <label for="ciudad">Ciudad:</label>
+    <input id="ciudad" [(ngModel)]="proveedor.ciudad" />
+
+    <label for="provincia">Provincia:</label>
+    <input id="provincia" [(ngModel)]="proveedor.provincia" />
+
+    <div class="form-botones">
+      <button class="guardar" (click)="updateProveedor()">Guardar</button>
+      <button class="cancelar" (click)="cancelEditing()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Materiales -->
+  <div class="materiales">
+    <div class="section-header">
+      <h2>Materiales</h2>
+      <div class="section-controls">
+        <input type="text" placeholder="Buscar materiales..." [(ngModel)]="searchMateriales" />
+        <button class="btn-toggle" (click)="toggleSection('materiales')">
+          {{ showMateriales ? 'Ocultar' : 'Mostrar' }}
+        </button>
+        <button class="btn-agregar" (click)="navigateToCreateMaterial()">Agregar Material</button>
+      </div>
+    </div>
+    <ul *ngIf="showMateriales">
+      <li *ngFor="let material of filteredMateriales()" (click)="navigateToMaterial(material.id)">
+        <div class="item-content">
+          {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
+        </div>
+        <button class="btn-eliminar" (click)="eliminarMaterial(material.id); $event.stopPropagation()">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Servicios -->
+  <div class="servicios">
+    <div class="section-header">
+      <h2>Servicios</h2>
+      <div class="section-controls">
+        <input type="text" placeholder="Buscar servicios..." [(ngModel)]="searchServicios" />
+        <button class="btn-toggle" (click)="toggleSection('servicios')">
+          {{ showServicios ? 'Ocultar' : 'Mostrar' }}
+        </button>
+        <button class="btn-agregar" (click)="navigateToCreateServicio()">Agregar Servicio</button>
+      </div>
+    </div>
+    <ul *ngIf="showServicios">
+      <li *ngFor="let servicio of filteredServicios()" (click)="navigateToServicio(servicio.id)">
+        <div class="item-content">
+          {{ servicio.descripcion }} - {{ servicio.precio_x_unidad }} {{ servicio.moneda }} por {{ servicio.unidad_medida }}
+        </div>
+        <button class="btn-eliminar" (click)="eliminarServicio(servicio.id); $event.stopPropagation()">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Ofertas -->
+  <div class="ofertas">
+    <div class="section-header">
+      <h2>Ofertas</h2>
+      <div class="section-controls">
+        <input type="text" placeholder="Buscar ofertas..." [(ngModel)]="searchOfertas" />
+        <button class="btn-toggle" (click)="toggleSection('ofertas')">
+          {{ showOfertas ? 'Ocultar' : 'Mostrar' }}
+        </button>
+        <button class="btn-agregar" (click)="navigateToCreateOferta()">Agregar Oferta</button>
+      </div>
+    </div>
+    <ul *ngIf="showOfertas">
+      <li *ngFor="let oferta of filteredOfertas()" (click)="navigateToOferta(oferta.id)">
+        <div class="item-content">
+          {{ oferta.descripcion }} - {{ oferta.monto_total }} {{ oferta.moneda }} (Desde: {{ oferta.fecha_desde }} Hasta: {{ oferta.fecha_hasta }})
+        </div>
+        <button class="btn-eliminar" (click)="eliminarOferta(oferta.id); $event.stopPropagation()">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-template #noProveedor>
+  <p class="loading-message">Cargando Proveedor...</p>
+</ng-template>
+
+
+

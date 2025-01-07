@@ -1,0 +1,56 @@
+<app-header></app-header>
+<div class="crear-almacen-container">
+  <h2>Alta de Almacén</h2>
+
+  <form [formGroup]="almacenForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <input id="descripcion" formControlName="descripcion" />
+      <div class="error" *ngIf="almacenForm.get('descripcion')?.invalid && almacenForm.get('descripcion')?.touched">
+        La descripción es obligatoria.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="direccion">Dirección:</label>
+      <input id="direccion" formControlName="direccion" />
+      <div class="error" *ngIf="almacenForm.get('direccion')?.invalid && almacenForm.get('direccion')?.touched">
+        La dirección es obligatoria.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="contacto">Contacto:</label>
+      <input id="contacto" formControlName="contacto" />
+      <div class="error" *ngIf="almacenForm.get('contacto')?.invalid && almacenForm.get('contacto')?.touched">
+        El contacto es obligatorio.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="ciudad">Ciudad:</label>
+      <input id="ciudad" formControlName="ciudad" />
+      <div class="error" *ngIf="almacenForm.get('ciudad')?.invalid && almacenForm.get('ciudad')?.touched">
+        La ciudad es obligatoria.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="provincia">Provincia:</label>
+      <input id="provincia" formControlName="provincia" />
+      <div class="error" *ngIf="almacenForm.get('provincia')?.invalid && almacenForm.get('provincia')?.touched">
+        La provincia es obligatoria.
+      </div>
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="almacenForm.invalid">Crear Almacén</button>
+  </form>
+
+  <div *ngIf="successMessage" class="success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+</div>
+

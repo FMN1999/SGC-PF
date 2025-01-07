@@ -1,0 +1,43 @@
+<app-header></app-header>
+
+<div class="servicios-container">
+  <h1>Servicios</h1>
+
+  <!-- Contenedor de filtros -->
+  <div class="filtros">
+    <input
+      type="text"
+      placeholder="Buscar servicios..."
+      [(ngModel)]="filtroBusqueda"
+      (input)="aplicarFiltros()"
+      class="busqueda"
+    />
+  </div>
+
+  <!-- Tabla de servicios -->
+  <div class="tabla-container" *ngIf="serviciosFiltrados.length > 0; else noServicios">
+    <table class="tabla-servicios">
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Duración</th>
+          <th>Precio</th>
+          <th>Unidad de medida</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let servicio of serviciosFiltrados" (click)="verDetalleServicio(servicio.id)">
+          <td>{{ servicio.descripcion }}</td>
+          <td>{{ servicio.duracion }}</td>
+          <td>{{ servicio.precio }} {{servicio.moneda}}</td>
+          <td>{{ servicio.unidad_medida }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noServicios>
+    <p class="no-servicios-message">Cargando...</p>
+  </ng-template>
+</div>
+

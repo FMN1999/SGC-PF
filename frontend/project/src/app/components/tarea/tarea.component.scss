@@ -1,0 +1,199 @@
+@import '../../../styles';
+
+.tarea-container {
+  padding: 50px;
+  background-color: $section-bg-color;
+  border: 1px solid $border-color;
+  border-radius: $button-radius;
+
+  .tarea-detalle {
+    h3 {
+      color: $primary-color;
+    }
+
+    p {
+      margin: 5px 0;
+      color: $text-color;
+
+      strong {
+        font-weight: bold;
+      }
+    }
+
+    .btn {
+      margin-top: 10px;
+    }
+  }
+
+  .tarea-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .required-asterisk {
+      color: red;
+      font-weight: bold;
+    }
+
+    h3 {
+      color: $primary-color;
+    }
+
+    label {
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    input,
+    textarea,
+    select {
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: $button-radius;
+      font-size: 16px;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+
+      .btn {
+        padding: 10px 15px;
+        border-radius: $button-radius;
+      }
+    }
+  }
+
+  .asignaciones {
+    margin-top: 20px;
+
+    .asignacion {
+      margin-bottom: 20px;
+
+      h3 {
+        color: $secondary-color;
+        margin-bottom: 10px;
+      }
+
+      .lista {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        .lista-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          background-color: $table-header-bg-color;
+          border: 1px solid $table-border-color;
+          border-radius: $button-radius;
+          margin-bottom: 5px;
+
+          p {
+            margin: 0;
+            color: $text-color;
+          }
+
+          .btn {
+            margin-left: 10px;
+          }
+
+          .btn-small {
+            padding: 5px 10px;
+          }
+        }
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .required-asterisk {
+          color: red;
+          font-weight: bold;
+        }
+
+        label {
+          font-weight: bold;
+          color: $text-color;
+        }
+
+        select,
+        input {
+          padding: 10px;
+          border: 1px solid $border-color;
+          border-radius: $button-radius;
+          font-size: 16px;
+        }
+
+        .d-flex {
+          display: flex;
+          gap: 10px;
+
+          .required-asterisk {
+            color: red;
+            font-weight: bold;
+          }
+
+          label {
+            margin: auto 0;
+          }
+
+          .btn-small {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: $button-radius;
+            &.btn-primary {
+              background-color: $secondary-color;
+              color: $white-color;
+              &:hover {
+                background-color: $hover-color;
+              }
+            }
+            &.btn-secondary {
+              background-color: $background-color;
+              color: $text-color;
+              border: 1px solid $border-color;
+              &:hover {
+                background-color: darken($background-color, 5%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .btn {
+    &.btn-primary {
+      background-color: $secondary-color;
+      color: $white-color;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+    }
+
+    &.btn-secondary {
+      background-color: $background-color;
+      color: $text-color;
+      border: 1px solid $border-color;
+
+      &:hover {
+        background-color: darken($background-color, 5%);
+      }
+    }
+
+    &.btn-danger {
+      background-color: $danger-color;
+      color: $white-color;
+
+      &:hover {
+        background-color: darken($danger-color, 10%);
+      }
+    }
+  }
+}
+

@@ -1,0 +1,128 @@
+@import '../../../styles';
+
+/* Contenedor principal */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: $background-color; /* Gris claro */
+  padding: $section-padding;
+}
+
+/* Caja de login */
+.login-box {
+  background-color: $white-color; /* Blanco puro */
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Títulos */
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: $primary-color; /* Azul oscuro profesional */
+}
+
+/* Estilos para los inputs */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  color: $text-color; /* Texto oscuro */
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.9rem;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: $primary-color; /* Azul oscuro */
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+/* Botón de iniciar sesión */
+.actions .btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: $button-radius;
+}
+
+.actions .btn-primary {
+  background-color: $primary-color; /* Azul oscuro */
+  color: $white-color;
+}
+
+.actions .btn-primary:hover {
+  background-color: lighten($primary-color, 10%);
+}
+
+/* Enlace para olvidar la contraseña */
+.forgot-password {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: $primary-color;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Estilo para el enlace de registro */
+.register-link {
+  margin-top: 20px;
+}
+
+.register-link p {
+  font-size: 0.9rem;
+  color: $text-color; /* Texto oscuro */
+}
+
+.register-link a {
+  color: $primary-color;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* Mensaje de error */
+.error-message {
+  margin-top: 15px;
+  color: $error-color; /* Rojo */
+  font-size: 0.9rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .login-box {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .actions .btn-primary {
+    font-size: 0.9rem;
+  }
+}

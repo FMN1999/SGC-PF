@@ -1,0 +1,210 @@
+<app-header></app-header>
+<div class="crear-oferta-container">
+  <h1>Crear Oferta</h1>
+
+  <form #ofertaForm="ngForm" (submit)="agregarOferta()">
+    <div class="form-group">
+      <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
+      <input
+        id="descripcion"
+        [(ngModel)]="ofertaData.descripcion"
+        name="descripcion"
+        type="text"
+        required
+        #descripcion="ngModel"
+      />
+      <div *ngIf="descripcion.invalid && descripcion.touched" class="error">
+        Descripción es requerida.
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="monto_total">Monto Total: <span class="required-asterisk">*</span></label>
+        <input
+          id="monto_total"
+          type="number"
+          [(ngModel)]="ofertaData.monto_total"
+          name="monto_total"
+          required
+          #monto_total="ngModel"
+        />
+        <div *ngIf="monto_total.invalid && monto_total.touched" class="error">
+          Monto Total es requerido.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="moneda">Moneda: <span class="required-asterisk">*</span></label>
+        <input
+          id="moneda"
+          [(ngModel)]="ofertaData.moneda"
+          name="moneda"
+          type="text"
+          required
+          maxlength="3"
+          #moneda="ngModel"
+        />
+        <div *ngIf="moneda.invalid && moneda.touched" class="error">
+          Moneda es requerida y debe tener máximo 3 caracteres.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fecha_desde">Fecha Desde: <span class="required-asterisk">*</span></label>
+        <input
+          id="fecha_desde"
+          type="date"
+          [(ngModel)]="ofertaData.fecha_desde"
+          name="fecha_desde"
+          required
+          #fecha_desde="ngModel"
+        />
+        <div *ngIf="fecha_desde.invalid && fecha_desde.touched" class="error">
+          Fecha Desde es requerida.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_hasta">Fecha Hasta: <span class="required-asterisk">*</span></label>
+        <input
+          id="fecha_hasta"
+          type="date"
+          [(ngModel)]="ofertaData.fecha_hasta"
+          name="fecha_hasta"
+          required
+          #fecha_hasta="ngModel"
+        />
+        <div *ngIf="fecha_hasta.invalid && fecha_hasta.touched" class="error">
+          Fecha Hasta es requerida.
+        </div>
+      </div>
+    </div>
+
+    <h3>Seleccionar Materiales</h3>
+    <div class="selection-group" *ngFor="let material of materiales">
+      <div class="checkbox-group">
+        <input
+          type="checkbox"
+          [(ngModel)]="material.selected"
+          name="material_{{material.id}}"
+          id="material_{{material.id}}"
+        />
+        <label for="material_{{material.id}}">
+          {{ material.tipo_material }} - {{ material.marca }}
+        </label>
+      </div>
+
+      <div class="nested-form" *ngIf="material.selected">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cantidad: <span class="required-asterisk">*</span></label>
+            <input
+              type="number"
+              [(ngModel)]="material.cantidad_of"
+              name="cantidad_{{material.id}}"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Unidad: <span class="required-asterisk">*</span></label>
+            <input type="text" [(ngModel)]="material.unidad_of" name="unidad_{{material.id}}" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Monto: <span class="required-asterisk">*</span></label>
+            <input
+              type="number"
+              [(ngModel)]="material.monto"
+              name="monto_{{material.id}}"
+              required
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label>Moneda: <span class="required-asterisk">*</span></label>
+            <input type="text" [(ngModel)]="material.moneda" name="moneda_{{material.id}}" required />
+          </div>
+          <div class="form-group">
+            <label>Porcentaje Descuento:</label>
+            <input
+              type="number"
+              [(ngModel)]="material.porc_desc"
+              name="desc_{{material.id}}"
+              step="0.01"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Seleccionar Servicios</h3>
+    <div class="selection-group" *ngFor="let servicio of servicios">
+      <div class="checkbox-group">
+        <input
+          type="checkbox"
+          [(ngModel)]="servicio.selected"
+          name="servicio_{{servicio.id}}"
+          id="servicio_{{servicio.id}}"
+        />
+        <label for="servicio_{{servicio.id}}">{{ servicio.descripcion }}</label>
+      </div>
+
+      <div class="nested-form" *ngIf="servicio.selected">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cantidad: <span class="required-asterisk">*</span></label>
+            <input
+              type="number"
+              [(ngModel)]="servicio.cantidad_of"
+              name="cantidad_{{servicio.id}}"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Unidad de Tiempo: <span class="required-asterisk">*</span></label>
+            <input
+              type="text"
+              [(ngModel)]="servicio.unidad_tiempo"
+              name="unidad_tiempo_{{servicio.id}}"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Monto: <span class="required-asterisk">*</span></label>
+            <input
+              type="number"
+              [(ngModel)]="servicio.monto"
+              name="monto_{{servicio.id}}"
+              required
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label>Moneda: <span class="required-asterisk">*</span></label>
+            <input type="text" [(ngModel)]="servicio.moneda" name="moneda_{{servicio.id}}" required />
+          </div>
+          <div class="form-group">
+            <label>Porcentaje Descuento:</label>
+            <input
+              type="number"
+              [(ngModel)]="servicio.porc_desc"
+              name="desc_{{servicio.id}}"
+              step="0.01"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" type="submit" [disabled]="ofertaForm.invalid">Crear Oferta</button>
+
+  </form>
+  <div *ngIf="mensajeExito" class="success-message">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="error-message">{{ mensajeError }}</div>
+</div>

@@ -1,0 +1,80 @@
+<app-header></app-header>
+<div class="crear-colaborador-container">
+  <h2>Crear Colaborador</h2>
+  <form [formGroup]="colaboradorForm" (ngSubmit)="onSubmit()">
+    <!-- Datos del Usuario -->
+    <fieldset class="form-section">
+      <legend>Datos del Usuario</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre <span class="required-asterisk">*</span></label>
+          <input id="nombre" formControlName="nombre" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="apellido">Apellido <span class="required-asterisk">*</span></label>
+          <input id="apellido" formControlName="apellido" type="text" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email <span class="required-asterisk">*</span></label>
+        <input id="email" formControlName="email" type="email" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="usuario">Usuario <span class="required-asterisk">*</span></label>
+          <input id="usuario" formControlName="usuario" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="contrasenia">Contraseña <span class="required-asterisk">*</span></label>
+          <input id="contrasenia" formControlName="contrasenia" type="password" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+        <input id="fecha_nacimiento" formControlName="fecha_nacimiento" type="date" />
+      </div>
+      <div class="form-group">
+        <label for="sexo">Sexo</label>
+        <select id="sexo" formControlName="sexo">
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="celular">Celular</label>
+          <input id="celular" formControlName="celular" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" formControlName="telefono" type="text" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="direccion">Dirección</label>
+        <input id="direccion" formControlName="direccion" type="text" />
+      </div>
+    </fieldset>
+
+    <!-- Datos del Colaborador -->
+    <fieldset class="form-section">
+      <legend>Datos del Colaborador</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="puesto">Puesto <span class="required-asterisk">*</span></label>
+          <input id="puesto" formControlName="puesto" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="rol">Rol <span class="required-asterisk">*</span></label>
+          <input id="rol" formControlName="rol" type="text" />
+        </div>
+      </div>
+    </fieldset>
+
+    <button class="submit-btn" type="submit" [disabled]="colaboradorForm.invalid">Crear Colaborador</button>
+  </form>
+
+  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+  <div *ngIf="mensajeSuccess" class="success">{{ mensajeSuccess }}</div>
+</div>
