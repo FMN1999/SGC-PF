@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements-dev.in
 #
+aenum==3.1.15
+    # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
 asgiref==3.8.1
     # via
     #   django

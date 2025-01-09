@@ -1,5 +1,7 @@
 import datetime
 
+import aenum
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -1408,6 +1410,22 @@ class TareaMaterialView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class Assistant(View):
+    class Opciones(aenum.Enum):
+        _init_ = 'value string'
+
+        RecomendacionesPresupuesto = 1, 'Recomendaciones para presupuesto'
+        RecomendacionesMateriales = aenum.auto(), 'Materiales frecuentes para cliente'
+        OfertasVigentes = aenum.auto(), 'Ofertas vigentes'
+        SeguimientoObra = aenum.auto(), 'Seguimiento de obra'
+        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos'
+        AnalisisCostos = aenum.auto(), 'Análisis de costos'
+
+        def __int__(self):
+            return self.value
+
+        def __str__(self):
+            return self.string
+
     def post(self, request):
         data = json.loads(request.body)
         adicional = data.get('adicional')
@@ -1417,27 +1435,23 @@ class Assistant(View):
         data_return = None
         response_message = ''
 
-        if int(user_message) == 1:
+        if int(user_message) == int(self.Opciones.RecomendacionesPresupuesto):
             data_return = ChatController.generador_presupuesto(id_obra)
             response_message = self.format_generador_presupuesto(data_return)
 
-        elif int(user_message) == 2:
+        elif int(user_message) == int(self.Opciones.RecomendacionesMateriales):
             data_return = ChatController.recomendaciones_materiales(id_cliente)
             response_message = self.format_recomendaciones_materiales(data_return)
 
-        elif int(user_message) == 3:
+        elif int(user_message) == int(self.Opciones.OfertasVigentes):
             data_return = ChatController.ofertas_especiales()
             response_message = self.format_ofertas_especiales(data_return)
 
-        elif int(user_message) == 4:
-            data_return = ChatController.calcular_transporte_almacenaje(id_obra)
-            response_message = f"El costo estimado de transporte y almacenamiento es: {data_return}"
-
-        elif int(user_message) == 5:
+        elif int(user_message) == int(Opciones.SeguimientoObra.value):
             data_return = ChatController.seguimiento_avance_obra(id_obra)
             response_message = self.format_seguimiento_avance_obra(data_return)
 
-        elif int(user_message) == 6:
+        elif int(user_message) == int(Opciones.OptimizacionCostos):
             data_return = ChatController.optimizacion_costos(id_obra)
             # Construir el mensaje de respuesta
             response_message = f"Aquí tienes sugerencias para optimizar costos en la obra '{data_return['nombre_obra']}':\n"
@@ -1455,11 +1469,7 @@ class Assistant(View):
             else:
                 response_message += "\nNo se encontraron sugerencias para servicios.\n"
 
-        elif int(user_message) == 7:
-            data_return = ChatController.gestion_proveedores(id_obra)
-            response_message = self.format_gestion_proveedores(data_return)
-
-        elif int(user_message) == 8:
+        elif int(user_message) == int(Opciones.AnalisisCostos):
             data_return = ChatController.analiza_costos(id_obra)
             # Construir una respuesta más detallada
             response_message = f"""
@@ -1487,6 +1497,16 @@ class Assistant(View):
             response_message = "Entendido, ¡Hasta luego!"
 
         return JsonResponse({'message': response_message, 'data_return': data_return})
+
+    def get(self, request):
+        lineas = [
+            "¡Hola! Soy tu asistente virtual, ¿en qué puedo ayudarte?",
+            "",
+            "Ingresá la opción deseada:",
+            *[f'{int(opc)}. {str(opc)}' for opc in self.Opciones]
+        ]
+        mensaje = "\n".join(lineas)
+        return JsonResponse({'message': mensaje})
 
     def format_gestion_proveedores(self, data):
         if not data:
