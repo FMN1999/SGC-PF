@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { TareaService } from '../../services/tarea/tarea.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { ObraService } from '../../services/obra/obra.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
@@ -27,6 +29,7 @@ export class CrearTareaComponent implements OnInit {
   vehiculos: any[] = [];
   idPresupuesto: number | undefined;
   idObra: number | undefined;
+  isLoggedIn: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +38,9 @@ export class CrearTareaComponent implements OnInit {
     private presupuestoService: PresupuestoService,
     private obraService: ObraService,
     private empresaService: EmpresaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {
     this.tareaForm = this.fb.group({
       titulo: ['', Validators.required],
@@ -50,6 +55,18 @@ export class CrearTareaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso1) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.idPresupuesto = +this.route.snapshot.paramMap.get('idPresupuesto')!;
     this.idObra = +this.route.snapshot.paramMap.get('idObra')!;
     this.cargarOpciones();

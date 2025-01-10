@@ -738,6 +738,7 @@ class CompraController:
             'id_aprobador': compra.id_aprobador.id if compra.id_aprobador else None,
             'nombre_aprobador': compra.id_aprobador.nombre if compra.id_aprobador else None,
             'apellido_aprobador': compra.id_aprobador.apellido if compra.id_aprobador else None,
+            'id_empresa': compra.id_obra.id_empresa.id,
             'lineas_compra': [
                 {
                     'nr_posicion': linea.nr_posicion,

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
@@ -32,14 +34,29 @@ export class CrearOfertaComponent implements OnInit {
   id_proveedor: number | undefined;
   mensajeExito: string = '';
   mensajeError: string = '';
+  isLoggedIn: boolean = false;
 
   constructor(
     private proveedorService: ProveedorService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso5 || !this.dataShare.permiso6) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.id_proveedor = this.route.snapshot.params['id'];
 
     // Obtener materiales del proveedor

@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { NgForOf, NgIf } from '@angular/common';
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { HeaderComponent } from '../header/header.component'
 
@@ -17,12 +19,15 @@ export class CrearProveedorComponent implements OnInit {
   proveedorForm: FormGroup;
   mensajeError: string = '';
   protected empresas: any;
+  isLoggedIn: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private proveedorService: ProveedorService,
     private empresaService: EmpresaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {
     // Recuperar el id_empresa del sessionStorage
     const idEmpresa = sessionStorage.getItem('id_empresa');
@@ -41,6 +46,18 @@ export class CrearProveedorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso7) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.empresaService.obtenerEmpresas().subscribe({
       next: (response: any) => {
         this.empresas = response;

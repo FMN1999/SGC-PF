@@ -2026,3 +2026,10 @@ class SubcontratacionesView(View):
     def get(self, request, id_empresa):
         subcontrataciones = SubcontratacionController.get_validas(id_empresa)
         return JsonResponse({'subcontrataciones': subcontrataciones})
+
+
+class PermisosUsuarioView(View):
+    def get(self, request, id_usuario):
+        permisos_usuario = Permiso_Usuario.objects.filter(id_usuario=id_usuario)
+        permisos = [permiso.id_permiso.id for permiso in permisos_usuario]  # IDs de los permisos
+        return JsonResponse({'permisos': permisos}, safe=False)

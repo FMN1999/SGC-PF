@@ -2,11 +2,13 @@ import { Component, OnInit} from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { IngresoService } from '../../services/ingresos/ingresos.service';
 import { TareaService } from '../../services/tarea/tarea.service';
+import { AuthService } from '../../services/auth/auth.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import { HeaderComponent } from '../header/header.component'
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import Swal from 'sweetalert2';
+import {DataShareService} from "../../services/data-share/data-share.service";
 
 @Component({
   selector: 'app-almacenes-empresa',
@@ -26,24 +28,41 @@ export class AlmacenesComponent implements OnInit {
   // @ts-ignore
   idEmpresa: number;
   almacenes: any[] = [];
-  id_tarea: any = null;
   tareas: any;
   tareaSeleccionada: any;
+  isLoggedIn: boolean = false;
 
   constructor(
     private empresaService: EmpresaService,
     private ingresoService: IngresoService,
     private tareaService: TareaService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     // @ts-ignore
     this.idEmpresa = +this.route.snapshot.paramMap.get('id');
     if (this.idEmpresa) {
       this.cargarAlmacenes();
     }
+
+    // @ts-ignore
+    const empresa_id = +sessionStorage.getItem('id_empresa');
+    if (this.idEmpresa !== empresa_id || !this.dataShare.permiso15) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.ingresoService.traerTareas(this.idEmpresa).subscribe({
       next: (data)=>{
         this.tareas =data;

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';  // Asegúrate de importar HttpClient
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';   // Importar tap desde rxjs/operators
-
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http'; // Asegúrate de importar HttpClient
+import {BehaviorSubject, Observable} from 'rxjs';
+import {tap} from 'rxjs/operators'; // Importar tap desde rxjs/operators
+import {environment} from '../../../environments/environment';
+import { DataShareService } from '../data-share/data-share.service';
 
 
 @Injectable({
@@ -13,7 +13,7 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
-  constructor(private http: HttpClient) {}  // Asegúrate de inyectar HttpClient
+  constructor(private http: HttpClient,  private dataShareService: DataShareService) {}  // Asegúrate de inyectar HttpClient
 
   // Verificar si hay un token en localStorage
   private hasToken(): boolean {
@@ -34,8 +34,24 @@ export class AuthService {
         sessionStorage.setItem('rol', response.rol);
         sessionStorage.setItem('id_empresa', response.id_emp)
         this.loggedIn.next(true); // Notifica que el usuario se ha logueado
+        this.cargarPermisos(response.user_id); // Cargar permisos después del login
       })
     );
+  }
+
+  cargarPermisos(idUsuario: number): void {
+    this.http.get(`${this.apiUrl}/permisos/${idUsuario}/`).subscribe((response: any) => {
+      const permisos = response.permisos || [];
+      console.log(permisos);
+      this.actualizarPermisos(permisos);
+    });
+  }
+
+  actualizarPermisos(permisos: number[]): void {
+    // Cambia las variables del DataShareService según los permisos
+    for (let i = 1; i <= 16; i++) {
+      (this.dataShareService as any)[`permiso${i}`] = permisos.includes(i);
+    }
   }
 
   // Función de logout
@@ -50,11 +66,6 @@ export class AuthService {
   register(user: any): Observable<any> {
     const url = `${this.apiUrl}/register/`;
     return this.http.post(url, user);
-  }
-
-  recoverPassword(email: string): Observable<any> {
-    const url = `${this.apiUrl}/recover-password`;
-    return this.http.post(url, { email });
   }
 
   crearColaborador(request: any): Observable<any> {

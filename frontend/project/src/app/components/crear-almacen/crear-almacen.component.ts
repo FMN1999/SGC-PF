@@ -1,8 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { NgIf } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
+import {Router} from '@angular/router';
 
 @Component({
   standalone: true,
@@ -21,8 +24,10 @@ export class CrearAlmacenComponent implements OnInit{
   errorMessage: string | null = null;
   // @ts-ignore
   idEmpresa: number;
+  isLoggedIn: boolean = false;
 
-  constructor(private fb: FormBuilder, private almacenService: EmpresaService) {
+  constructor(private fb: FormBuilder, private almacenService: EmpresaService, private authService:AuthService,
+              private dataShare: DataShareService, private router: Router) {
     this.almacenForm = this.fb.group({
       descripcion: ['', Validators.required],
       direccion: ['', Validators.required],
@@ -33,8 +38,20 @@ export class CrearAlmacenComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     // @ts-ignore
     this.idEmpresa = +sessionStorage.getItem('id_empresa');
+
+    if (!this.dataShare.permiso15) {
+      this.router.navigate(['/no-permissions']);
+    }
   }
 
   onSubmit(): void {
