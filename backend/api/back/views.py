@@ -1447,11 +1447,11 @@ class Assistant(View):
             data_return = ChatController.ofertas_especiales()
             response_message = self.format_ofertas_especiales(data_return)
 
-        elif int(user_message) == int(Opciones.SeguimientoObra.value):
+        elif int(user_message) == int(self.Opciones.SeguimientoObra):
             data_return = ChatController.seguimiento_avance_obra(id_obra)
             response_message = self.format_seguimiento_avance_obra(data_return)
 
-        elif int(user_message) == int(Opciones.OptimizacionCostos):
+        elif int(user_message) == int(self.Opciones.OptimizacionCostos):
             data_return = ChatController.optimizacion_costos(id_obra)
             # Construir el mensaje de respuesta
             response_message = f"Aquí tienes sugerencias para optimizar costos en la obra '{data_return['nombre_obra']}':\n"
@@ -1469,7 +1469,7 @@ class Assistant(View):
             else:
                 response_message += "\nNo se encontraron sugerencias para servicios.\n"
 
-        elif int(user_message) == int(Opciones.AnalisisCostos):
+        elif int(user_message) == int(self.Opciones.AnalisisCostos):
             data_return = ChatController.analiza_costos(id_obra)
             # Construir una respuesta más detallada
             response_message = f"""
