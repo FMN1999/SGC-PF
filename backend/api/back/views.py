@@ -390,6 +390,7 @@ class MaterialView(View):
             material = Material.objects.get(id=material_id)
             material_data = {
                 'id': material.id,
+                'id_empresa': material.id_proveedor.id_empresa.id,
                 'id_proveedor': material.id_proveedor.id,
                 'tipo_material': material.tipo_material,
                 'unidad_medida': material.unidad_medida,

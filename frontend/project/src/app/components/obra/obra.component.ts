@@ -4,6 +4,8 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ObraService } from '../../services/obra/obra.service';
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 
 @Component({
   selector: 'app-obra',
@@ -38,12 +40,16 @@ export class ObraComponent implements OnInit {
   mostrarPresupuestos = false;
   mostrarDocumentos = false;
   abrirReporte: boolean = false;
+  isLoggedIn: boolean = false;
+  empresa_id: number = 0;
 
   constructor(
     private fb: FormBuilder,
     private obraService: ObraService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    protected dataShare: DataShareService
   ) {
     this.obraForm = this.fb.group({
       direccion: [{ value: '', disabled: true }, Validators.required],
@@ -78,30 +84,45 @@ export class ObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
+    // @ts-ignore
+    this.empresa_id = +sessionStorage.getItem('id_empresa');
     this.cargarObra();
-    this.cargarAreas();
-    this.documentoForm = this.fb.group({
-      nombre: [''],
-      link: [''],
-      descripcion: [''],
-      tipo_archivo: [''],
-      id_obra:this.obra_id
-    });
-    this.cargarNotas();  // Cargar las notas de la obra
-    this.cargarDocumentos();
-    this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
-      this.presupuestos = data;
+    if (this.obra.empresa.id === this.empresa_id){
+      this.cargarAreas();
+      this.documentoForm = this.fb.group({
+        nombre: [''],
+        link: [''],
+        descripcion: [''],
+        tipo_archivo: [''],
+        id_obra:this.obra_id
+      });
+      this.cargarNotas();  // Cargar las notas de la obra
+      this.cargarDocumentos();
+      this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
+        this.presupuestos = data;
 
-      // Verificar si algún presupuesto tiene aprobado = true
-      const existePresupuestoAprobado = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
+        // Verificar si algún presupuesto tiene aprobado = true
+        const existePresupuestoAprobado = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
 
-      if (existePresupuestoAprobado) {
-        this.abrirReporte = true; // Cambia esta línea por el nombre de tu variable
-      } else {
-        this.abrirReporte = false; // O el valor por defecto que quieras asignar
-      }
-    });
+        if (existePresupuestoAprobado) {
+          this.abrirReporte = true; // Cambia esta línea por el nombre de tu variable
+        } else {
+          this.abrirReporte = false; // O el valor por defecto que quieras asignar
+        }
+      });
+    }
+    else{
+      this.router.navigate(['/no-permissions']);
+    }
   }
 
   toggleSeccion(seccion: string): void {

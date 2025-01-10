@@ -1,22 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service'; // Ajusta la ruta si es necesario
 import { Router } from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    imports: [
-        FormsModule,
-        NgIf
-    ],
-    styleUrls: ['./login.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  imports: [
+    FormsModule,
+    NgIf
+  ],
+  standalone: true,
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
+  isLoggedIn: boolean =false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -30,6 +32,16 @@ export class LoginComponent {
         this.errorMessage = 'Credenciales incorrectas. Inténtalo de nuevo.';
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (this.isLoggedIn) {
+      this.router.navigate(['/home']);
+    }
   }
 }
 

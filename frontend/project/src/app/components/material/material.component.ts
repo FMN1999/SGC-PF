@@ -1,11 +1,13 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
 import {BehaviorSubject} from "rxjs";
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 
 @Component({
   selector: 'app-material',
@@ -34,12 +36,16 @@ export class MaterialComponent implements OnInit {
   mensajeError: string = '';
   // @ts-ignore
   materialId: number;
+  isLoggedIn: boolean=false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private proveedorService: ProveedorService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
+    private authService: AuthService,
+    protected dataShare: DataShareService,
+    private router: Router
   ) {
     // Definir el formulario reactivo
     this.materialForm = this.fb.group({
@@ -66,22 +72,38 @@ export class MaterialComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.materialId = +this.route.snapshot.params['id'];
-    // @ts-ignore
-    this.empresaId = +sessionStorage.getItem('id_empresa')
-    if (this.empresaId){
-      this.empresaService.obtenerAlmacenesPorEmpresa(Number(this.empresaId)).subscribe((almacenes)=>{
-        this.almacenes=almacenes;
-      })
+
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
     }
 
+    const es_cliente = sessionStorage.getItem('rol');
+    // @ts-ignore
+    this.empresaId = +sessionStorage.getItem('id_empresa')
     this.proveedorService.getMaterialById(this.materialId).subscribe({
-      next: (data) => {
-        this.material$.next(data);
-        this.updateFormControls(data);
-      },
-      error: (err) => console.error(err)
-    });
+        next: (data) => {
+          this.material$.next(data);
+          this.updateFormControls(data);
+        },
+        error: (err) => console.error(err)
+      });
+
+    if (es_cliente && this.empresaId === this.material.id_empresa) {
+      this.materialId = +this.route.snapshot.params['id'];
+
+      if (this.empresaId){
+        this.empresaService.obtenerAlmacenesPorEmpresa(Number(this.empresaId)).subscribe((almacenes)=>{
+          this.almacenes=almacenes;
+        })
+      }
+    }
+    else{
+      this.router.navigate(['/no-permissions']);
+    }
   }
 
   // Método para alternar entre modo de vista y edición

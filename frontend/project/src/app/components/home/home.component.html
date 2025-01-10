@@ -24,7 +24,7 @@
       <li *ngIf="isLoggedIn"><a href="/registrar-pago">Generar pago a proveedor</a></li>
       <li *ngIf="isLoggedIn"><a href="/pago-cliente">Generar pago de cliente</a></li>
       <li *ngIf="isLoggedIn && dataShare.permiso10"><a [routerLink]="['/balance', idEmpresa]">Balance anual</a></li>
-      <li *ngIf="isLoggedIn"><a [routerLink]="['/empresas']">Empresas</a></li>
+      <li *ngIf="isLoggedIn && dataShare.permiso16"><a [routerLink]="['/empresas']">Empresas</a></li>
       <li *ngIf="isLoggedIn"><a href="/home" (click)="logout()">Cerrar sesión</a></li>
     </ul>
   </nav>

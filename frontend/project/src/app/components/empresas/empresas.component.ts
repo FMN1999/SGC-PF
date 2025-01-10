@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { NgForOf, NgIf } from "@angular/common";
 import { Router } from "@angular/router";
 import { HeaderComponent } from '../header/header.component'
@@ -28,10 +30,24 @@ export class EmpresasComponent implements OnInit {
   itemsPerPage: number = 10;
   loading: boolean = false;
   error: string | null = null;
+  isLoggedIn: boolean = false;
 
-  constructor(private empresaService: EmpresaService, private router: Router) {}
+  constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
+              private dataShare: DataShareService) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso16) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.obtenerEmpresas();
   }
 

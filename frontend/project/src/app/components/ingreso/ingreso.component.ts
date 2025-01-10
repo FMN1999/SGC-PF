@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CompraService } from '../../services/compra/compra.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { IngresoService } from '../../services/ingresos/ingresos.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
@@ -29,13 +31,17 @@ export class IngresoComponent implements OnInit {
   mensajeError: string;
   // @ts-ignore
   mensajeExito: string;
+  isLoggedIn: boolean= false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private compraService: CompraService,
     private ingresoService: IngresoService,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
+    private authService: AuthService,
+    private dataShare: DataShareService,
+    private router: Router
   ) {
     this.ingresoForm = this.fb.group({
       ingresos: this.fb.array([]) // FormArray para múltiples ingresos
@@ -43,6 +49,18 @@ export class IngresoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso15) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.compraId = Number(this.route.snapshot.paramMap.get('id'));
     // @ts-ignore
     this.empresaId = sessionStorage.getItem('id_empresa')

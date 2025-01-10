@@ -14,7 +14,7 @@
       <p><strong>Rol: </strong>{{ perfil.rol }}</p>
       <p><strong>Fecha de alta: </strong>{{ perfil.fecha_alta }}</p>
       <p><strong>Empresa: </strong>{{perfil.empresa_col}}</p>
-      <button (click)="gestionarPermisos(perfil.id)">Gestionar Permisos</button>
+      <button (click)="gestionarPermisos(perfil.id)" [disabled]="!dataShare.permiso10">Gestionar Permisos</button>
     </div>
 
     <div class="cliente-info" *ngIf="perfil.cuit!==null">
