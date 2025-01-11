@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { TareaService } from '../../services/tarea/tarea.service'; // Ajusta la ruta del servicio
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { UsuarioService} from '../../services/usuarios/usuario.service'
+import { AuthService} from '../../services/auth/auth.service';
+import { DataShareService} from '../../services/data-share/data-share.service';
 import {FormsModule} from "@angular/forms";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
-import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
+import {ActivatedRoute, Router} from "@angular/router"; // Ajusta la ruta del servicio
 import {HeaderComponent} from '../header/header.component';
 
 @Component({
@@ -51,7 +53,7 @@ export class TareaComponent implements OnInit {
   id_vehiculo: any;
   vehiculo:any;
   cant_dias: any;
-
+  isLoggedIn: boolean = false;
   editandoCantDias: { [colaboradorId: number]: boolean } = {}; // Almacena el estado de edición de cada colaborador
   cantDiasTemp: { [colaboradorId: number]: number } = {}; // Almacena el valor temporal de cant_dias para cada colaborador
 
@@ -60,10 +62,21 @@ export class TareaComponent implements OnInit {
     private tareaService: TareaService,
     private empresaService: EmpresaService,
     private usuarioService: UsuarioService,
+    private authService: AuthService,
+    protected dataShare: DataShareService,
+    private router: Router,
     private route: ActivatedRoute  // Para obtener el ID desde la URL
   ) { }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.tareaId = +this.route.snapshot.paramMap.get('id')!;
     this.empresaId = sessionStorage.getItem('id_empresa') || '';
     this.cargarDatosRelacionados();

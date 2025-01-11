@@ -90,6 +90,11 @@ export class ObraComponent implements OnInit {
         this.router.navigate(['/no-permissions']);
       }
     });
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    // @ts-ignore
+    const id_emp = +sessionStorage.getItem('id_empresa');
+    this.authService.cargarPermisos(id_user);
 
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     // @ts-ignore

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TareaService } from '../../services/tarea/tarea.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { HeaderComponent } from '../header/header.component';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf, CurrencyPipe } from '@angular/common';
@@ -31,13 +33,22 @@ export class TareasComponent implements OnInit {
   error = false;
   filtroBusqueda: string = '';
   filtroEstado: string = '';
+  isLoggedIn:boolean=false;
 
   constructor(
     private tareaService: TareaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
     this.cargarTareas();
   }
 

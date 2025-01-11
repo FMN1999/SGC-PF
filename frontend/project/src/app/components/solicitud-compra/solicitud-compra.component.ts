@@ -5,6 +5,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {PresupuestoService} from "../../services/presupuesto/presupuesto.service";
 import {CompraService} from "../../services/compra/compra.service";
 import {EmpresaService} from "../../services/empresa/empresa.service";
+import {AuthService} from "../../services/auth/auth.service";
+import {DataShareService} from "../../services/data-share/data-share.service";
 import {HeaderComponent} from '../header/header.component';
 
 @Component({
@@ -27,6 +29,7 @@ export class SolicitudCompraComponent implements OnInit {
   protected idObra: number | undefined;
   protected idSolicitante= sessionStorage.getItem('id_usuario');
   materiales: any;
+  isLoggedIn:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,10 +37,24 @@ export class SolicitudCompraComponent implements OnInit {
     private presupuestoService: PresupuestoService,
     private compraService: CompraService,
     private empresaService: EmpresaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {}
 
   ngOnInit() {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso2) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.idPresupuesto = +this.route.snapshot.paramMap.get('idPresupuesto')!;
     this.idObra = +this.route.snapshot.paramMap.get('idObra')!;
     this.compraForm = this.fb.group({

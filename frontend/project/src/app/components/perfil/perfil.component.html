@@ -25,7 +25,7 @@
       <p><strong>Empresa: </strong>{{perfil.empresa_cl}}</p>
     </div>
 
-    <button *ngIf="esUsuarioActual() || dataSare.permiso16" (click)="activarEdicion()">Editar Perfil</button>
+    <button *ngIf="esUsuarioActual() || dataShare.permiso16" (click)="activarEdicion()">Editar Perfil</button>
   </div>
 
   <div class="formulario-edicion" *ngIf="editMode">
@@ -99,13 +99,13 @@
     <ul>
       <li *ngFor="let t of tareas; let i = index">
         <a [routerLink]="['/tarea', t.id]" class="tarea-enlace">
-          <p><strong>Título: </strong>{{ t.TAREA }}</p>
+          <p><strong>Título: </strong>{{ t.tarea }}</p>
           <p><strong>Descripción: </strong>{{ t.descripcion }}</p>
           <p><strong>Estado: </strong>{{ t.estado }}</p>
           <p><strong>Cantidad de días: </strong>{{ t.cant_dias }}</p>
         </a>
         <div *ngIf="!editTareas[i]">
-          <button (click)="activarEdicionTarea(i)" *ngIf="esUsuarioActual() || dataSare.permiso1" >Editar</button>
+          <button (click)="activarEdicionTarea(i)" *ngIf="esUsuarioActual() || dataShare.permiso1" >Editar</button>
         </div>
         <div *ngIf="editTareas[i]" class="tarea-edicion">
           <label for="cant_dias_{{i}}"><strong>Cantidad de días:</strong></label>

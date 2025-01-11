@@ -8,7 +8,7 @@
     <p><strong>Fecha de fin:</strong> {{ fechaFin | date }}</p>
     <p><strong>Precio total:</strong> {{ precioTotal | currency }}</p>
     <p><strong>Área:</strong> {{ vehiculo }}</p>
-    <button class="btn btn-primary" (click)="habilitarEdicion()">Editar</button>
+    <button class="btn btn-primary" (click)="habilitarEdicion()" *ngIf="dataShare.permiso1">Editar</button>
   </div>
 
   <form *ngIf="modoEdicion" (ngSubmit)="actualizarTarea()" class="tarea-form">
@@ -50,14 +50,14 @@
           </p>
           <div *ngIf="!editandoCantDias[colaborador.id]" class="d-flex">
             <span><strong>Días trabajados: </strong>{{ colaborador.cant_dias }}</span>
-            <button class="btn btn-small btn-primary" (click)="habilitarEdicionCantDias(colaborador.id, colaborador.cant_dias)">Editar</button>
+            <button class="btn btn-small btn-primary" (click)="habilitarEdicionCantDias(colaborador.id, colaborador.cant_dias)" [disabled]="!dataShare.permiso1">Editar</button>
           </div>
           <div *ngIf="editandoCantDias[colaborador.id]" class="d-flex">
             <input type="number" [(ngModel)]="cantDiasTemp[colaborador.id]" step="0.5" />
             <button class="btn btn-small btn-primary" (click)="guardarCantDias(colaborador.id)">Guardar</button>
             <button class="btn btn-small btn-secondary" (click)="cancelarEdicionCantDias(colaborador.id)">Cancelar</button>
           </div>
-          <button class="btn btn-danger btn-small" (click)="eliminarColaborador(colaborador.id)">Eliminar</button>
+          <button class="btn btn-danger btn-small" (click)="eliminarColaborador(colaborador.id)" *ngIf="dataShare.permiso1">Eliminar</button>
         </li>
       </ul>
       <div class="form-group">
@@ -65,7 +65,7 @@
         <select id="colaboradorSeleccionado" [(ngModel)]="colaboradorSeleccionado" name="colaboradorSeleccionado">
           <option *ngFor="let colaborador of colaboradores" [value]="colaborador.id"><strong>{{ colaborador.nombre }} {{colaborador.apellido}}</strong></option>
         </select>
-        <button class="btn btn-primary btn-small" (click)="agregarColaborador()" [disabled]="!colaboradorSeleccionado">Agregar</button>
+        <button class="btn btn-primary btn-small" (click)="agregarColaborador()" [disabled]="!colaboradorSeleccionado && !dataShare.permiso1" >Agregar</button>
       </div>
     </section>
 
@@ -75,7 +75,7 @@
       <ul class="lista">
         <li *ngFor="let herramienta of herramientasTarea" class="lista-item">
           <p><strong>{{ herramienta.herramienta }} - Uso desde: </strong>{{ herramienta.uso_desde }} <strong> - hasta: </strong>{{ herramienta.uso_hasta }}</p>
-          <button class="btn btn-danger btn-small" (click)="eliminarHerramienta(herramienta.id)">Eliminar</button>
+          <button class="btn btn-danger btn-small" (click)="eliminarHerramienta(herramienta.id)" *ngIf="dataShare.permiso1">Eliminar</button>
         </li>
       </ul>
       <div class="form-group">
@@ -89,7 +89,7 @@
           <label for="usoHasta">Uso hasta <span class="required-asterisk">*</span></label>
           <input type="date" id="usoHasta" [(ngModel)]="fechaFin" name="usoHasta" required />
         </div>
-        <button class="btn btn-primary btn-small" (click)="agregarHerramienta()" [disabled]="!herramientaSeleccionada">Agregar Herramienta</button>
+        <button class="btn btn-primary btn-small" (click)="agregarHerramienta()" [disabled]="!herramientaSeleccionada && !dataShare.permiso1">Agregar Herramienta</button>
       </div>
     </section>
 
@@ -99,7 +99,7 @@
       <ul class="lista">
         <li *ngFor="let material of materialesTarea" class="lista-item">
           <p><strong>{{ material.material }} - Utilizado: </strong>{{ material.cant_utilizada }}- <strong>No Utilizado: </strong>{{ material.cant_no_utilizada }}</p>
-          <button class="btn btn-danger btn-small" (click)="eliminarMaterial(material.id)">Eliminar</button>
+          <button class="btn btn-danger btn-small" (click)="eliminarMaterial(material.id)" *ngIf="dataShare.permiso1">Eliminar</button>
         </li>
       </ul>
       <div class="form-group">
@@ -113,7 +113,7 @@
           <label for="cantidadNoUtilizada">Cantidad no utilizada</label>
           <input type="number" id="cantidadNoUtilizada" [(ngModel)]="cantidadNoUtilizada" name="cantidadNoUtilizada" />
         </div>
-        <button class="btn btn-primary btn-small" (click)="agregarMaterial()" [disabled]="!materialSeleccionado">Agregar Material</button>
+        <button class="btn btn-primary btn-small" (click)="agregarMaterial()" [disabled]="!materialSeleccionado&& !dataShare.permiso1">Agregar Material</button>
       </div>
     </section>
   </div>

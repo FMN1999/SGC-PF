@@ -50,17 +50,20 @@ export class AlmacenesComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
-
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
     // @ts-ignore
     this.idEmpresa = +this.route.snapshot.paramMap.get('id');
-    if (this.idEmpresa) {
-      this.cargarAlmacenes();
-    }
-
     // @ts-ignore
     const empresa_id = +sessionStorage.getItem('id_empresa');
     if (this.idEmpresa !== empresa_id || !this.dataShare.permiso15) {
       this.router.navigate(['/no-permissions']);
+    }
+
+
+    if (this.idEmpresa) {
+      this.cargarAlmacenes();
     }
 
     this.ingresoService.traerTareas(this.idEmpresa).subscribe({

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {formatDate, NgForOf, NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
 import {FormsModule} from "@angular/forms";
-import {RouterLink} from "@angular/router";
+import {RouterLink, Router} from "@angular/router";
 
 @Component({
   selector: 'app-usuarios',
@@ -22,10 +24,22 @@ export class UsuariosComponent implements OnInit {
   searchTerm: string = '';
   mostrarEntidades: boolean = true;
   idEmpresa: number = 0;
+  isLoggedIn : boolean = false;
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private authService: AuthService,
+              protected dataShare: DataShareService, private router: Router) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     // @ts-ignore
     this.idEmpresa = +sessionStorage.getItem('id_empresa');
     this.usuarioService.obtenerUsuariosPorEmpresa(this.idEmpresa).subscribe({

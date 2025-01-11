@@ -3,10 +3,10 @@
 <div class="entidades-container">
     <!-- Botones para crear -->
   <div class="acciones">
-    <button class="btn btn-primary" [routerLink]="['/crear-colaborador']">
+    <button *ngIf="dataShare.permiso16" class="btn btn-primary" [routerLink]="['/crear-colaborador']">
       Crear Colaborador
     </button>
-    <button class="btn btn-primary" [routerLink]="['/crear-proveedor']">
+    <button *ngIf="dataShare.permiso7" class="btn btn-primary" [routerLink]="['/crear-proveedor']">
       Crear Proveedor
     </button>
   </div>

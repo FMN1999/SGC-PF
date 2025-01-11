@@ -42,7 +42,6 @@ export class AuthService {
   cargarPermisos(idUsuario: number): void {
     this.http.get(`${this.apiUrl}/permisos/${idUsuario}/`).subscribe((response: any) => {
       const permisos = response.permisos || [];
-      console.log(permisos);
       this.actualizarPermisos(permisos);
     });
   }

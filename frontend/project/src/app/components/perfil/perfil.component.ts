@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
 import {DataShareService} from "../../services/data-share/data-share.service";  // Importar ActivatedRoute
+import {AuthService} from "../../services/auth/auth.service";  // Importar ActivatedRoute
 import {HeaderComponent} from '../header/header.component';
 
 @Component({
@@ -33,6 +34,7 @@ export class PerfilComponent implements OnInit {
 
   constructor(
     private perfilService: PerfilService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private route: ActivatedRoute,  // Inyectar ActivatedRoute
     private tareaService: TareaService,
@@ -74,6 +76,9 @@ export class PerfilComponent implements OnInit {
           deuda: this.perfil.deuda,
         });
       });
+      // @ts-ignore
+      const id_user = +sessionStorage.getItem('id_usuario');
+      this.authService.cargarPermisos(id_user);
 
       this.perfilService.tareasPorUsuario(parseInt(this.perfilIdUrl)).subscribe((data: any)=>{
         this.tareas = data;

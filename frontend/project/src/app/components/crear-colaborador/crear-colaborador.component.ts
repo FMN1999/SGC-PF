@@ -58,6 +58,9 @@ export class CrearColaboradorComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.colaboradorService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso8) {
       this.router.navigate(['/no-permissions']);

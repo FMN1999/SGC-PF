@@ -31,6 +31,9 @@ export class HomeComponent {
     });
 
     this.es_colaborador = sessionStorage.getItem('rol');
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
   }
 
   @HostListener('window:resize', ['$event'])

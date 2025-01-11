@@ -1818,6 +1818,7 @@ class AlmacenesPorEmpresaView(View):
 class PagosCobrosObraView(View):
     def get(self, request, id_obra):
         try:
+            obra= Obra.objects.get(id=id_obra)
             # Obtener pagos relacionados con la obra
             pagos = Pago.objects.filter(id_compra__id_obra=id_obra)
             pagos_data = [
@@ -1853,7 +1854,7 @@ class PagosCobrosObraView(View):
                 for cobro in cobros
             ]
 
-            return JsonResponse({'pagos': pagos_data, 'cobros': cobros_data}, safe=False)
+            return JsonResponse({'pagos': pagos_data, 'cobros': cobros_data, 'id_cliente':obra.id_cliente.id, 'id_empresa': obra.id_empresa.id}, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
