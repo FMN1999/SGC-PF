@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { NgIf, NgClass, NgOptimizedImage } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import {DataShareService} from "../../services/data-share/data-share.service";
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ export class HomeComponent {
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
   protected userMenuVisible: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, protected dataShare: DataShareService) {
     this.checkScreenSize();
 
     // Suscribirse al estado de autenticación

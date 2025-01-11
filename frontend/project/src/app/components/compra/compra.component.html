@@ -17,16 +17,19 @@
   <div class="cambiar-estado">
     <h3>Cambiar Estado</h3>
     <div class="botones-estado">
-      <button class="btn-estado" *ngFor="let estado of obtenerBotones()" (click)="cambiarEstado(estado)">
+      <button class="btn-estado" *ngFor="let estado of obtenerBotones()" (click)="cambiarEstado(estado)" [disabled]="compra.id_aprobador !== Number(id_usuario)">
         {{ estado }}
       </button>
     </div>
   </div>
 
   <div class="acciones">
-    <button class="btn-accion" [disabled]="!generarIngresoHabilitado" (click)="abrirFormularioIngreso()">Generar Ingreso</button>
+    <button class="btn-accion"
+            [disabled]="!generarIngresoHabilitado || estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado' || !dataShare.permiso15" (click)="abrirFormularioIngreso()"> Generar Ingreso
+    </button>
+
     <button
-      [disabled]="estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado'"
+      [disabled]="estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado' || !dataShare.permiso13"
       class="btn-accion"
       (click)="registrarPagoCompra(compra.id, compra.id_proveedor, compra.monto_total)">
       Registrar Pago

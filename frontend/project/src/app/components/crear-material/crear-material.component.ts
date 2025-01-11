@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
@@ -34,6 +36,7 @@ export class CrearMaterialComponent implements OnInit{
   id_proveedor: any;
   mensajeError: string = '';
   mensajeSuccess: string = '';
+  isLoggedIn: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +44,9 @@ export class CrearMaterialComponent implements OnInit{
     private usuariosService: UsuarioService,
     private proveedorService: ProveedorService,
     private empresaService: EmpresaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {
       this.id_proveedor = this.route.snapshot.params['id'];
       this.materialForm = this.fb.group({
@@ -77,6 +82,17 @@ export class CrearMaterialComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso5) {
+      this.router.navigate(['/no-permissions']);
+    }
     // @ts-ignore
     this.idEmpresa = +sessionStorage.getItem('id_empresa');
     this.usuariosService.obtenerUsuariosPorEmpresa(this.idEmpresa).subscribe({

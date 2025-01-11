@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf } from "@angular/common";
 import { HeaderComponent } from '../header/header.component'
@@ -21,11 +22,13 @@ export class CrearColaboradorComponent implements OnInit {
   colaboradorForm: FormGroup;
   mensajeError: string = '';
   mensajeSuccess: string = '';
+  isLoggedIn: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private colaboradorService: AuthService,
-    private router: Router
+    private router: Router,
+    private dataShare: DataShareService
   ) {
     this.colaboradorForm = this.fb.group({
       // Datos del Usuario
@@ -47,7 +50,19 @@ export class CrearColaboradorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.colaboradorService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso8) {
+      this.router.navigate(['/no-permissions']);
+    }
+  }
 
   onSubmit() {
     if (this.colaboradorForm.valid) {

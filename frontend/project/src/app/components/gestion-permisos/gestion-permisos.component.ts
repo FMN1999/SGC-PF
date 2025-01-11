@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
-import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {HeaderComponent} from '../header/header.component';
@@ -25,13 +27,28 @@ export class GestionPermisosComponent implements OnInit {
   nuevoPermisoId: number | null = null;
   // @ts-ignore
   mensaje: string;
+  isLoggedIn: boolean= false;
 
   constructor(
     private permisosService: UsuarioService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private dataShare: DataShareService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso10) {
+      this.router.navigate(['/no-permissions']);
+    }
     this.idUsuario = +this.route.snapshot.paramMap.get('id')!;
     this.cargarPermisos();
   }

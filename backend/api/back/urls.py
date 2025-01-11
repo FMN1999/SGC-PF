@@ -101,4 +101,5 @@ urlpatterns = [
     path('compras-pendientes/', views.ComprasPagosView.as_view(), name='compras-pendientes'),
     path('subcontrataciones/<int:id_empresa>/', views.SubcontratacionesView.as_view(), name='contrataciones-pendientes'),
     path('actualizar-presupuesto/<int:pk>/', views.PresupuestoView.as_view(), name='actualizar-presupuesto'),
+    path('permisos/<int:id_usuario>/', views.PermisosUsuarioView.as_view(), name='obtener_permisos'),
 ]

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ObraService } from '../../services/obra/obra.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common"; // Para obtener los clientes
 import { HeaderComponent } from '../header/header.component';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-crear-obra',
@@ -22,8 +25,10 @@ export class CrearObraComponent implements OnInit {
   clientes: any[] = [];
   mensajeExito: string='';
   mensajeError: string='';
+  isLoggedIn: boolean = false;
 
-  constructor(private fb: FormBuilder, private obraService: ObraService, private empresaService: EmpresaService) {
+  constructor(private fb: FormBuilder, private obraService: ObraService, private empresaService: EmpresaService,
+              private authService: AuthService, private dataShare: DataShareService, private router: Router) {
     this.obraForm = this.fb.group({
       direccion: ['', Validators.required],
       id_cliente: ['', Validators.required],
@@ -39,6 +44,18 @@ export class CrearObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso11) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     const id_empresa = sessionStorage.getItem('id_empresa');
     if (id_empresa) {
       this.empresaService.obtenerClientes(parseInt(id_empresa)).subscribe((clientes: any) => {

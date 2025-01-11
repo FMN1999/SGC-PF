@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ChartComponent, ApexChart, ApexAxisChartSeries, ApexXAxis, ApexTitleSubtitle, ApexDataLabels, ApexTooltip, ApexResponsive } from "ng-apexcharts";
 import {CurrencyPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { HeaderComponent } from '../header/header.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 
 export interface ChartOptions {
   series: ApexAxisChartSeries;
@@ -50,11 +52,26 @@ export class BalanceFinancieroComponent implements OnInit {
   };
 
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  isLoggedIn: boolean = false;
 
-  constructor(private route: ActivatedRoute, private empresaService: EmpresaService) {}
+  constructor(private route: ActivatedRoute, private empresaService: EmpresaService, private authService: AuthService,
+              private router: Router, private dataShare: DataShareService) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
     this.empresaId = +this.route.snapshot.params['id'];
+
+    // @ts-ignore
+    const empresa_id = +sessionStorage.getItem('id_empresa');
+    if (this.empresaId !== empresa_id || !this.dataShare.permiso10) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.obtenerBalance();
   }
 

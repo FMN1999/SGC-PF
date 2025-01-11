@@ -390,6 +390,7 @@ class MaterialView(View):
             material = Material.objects.get(id=material_id)
             material_data = {
                 'id': material.id,
+                'id_empresa': material.id_proveedor.id_empresa.id,
                 'id_proveedor': material.id_proveedor.id,
                 'tipo_material': material.tipo_material,
                 'unidad_medida': material.unidad_medida,
@@ -2026,3 +2027,10 @@ class SubcontratacionesView(View):
     def get(self, request, id_empresa):
         subcontrataciones = SubcontratacionController.get_validas(id_empresa)
         return JsonResponse({'subcontrataciones': subcontrataciones})
+
+
+class PermisosUsuarioView(View):
+    def get(self, request, id_usuario):
+        permisos_usuario = Permiso_Usuario.objects.filter(id_usuario=id_usuario)
+        permisos = [permiso.id_permiso.id for permiso in permisos_usuario]  # IDs de los permisos
+        return JsonResponse({'permisos': permisos}, safe=False)

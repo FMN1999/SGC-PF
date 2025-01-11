@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { HeaderComponent } from '../header/header.component';
 import {NgIf} from "@angular/common";
 
@@ -22,14 +24,16 @@ export class CrearServicioComponent implements OnInit {
   id_proveedor: number | undefined;  // Para almacenar el ID del proveedor
   mensajeExito: string = '';  // Mensaje de éxito
   mensajeError: string = '';  // Mensaje de error
-
   servicioForm: FormGroup;
+  isLoggedIn: boolean = false;
 
   constructor(
     private proveedorService: ProveedorService,
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder  // Inyectamos FormBuilder
+    private fb: FormBuilder,  // Inyectamos FormBuilder
+    private authService: AuthService,
+    private dataShare: DataShareService
   ) {
     // Inicializamos el FormGroup
     this.servicioForm = this.fb.group({
@@ -49,6 +53,17 @@ export class CrearServicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso6) {
+      this.router.navigate(['/no-permissions']);
+    }
     // Obtenemos el ID del proveedor desde la ruta
     this.id_proveedor = +this.route.snapshot.params['id'];
   }

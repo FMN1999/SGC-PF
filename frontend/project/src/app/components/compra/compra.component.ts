@@ -4,6 +4,8 @@ import { CompraService } from '../../services/compra/compra.service';
 import { PagoService } from '../../services/pago/pago.service'
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
+import {DataShareService} from "../../services/data-share/data-share.service";
+import {AuthService} from "../../services/auth/auth.service";
 
 @Component({
   selector: 'app-compra',
@@ -23,20 +25,41 @@ export class CompraComponent implements OnInit {
   estadoActual: string = '';
   id_usuario:string='';
   generarIngresoHabilitado: boolean = false;
+  isLoggedIn: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private compraService: CompraService,
     private pagoService: PagoService,
-    private router: Router
+    private router: Router,
+    protected dataShare: DataShareService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     // @ts-ignore
     this.id_usuario = sessionStorage.getItem('id_usuario');
     const compraId = Number(this.route.snapshot.paramMap.get('id'));
     this.obtenerCompra(compraId);
-    this.verificarIngresos(compraId);
+
+    const idEmpresa = this.compra.id_empresa;
+    // @ts-ignore
+    const empresa_id = +sessionStorage.getItem('id_empresa');
+    if (idEmpresa === empresa_id && (this.dataShare.permiso12 || this.dataShare.permiso15|| this.dataShare.permiso13)) {
+      this.verificarIngresos(compraId);
+    }
+    else{
+      this.router.navigate(['/no-permissions']);
+    }
+
   }
 
   obtenerCompra(compraId: number): void {
@@ -91,4 +114,6 @@ export class CompraComponent implements OnInit {
       this.generarIngresoHabilitado = !data.todos_ingresos_realizados;
     });
   }
+
+  protected readonly Number = Number;
 }

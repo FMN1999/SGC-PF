@@ -3,8 +3,8 @@
 <div class="container">
   <h2>Detalles de Obra en {{ obra?.direccion }}</h2>
   <div class="action-buttons">
-    <button *ngIf="abrirReporte" (click)="irAReporte(obra_id)" class="btn btn-info">Ver Reportes</button>
-    <button class="btn btn-info" (click)="irAPagosCobros()">Ver Pagos y Cobros</button>
+    <button *ngIf="abrirReporte" (click)="irAReporte(obra_id)" class="btn btn-info" [disabled]="!dataShare.permiso10">Ver Reportes</button>
+    <button class="btn btn-info" (click)="irAPagosCobros()" [disabled]="!dataShare.permiso12">Ver Pagos y Cobros</button>
   </div>
   <div class="detalle-obra" *ngIf="!editMode" >
     <p><strong>Cliente:</strong> {{ obra?.cliente.nombre }}</p>
@@ -119,7 +119,7 @@
     </div>
   </form>
   <div *ngIf="!editMode" class="action-buttons">
-    <button type="button" class="btn btn-primary" (click)="toggleEditMode()">
+    <button type="button" class="btn btn-primary" (click)="toggleEditMode()" [disabled]="!dataShare.permiso11">
       Editar
     </button>
   </div>
@@ -133,15 +133,15 @@
   </h3>
 
   <div class="areas" *ngIf="mostrarAreas">
-    <button *ngIf="!areasMode" type="button" class="btn btn-primary" (click)="toggleNewAreaMode()">Nueva Área</button>
+    <button *ngIf="!areasMode" type="button" class="btn btn-primary" (click)="toggleNewAreaMode()" [disabled]="!dataShare.permiso11">Nueva Área</button>
     <ul>
       <li *ngFor="let area of areas">
         <div class="area-item">
           <h3>{{ area.descripcion }} </h3><br />
           <strong>Dimensiones:</strong> {{ area.dimensiones }}<br />
           <strong>Estado:</strong> {{ area.estado }}<br />
-          <strong>Porcentaje:</strong> {{ area.porcentaje }}%
-          <button (click)="eliminarArea(area.id)" class="btn btn-danger btn-sm mt-2">Eliminar Área</button>
+          <strong>Porcentaje:</strong> {{ area.porcentaje }}% <br/>
+          <button [disabled]="!dataShare.permiso11" (click)="eliminarArea(area.id)" class="btn btn-danger btn-sm mt-2">Eliminar Área</button>
         </div>
       </li>
     </ul>
@@ -182,7 +182,7 @@
     </button>
   </h3>
   <div class="presupuestos" *ngIf="mostrarPresupuestos">
-    <button type="button" class="btn btn-primary" (click)="crearPresupuesto()">Crear presupuesto</button>
+    <button type="button" class="btn btn-primary" (click)="crearPresupuesto()" [disabled]="!dataShare.permiso4">Crear presupuesto</button>
     <ul>
       <li *ngFor="let presupuesto of presupuestos">
         <a [routerLink]="['/presupuestos', presupuesto.id]" class="presupuesto-item-link">
@@ -209,7 +209,7 @@
     </button>
   </h3>
   <div class="documentos" *ngIf="mostrarDocumentos">
-    <button *ngIf="!documentoMode" type="button" class="btn btn-primary" (click)="toggleNewDocumentoMode()">Nuevo Documento</button>
+    <button *ngIf="!documentoMode" type="button" class="btn btn-primary" (click)="toggleNewDocumentoMode()" [disabled]="!dataShare.permiso11">Nuevo Documento</button>
     <ul>
       <li *ngFor="let documento of documentos">
         <div class="documento-item">

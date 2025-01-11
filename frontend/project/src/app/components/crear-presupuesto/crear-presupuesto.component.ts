@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { ObraService } from '../../services/obra/obra.service';
-import {ActivatedRoute} from "@angular/router";
+import { AuthService } from '../../services/auth/auth.service';
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
 import { ChatComponent } from '../chat/chat.component'
 import {DataShareService} from "../../services/data-share/data-share.service";
@@ -31,16 +32,30 @@ export class CrearPresupuestoComponent implements OnInit {
   areas: any[] = [];
   clienteId!:number;
   mensajeExito: string='';
+  isLoggedIn: boolean=false;
 
   constructor(
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
     private obraService: ObraService,
     private route: ActivatedRoute,
-    private dataShareService: DataShareService
+    private dataShareService: DataShareService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShareService.permiso4) {
+      this.router.navigate(['/no-permissions']);
+    }
     // @ts-ignore
     this.id_empresa = parseInt(sessionStorage.getItem('id_empresa'))
 
@@ -52,7 +67,7 @@ export class CrearPresupuestoComponent implements OnInit {
     this.obraService.obtenerObra(this.obraId).subscribe(obra =>{
       this.clienteId = obra.cliente.id;
       this.dataShareService.setClienteId(this.clienteId);
-      console.log(this.clienteId)
+
     });
 
 
