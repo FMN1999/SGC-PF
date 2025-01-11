@@ -56,31 +56,26 @@ export class ChatComponent implements OnInit {
   }
 
   mensajesBienvenida():void {
-    this.messages.push({text: '¡Hola! Soy tu asistente virtual, ¿En qué puedo ayudarte?', isUser: false});
-    this.messages.push({text: 'Ingresá la opción deseada:', isUser: false});
-    this.messages.push({text: '1. Recomendaciones para presupuesto\n' +
-        '2. Materiales frecuentes para cliente\n' +
-        '3. Ofertas vigentes\n' +
-        '4. Calcular costos adicionales\n' +
-        '5. Seguimiento de obra\n' +
-        '6. Sugerencias de optimización de costos\n' +
-        '7. Evaluación de proveedores\n' +
-        '8. Análisis de costos', isUser: false});
+    this.chatService.getMensajeBienvenida().subscribe((response) => {
+      this.receiveMessage(response);
+    });
   }
 
   sendMessage() {
     if (this.userMessage.trim()) {
       this.messages.push({ text: this.userMessage, isUser: true });
       this.chatService.getResponse(this.userMessage, this.adicional).subscribe((response) => {
-        this.messages.push({ text: response.message, isUser: false });
+        this.receiveMessage(response);
       });
       this.userMessage = ''; // Limpiar el input
     }
   }
 
+  receiveMessage(response: any) {
+    this.messages.push({ text: response.message, isUser: false });
+  }
+
   setAdicionalData(adicionalData: { id_obra?: number, id_cliente?: number }) {
     this.adicional = adicionalData;
   }
-
-
 }

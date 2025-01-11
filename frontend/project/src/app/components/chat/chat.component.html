@@ -5,7 +5,8 @@
 
   <div class="chat-box" *ngIf="isVisible">
     <div class="messages">
-      <div markdown emoji [data]="message.text" class="message" *ngFor="let message of messages" [ngClass]="{ 'user-message': message.isUser, 'bot-message': !message.isUser }">
+      <div class="message" *ngFor="let message of messages" [ngClass]="{ 'user-message': message.isUser, 'bot-message': !message.isUser }">
+        <markdown emoji [data]="message.text" />
       </div>
     </div>
 

@@ -1191,7 +1191,7 @@ class ChatController:
             costo_material_prev = compras_previas.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
                 compras_previas) if compras_previas else 0
             comparativa_materiales.append({
-                'obra': obra_prev.nombre,
+                'obra': obra_prev.direccion,
                 'costo_material': costo_material_prev,
                 'diferencia': costo_material_promedio - costo_material_prev
             })
@@ -1203,7 +1203,7 @@ class ChatController:
                                              'monto_contratacion__sum'] / len(
                 subcontrataciones_previas) if subcontrataciones_previas else 0
             comparativa_subcontratacion.append({
-                'obra': obra_prev.nombre,
+                'obra': obra_prev.direccion,
                 'costo_subcontratacion': costo_subcontratacion_prev,
                 'diferencia': costo_subcontratacion_promedio - costo_subcontratacion_prev
             })
