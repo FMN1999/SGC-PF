@@ -1476,26 +1476,20 @@ class Assistant(View):
             response_message = f"""
                 El análisis de costos para la obra *{data_return['nombre_obra']}* (ID: {data_return['obra_id']}) es el siguiente:
             
-                - **Comparativa de materiales**:
+                * **Comparativa de materiales**:
                 """
             for comp in data_return['comparativa_materiales']:
-                response_message += f"      • En la obra '{comp['obra']}': Costo promedio de materiales {comp['costo_material']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
+                response_message += f"      - En la obra '{comp['obra']}': Costo promedio de materiales {comp['costo_material']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
             response_message += f"""           
-                - **Comparativa de subcontrataciones**:           
+                * **Comparativa de subcontrataciones**:
                 """
             for comp in data_return['comparativa_subcontratacion']:
-                response_message += f"      • En la obra '{comp['obra']}': Costo promedio de subcontrataciones {comp['costo_subcontratacion']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
+                response_message += f"      - En la obra '{comp['obra']}': Costo promedio de subcontrataciones {comp['costo_subcontratacion']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
             response_message += f"""           
-                - **Recomendaciones**:          
-                  • Materiales: {data_return['recomendaciones']['materiales']}         
-                  • Subcontrataciones: {data_return['recomendaciones']['subcontrataciones']}         
+                * **Recomendaciones**:
+                  - Materiales: {data_return['recomendaciones']['materiales']}
+                  - Subcontrataciones: {data_return['recomendaciones']['subcontrataciones']}
                 """
-
-        elif user_message.lower() == 'si':
-            response_message = "Ok, ingrese otra opción"
-
-        elif user_message.lower() == 'no':
-            response_message = "Entendido, ¡Hasta luego!"
 
         return JsonResponse({'message': response_message, 'data_return': data_return})
 
