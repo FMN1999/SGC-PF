@@ -63,16 +63,20 @@
     background-color: #f1f1f1;
 
     markdown ::ng-deep { /* romper encapsulamiento para poder ajustar estilos */
-      /* corregir márgenes y padding de los elementos dentro del markdown */
-      p {
-        margin: 0;
+      /* corregir márgenes y padding de los elementos p, ol y ul dentro del markdown */
+      p:first-child,
+      ol:first-child,
+      ul:first-child {
+        margin-top: 0;
       }
-      ol {
-        margin: 0;
-        padding-left: 1.1em;
+
+      p:last-child,
+      ol:first-child,
+      ul:first-child {
+        margin-bottom: 0;
       }
-      ul {
-        margin: 0;
+
+      ol, ul {
         padding-left: 1.1em;
       }
     }
