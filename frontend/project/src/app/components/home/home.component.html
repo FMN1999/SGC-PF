@@ -19,10 +19,10 @@
 
       <!-- Opciones que se muestran solo cuando el usuario está logueado -->
       <li *ngIf="isLoggedIn"><a href="/usuarios">Usuarios / Proveedores</a></li>
-      <li *ngIf="isLoggedIn"><a href="/solicitudes">Compras / Solicitudes</a></li>
+      <li *ngIf="isLoggedIn && dataShare.permiso3"><a href="/solicitudes">Compras / Solicitudes</a></li>
       <li *ngIf="isLoggedIn"><a [routerLink]="['/obras', idEmpresa]">Obras</a></li>
-      <li *ngIf="isLoggedIn"><a href="/registrar-pago">Generar pago a proveedor</a></li>
-      <li *ngIf="isLoggedIn"><a href="/pago-cliente">Generar pago de cliente</a></li>
+      <li *ngIf="isLoggedIn && dataShare.permiso13"><a href="/registrar-pago">Generar pago a proveedor</a></li>
+      <li *ngIf="isLoggedIn && dataShare.permiso14"><a href="/pago-cliente">Generar pago de cliente</a></li>
       <li *ngIf="isLoggedIn && dataShare.permiso10"><a [routerLink]="['/balance', idEmpresa]">Balance anual</a></li>
       <li *ngIf="isLoggedIn && dataShare.permiso16"><a [routerLink]="['/empresas']">Empresas</a></li>
       <li *ngIf="isLoggedIn"><a href="/home" (click)="logout()">Cerrar sesión</a></li>
@@ -62,7 +62,7 @@
     </section>
 
     <!-- Otros contenidos del Home -->
-    <section class="services">
+    <section *ngIf="isLoggedIn" class="services">
       <div *ngIf="dataShare.permiso15" class="service" (click)="navigateTo('/almacenes', idEmpresa)">
         <h3>Almacenes</h3>
         <p>Existencias, ingresos y stock.</p>
@@ -71,11 +71,11 @@
         <h3>Tareas en curso</h3>
         <p>Detalles de tareas en curso.</p>
       </div>
-      <div class="service" (click)="navigateTo('/materiales')">
+      <div *ngIf="es_colaborador" class="service" (click)="navigateTo('/materiales')">
         <h3>Materiales</h3>
         <p>Materiales correspondientes a la empresa.</p>
       </div>
-      <div class="service" (click)="navigateTo('/servicios')">
+      <div *ngIf="es_colaborador" class="service" (click)="navigateTo('/servicios')">
         <h3>Servicios</h3>
         <p>Servicios correspondientes a la empresa.</p>
       </div>

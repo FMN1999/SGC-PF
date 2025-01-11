@@ -18,9 +18,18 @@ export class RegisterComponent implements OnInit {
   empresas: any[] = [];  // Para almacenar la lista de empresas
   mensajeSuccess: string = '';
   mensajeError: string = '';
+  isLoggedIn:boolean =false;
 
   constructor(private fb: FormBuilder, private authService: AuthService,
               private empresaService: EmpresaService, private router: Router) {
+
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
     this.registerForm = this.fb.group({
       // Campos del usuario
       nombre_usuario: ['', Validators.required],

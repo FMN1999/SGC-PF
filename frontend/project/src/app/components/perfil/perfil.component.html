@@ -14,7 +14,7 @@
       <p><strong>Rol: </strong>{{ perfil.rol }}</p>
       <p><strong>Fecha de alta: </strong>{{ perfil.fecha_alta }}</p>
       <p><strong>Empresa: </strong>{{perfil.empresa_col}}</p>
-      <button (click)="gestionarPermisos(perfil.id)" [disabled]="!dataShare.permiso10">Gestionar Permisos</button>
+      <button (click)="gestionarPermisos(perfil.id)" *ngIf="dataShare.permiso16">Gestionar Permisos</button>
     </div>
 
     <div class="cliente-info" *ngIf="perfil.cuit!==null">
@@ -25,7 +25,7 @@
       <p><strong>Empresa: </strong>{{perfil.empresa_cl}}</p>
     </div>
 
-    <button *ngIf="esUsuarioActual()" (click)="activarEdicion()">Editar Perfil</button>
+    <button *ngIf="esUsuarioActual() || dataSare.permiso16" (click)="activarEdicion()">Editar Perfil</button>
   </div>
 
   <div class="formulario-edicion" *ngIf="editMode">
@@ -82,7 +82,7 @@
     </form>
   </div>
 
-  <div class="obras" *ngIf="obras !== null">
+  <div class="obras" *ngIf="obras">
     <h2>Obras</h2>
     <ul>
       <li *ngFor="let o of obras">
@@ -105,7 +105,7 @@
           <p><strong>Cantidad de días: </strong>{{ t.cant_dias }}</p>
         </a>
         <div *ngIf="!editTareas[i]">
-          <button (click)="activarEdicionTarea(i)">Editar</button>
+          <button (click)="activarEdicionTarea(i)" *ngIf="esUsuarioActual() || dataSare.permiso1" >Editar</button>
         </div>
         <div *ngIf="editTareas[i]" class="tarea-edicion">
           <label for="cant_dias_{{i}}"><strong>Cantidad de días:</strong></label>

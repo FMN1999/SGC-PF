@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
 import { PagoService } from '../../services/pago/pago.service';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -27,12 +30,16 @@ export class PagoComponent implements OnInit {
   subcontrataciones: any[] = []; // Lista de subcontrataciones válidas
   mensajeError: string = '';
   mensajeSuccess: string = '';
+  isLoggedIn: boolean = false;
 
 
   constructor(
     private fb: FormBuilder,
     private pagoService: PagoService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private authService: AuthService,
+    private dataShare: DataShareService,
+    private router: Router
   ) {
     this.pagoForm = this.fb.group({
       tipo_pago: ['', Validators.required],
@@ -47,6 +54,18 @@ export class PagoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso13) {
+      this.router.navigate(['/no-permissions']);
+    }
+
       // @ts-ignore
     const idEmpresa = +sessionStorage.getItem('id_empresa');
         // Cargar proveedores

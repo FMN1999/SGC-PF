@@ -19,6 +19,7 @@ export class HomeComponent {
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
+  es_colaborador;
   protected userMenuVisible: boolean = false;
 
   constructor(private authService: AuthService, private router: Router, protected dataShare: DataShareService) {
@@ -28,6 +29,8 @@ export class HomeComponent {
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
+
+    this.es_colaborador = sessionStorage.getItem('rol');
   }
 
   @HostListener('window:resize', ['$event'])

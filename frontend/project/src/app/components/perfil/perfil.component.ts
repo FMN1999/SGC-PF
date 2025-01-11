@@ -4,6 +4,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
+import {DataShareService} from "../../services/data-share/data-share.service";  // Importar ActivatedRoute
 import {HeaderComponent} from '../header/header.component';
 
 @Component({
@@ -35,7 +36,8 @@ export class PerfilComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,  // Inyectar ActivatedRoute
     private tareaService: TareaService,
-    private router: Router
+    private router: Router,
+    protected dataShare: DataShareService
   ) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],

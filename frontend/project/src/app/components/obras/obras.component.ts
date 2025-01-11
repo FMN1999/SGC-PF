@@ -38,8 +38,14 @@ export class ObrasComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.idEmpresa = +params['id'];
-      if (this.idEmpresa) {
+
+      // @ts-ignore
+      const empresa_id=+sessionStorage.getItem('id_empresa');
+      if (this.idEmpresa === empresa_id) {
         this.cargarObras();
+      }
+      else {
+        this.router.navigate(['/no-permissions']);
       }
     });
   }

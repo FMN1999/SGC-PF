@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReporteService } from '../../services/reporte/reporte.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {CurrencyPipe, NgForOf, NgIf, PercentPipe} from "@angular/common";
 import {BaseChartDirective} from "ng2-charts";
 import {ChartData} from "chart.js";
@@ -14,7 +16,7 @@ import {
   Legend
 } from 'chart.js';
 import {HeaderComponent} from '../header/header.component';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-reporte-obra',
@@ -34,6 +36,7 @@ export class ReporteObraComponent implements OnInit {
   reporte: any;
   loading: boolean = true;
   id_obra: number = 0;
+  isLoggedIn: boolean = false;
 
   // @ts-ignore
   // @ts-ignore
@@ -53,7 +56,8 @@ export class ReporteObraComponent implements OnInit {
     ]
   };
 
-  constructor(private reporteService: ReporteService, private route: ActivatedRoute,) {
+  constructor(private reporteService: ReporteService, private route: ActivatedRoute, private authService: AuthService,
+              private dataShare: DataShareService, private router: Router) {
     Chart.register(
       BarController,
       BarElement,
@@ -66,6 +70,17 @@ export class ReporteObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso10) {
+      this.router.navigate(['/no-permissions']);
+    }
     // @ts-ignore
     this.id_obra = +this.route.snapshot.paramMap.get('id');
     this.obtenerReporte();

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
+import {AuthService} from "../../services/auth/auth.service";
 
 @Component({
   selector: 'app-servicios',
@@ -21,10 +22,23 @@ export class ServiciosComponent implements OnInit {
   servicios: any[] = [];
   serviciosFiltrados: any[] = [];
   filtroBusqueda: string = '';
+  isLoggedIn: boolean=false;
 
-  constructor(private empresaService: EmpresaService, private router: Router) {}
+  constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    const es_cliente = sessionStorage.getItem('rol');
+    if(!es_cliente){
+      this.router.navigate(['/no-permissions']);
+    }
     const idEmpresa = sessionStorage.getItem('id_empresa');
     if (idEmpresa) {
       this.empresaService.obtenerServiciosPorEmpresa(parseInt(idEmpresa)).subscribe({

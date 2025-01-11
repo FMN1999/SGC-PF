@@ -11,7 +11,7 @@
     <p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
     <p><strong>Provincia:</strong> {{ proveedor.provincia }}</p>
 
-    <button class="btn-editar" (click)="enableEditing()">Editar</button>
+    <button class="btn-editar" (click)="enableEditing()" *ngIf="dataShare.permiso7">Editar</button>
   </div>
 
   <!-- Formulario de edición -->
@@ -53,7 +53,7 @@
         <button class="btn-toggle" (click)="toggleSection('materiales')">
           {{ showMateriales ? 'Ocultar' : 'Mostrar' }}
         </button>
-        <button class="btn-agregar" (click)="navigateToCreateMaterial()">Agregar Material</button>
+        <button class="btn-agregar" (click)="navigateToCreateMaterial()" [disabled]="!dataShare.permiso5">Agregar Material</button>
       </div>
     </div>
     <ul *ngIf="showMateriales">
@@ -61,7 +61,7 @@
         <div class="item-content">
           {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
         </div>
-        <button class="btn-eliminar" (click)="eliminarMaterial(material.id); $event.stopPropagation()">Eliminar</button>
+        <button class="btn-eliminar" (click)="eliminarMaterial(material.id); $event.stopPropagation()" [disabled]="!dataShare.permiso5">Eliminar</button>
       </li>
     </ul>
   </div>
@@ -75,7 +75,7 @@
         <button class="btn-toggle" (click)="toggleSection('servicios')">
           {{ showServicios ? 'Ocultar' : 'Mostrar' }}
         </button>
-        <button class="btn-agregar" (click)="navigateToCreateServicio()">Agregar Servicio</button>
+        <button class="btn-agregar" (click)="navigateToCreateServicio()" [disabled]="!dataShare.permiso6">Agregar Servicio</button>
       </div>
     </div>
     <ul *ngIf="showServicios">
@@ -83,7 +83,7 @@
         <div class="item-content">
           {{ servicio.descripcion }} - {{ servicio.precio_x_unidad }} {{ servicio.moneda }} por {{ servicio.unidad_medida }}
         </div>
-        <button class="btn-eliminar" (click)="eliminarServicio(servicio.id); $event.stopPropagation()">Eliminar</button>
+        <button class="btn-eliminar" (click)="eliminarServicio(servicio.id); $event.stopPropagation()" [disabled]="!dataShare.permiso6">Eliminar</button>
       </li>
     </ul>
   </div>
@@ -97,7 +97,7 @@
         <button class="btn-toggle" (click)="toggleSection('ofertas')">
           {{ showOfertas ? 'Ocultar' : 'Mostrar' }}
         </button>
-        <button class="btn-agregar" (click)="navigateToCreateOferta()">Agregar Oferta</button>
+        <button class="btn-agregar" (click)="navigateToCreateOferta()" [disabled]="!dataShare.permiso6 || !dataShare.permiso7">Agregar Oferta</button>
       </div>
     </div>
     <ul *ngIf="showOfertas">
@@ -105,7 +105,7 @@
         <div class="item-content">
           {{ oferta.descripcion }} - {{ oferta.monto_total }} {{ oferta.moneda }} (Desde: {{ oferta.fecha_desde }} Hasta: {{ oferta.fecha_hasta }})
         </div>
-        <button class="btn-eliminar" (click)="eliminarOferta(oferta.id); $event.stopPropagation()">Eliminar</button>
+        <button class="btn-eliminar" (click)="eliminarOferta(oferta.id); $event.stopPropagation()" [disabled]="!dataShare.permiso7">Eliminar</button>
       </li>
     </ul>
   </div>

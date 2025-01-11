@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { SubcontratacionService } from '../../services/subcontratacion/subcontratacion.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {EmpresaService} from "../../services/empresa/empresa.service";
+import {AuthService} from "../../services/auth/auth.service";
+import {DataShareService} from "../../services/data-share/data-share.service";
 import {HeaderComponent} from '../header/header.component';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -30,6 +32,7 @@ export class PresupuestoServicioComponent implements OnInit {
   idUsuario = sessionStorage.getItem('id_usuario');
   mensajeSuccess: string='';
   mensajeError: string='';
+  isLoggedIn:boolean=false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,10 +40,25 @@ export class PresupuestoServicioComponent implements OnInit {
     private presupuestoService: PresupuestoService,
     private empresaService: EmpresaService,
     private subcontratacionService: SubcontratacionService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private dataShare: DataShareService,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso3) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.idPresupuesto = +this.route.snapshot.paramMap.get('idPresupuesto')!;
     this.idObra = +this.route.snapshot.paramMap.get('idObra')!;
     this.subcontratacionForm = this.fb.group({

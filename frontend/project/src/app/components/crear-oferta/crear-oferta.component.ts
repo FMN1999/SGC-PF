@@ -53,7 +53,7 @@ export class CrearOfertaComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
-    if (!this.dataShare.permiso5 || !this.dataShare.permiso6) {
+    if (!this.dataShare.permiso7) {
       this.router.navigate(['/no-permissions']);
     }
 

@@ -1,8 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { Router} from '@angular/router';
 import {NgForOf, NgIf} from "@angular/common";
 import{ PagoService } from '../../services/pago/pago.service';
+import{ AuthService } from '../../services/auth/auth.service';
+import{ DataShareService } from '../../services/data-share/data-share.service';
 import{ EmpresaService } from '../../services/empresa/empresa.service';
 import { HeaderComponent } from '../header/header.component';
 
@@ -27,13 +29,29 @@ export class RegistrarPagoComponent implements OnInit {
   id_empresa: number;
   mensajeSuccess: string = '';
   mensajeError: string = '';
+  isLoggedIn: boolean = false;
 
   constructor(private fb: FormBuilder,
               private pagoService: PagoService,
-              private empresaService: EmpresaService
+              private empresaService: EmpresaService,
+              private authService: AuthService,
+              private dataShare: DataShareService,
+              private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    if (!this.dataShare.permiso14) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     // @ts-ignore
     this.id_empresa = +sessionStorage.getItem('id_empresa');
 

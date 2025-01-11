@@ -84,6 +84,7 @@ export class MaterialComponent implements OnInit {
     const es_cliente = sessionStorage.getItem('rol');
     // @ts-ignore
     this.empresaId = +sessionStorage.getItem('id_empresa')
+    this.materialId = +this.route.snapshot.params['id'];
     this.proveedorService.getMaterialById(this.materialId).subscribe({
         next: (data) => {
           this.material$.next(data);
@@ -92,8 +93,7 @@ export class MaterialComponent implements OnInit {
         error: (err) => console.error(err)
       });
 
-    if (es_cliente && this.empresaId === this.material.id_empresa) {
-      this.materialId = +this.route.snapshot.params['id'];
+    if (es_cliente) {
 
       if (this.empresaId){
         this.empresaService.obtenerAlmacenesPorEmpresa(Number(this.empresaId)).subscribe((almacenes)=>{

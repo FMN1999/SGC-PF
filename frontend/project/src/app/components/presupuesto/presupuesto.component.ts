@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from '@angular/router';
 import {HeaderComponent} from '../header/header.component';
@@ -27,16 +29,26 @@ export class PresupuestoComponent implements OnInit {
   protected trabajadores_data: any[] = [];
   protected idEditar: boolean = false;
   tareas_data: any[] = [];
+  isLoggedIn: boolean=false;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
     private router: Router,
-
+    private authService: AuthService,
+    protected dataShare: DataShareService
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
     this.idPresupuesto = +this.route.snapshot.paramMap.get('id')!;
     this.initForm();
     this.cargarDatosPresupuesto();

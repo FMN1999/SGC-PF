@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import {NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
-import * as console from "node:console";
+//import * as console from "node:console";
 import { Router } from '@angular/router';
 
 @Component({

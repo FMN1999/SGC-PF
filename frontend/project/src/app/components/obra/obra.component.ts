@@ -82,47 +82,51 @@ export class ObraComponent implements OnInit {
     });
 
   }
-
   ngOnInit(): void {
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
-    });
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     // @ts-ignore
     this.empresa_id = +sessionStorage.getItem('id_empresa');
+
+    // Cargar la obra y esperar a que esté lista
     this.cargarObra();
-    if (this.obra.empresa.id === this.empresa_id){
-      this.cargarAreas();
-      this.documentoForm = this.fb.group({
-        nombre: [''],
-        link: [''],
-        descripcion: [''],
-        tipo_archivo: [''],
-        id_obra:this.obra_id
-      });
-      this.cargarNotas();  // Cargar las notas de la obra
-      this.cargarDocumentos();
-      this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
-        this.presupuestos = data;
 
-        // Verificar si algún presupuesto tiene aprobado = true
-        const existePresupuestoAprobado = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
+    const checkObraInterval = setInterval(() => {
+      if (this.obra && this.obra.empresa && this.obra.empresa.id) {
+        clearInterval(checkObraInterval);
 
-        if (existePresupuestoAprobado) {
-          this.abrirReporte = true; // Cambia esta línea por el nombre de tu variable
+        if (this.obra.empresa.id === this.empresa_id) {
+          this.cargarAreas();
+          this.documentoForm = this.fb.group({
+            nombre: [''],
+            link: [''],
+            descripcion: [''],
+            tipo_archivo: [''],
+            id_obra: this.obra_id,
+          });
+
+          this.cargarNotas(); // Cargar las notas de la obra
+          this.cargarDocumentos();
+
+          // Obtener presupuestos y verificar si hay alguno aprobado
+          this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
+            this.presupuestos = data;
+
+            // Verificar si algún presupuesto tiene aprobado = true
+            this.abrirReporte = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
+          });
         } else {
-          this.abrirReporte = false; // O el valor por defecto que quieras asignar
+          this.router.navigate(['/no-permissions']);
         }
-      });
-    }
-    else{
-      this.router.navigate(['/no-permissions']);
-    }
+      }
+    }, 100); // Revisar cada 100ms si la obra está lista
   }
 
   toggleSeccion(seccion: string): void {
