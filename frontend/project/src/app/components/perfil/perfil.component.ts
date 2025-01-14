@@ -62,6 +62,12 @@ export class PerfilComponent implements OnInit {
     if (this.perfilIdUrl) {
       this.perfilService.obtenerPerfil(parseInt(this.perfilIdUrl)).subscribe((data: any) => {
         this.perfil = data;
+        const id_emp = this.perfil.id_empresa;
+        // @ts-ignore
+        const id_empresa = +sessionStorage.getItem('id_empresa');
+        if (id_emp !== id_empresa){
+          this.router.navigate(['/no-permissions']);
+        }
         this.perfilForm.patchValue({
           nombre: this.perfil.nombre,
           apellido: this.perfil.apellido,

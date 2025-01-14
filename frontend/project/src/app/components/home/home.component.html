@@ -71,11 +71,11 @@
         <h3>Tareas en curso</h3>
         <p>Detalles de tareas en curso.</p>
       </div>
-      <div *ngIf="es_colaborador !== null" class="service" (click)="navigateTo('/materiales')">
+      <div *ngIf="esColaborador==='CO'" class="service" (click)="navigateTo('/materiales', idEmpresa)">
         <h3>Materiales</h3>
         <p>Materiales correspondientes a la empresa.</p>
       </div>
-      <div *ngIf="es_colaborador!==null" class="service" (click)="navigateTo('/servicios')">
+      <div *ngIf="esColaborador==='CO'" class="service" (click)="navigateTo('/servicios')">
         <h3>Servicios</h3>
         <p>Servicios correspondientes a la empresa.</p>
       </div>

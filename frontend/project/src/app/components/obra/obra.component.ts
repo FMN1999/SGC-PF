@@ -42,6 +42,8 @@ export class ObraComponent implements OnInit {
   abrirReporte: boolean = false;
   isLoggedIn: boolean = false;
   empresa_id: number = 0;
+  empresa_obra: number | undefined;
+  cliente_id: number | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -92,13 +94,16 @@ export class ObraComponent implements OnInit {
     });
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    // @ts-ignore
-    const id_emp = +sessionStorage.getItem('id_empresa');
     this.authService.cargarPermisos(id_user);
 
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     // @ts-ignore
     this.empresa_id = +sessionStorage.getItem('id_empresa');
+
+    const es_colaborador = sessionStorage.getItem('tipo');
+    if (es_colaborador === 'CL' && this.cliente_id !== id_user){
+      this.router.navigate(['/no-permissions']);
+    }
 
     // Cargar la obra y esperar a que esté lista
     this.cargarObra();
@@ -153,6 +158,12 @@ export class ObraComponent implements OnInit {
   cargarObra(): void {
     this.obraService.obtenerObra(this.obra_id).subscribe((obra: any) => {
       this.obra = obra;
+      this.empresa_obra = obra.empresa.id;
+      this.cliente_id = obra.cliente.id_cliente;
+
+      if (this.empresa_id !== this.empresa_obra){
+        this.router.navigate(['/no-permissions']);
+      }
       this.obraForm.patchValue({
         direccion: obra.direccion,
         id_cliente: obra.cliente.id,

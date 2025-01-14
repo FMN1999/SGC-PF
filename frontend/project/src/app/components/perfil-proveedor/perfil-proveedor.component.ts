@@ -52,15 +52,25 @@ export class PerfilProveedorComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
-    const es_cliente = sessionStorage.getItem('rol');
-    if (!es_cliente){
+    const es_cliente = sessionStorage.getItem('tipo');
+    if (es_cliente==='CL'){
       this.router.navigate(['/no-permissions']);
     }
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
 
     const id = this.route.snapshot.params['id'];
     this.proveedorService.obtenerProveedor(id).subscribe({
       next: (data) => {
         this.proveedor = data.proveedor;
+        // @ts-ignore
+        const id_emp = +sessionStorage.getItem('id_empresa');
+        if (this.proveedor.id_empresa !==id_emp){
+          this.router.navigate(['/no-permissions']);
+        }
         this.materiales = data.materiales;
         this.servicios = data.servicios;
         this.ofertas = data.ofertas;

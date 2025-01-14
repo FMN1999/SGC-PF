@@ -62,6 +62,10 @@ export class PagoComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
     if (!this.dataShare.permiso13) {
       this.router.navigate(['/no-permissions']);
     }

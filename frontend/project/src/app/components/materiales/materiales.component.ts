@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import{ HeaderComponent } from '../header/header.component'
 import {NgForOf, NgIf} from "@angular/common";
@@ -24,8 +24,11 @@ export class MaterialesComponent implements OnInit {
   filtroBusqueda: string = '';
   filtroTipo: string = '';
   isLoggedIn:boolean=false;
+  // @ts-ignore
+  esColaborador:string;
 
-  constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService) {}
+  constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
+              private route: ActivatedRoute,) {}
 
   ngOnInit(): void {
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
@@ -35,21 +38,27 @@ export class MaterialesComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
-    const es_cliente = sessionStorage.getItem('rol');
-    if (es_cliente){
-      const idEmpresa = sessionStorage.getItem('id_empresa');
-      if (idEmpresa) {
-        this.empresaService.listarMaterialesPorEmpresa(parseInt(idEmpresa)).subscribe({
-          next: (data) => {
-            this.materiales = data;
-            this.materialesFiltrados = [...this.materiales]; // Inicializamos con todos los materiales
-          },
-          error: () => {
-            console.error('Error al obtener los materiales.');
-          }
-        });
-      }
+    // @ts-ignore
+    const idEmpresa = +sessionStorage.getItem('id_empresa');
+    const empr_ruta = +this.route.snapshot.params['id'];
+    // @ts-ignore
+    this.esColaborador = sessionStorage.getItem('tipo');
+
+    if (this.esColaborador==='CO' && empr_ruta ===idEmpresa){
+
+      this.empresaService.listarMaterialesPorEmpresa(empr_ruta).subscribe({
+        next: (data) => {
+          this.materiales = data;
+          this.materialesFiltrados = [...this.materiales]; // Inicializamos con todos los materiales
+        },
+        error: () => {
+          console.error('Error al obtener los materiales.');
+        }
+      });
     }
     else{
       this.router.navigate(['/no-permissions']);

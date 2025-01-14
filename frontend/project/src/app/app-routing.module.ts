@@ -60,7 +60,7 @@ const routes: Routes = [
   { path: 'servicio/:id', component: ServicioComponent },
   { path: 'oferta/:id', component: OfertaComponent },
   { path: 'usuarios', component: UsuariosComponent },
-  { path: 'materiales', component: MaterialesComponent },
+  { path: 'materiales/:id', component: MaterialesComponent },
   { path: 'servicios', component: ServiciosComponent },
   { path: 'crear-obra', component: CrearObraComponent },
   { path: 'obra/:id', component: ObraComponent },

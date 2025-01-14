@@ -49,6 +49,10 @@ export class PresupuestoComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
     this.idPresupuesto = +this.route.snapshot.paramMap.get('id')!;
     this.initForm();
     this.cargarDatosPresupuesto();
@@ -73,6 +77,21 @@ export class PresupuestoComponent implements OnInit {
     // Aquí cargarías los datos del presupuesto desde el backend
     this.presupuestoService.getPresupuestoDetalles(this.idPresupuesto).subscribe(data => {
       this.presupuesto = data;
+      const cliente = this.presupuesto.id_cliente
+      // @ts-ignore
+      const id_emp = +sessionStorage.getItem('id_empresa');
+      const emp_pres = this.presupuesto.id_empresa;
+      if (id_emp!== emp_pres){
+        this.router.navigate(['/no-permissions']);
+      }
+      // @ts-ignore
+      const id_user2 = +sessionStorage.getItem('id_usuario');
+      // @ts-ignore
+      const tipo = sessionStorage.getItem('tipo');
+      if (tipo==='CL' && id_user2 !== cliente ){
+        this.router.navigate(['/no-permissions']);
+      }
+
 
       // @ts-ignore
       this.presupuestoForm.patchValue({

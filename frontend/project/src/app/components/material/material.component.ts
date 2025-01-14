@@ -37,6 +37,10 @@ export class MaterialComponent implements OnInit {
   // @ts-ignore
   materialId: number;
   isLoggedIn: boolean=false;
+  // @ts-ignore
+  empresa_mat : number;
+  // @ts-ignore
+  esColaborador:string;
 
   constructor(
     private fb: FormBuilder,
@@ -72,8 +76,7 @@ export class MaterialComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
     });
 
@@ -81,30 +84,34 @@ export class MaterialComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
-    const es_cliente = sessionStorage.getItem('rol');
-    // @ts-ignore
-    this.empresaId = +sessionStorage.getItem('id_empresa')
+    const id_user = +sessionStorage.getItem('id_usuario')!;
+    this.authService.cargarPermisos(id_user);
+
+    this.empresaId = +sessionStorage.getItem('id_empresa')!;
     this.materialId = +this.route.snapshot.params['id'];
+    // @ts-ignore
+    this.esColaborador = sessionStorage.getItem('tipo');
+
+    // Cargar el material y esperar los datos antes de continuar
     this.proveedorService.getMaterialById(this.materialId).subscribe({
-        next: (data) => {
-          this.material$.next(data);
-          this.updateFormControls(data);
-        },
-        error: (err) => console.error(err)
-      });
+      next: (data) => {
+        this.empresa_mat = data.id_empresa;
+        this.material$.next(data);
+        this.updateFormControls(data);
 
-    if (es_cliente) {
-
-      if (this.empresaId){
-        this.empresaService.obtenerAlmacenesPorEmpresa(Number(this.empresaId)).subscribe((almacenes)=>{
-          this.almacenes=almacenes;
-        })
-      }
-    }
-    else{
-      this.router.navigate(['/no-permissions']);
-    }
+        // Ahora que `empresa_mat` está disponible, puedes realizar la comparación
+        if (this.esColaborador==='CO' && this.empresaId === this.empresa_mat) {
+          this.empresaService.obtenerAlmacenesPorEmpresa(this.empresa_mat).subscribe((almacenes) => {
+            this.almacenes = almacenes;
+          });
+        } else {
+          this.router.navigate(['/no-permissions']);
+        }
+      },
+      error: (err) => console.error(err),
+    });
   }
+
 
   // Método para alternar entre modo de vista y edición
   toggleEditMode(): void {

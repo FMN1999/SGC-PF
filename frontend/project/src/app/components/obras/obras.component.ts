@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService} from '../../services/auth/auth.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {HeaderComponent} from '../header/header.component';
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -32,7 +34,9 @@ export class ObrasComponent implements OnInit {
   constructor(
     private empresaService: EmpresaService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    protected dataShare: DataShareService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -40,21 +44,32 @@ export class ObrasComponent implements OnInit {
       this.idEmpresa = +params['id'];
 
       // @ts-ignore
-      const empresa_id=+sessionStorage.getItem('id_empresa');
+      const id_user = +sessionStorage.getItem('id_usuario');
+      // @ts-ignore
+      const tipo_usuario = sessionStorage.getItem('tipo');
+      this.authService.cargarPermisos(id_user);
+
+      // @ts-ignore
+      const empresa_id = +sessionStorage.getItem('id_empresa');
       if (this.idEmpresa === empresa_id) {
-        this.cargarObras();
-      }
-      else {
+        this.cargarObras(tipo_usuario, id_user); // Pasamos tipo_usuario e id_user
+      } else {
         this.router.navigate(['/no-permissions']);
       }
     });
   }
 
-  cargarObras(): void {
+  cargarObras(tipo_usuario: string | null, id_user: number): void {
     this.cargando = true;
     this.empresaService.obtenerObrasPorEmpresa(this.idEmpresa!).subscribe({
       next: (response) => {
         this.obras = response.obras;
+
+        // Filtrar obras si el usuario es de tipo cliente
+        if (tipo_usuario === 'CL') {
+          this.obras = this.obras.filter(obra => obra.id_usuario === id_user);
+        }
+
         this.obrasFiltradas = this.obras; // Inicializamos con todas las obras
         this.cargando = false;
       },

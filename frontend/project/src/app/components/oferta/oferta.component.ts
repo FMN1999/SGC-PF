@@ -44,15 +44,26 @@ export class OfertaComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
-    const es_cliente = sessionStorage.getItem('rol');
-    if (!es_cliente){
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    // @ts-ignore
+    const tipo_usuario = sessionStorage.getItem('tipo');
+    this.authService.cargarPermisos(id_user);
+
+    if (tipo_usuario ==='CL'){
       this.router.navigate(['/no-permissions']);
     }
 
+    // @ts-ignore
+    const id_empresa = +sessionStorage.getItem('id_empresa');
 
     const ofertaId = this.route.snapshot.params['id'];
     this.proveedorService.getOfertaById(ofertaId).subscribe({
       next: (data) => {
+        const id_emp = data.oferta.id_empresa;
+        if (id_empresa !== id_emp){
+          this.router.navigate(['/no-permissions']);
+        }
         this.oferta = data.oferta;
         this.materiales = data.materiales;
         this.servicios = data.servicios;

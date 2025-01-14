@@ -18,8 +18,8 @@ export class HomeComponent {
   isLoggedIn: boolean = false;
   isDesktop: boolean = true;
   sidebarVisible: boolean = true;
+  esColaborador :string;
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
-  es_colaborador;
   protected userMenuVisible: boolean = false;
 
   constructor(private authService: AuthService, private router: Router, protected dataShare: DataShareService) {
@@ -30,9 +30,10 @@ export class HomeComponent {
       this.isLoggedIn = isLoggedIn;
     });
 
-    this.es_colaborador = sessionStorage.getItem('rol');
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
+    // @ts-ignore
+    this.esColaborador = sessionStorage.getItem('tipo');
     this.authService.cargarPermisos(id_user);
   }
 
@@ -79,6 +80,7 @@ export class HomeComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
 }
 
 

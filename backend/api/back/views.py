@@ -26,6 +26,7 @@ class LoginView(View):
             if usuario_obj:
                 response_data = {
                     'user_id': usuario_obj.id,  # Devolver el ID del usuario
+                    'tipo': 'CL' if Cliente.objects.filter(id_usuario=usuario_obj.id).exists() else 'CO',
                     'rol': colaborador.rol if colaborador else None,
                     'id_emp': colaborador.id_empresa.id if colaborador else cliente.id_empresa.id
                 }
@@ -291,6 +292,7 @@ class OfertaDetalleView(View):
                 'fecha_desde': oferta.fecha_desde,
                 'fecha_hasta': oferta.fecha_hasta,
                 'id_proveedor': oferta.id_proveedor_id,
+                'id_empresa': oferta.id_proveedor.id_empresa.id
             }
 
             # Serializa los materiales
@@ -1647,7 +1649,8 @@ class ObraEmpresaView(View):
                 'fecha_inicio_est': o.fecha_inicio_est,
                 'monto_total_est': o.monto_total_est,
                 'tipo_obra': o.tipo_obra,
-                'estado': o.estado
+                'estado': o.estado,
+                'id_usuario': o.id_cliente.id_usuario.id
             } for o in obras
         ]
         return JsonResponse({'obras': obras_return}, safe=False)
