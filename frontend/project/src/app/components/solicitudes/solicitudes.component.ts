@@ -41,6 +41,10 @@ export class SolicitudesComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
     if (this.dataShare.permiso2 || this.dataShare.permiso3) {
       this.cargarSolicitudesPendientes();
     }

@@ -505,7 +505,6 @@ class ServicioView(View):
             data = json.loads(request.body)
 
             proveedor_id = data.get('id_proveedor')
-            print(f"Proveedor ID: {proveedor_id}")  # Debería imprimir el id del proveedor
 
             # Validar y crear servicio
             servicio = ServicioController.crear_servicio(data, proveedor_id)
@@ -534,7 +533,8 @@ class ServicioView(View):
                 'descripcion_impuestos': servicio.descripcion_impuestos,
                 'otros_gastos': servicio.otros_gastos,
                 'moneda_otros_gastos': servicio.moneda_otros_gastos,
-                'descripcion_otros_gastos': servicio.descripcion_otros_gastos
+                'descripcion_otros_gastos': servicio.descripcion_otros_gastos,
+                'id_empresa': servicio.id_proveedor.id_empresa.id
             }
             return JsonResponse(servicio_data, status=200)
         except Servicio.DoesNotExist:
@@ -1110,6 +1110,8 @@ class TareaView(View):
             tarea = Tarea.objects.get(id=id_tarea)
             tarea_data = {
                 'fecha_inicio': tarea.fecha_inicio,
+                'id_empresa': tarea.id_presupuesto_servicio.id_presupuesto.id_obra.id_empresa.id,
+                'id_cliente': tarea.id_presupuesto_servicio.id_presupuesto.id_obra.id_cliente.id_usuario.id,
                 'fecha_fin': tarea.fecha_fin,
                 'precio_total': tarea.precio_total,
                 'descripcion': tarea.descripcion,
@@ -1984,7 +1986,8 @@ class TareasView(View):
                     "porcentaje_avance": t.porcentaje_avance if t.porcentaje_avance else 0,
                     "vehiculo": vehiculo,
                     "tipo_vehiculo": tipo_vehiculo,
-                    "modelo_vehiculo": modelo_vehiculo
+                    "modelo_vehiculo": modelo_vehiculo,
+                    "id_usuario": t.id_presupuesto_servicio.id_presupuesto.id_obra.id_cliente.id_usuario.id
                 })
         return JsonResponse(tareas_response, safe=False)
 

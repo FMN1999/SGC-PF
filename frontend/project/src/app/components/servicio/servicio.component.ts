@@ -40,14 +40,25 @@ export class ServicioComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
-    const es_cliente = sessionStorage.getItem('rol');
-    if(!es_cliente){
+    const es_cliente = sessionStorage.getItem('tipo');
+    if(es_cliente==='CL'){
       this.router.navigate(['/no-permissions']);
     }
+    const id_user = +sessionStorage.getItem('id_usuario')!;
+    this.authService.cargarPermisos(id_user);
 
     const servicioId = this.route.snapshot.params['id'];
     this.proveedorService.getServicioById(servicioId).subscribe({
-      next: (data) => this.servicio = data,
+      next: (data) => {
+        this.servicio = data;
+        const empr_serv = this.servicio.id_empresa;
+        // @ts-ignore
+        const id_emp = +sessionStorage.getItem('id_empresa');
+        if (id_emp !== empr_serv){
+          this.router.navigate(['/no-permissions']);
+        }
+
+      },
       error: (err) => console.error(err)
     });
   }

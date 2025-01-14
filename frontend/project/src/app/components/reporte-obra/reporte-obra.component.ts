@@ -78,6 +78,10 @@ export class ReporteObraComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
     if (!this.dataShare.permiso10) {
       this.router.navigate(['/no-permissions']);
     }
@@ -90,6 +94,11 @@ export class ReporteObraComponent implements OnInit {
     this.reporteService.getReporteObra(this.id_obra)
       .subscribe(data => {
         this.reporte = data;
+        // @ts-ignore
+        const id_empresa = +sessionStorage.getItem('id_empresa');
+        if(id_empresa !== this.reporte.id_empresa){
+          this.router.navigate(['/no-permissions']);
+        }
         this.loading = false;
 
         // Actualizar los datos del gráfico

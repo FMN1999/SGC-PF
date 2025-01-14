@@ -1278,6 +1278,7 @@ class ReporteObra:
         # Generar reporte
         data_return = {
             "obra_id": obra.id,
+            "id_empresa": obra.id_empresa.id,
             "nombre_obra": obra.direccion,
             "presupuesto_total": presupuesto.total,
             "total_contratacion": total_contratacion,

@@ -25,6 +25,7 @@ export class UsuariosComponent implements OnInit {
   mostrarEntidades: boolean = true;
   idEmpresa: number = 0;
   isLoggedIn : boolean = false;
+  tipo: string='';
 
   constructor(private usuarioService: UsuarioService, private authService: AuthService,
               protected dataShare: DataShareService, private router: Router) {}
@@ -33,13 +34,15 @@ export class UsuariosComponent implements OnInit {
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
-    // @ts-ignore
-    const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
+    // @ts-ignore
+    this.tipo = sessionStorage.getItem('tipo');
     // @ts-ignore
     this.idEmpresa = +sessionStorage.getItem('id_empresa');
     this.usuarioService.obtenerUsuariosPorEmpresa(this.idEmpresa).subscribe({

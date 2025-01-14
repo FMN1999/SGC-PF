@@ -61,7 +61,7 @@ const routes: Routes = [
   { path: 'oferta/:id', component: OfertaComponent },
   { path: 'usuarios', component: UsuariosComponent },
   { path: 'materiales/:id', component: MaterialesComponent },
-  { path: 'servicios', component: ServiciosComponent },
+  { path: 'servicios/:id', component: ServiciosComponent },
   { path: 'crear-obra', component: CrearObraComponent },
   { path: 'obra/:id', component: ObraComponent },
   { path: 'crear-presupuesto', component: CrearPresupuestoComponent },

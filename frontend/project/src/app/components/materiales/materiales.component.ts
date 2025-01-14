@@ -28,7 +28,7 @@ export class MaterialesComponent implements OnInit {
   esColaborador:string;
 
   constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
-              private route: ActivatedRoute,) {}
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.authService.isLoggedIn().subscribe(isLoggedIn => {

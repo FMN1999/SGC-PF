@@ -61,7 +61,7 @@
     </section>
 
     <!-- Proveedores -->
-    <section class="entidad">
+    <section *ngIf="tipo==='CO'" class="entidad">
       <h2>Proveedores</h2>
       <ul class="entidad-lista">
         <li *ngFor="let proveedor of proveedoresFiltrados" class="entidad-item" [routerLink]="['/proveedor', proveedor.id]">

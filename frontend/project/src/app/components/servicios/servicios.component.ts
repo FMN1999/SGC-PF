@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpresaService } from '../../services/empresa/empresa.service';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
@@ -24,7 +24,8 @@ export class ServiciosComponent implements OnInit {
   filtroBusqueda: string = '';
   isLoggedIn: boolean=false;
 
-  constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService) {}
+  constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
@@ -35,13 +36,20 @@ export class ServiciosComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
 
-    const es_cliente = sessionStorage.getItem('rol');
-    if(!es_cliente){
+    const es_cliente = sessionStorage.getItem('tipo');
+    if(es_cliente==='CL'){
       this.router.navigate(['/no-permissions']);
     }
-    const idEmpresa = sessionStorage.getItem('id_empresa');
-    if (idEmpresa) {
-      this.empresaService.obtenerServiciosPorEmpresa(parseInt(idEmpresa)).subscribe({
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
+    // @ts-ignore
+    const idEmpresa = +sessionStorage.getItem('id_empresa');
+    const empr_ruta = +this.route.snapshot.params['id'];
+    if (idEmpresa ===empr_ruta) {
+      this.empresaService.obtenerServiciosPorEmpresa(idEmpresa).subscribe({
         next: (data) => {
           this.servicios = data;
           this.serviciosFiltrados = [...this.servicios];
@@ -50,6 +58,9 @@ export class ServiciosComponent implements OnInit {
           console.error('Error al obtener los servicios.');
         }
       });
+    }
+    else {
+      this.router.navigate(['/no-permissions']);
     }
   }
 

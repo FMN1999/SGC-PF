@@ -76,16 +76,27 @@ export class TareaComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     this.tareaId = +this.route.snapshot.paramMap.get('id')!;
     this.empresaId = sessionStorage.getItem('id_empresa') || '';
-    this.cargarDatosRelacionados();
-    this.usuarioService.obtenerUsuariosPorEmpresa(Number(this.empresaId)).subscribe(u => this.colaboradores = u.colaboradores);
-    this.empresaService.obtenerHerramientasPorEmpresa(Number(this.empresaId)).subscribe(herramientas => this.herramientas = herramientas);
-    this.empresaService.listarMaterialesPorEmpresa(Number(this.empresaId)).subscribe(materiales => this.materiales = materiales);
-    this.empresaService.obtenerVehiculosPorEmpresa(Number(this.empresaId)).subscribe(vehiculos => this.vehiculos = vehiculos);
 
     this.tareaService.getTarea(this.tareaId).subscribe((tarea) => {
+
+      const id_emp = tarea.id_empresa;
+      if (Number(this.empresaId) !== id_emp){
+        this.router.navigate(['/no-permissions']);
+      }
+      // @ts-ignore
+      const id_user = +sessionStorage.getItem('id_usuario');
+      const tarea_user = tarea.id_cliente;
+      const es_cliente = sessionStorage.getItem('tipo');
+
+      if (es_cliente === 'CL' && id_user!== tarea_user){
+        this.router.navigate(['/no-permissions']);
+      }
       this.fechaInicio = tarea.fecha_inicio;
       this.fechaFin = tarea.fecha_fin;
       this.precioTotal = tarea.precio_total;
@@ -95,6 +106,12 @@ export class TareaComponent implements OnInit {
       this.vehiculo = tarea.vehiculo;
       this.vehiculoSeleccionado = tarea.id_vehiculo;
     });
+    this.cargarDatosRelacionados();
+    this.usuarioService.obtenerUsuariosPorEmpresa(Number(this.empresaId)).subscribe(u => this.colaboradores = u.colaboradores);
+    this.empresaService.obtenerHerramientasPorEmpresa(Number(this.empresaId)).subscribe(herramientas => this.herramientas = herramientas);
+    this.empresaService.listarMaterialesPorEmpresa(Number(this.empresaId)).subscribe(materiales => this.materiales = materiales);
+    this.empresaService.obtenerVehiculosPorEmpresa(Number(this.empresaId)).subscribe(vehiculos => this.vehiculos = vehiculos);
+
   }
 
   cargarDatosRelacionados() {
