@@ -33,7 +33,7 @@
           <button
             *ngIf="cliente.fecha_baja === null"
             class="btn btn-danger btn-small"
-            (click)="darDeBajaCliente(cliente.id); $event.stopPropagation()"
+            (click)="darDeBajaCliente(cliente.id, cliente.nombre, cliente.apellido); $event.stopPropagation()"
           >
             Dar de baja
           </button>
@@ -52,7 +52,7 @@
           <button
             *ngIf="colaborador.fecha_baja === null"
             class="btn btn-danger btn-small"
-            (click)="darDeBajaColaborador(colaborador.id); $event.stopPropagation()"
+            (click)="darDeBajaColaborador(colaborador.id, colaborador.nombre, colaborador.apellido); $event.stopPropagation()"
           >
             Dar de baja
           </button>

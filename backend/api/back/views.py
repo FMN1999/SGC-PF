@@ -75,10 +75,11 @@ class RegistroClienteView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            fecha = data.get('fecha_nacimiento')
 
             # Datos del usuario
             datos_usuario = {
-                'fecha_nacimiento': data.get('fecha_nacimiento'),
+                'fecha_nacimiento': fecha if fecha else None,
                 'nombre': data.get('nombre'),
                 'apellido': data.get('apellido'),
                 'email': data.get('email'),

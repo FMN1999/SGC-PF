@@ -99,7 +99,7 @@ export class RegisterComponent implements OnInit {
         this.mensajeSuccess = '¡Cliente registrado exitosamente en la empresa!';
         this.mensajeError = ''; // Limpia el mensaje de error
         this.registerForm.reset(); // Reinicia el formulario tras el registro exitoso
-        this.router.navigate(['/login']);
+        this.router.navigate(['/home']);
       },
       error: (error: any) => {
         this.mensajeError = error.error?.error || 'Ocurrió un error durante el registro. Intenta nuevamente.';
