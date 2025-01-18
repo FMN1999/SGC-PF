@@ -6,6 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf, CurrencyPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 interface Tarea {
   id: number;
@@ -40,10 +41,12 @@ export class TareasComponent implements OnInit {
     private tareaService: TareaService,
     private router: Router,
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Tareas');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

@@ -6,6 +6,7 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
 import {DataShareService} from "../../services/data-share/data-share.service";
 import {AuthService} from "../../services/auth/auth.service";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-compra',
@@ -33,10 +34,12 @@ export class CompraComponent implements OnInit {
     private pagoService: PagoService,
     private router: Router,
     protected dataShare: DataShareService,
-    private authService: AuthService
+    private authService: AuthService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de compra'); // Ajusta el nombre dinámicamente
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

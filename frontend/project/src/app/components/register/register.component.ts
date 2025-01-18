@@ -4,6 +4,7 @@ import { NgIf, NgFor } from '@angular/common';  // Para *ngIf y *ngFor
 import { AuthService } from '../../services/auth/auth.service'; // Ajusta la ruta si es necesario
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {Router} from "@angular/router"; // Ajusta la ruta si es necesario
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -20,9 +21,10 @@ export class RegisterComponent implements OnInit {
   mensajeError: string = '';
   isLoggedIn:boolean =false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService,
+  constructor(private fb: FormBuilder, private authService: AuthService, private titleService: Title,
               private empresaService: EmpresaService, private router: Router) {
 
+    this.titleService.setTitle('Registrarse como Cliente');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

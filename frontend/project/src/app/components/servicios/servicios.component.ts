@@ -5,6 +5,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import {AuthService} from "../../services/auth/auth.service";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-servicios',
@@ -25,9 +26,10 @@ export class ServiciosComponent implements OnInit {
   isLoggedIn: boolean=false;
 
   constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute, private titleService: Title) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Servicios');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

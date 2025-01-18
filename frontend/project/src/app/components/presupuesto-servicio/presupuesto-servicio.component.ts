@@ -9,6 +9,7 @@ import {AuthService} from "../../services/auth/auth.service";
 import {DataShareService} from "../../services/data-share/data-share.service";
 import {HeaderComponent} from '../header/header.component';
 import { ChangeDetectorRef } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -43,10 +44,12 @@ export class PresupuestoServicioComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
     private dataShare: DataShareService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
+    this.titleService.setTitle('Registrar Contratación');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

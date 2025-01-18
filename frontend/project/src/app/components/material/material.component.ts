@@ -8,6 +8,7 @@ import {HeaderComponent} from '../header/header.component';
 import {BehaviorSubject} from "rxjs";
 import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-material',
@@ -49,7 +50,8 @@ export class MaterialComponent implements OnInit {
     private empresaService: EmpresaService,
     private authService: AuthService,
     protected dataShare: DataShareService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {
     // Definir el formulario reactivo
     this.materialForm = this.fb.group({
@@ -76,6 +78,7 @@ export class MaterialComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Datos de Material');
     this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
     });

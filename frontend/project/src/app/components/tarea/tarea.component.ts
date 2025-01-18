@@ -8,6 +8,7 @@ import {FormsModule} from "@angular/forms";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router"; // Ajusta la ruta del servicio
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tarea',
@@ -65,10 +66,12 @@ export class TareaComponent implements OnInit {
     private authService: AuthService,
     protected dataShare: DataShareService,
     private router: Router,
+    private titleService: Title,
     private route: ActivatedRoute  // Para obtener el ID desde la URL
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de Tarea');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

@@ -9,6 +9,7 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -40,7 +41,8 @@ export class CrearTareaComponent implements OnInit {
     private empresaService: EmpresaService,
     private router: Router,
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {
     this.tareaForm = this.fb.group({
       titulo: ['', Validators.required],
@@ -55,6 +57,7 @@ export class CrearTareaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Tarea');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

@@ -6,6 +6,7 @@ import {formatDate, NgForOf, NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
 import {FormsModule} from "@angular/forms";
 import {RouterLink, Router} from "@angular/router";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-usuarios',
@@ -27,10 +28,11 @@ export class UsuariosComponent implements OnInit {
   isLoggedIn : boolean = false;
   tipo: string='';
 
-  constructor(private usuarioService: UsuarioService, private authService: AuthService,
+  constructor(private usuarioService: UsuarioService, private authService: AuthService, private titleService: Title,
               protected dataShare: DataShareService, private router: Router) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Usuarios');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

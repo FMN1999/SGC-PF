@@ -6,6 +6,7 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import { HeaderComponent } from '../header/header.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
+import { Title } from '@angular/platform-browser';
 
 export interface ChartOptions {
   series: ApexAxisChartSeries;
@@ -55,9 +56,10 @@ export class BalanceFinancieroComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   constructor(private route: ActivatedRoute, private empresaService: EmpresaService, private authService: AuthService,
-              private router: Router, private dataShare: DataShareService) {}
+              private router: Router, private dataShare: DataShareService, private titleService: Title) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Balance Anual'); // Ajusta el nombre dinámicamente
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

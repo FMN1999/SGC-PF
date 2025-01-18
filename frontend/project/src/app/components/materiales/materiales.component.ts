@@ -5,6 +5,7 @@ import {FormsModule} from "@angular/forms";
 import{ HeaderComponent } from '../header/header.component'
 import {NgForOf, NgIf} from "@angular/common";
 import { AuthService } from '../../services/auth/auth.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-materiales',
@@ -28,9 +29,10 @@ export class MaterialesComponent implements OnInit {
   esColaborador:string;
 
   constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute, private titleService: Title) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Materiales');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

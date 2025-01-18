@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-oferta',
@@ -32,10 +33,12 @@ export class OfertaComponent implements OnInit {
     private proveedorService: ProveedorService,
     private router: Router,
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Oferta');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

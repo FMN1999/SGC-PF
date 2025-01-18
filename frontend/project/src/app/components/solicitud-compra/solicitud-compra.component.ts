@@ -8,6 +8,7 @@ import {EmpresaService} from "../../services/empresa/empresa.service";
 import {AuthService} from "../../services/auth/auth.service";
 import {DataShareService} from "../../services/data-share/data-share.service";
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-solicitud-compra',
@@ -39,10 +40,12 @@ export class SolicitudCompraComponent implements OnInit {
     private empresaService: EmpresaService,
     private router: Router,
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
+    this.titleService.setTitle('Registrar Solicitud de Compra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

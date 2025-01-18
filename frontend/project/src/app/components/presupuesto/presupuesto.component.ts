@@ -6,6 +6,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from '@angular/router';
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-presupuesto',
@@ -37,10 +38,12 @@ export class PresupuestoComponent implements OnInit {
     private presupuestoService: PresupuestoService,
     private router: Router,
     private authService: AuthService,
-    protected dataShare: DataShareService
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de Presupuesto');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

@@ -9,6 +9,7 @@ import { HeaderComponent } from '../header/header.component'
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import Swal from 'sweetalert2';
 import {DataShareService} from "../../services/data-share/data-share.service";
+import { Title } from '@angular/platform-browser'; // Importa Title
 
 @Component({
   selector: 'app-almacenes-empresa',
@@ -39,10 +40,13 @@ export class AlmacenesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de Almacenes'); // Ajusta el nombre dinámicamente
+
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

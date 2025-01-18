@@ -6,6 +6,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import { NgIf } from "@angular/common";
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para usar ngModel
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-servicio',
@@ -28,10 +29,12 @@ export class ServicioComponent implements OnInit {
     private proveedorService: ProveedorService,
     private router: Router,
     private authService: AuthService,
-    protected dataShare: DataShareService
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Datos de Servicio');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

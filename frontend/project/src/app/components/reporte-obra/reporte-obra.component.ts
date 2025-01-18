@@ -5,6 +5,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import {CurrencyPipe, NgForOf, NgIf, PercentPipe} from "@angular/common";
 import {BaseChartDirective} from "ng2-charts";
 import {ChartData} from "chart.js";
+// @ts-ignore
 import {
   Chart,
   BarController,
@@ -17,6 +18,8 @@ import {
 } from 'chart.js';
 import {HeaderComponent} from '../header/header.component';
 import {ActivatedRoute, Router} from "@angular/router";
+// @ts-ignore
+import { Title as TitleService} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-reporte-obra',
@@ -56,8 +59,14 @@ export class ReporteObraComponent implements OnInit {
     ]
   };
 
-  constructor(private reporteService: ReporteService, private route: ActivatedRoute, private authService: AuthService,
-              private dataShare: DataShareService, private router: Router) {
+
+  constructor(private reporteService: ReporteService,
+              private route: ActivatedRoute,
+              private authService: AuthService,
+              private dataShare: DataShareService,
+              private router: Router,
+              // @ts-ignore
+              private titleService: TitleService) {
     Chart.register(
       BarController,
       BarElement,
@@ -70,6 +79,7 @@ export class ReporteObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Reporte de Obra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

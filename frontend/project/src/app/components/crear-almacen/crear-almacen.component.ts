@@ -6,6 +6,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import { NgIf } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import {Router} from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   standalone: true,
@@ -27,7 +28,7 @@ export class CrearAlmacenComponent implements OnInit{
   isLoggedIn: boolean = false;
 
   constructor(private fb: FormBuilder, private almacenService: EmpresaService, private authService:AuthService,
-              private dataShare: DataShareService, private router: Router) {
+              private dataShare: DataShareService, private router: Router, private titleService: Title) {
     this.almacenForm = this.fb.group({
       descripcion: ['', Validators.required],
       direccion: ['', Validators.required],
@@ -38,6 +39,7 @@ export class CrearAlmacenComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Almacen'); // Ajusta el nombre dinámicamente
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

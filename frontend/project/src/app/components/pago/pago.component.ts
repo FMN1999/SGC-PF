@@ -7,6 +7,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
 import {Router} from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -39,7 +40,8 @@ export class PagoComponent implements OnInit {
     private usuarioService: UsuarioService,
     private authService: AuthService,
     private dataShare: DataShareService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {
     this.pagoForm = this.fb.group({
       tipo_pago: ['', Validators.required],
@@ -54,6 +56,7 @@ export class PagoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Registrar Pago');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

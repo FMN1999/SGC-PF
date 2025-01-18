@@ -7,6 +7,7 @@ import{ AuthService } from '../../services/auth/auth.service';
 import{ DataShareService } from '../../services/data-share/data-share.service';
 import{ EmpresaService } from '../../services/empresa/empresa.service';
 import { HeaderComponent } from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-registrar-pago',
@@ -36,10 +37,12 @@ export class RegistrarPagoComponent implements OnInit {
               private empresaService: EmpresaService,
               private authService: AuthService,
               private dataShare: DataShareService,
-              private router: Router
+              private router: Router,
+              private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Registrar pago de Cliente');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

@@ -6,6 +6,7 @@ import { RouterLink, Router } from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-solicitudes',
@@ -30,9 +31,10 @@ export class SolicitudesComponent implements OnInit {
   isLoggedIn:boolean=false;
 
   constructor(private solicitudService: CompraService, private authService: AuthService,
-              private dataShare: DataShareService, private router: Router) {}
+              private dataShare: DataShareService, private router: Router, private titleService: Title) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Solicitudes / Compras');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

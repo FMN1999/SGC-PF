@@ -7,6 +7,7 @@ import {TareaService} from "../../services/tarea/tarea.service";  // Importar Ac
 import {DataShareService} from "../../services/data-share/data-share.service";  // Importar ActivatedRoute
 import {AuthService} from "../../services/auth/auth.service";  // Importar ActivatedRoute
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-perfil',
@@ -39,7 +40,8 @@ export class PerfilComponent implements OnInit {
     private route: ActivatedRoute,  // Inyectar ActivatedRoute
     private tareaService: TareaService,
     private router: Router,
-    protected dataShare: DataShareService
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -57,6 +59,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Perfil de Usuario');
     // @ts-ignore
     this.perfilIdUrl = this.route.snapshot.paramMap.get('id');
     if (this.perfilIdUrl) {

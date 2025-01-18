@@ -4,7 +4,8 @@ import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
-import {HeaderComponent} from '../header/header.component'
+import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-finanzas-obra',
@@ -31,10 +32,12 @@ export class FinanzasObraComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private dataShare: DataShareService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
     ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Pagos y Cobros de Obra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

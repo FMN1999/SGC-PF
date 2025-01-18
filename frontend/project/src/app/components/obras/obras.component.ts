@@ -6,6 +6,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import {HeaderComponent} from '../header/header.component';
 import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-obras-empresa',
@@ -36,10 +37,12 @@ export class ObrasComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     protected dataShare: DataShareService,
-    private authService: AuthService
+    private authService: AuthService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Obras');
     this.route.params.subscribe(params => {
       this.idEmpresa = +params['id'];
 

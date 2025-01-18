@@ -6,6 +6,7 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-obra',
@@ -51,7 +52,8 @@ export class ObraComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    protected dataShare: DataShareService
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {
     this.obraForm = this.fb.group({
       direccion: [{ value: '', disabled: true }, Validators.required],
@@ -85,6 +87,7 @@ export class ObraComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de Obra');
     this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
 
