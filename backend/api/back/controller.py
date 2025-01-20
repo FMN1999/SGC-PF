@@ -923,7 +923,7 @@ class ChatController:
                 "material_id": material.id,
                 "descripcion": material.id_material.descripcion,
                 "marca": material.id_material.marca,
-                "precio": material.id_material.precio,
+                "precio": material.id_material.precio + material.id_material.impuestos_total + material.id_material.otros_gastos,
                 "moneda": material.id_material.moneda,
                 "unidad_medida": material.id_material.unidad_medida,
                 "ofertas": ofertas_data,
