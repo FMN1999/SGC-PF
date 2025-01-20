@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from '@angular/forms';
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from '@angular/router';
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-presupuesto',
@@ -27,16 +30,32 @@ export class PresupuestoComponent implements OnInit {
   protected trabajadores_data: any[] = [];
   protected idEditar: boolean = false;
   tareas_data: any[] = [];
+  isLoggedIn: boolean=false;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
     private router: Router,
-
+    private authService: AuthService,
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de Presupuesto');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
     this.idPresupuesto = +this.route.snapshot.paramMap.get('id')!;
     this.initForm();
     this.cargarDatosPresupuesto();
@@ -61,6 +80,21 @@ export class PresupuestoComponent implements OnInit {
     // Aquí cargarías los datos del presupuesto desde el backend
     this.presupuestoService.getPresupuestoDetalles(this.idPresupuesto).subscribe(data => {
       this.presupuesto = data;
+      const cliente = this.presupuesto.id_cliente
+      // @ts-ignore
+      const id_emp = +sessionStorage.getItem('id_empresa');
+      const emp_pres = this.presupuesto.id_empresa;
+      if (id_emp!== emp_pres){
+        this.router.navigate(['/no-permissions']);
+      }
+      // @ts-ignore
+      const id_user2 = +sessionStorage.getItem('id_usuario');
+      // @ts-ignore
+      const tipo = sessionStorage.getItem('tipo');
+      if (tipo==='CL' && id_user2 !== cliente ){
+        this.router.navigate(['/no-permissions']);
+      }
+
 
       // @ts-ignore
       this.presupuestoForm.patchValue({

@@ -4,6 +4,7 @@ import { NgIf, NgFor } from '@angular/common';  // Para *ngIf y *ngFor
 import { AuthService } from '../../services/auth/auth.service'; // Ajusta la ruta si es necesario
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {Router} from "@angular/router"; // Ajusta la ruta si es necesario
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -18,9 +19,19 @@ export class RegisterComponent implements OnInit {
   empresas: any[] = [];  // Para almacenar la lista de empresas
   mensajeSuccess: string = '';
   mensajeError: string = '';
+  isLoggedIn:boolean =false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService,
+  constructor(private fb: FormBuilder, private authService: AuthService, private titleService: Title,
               private empresaService: EmpresaService, private router: Router) {
+
+    this.titleService.setTitle('Registrarse como Cliente');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
     this.registerForm = this.fb.group({
       // Campos del usuario
       nombre_usuario: ['', Validators.required],
@@ -88,7 +99,7 @@ export class RegisterComponent implements OnInit {
         this.mensajeSuccess = '¡Cliente registrado exitosamente en la empresa!';
         this.mensajeError = ''; // Limpia el mensaje de error
         this.registerForm.reset(); // Reinicia el formulario tras el registro exitoso
-        this.router.navigate(['/login']);
+        this.router.navigate(['/home']);
       },
       error: (error: any) => {
         this.mensajeError = error.error?.error || 'Ocurrió un error durante el registro. Intenta nuevamente.';

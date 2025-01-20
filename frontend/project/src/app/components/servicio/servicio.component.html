@@ -18,7 +18,7 @@
       <p><strong>Proveedor:</strong> {{ servicio.proveedor }}</p>
 
       <div class="acciones">
-        <button class="btn btn-primary" (click)="enableEditing()">Editar</button>
+        <button class="btn btn-primary" (click)="enableEditing()" *ngIf="dataShare.permiso6">Editar</button>
       </div>
     </div>
 

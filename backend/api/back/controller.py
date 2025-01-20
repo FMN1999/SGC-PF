@@ -206,6 +206,7 @@ class ProveedorController:
                     'cuil': proveedor.cuil,
                     'ciudad': proveedor.ciudad,
                     'provincia': proveedor.provincia,
+                    'id_empresa': proveedor.id_empresa.id
                 },
                 'materiales': materiales_list,
                 'servicios': servicios_list,
@@ -402,7 +403,8 @@ class ObraController:
             'direccion': obra.direccion,
             'cliente': {
                 'id': obra.id_cliente.id,
-                'nombre': f'{obra.id_cliente.id_usuario.nombre} {obra.id_cliente.id_usuario.apellido}'
+                'nombre': f'{obra.id_cliente.id_usuario.nombre} {obra.id_cliente.id_usuario.apellido}',
+                'id_usuario': obra.id_cliente.id_usuario.id
             },
             'telefono_contacto': obra.telefono_contacto,
             'fecha_inicio_est': obra.fecha_inicio_est,
@@ -1280,6 +1282,7 @@ class ReporteObra:
         # Generar reporte
         data_return = {
             "obra_id": obra.id,
+            "id_empresa": obra.id_empresa.id,
             "nombre_obra": obra.direccion,
             "presupuesto_total": presupuesto.total,
             "total_contratacion": total_contratacion,

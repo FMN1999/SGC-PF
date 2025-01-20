@@ -6,6 +6,7 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from '../header/header.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-obra',
@@ -42,6 +43,8 @@ export class ObraComponent implements OnInit {
   abrirReporte: boolean = false;
   isLoggedIn: boolean = false;
   empresa_id: number = 0;
+  empresa_obra: number | undefined;
+  cliente_id: number | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -49,7 +52,8 @@ export class ObraComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    protected dataShare: DataShareService
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {
     this.obraForm = this.fb.group({
       direccion: [{ value: '', disabled: true }, Validators.required],
@@ -82,47 +86,60 @@ export class ObraComponent implements OnInit {
     });
 
   }
-
   ngOnInit(): void {
-    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+    this.titleService.setTitle('Gestión de Obra');
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
-    });
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     // @ts-ignore
     this.empresa_id = +sessionStorage.getItem('id_empresa');
-    this.cargarObra();
-    if (this.obra.empresa.id === this.empresa_id){
-      this.cargarAreas();
-      this.documentoForm = this.fb.group({
-        nombre: [''],
-        link: [''],
-        descripcion: [''],
-        tipo_archivo: [''],
-        id_obra:this.obra_id
-      });
-      this.cargarNotas();  // Cargar las notas de la obra
-      this.cargarDocumentos();
-      this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
-        this.presupuestos = data;
 
-        // Verificar si algún presupuesto tiene aprobado = true
-        const existePresupuestoAprobado = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
-
-        if (existePresupuestoAprobado) {
-          this.abrirReporte = true; // Cambia esta línea por el nombre de tu variable
-        } else {
-          this.abrirReporte = false; // O el valor por defecto que quieras asignar
-        }
-      });
-    }
-    else{
+    const es_colaborador = sessionStorage.getItem('tipo');
+    if (es_colaborador === 'CL' && this.cliente_id !== id_user){
       this.router.navigate(['/no-permissions']);
     }
+
+    // Cargar la obra y esperar a que esté lista
+    this.cargarObra();
+
+    const checkObraInterval = setInterval(() => {
+      if (this.obra && this.obra.empresa && this.obra.empresa.id) {
+        clearInterval(checkObraInterval);
+
+        if (this.obra.empresa.id === this.empresa_id) {
+          this.cargarAreas();
+          this.documentoForm = this.fb.group({
+            nombre: [''],
+            link: [''],
+            descripcion: [''],
+            tipo_archivo: [''],
+            id_obra: this.obra_id,
+          });
+
+          this.cargarNotas(); // Cargar las notas de la obra
+          this.cargarDocumentos();
+
+          // Obtener presupuestos y verificar si hay alguno aprobado
+          this.obraService.getPresupuestosPorObra(this.obra_id).subscribe((data) => {
+            this.presupuestos = data;
+
+            // Verificar si algún presupuesto tiene aprobado = true
+            this.abrirReporte = this.presupuestos.some((presupuesto: any) => presupuesto.aprobado === true);
+          });
+        } else {
+          this.router.navigate(['/no-permissions']);
+        }
+      }
+    }, 100); // Revisar cada 100ms si la obra está lista
   }
 
   toggleSeccion(seccion: string): void {
@@ -144,6 +161,12 @@ export class ObraComponent implements OnInit {
   cargarObra(): void {
     this.obraService.obtenerObra(this.obra_id).subscribe((obra: any) => {
       this.obra = obra;
+      this.empresa_obra = obra.empresa.id;
+      this.cliente_id = obra.cliente.id_cliente;
+
+      if (this.empresa_id !== this.empresa_obra){
+        this.router.navigate(['/no-permissions']);
+      }
       this.obraForm.patchValue({
         direccion: obra.direccion,
         id_cliente: obra.cliente.id,

@@ -8,6 +8,7 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-crear-material',
@@ -46,7 +47,8 @@ export class CrearMaterialComponent implements OnInit{
     private empresaService: EmpresaService,
     private router: Router,
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {
       this.id_proveedor = this.route.snapshot.params['id'];
       this.materialForm = this.fb.group({
@@ -82,6 +84,7 @@ export class CrearMaterialComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Material');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -89,6 +92,9 @@ export class CrearMaterialComponent implements OnInit{
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso5) {
       this.router.navigate(['/no-permissions']);

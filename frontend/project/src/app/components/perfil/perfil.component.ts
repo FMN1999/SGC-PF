@@ -4,7 +4,10 @@ import {NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TareaService} from "../../services/tarea/tarea.service";  // Importar ActivatedRoute
+import {DataShareService} from "../../services/data-share/data-share.service";  // Importar ActivatedRoute
+import {AuthService} from "../../services/auth/auth.service";  // Importar ActivatedRoute
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-perfil',
@@ -32,10 +35,13 @@ export class PerfilComponent implements OnInit {
 
   constructor(
     private perfilService: PerfilService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private route: ActivatedRoute,  // Inyectar ActivatedRoute
     private tareaService: TareaService,
-    private router: Router
+    private router: Router,
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -53,11 +59,18 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Perfil de Usuario');
     // @ts-ignore
     this.perfilIdUrl = this.route.snapshot.paramMap.get('id');
     if (this.perfilIdUrl) {
       this.perfilService.obtenerPerfil(parseInt(this.perfilIdUrl)).subscribe((data: any) => {
         this.perfil = data;
+        const id_emp = this.perfil.id_empresa;
+        // @ts-ignore
+        const id_empresa = +sessionStorage.getItem('id_empresa');
+        if (id_emp !== id_empresa){
+          this.router.navigate(['/no-permissions']);
+        }
         this.perfilForm.patchValue({
           nombre: this.perfil.nombre,
           apellido: this.perfil.apellido,
@@ -72,6 +85,9 @@ export class PerfilComponent implements OnInit {
           deuda: this.perfil.deuda,
         });
       });
+      // @ts-ignore
+      const id_user = +sessionStorage.getItem('id_usuario');
+      this.authService.cargarPermisos(id_user);
 
       this.perfilService.tareasPorUsuario(parseInt(this.perfilIdUrl)).subscribe((data: any)=>{
         this.tareas = data;

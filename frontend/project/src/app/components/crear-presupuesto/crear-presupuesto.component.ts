@@ -8,6 +8,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import { ChatComponent } from '../chat/chat.component'
 import {DataShareService} from "../../services/data-share/data-share.service";
 import { HeaderComponent } from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   standalone:true,
@@ -41,10 +42,12 @@ export class CrearPresupuestoComponent implements OnInit {
     private route: ActivatedRoute,
     private dataShareService: DataShareService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
+    this.titleService.setTitle('Crear Presupuesto');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -52,6 +55,9 @@ export class CrearPresupuestoComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShareService.permiso4) {
       this.router.navigate(['/no-permissions']);

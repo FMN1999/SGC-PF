@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ReporteService } from '../../services/reporte/reporte.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import {CurrencyPipe, NgForOf, NgIf, PercentPipe} from "@angular/common";
 import {BaseChartDirective} from "ng2-charts";
 import {ChartData} from "chart.js";
+// @ts-ignore
 import {
   Chart,
   BarController,
@@ -14,7 +17,9 @@ import {
   Legend
 } from 'chart.js';
 import {HeaderComponent} from '../header/header.component';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+// @ts-ignore
+import { Title as TitleService} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-reporte-obra',
@@ -34,6 +39,7 @@ export class ReporteObraComponent implements OnInit {
   reporte: any;
   loading: boolean = true;
   id_obra: number = 0;
+  isLoggedIn: boolean = false;
 
   // @ts-ignore
   // @ts-ignore
@@ -53,7 +59,14 @@ export class ReporteObraComponent implements OnInit {
     ]
   };
 
-  constructor(private reporteService: ReporteService, private route: ActivatedRoute,) {
+
+  constructor(private reporteService: ReporteService,
+              private route: ActivatedRoute,
+              private authService: AuthService,
+              private dataShare: DataShareService,
+              private router: Router,
+              // @ts-ignore
+              private titleService: TitleService) {
     Chart.register(
       BarController,
       BarElement,
@@ -66,6 +79,22 @@ export class ReporteObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Reporte de Obra');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
+    if (!this.dataShare.permiso10) {
+      this.router.navigate(['/no-permissions']);
+    }
     // @ts-ignore
     this.id_obra = +this.route.snapshot.paramMap.get('id');
     this.obtenerReporte();
@@ -75,6 +104,11 @@ export class ReporteObraComponent implements OnInit {
     this.reporteService.getReporteObra(this.id_obra)
       .subscribe(data => {
         this.reporte = data;
+        // @ts-ignore
+        const id_empresa = +sessionStorage.getItem('id_empresa');
+        if(id_empresa !== this.reporte.id_empresa){
+          this.router.navigate(['/no-permissions']);
+        }
         this.loading = false;
 
         // Actualizar los datos del gráfico

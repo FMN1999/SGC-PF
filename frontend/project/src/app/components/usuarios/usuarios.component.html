@@ -3,10 +3,10 @@
 <div class="entidades-container">
     <!-- Botones para crear -->
   <div class="acciones">
-    <button class="btn btn-primary" [routerLink]="['/crear-colaborador']">
+    <button *ngIf="dataShare.permiso16" class="btn btn-primary" [routerLink]="['/crear-colaborador']">
       Crear Colaborador
     </button>
-    <button class="btn btn-primary" [routerLink]="['/crear-proveedor']">
+    <button *ngIf="dataShare.permiso7" class="btn btn-primary" [routerLink]="['/crear-proveedor']">
       Crear Proveedor
     </button>
   </div>
@@ -33,7 +33,7 @@
           <button
             *ngIf="cliente.fecha_baja === null"
             class="btn btn-danger btn-small"
-            (click)="darDeBajaCliente(cliente.id); $event.stopPropagation()"
+            (click)="darDeBajaCliente(cliente.id, cliente.nombre, cliente.apellido); $event.stopPropagation()"
           >
             Dar de baja
           </button>
@@ -52,7 +52,7 @@
           <button
             *ngIf="colaborador.fecha_baja === null"
             class="btn btn-danger btn-small"
-            (click)="darDeBajaColaborador(colaborador.id); $event.stopPropagation()"
+            (click)="darDeBajaColaborador(colaborador.id, colaborador.nombre, colaborador.apellido); $event.stopPropagation()"
           >
             Dar de baja
           </button>
@@ -61,7 +61,7 @@
     </section>
 
     <!-- Proveedores -->
-    <section class="entidad">
+    <section *ngIf="tipo==='CO'" class="entidad">
       <h2>Proveedores</h2>
       <ul class="entidad-lista">
         <li *ngFor="let proveedor of proveedoresFiltrados" class="entidad-item" [routerLink]="['/proveedor', proveedor.id]">

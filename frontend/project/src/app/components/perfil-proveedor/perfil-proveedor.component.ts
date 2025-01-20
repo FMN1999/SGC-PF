@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor/proveedor.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { NgForOf, NgIf } from "@angular/common";
 import { FormsModule } from '@angular/forms'; // Importar FormsModule para ngModel
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-perfil-proveedor',
@@ -31,18 +34,46 @@ export class PerfilProveedorComponent implements OnInit {
   showMateriales = true;
   showServicios = true;
   showOfertas = true;
+  isLoggedIn:boolean=false;
 
   constructor(
     private proveedorService: ProveedorService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    protected dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Perfil de Proveedor');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    const es_cliente = sessionStorage.getItem('tipo');
+    if (es_cliente==='CL'){
+      this.router.navigate(['/no-permissions']);
+    }
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
+
     const id = this.route.snapshot.params['id'];
     this.proveedorService.obtenerProveedor(id).subscribe({
       next: (data) => {
         this.proveedor = data.proveedor;
+        // @ts-ignore
+        const id_emp = +sessionStorage.getItem('id_empresa');
+        if (this.proveedor.id_empresa !==id_emp){
+          this.router.navigate(['/no-permissions']);
+        }
         this.materiales = data.materiales;
         this.servicios = data.servicios;
         this.ofertas = data.ofertas;

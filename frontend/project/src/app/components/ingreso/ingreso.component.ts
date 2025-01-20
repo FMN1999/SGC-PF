@@ -8,6 +8,7 @@ import { IngresoService } from '../../services/ingresos/ingresos.service';
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common";
 import{HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ingreso',
@@ -41,7 +42,8 @@ export class IngresoComponent implements OnInit {
     private empresaService: EmpresaService,
     private authService: AuthService,
     private dataShare: DataShareService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {
     this.ingresoForm = this.fb.group({
       ingresos: this.fb.array([]) // FormArray para múltiples ingresos
@@ -49,6 +51,7 @@ export class IngresoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Nuevo Ingreso');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -56,6 +59,10 @@ export class IngresoComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso15) {
       this.router.navigate(['/no-permissions']);

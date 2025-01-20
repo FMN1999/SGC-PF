@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gestion-permisos',
@@ -34,10 +35,12 @@ export class GestionPermisosComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private dataShare: DataShareService,
-    private router: Router
+    private router: Router,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de permisos de Usuario');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -45,6 +48,9 @@ export class GestionPermisosComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+        // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso10) {
       this.router.navigate(['/no-permissions']);

@@ -29,6 +29,8 @@ export class AuthService {
   login(usuario: string, contrasenia: string) {
     return this.http.post(`${this.apiUrl}/login/`, { usuario, contrasenia }).pipe(
       tap((response: any) => {
+        console.log(response);
+        sessionStorage.setItem('tipo', response.tipo);
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('id_usuario',response.user_id);
         sessionStorage.setItem('rol', response.rol);
@@ -42,7 +44,6 @@ export class AuthService {
   cargarPermisos(idUsuario: number): void {
     this.http.get(`${this.apiUrl}/permisos/${idUsuario}/`).subscribe((response: any) => {
       const permisos = response.permisos || [];
-      console.log(permisos);
       this.actualizarPermisos(permisos);
     });
   }
@@ -56,10 +57,14 @@ export class AuthService {
 
   // Función de logout
   logout() {
+    sessionStorage.removeItem('tipo');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('rol');
     sessionStorage.removeItem('id_empresa');
     sessionStorage.removeItem('id_usuario');
+    for (let i = 1; i <= 16; i++) {
+      (this.dataShareService as any)[`permiso${i}`] = false;
+    }
     this.loggedIn.next(false); // Notifica que el usuario se ha deslogueado
   }
 

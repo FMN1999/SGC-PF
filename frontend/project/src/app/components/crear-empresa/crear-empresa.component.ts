@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import {NgIf} from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
-import * as console from "node:console";
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 @Component({
@@ -26,7 +26,7 @@ export class CrearEmpresaComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   constructor(private fb: FormBuilder, private empresaService: EmpresaService, private authService:AuthService,
-              private dataShare: DataShareService, private router: Router) {
+              private dataShare: DataShareService, private router: Router, private titleService: Title) {
     this.empresaForm = this.fb.group({
       denominacion: ['', Validators.required],
       cuit: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
@@ -56,6 +56,7 @@ export class CrearEmpresaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Empresa'); // Ajusta el nombre dinámicamente
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -63,6 +64,9 @@ export class CrearEmpresaComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso16) {
       this.router.navigate(['/no-permissions']);

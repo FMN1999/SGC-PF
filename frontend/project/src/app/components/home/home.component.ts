@@ -1,9 +1,10 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Renderer2 } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { NgIf, NgClass, NgOptimizedImage } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import {DataShareService} from "../../services/data-share/data-share.service";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -17,17 +18,26 @@ export class HomeComponent {
   idEmpresa = +sessionStorage.getItem('id_empresa')
   isLoggedIn: boolean = false;
   isDesktop: boolean = true;
-  sidebarVisible: boolean = true;
+  sidebarVisible: boolean = false;
+  esColaborador :string;
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
   protected userMenuVisible: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, protected dataShare: DataShareService) {
+  constructor(private authService: AuthService, private router: Router, protected dataShare: DataShareService,
+              private renderer: Renderer2, private titleService: Title) {
+    this.titleService.setTitle('Home');
     this.checkScreenSize();
 
     // Suscribirse al estado de autenticación
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    // @ts-ignore
+    this.esColaborador = sessionStorage.getItem('tipo');
+    this.authService.cargarPermisos(id_user);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -73,6 +83,7 @@ export class HomeComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
 }
 
 

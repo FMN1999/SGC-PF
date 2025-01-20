@@ -11,7 +11,7 @@
 <div *ngIf="!cargando && !error">
   <div class="header-container">
     <h1>Listado de obras</h1>
-    <button (click)="irACrearObra()" class="create-obra-button">Crear Nueva Obra</button>
+    <button (click)="irACrearObra()" class="create-obra-button" *ngIf="dataShare.permiso11">Crear Nueva Obra</button>
   </div>
 
   <!-- Barra de búsqueda y filtros -->

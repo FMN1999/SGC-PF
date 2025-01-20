@@ -7,6 +7,7 @@ import { EmpresaService } from '../../services/empresa/empresa.service';
 import {NgForOf, NgIf} from "@angular/common"; // Para obtener los clientes
 import { HeaderComponent } from '../header/header.component';
 import {Router} from "@angular/router";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-crear-obra',
@@ -28,7 +29,8 @@ export class CrearObraComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   constructor(private fb: FormBuilder, private obraService: ObraService, private empresaService: EmpresaService,
-              private authService: AuthService, private dataShare: DataShareService, private router: Router) {
+              private authService: AuthService, private dataShare: DataShareService, private router: Router,
+              private titleService: Title) {
     this.obraForm = this.fb.group({
       direccion: ['', Validators.required],
       id_cliente: ['', Validators.required],
@@ -44,6 +46,7 @@ export class CrearObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Obra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -51,6 +54,9 @@ export class CrearObraComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso11) {
       this.router.navigate(['/no-permissions']);

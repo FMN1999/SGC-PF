@@ -5,6 +5,7 @@ import { DataShareService } from '../../services/data-share/data-share.service';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf } from "@angular/common";
 import { HeaderComponent } from '../header/header.component'
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-crear-colaborador',
@@ -28,7 +29,8 @@ export class CrearColaboradorComponent implements OnInit {
     private fb: FormBuilder,
     private colaboradorService: AuthService,
     private router: Router,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {
     this.colaboradorForm = this.fb.group({
       // Datos del Usuario
@@ -51,6 +53,7 @@ export class CrearColaboradorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Colaborador'); // Ajusta el nombre dinámicamente
     this.colaboradorService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -58,6 +61,9 @@ export class CrearColaboradorComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.colaboradorService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso8) {
       this.router.navigate(['/no-permissions']);

@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { HeaderComponent } from '../header/header.component'
 import {NgxPaginationModule} from "ngx-pagination";
 import {FormsModule} from "@angular/forms";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-listado-empresas',
@@ -33,9 +34,10 @@ export class EmpresasComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   constructor(private empresaService: EmpresaService, private router: Router, private authService: AuthService,
-              private dataShare: DataShareService) {}
+              private dataShare: DataShareService, private titleService: Title) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Empresas');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -43,6 +45,9 @@ export class EmpresasComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso16) {
       this.router.navigate(['/no-permissions']);

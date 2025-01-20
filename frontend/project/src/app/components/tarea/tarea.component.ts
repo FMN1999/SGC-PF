@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { TareaService } from '../../services/tarea/tarea.service'; // Ajusta la ruta del servicio
 import { EmpresaService } from '../../services/empresa/empresa.service';
 import { UsuarioService} from '../../services/usuarios/usuario.service'
+import { AuthService} from '../../services/auth/auth.service';
+import { DataShareService} from '../../services/data-share/data-share.service';
 import {FormsModule} from "@angular/forms";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
-import {ActivatedRoute} from "@angular/router"; // Ajusta la ruta del servicio
+import {ActivatedRoute, Router} from "@angular/router"; // Ajusta la ruta del servicio
 import {HeaderComponent} from '../header/header.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tarea',
@@ -51,7 +54,7 @@ export class TareaComponent implements OnInit {
   id_vehiculo: any;
   vehiculo:any;
   cant_dias: any;
-
+  isLoggedIn: boolean = false;
   editandoCantDias: { [colaboradorId: number]: boolean } = {}; // Almacena el estado de edición de cada colaborador
   cantDiasTemp: { [colaboradorId: number]: number } = {}; // Almacena el valor temporal de cant_dias para cada colaborador
 
@@ -60,19 +63,43 @@ export class TareaComponent implements OnInit {
     private tareaService: TareaService,
     private empresaService: EmpresaService,
     private usuarioService: UsuarioService,
+    private authService: AuthService,
+    protected dataShare: DataShareService,
+    private router: Router,
+    private titleService: Title,
     private route: ActivatedRoute  // Para obtener el ID desde la URL
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de Tarea');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
     this.tareaId = +this.route.snapshot.paramMap.get('id')!;
     this.empresaId = sessionStorage.getItem('id_empresa') || '';
-    this.cargarDatosRelacionados();
-    this.usuarioService.obtenerUsuariosPorEmpresa(Number(this.empresaId)).subscribe(u => this.colaboradores = u.colaboradores);
-    this.empresaService.obtenerHerramientasPorEmpresa(Number(this.empresaId)).subscribe(herramientas => this.herramientas = herramientas);
-    this.empresaService.listarMaterialesPorEmpresa(Number(this.empresaId)).subscribe(materiales => this.materiales = materiales);
-    this.empresaService.obtenerVehiculosPorEmpresa(Number(this.empresaId)).subscribe(vehiculos => this.vehiculos = vehiculos);
 
     this.tareaService.getTarea(this.tareaId).subscribe((tarea) => {
+
+      const id_emp = tarea.id_empresa;
+      if (Number(this.empresaId) !== id_emp){
+        this.router.navigate(['/no-permissions']);
+      }
+      // @ts-ignore
+      const id_user = +sessionStorage.getItem('id_usuario');
+      const tarea_user = tarea.id_cliente;
+      const es_cliente = sessionStorage.getItem('tipo');
+
+      if (es_cliente === 'CL' && id_user!== tarea_user){
+        this.router.navigate(['/no-permissions']);
+      }
       this.fechaInicio = tarea.fecha_inicio;
       this.fechaFin = tarea.fecha_fin;
       this.precioTotal = tarea.precio_total;
@@ -82,6 +109,12 @@ export class TareaComponent implements OnInit {
       this.vehiculo = tarea.vehiculo;
       this.vehiculoSeleccionado = tarea.id_vehiculo;
     });
+    this.cargarDatosRelacionados();
+    this.usuarioService.obtenerUsuariosPorEmpresa(Number(this.empresaId)).subscribe(u => this.colaboradores = u.colaboradores);
+    this.empresaService.obtenerHerramientasPorEmpresa(Number(this.empresaId)).subscribe(herramientas => this.herramientas = herramientas);
+    this.empresaService.listarMaterialesPorEmpresa(Number(this.empresaId)).subscribe(materiales => this.materiales = materiales);
+    this.empresaService.obtenerVehiculosPorEmpresa(Number(this.empresaId)).subscribe(vehiculos => this.vehiculos = vehiculos);
+
   }
 
   cargarDatosRelacionados() {

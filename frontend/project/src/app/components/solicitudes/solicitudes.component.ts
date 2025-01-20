@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CompraService } from '../../services/compra/compra.service';
 import { NgForOf, NgIf } from "@angular/common";
 import { HeaderComponent } from '../header/header.component';
-import { RouterLink } from "@angular/router";
+import { RouterLink, Router } from "@angular/router";
 import {FormsModule} from "@angular/forms";
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-solicitudes',
@@ -25,11 +28,31 @@ export class SolicitudesComponent implements OnInit {
   filtroEstado: string = '';
   solicitudesFiltradas: { [key: string]: any[] } = {};
   estadosFiltrados: string[] = [];
+  isLoggedIn:boolean=false;
 
-  constructor(private solicitudService: CompraService) {}
+  constructor(private solicitudService: CompraService, private authService: AuthService,
+              private dataShare: DataShareService, private router: Router, private titleService: Title) {}
 
   ngOnInit(): void {
-    this.cargarSolicitudesPendientes();
+    this.titleService.setTitle('Solicitudes / Compras');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+    }
+
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+
+    if (this.dataShare.permiso2 || this.dataShare.permiso3) {
+      this.cargarSolicitudesPendientes();
+    }
+    else {
+      this.router.navigate(['/no-permissions']);
+    }
   }
 
   cargarSolicitudesPendientes(): void {

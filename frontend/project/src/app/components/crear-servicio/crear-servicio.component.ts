@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { HeaderComponent } from '../header/header.component';
 import {NgIf} from "@angular/common";
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class CrearServicioComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,  // Inyectamos FormBuilder
     private authService: AuthService,
-    private dataShare: DataShareService
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {
     // Inicializamos el FormGroup
     this.servicioForm = this.fb.group({
@@ -53,6 +55,7 @@ export class CrearServicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Crear Servicio');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
@@ -60,6 +63,9 @@ export class CrearServicioComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.router.navigate(['/no-permissions']);
     }
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
 
     if (!this.dataShare.permiso6) {
       this.router.navigate(['/no-permissions']);

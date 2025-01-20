@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth/auth.service'; // Ajusta la rut
 import { Router } from '@angular/router';
 import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string = '';
   isLoggedIn: boolean =false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private titleService: Title) {}
 
   login() {
     this.authService.login(this.username, this.password).subscribe({
@@ -35,6 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Iniciar Sesión');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

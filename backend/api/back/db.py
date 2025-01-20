@@ -631,6 +631,8 @@ class PresupuestoData:
             presupuesto_data = {
                 "id": presupuesto.id,
                 "id_obra": presupuesto.id_obra.id,
+                "id_empresa": presupuesto.id_obra.id_empresa.id,
+                "id_cliente": presupuesto.id_obra.id_cliente.id,
                 "total": presupuesto.total,
                 "moneda": presupuesto.moneda,
                 "fecha_creacion": presupuesto.fecha_creacion,

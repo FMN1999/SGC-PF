@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { TareaService } from '../../services/tarea/tarea.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { DataShareService } from '../../services/data-share/data-share.service';
 import { HeaderComponent } from '../header/header.component';
 import { Router } from '@angular/router';
 import { NgForOf, NgIf, CurrencyPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 interface Tarea {
   id: number;
@@ -15,6 +18,7 @@ interface Tarea {
   porcentaje_avance: number;
   estado: string;
   area: string;
+  id_usuario:number;
 }
 
 @Component({
@@ -31,23 +35,44 @@ export class TareasComponent implements OnInit {
   error = false;
   filtroBusqueda: string = '';
   filtroEstado: string = '';
+  isLoggedIn:boolean=false;
 
   constructor(
     private tareaService: TareaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private dataShare: DataShareService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
-    this.cargarTareas();
+    this.titleService.setTitle('Tareas');
+    this.authService.isLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/no-permissions']);
+      return;
+    }
+
+    // Recuperar datos del usuario
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user);
+    // @ts-ignore
+    const tipo_usuario = sessionStorage.getItem('tipo');
+
+    this.cargarTareas(tipo_usuario, id_user); // Pasamos tipo_usuario e id_user
   }
 
-  cargarTareas(): void {
+  cargarTareas(tipo_usuario: string | null, id_user: number): void {
     this.cargando = true;
+
     // @ts-ignore
     const idEmpresa = +sessionStorage.getItem('id_empresa'); // Recuperar el id_empresa del sessionStorage
 
     if (!idEmpresa) {
-      console.error('El ID de la empresa no está disponible en el sessionStorage.');
       this.error = true;
       this.cargando = false;
       return;
@@ -56,7 +81,13 @@ export class TareasComponent implements OnInit {
     this.tareaService.obtenerTareasPorEmpresa(idEmpresa).subscribe({
       next: (response: Tarea[]) => {
         this.tareas = response;
-        this.tareasFiltradas = this.tareas;
+
+        // Filtrar tareas si el usuario es de tipo cliente
+        if (tipo_usuario === 'CL') {
+          this.tareas = this.tareas.filter(tarea => tarea.id_usuario === id_user);
+        }
+
+        this.tareasFiltradas = this.tareas; // Inicializamos con todas las tareas
         this.cargando = false;
       },
       error: (err) => {
@@ -66,7 +97,6 @@ export class TareasComponent implements OnInit {
       }
     });
   }
-
   verDetalleTarea(id: number): void {
     this.router.navigate([`/tarea/${id}`]);
   }

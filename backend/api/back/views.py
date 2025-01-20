@@ -28,6 +28,7 @@ class LoginView(View):
             if usuario_obj:
                 response_data = {
                     'user_id': usuario_obj.id,  # Devolver el ID del usuario
+                    'tipo': 'CL' if Cliente.objects.filter(id_usuario=usuario_obj.id).exists() else 'CO',
                     'rol': colaborador.rol if colaborador else None,
                     'id_emp': colaborador.id_empresa.id if colaborador else cliente.id_empresa.id
                 }
@@ -76,10 +77,11 @@ class RegistroClienteView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
+            fecha = data.get('fecha_nacimiento')
 
             # Datos del usuario
             datos_usuario = {
-                'fecha_nacimiento': data.get('fecha_nacimiento'),
+                'fecha_nacimiento': fecha if fecha else None,
                 'nombre': data.get('nombre'),
                 'apellido': data.get('apellido'),
                 'email': data.get('email'),
@@ -293,6 +295,7 @@ class OfertaDetalleView(View):
                 'fecha_desde': oferta.fecha_desde,
                 'fecha_hasta': oferta.fecha_hasta,
                 'id_proveedor': oferta.id_proveedor_id,
+                'id_empresa': oferta.id_proveedor.id_empresa.id
             }
 
             # Serializa los materiales
@@ -505,7 +508,6 @@ class ServicioView(View):
             data = json.loads(request.body)
 
             proveedor_id = data.get('id_proveedor')
-            print(f"Proveedor ID: {proveedor_id}")  # Debería imprimir el id del proveedor
 
             # Validar y crear servicio
             servicio = ServicioController.crear_servicio(data, proveedor_id)
@@ -534,7 +536,8 @@ class ServicioView(View):
                 'descripcion_impuestos': servicio.descripcion_impuestos,
                 'otros_gastos': servicio.otros_gastos,
                 'moneda_otros_gastos': servicio.moneda_otros_gastos,
-                'descripcion_otros_gastos': servicio.descripcion_otros_gastos
+                'descripcion_otros_gastos': servicio.descripcion_otros_gastos,
+                'id_empresa': servicio.id_proveedor.id_empresa.id
             }
             return JsonResponse(servicio_data, status=200)
         except Servicio.DoesNotExist:
@@ -1110,6 +1113,8 @@ class TareaView(View):
             tarea = Tarea.objects.get(id=id_tarea)
             tarea_data = {
                 'fecha_inicio': tarea.fecha_inicio,
+                'id_empresa': tarea.id_presupuesto_servicio.id_presupuesto.id_obra.id_empresa.id,
+                'id_cliente': tarea.id_presupuesto_servicio.id_presupuesto.id_obra.id_cliente.id_usuario.id,
                 'fecha_fin': tarea.fecha_fin,
                 'precio_total': tarea.precio_total,
                 'descripcion': tarea.descripcion,
@@ -1661,7 +1666,8 @@ class ObraEmpresaView(View):
                 'fecha_inicio_est': o.fecha_inicio_est,
                 'monto_total_est': o.monto_total_est,
                 'tipo_obra': o.tipo_obra,
-                'estado': o.estado
+                'estado': o.estado,
+                'id_usuario': o.id_cliente.id_usuario.id
             } for o in obras
         ]
         return JsonResponse({'obras': obras_return}, safe=False)
@@ -1832,6 +1838,7 @@ class AlmacenesPorEmpresaView(View):
 class PagosCobrosObraView(View):
     def get(self, request, id_obra):
         try:
+            obra= Obra.objects.get(id=id_obra)
             # Obtener pagos relacionados con la obra
             pagos = Pago.objects.filter(id_compra__id_obra=id_obra)
             pagos_data = [
@@ -1867,7 +1874,7 @@ class PagosCobrosObraView(View):
                 for cobro in cobros
             ]
 
-            return JsonResponse({'pagos': pagos_data, 'cobros': cobros_data}, safe=False)
+            return JsonResponse({'pagos': pagos_data, 'cobros': cobros_data, 'id_cliente':obra.id_cliente.id, 'id_empresa': obra.id_empresa.id}, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
@@ -1994,7 +2001,8 @@ class TareasView(View):
                     "porcentaje_avance": t.porcentaje_avance if t.porcentaje_avance else 0,
                     "vehiculo": vehiculo,
                     "tipo_vehiculo": tipo_vehiculo,
-                    "modelo_vehiculo": modelo_vehiculo
+                    "modelo_vehiculo": modelo_vehiculo,
+                    "id_usuario": t.id_presupuesto_servicio.id_presupuesto.id_obra.id_cliente.id_usuario.id
                 })
         return JsonResponse(tareas_response, safe=False)
 
