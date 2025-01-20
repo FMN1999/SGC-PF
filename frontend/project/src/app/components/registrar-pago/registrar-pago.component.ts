@@ -55,10 +55,6 @@ export class RegistrarPagoComponent implements OnInit {
     const id_user = +sessionStorage.getItem('id_usuario');
     this.authService.cargarPermisos(id_user);
 
-    if (!this.dataShare.permiso14) {
-      this.router.navigate(['/no-permissions']);
-    }
-
     // @ts-ignore
     this.id_empresa = +sessionStorage.getItem('id_empresa');
 
