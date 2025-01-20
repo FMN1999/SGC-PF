@@ -33,10 +33,10 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd8vvaehtog1v4i',
-        'USER': 'ue8813f4fp74sv',
-        'PASSWORD': 'pcde515d2c2c6dcdb192438b119ecbe75247956bcf218621a426f1ddda4fbe47b',
-        'HOST': 'ccba8a0vn4fb2p.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'NAME': 'sgc_construccion_ale',
+        'USER': 'sgc_construccion_ale_user',
+        'PASSWORD': 'lxzWBZP0Wo1BfQq4HHUham57rt3Bl0BD',
+        'HOST': 'dpg-cu7bo2bv2p9s73bf9lkg-a.virginia-postgres.render.com',
         'PORT': '5432',
     }
 }
