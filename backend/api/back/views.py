@@ -1537,7 +1537,7 @@ class Assistant(View):
         if not data:
             return "No se pudo generar un presupuesto para esta obra."
 
-        response = f"Presupuesto generado para la obra *{data['direccion']}:* \n\n"
+        response = f"Presupuesto generado para la obra *{data['direccion']}*: \n"
         response += f"- **Total estimado:** {data['total']} {data['moneda']}\n"
         response += f"- **Materiales incluidos:**\n"
         for material in data['materiales']:
