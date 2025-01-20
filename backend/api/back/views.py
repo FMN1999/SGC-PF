@@ -1,5 +1,3 @@
-import datetime
-
 import aenum
 
 from django.http import JsonResponse
