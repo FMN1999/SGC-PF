@@ -2041,3 +2041,26 @@ class PermisosUsuarioView(View):
         permisos_usuario = Permiso_Usuario.objects.filter(id_usuario=id_usuario)
         permisos = [permiso.id_permiso.id for permiso in permisos_usuario]  # IDs de los permisos
         return JsonResponse({'permisos': permisos}, safe=False)
+
+
+class HomeView(View):
+    def get(self, request):
+        # Cantidades generales
+        cant_users = Usuario.objects.all().count()
+        cant_empresas = Empresa.objects.all().count()
+        fecha_actual = datetime.now().date()
+
+        # Estadísticas
+        pagos_pendientes = Pago.objects.filter(fecha_pago__gt=fecha_actual).count()
+        obras_actuales = Obra.objects.exclude(estado='Finalizado').count()
+
+        # Tareas próximas
+        tareas_proximas = Tarea.objects.filter(fecha_inicio__gte=fecha_actual).values('fecha_inicio', 'titulo')
+
+        return JsonResponse({
+            'cant_users': cant_users,
+            'cant_empresas': cant_empresas,
+            'pagos_pendientes': pagos_pendientes,
+            'obras_actuales': obras_actuales,
+            'tareas_proximas': list(tareas_proximas)  # Convertimos el QuerySet a una lista
+        }, safe=False)
