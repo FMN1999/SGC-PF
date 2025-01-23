@@ -12,8 +12,8 @@ export class ChatService {
   constructor(private http: HttpClient) {}
 
   // Esta función se comunica con el backend para obtener la respuesta del asistente
-  getResponse(userMessage: string, adicional: any): Observable<any> {
-    const url = `${environment.apiUrl}/assistant`;
+  getResponse(userMessage: string, adicional: any, modo: string): Observable<any> {
+    const url = `${environment.apiUrl}/assistant?modo=${modo}`;
     const data = {
       message: userMessage,
       adicional: adicional, // Datos adicionales
@@ -21,8 +21,8 @@ export class ChatService {
     return this.http.post<any>(url, data);
   }
 
-  getMensajeBienvenida(): Observable<any> {
-    const url = `${environment.apiUrl}/assistant`
+  getMensajeBienvenida(modo: string): Observable<any> {
+    const url = `${environment.apiUrl}/assistant?modo=${modo}`
     return this.http.get(url);
   }
 }

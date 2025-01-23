@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { ChatService } from '../../services/chat/chat.service'
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -24,6 +24,7 @@ export class ChatComponent implements OnInit {
   messages: { text: string, isUser: boolean }[] = [];
   adicional: { id_obra?: number, id_cliente?: number } = {};
   isVisible: boolean = false;
+  @Input() modo: string = 'presupuesto';
 
 
   constructor(private chatService: ChatService,
@@ -56,7 +57,7 @@ export class ChatComponent implements OnInit {
   }
 
   mensajesBienvenida():void {
-    this.chatService.getMensajeBienvenida().subscribe((response) => {
+    this.chatService.getMensajeBienvenida(this.modo).subscribe((response) => {
       this.receiveMessage(response);
     });
   }
@@ -64,7 +65,7 @@ export class ChatComponent implements OnInit {
   sendMessage() {
     if (this.userMessage.trim()) {
       this.messages.push({ text: this.userMessage, isUser: true });
-      this.chatService.getResponse(this.userMessage, this.adicional).subscribe((response) => {
+      this.chatService.getResponse(this.userMessage, this.adicional, this.modo).subscribe((response) => {
         this.receiveMessage(response);
       });
       this.userMessage = ''; // Limpiar el input

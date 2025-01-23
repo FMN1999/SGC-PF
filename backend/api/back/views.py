@@ -1417,20 +1417,25 @@ class Assistant(View):
     class Opciones(aenum.Enum):
         _init_ = 'value string'
 
-        RecomendacionesPresupuesto = 1, 'Recomendaciones para presupuesto'
-        RecomendacionesMateriales = aenum.auto(), 'Materiales frecuentes para cliente'
-        OfertasVigentes = aenum.auto(), 'Ofertas vigentes'
-        SeguimientoObra = aenum.auto(), 'Seguimiento de obra'
-        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos'
-        AnalisisCostos = aenum.auto(), 'Análisis de costos'
-
         def __int__(self):
             return self.value
 
         def __str__(self):
             return self.string
 
+    class OpcionesPresupuesto(Opciones):
+        RecomendacionesPresupuesto = 1, 'Recomendaciones para presupuesto'
+        RecomendacionesMateriales = aenum.auto(), 'Materiales frecuentes para cliente'
+        OfertasVigentes = aenum.auto(), 'Ofertas vigentes'
+        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos'
+
+    class OpcionesSeguimiento(Opciones):
+        SeguimientoObra = 1, 'Seguimiento de obra'
+        AnalisisCostos = aenum.auto(), 'Análisis de costos'
+
     def post(self, request):
+        params = request.GET
+        modo = params.get('modo', 'presupuesto')  # retrocompatibilidad con el frontend viejo
         data = json.loads(request.body)
         adicional = data.get('adicional')
         id_obra = adicional.get('id_obra')
@@ -1439,69 +1444,69 @@ class Assistant(View):
         data_return = None
         response_message = ''
 
-        if int(user_message) == int(self.Opciones.RecomendacionesPresupuesto):
-            data_return = ChatController.generador_presupuesto(id_obra)
-            response_message = self.format_generador_presupuesto(data_return)
-
-        elif int(user_message) == int(self.Opciones.RecomendacionesMateriales):
-            data_return = ChatController.recomendaciones_materiales(id_cliente)
-            response_message = self.format_recomendaciones_materiales(data_return)
-
-        elif int(user_message) == int(self.Opciones.OfertasVigentes):
-            data_return = ChatController.ofertas_especiales()
-            response_message = self.format_ofertas_especiales(data_return)
-
-        elif int(user_message) == int(self.Opciones.SeguimientoObra):
-            data_return = ChatController.seguimiento_avance_obra(id_obra)
-            response_message = self.format_seguimiento_avance_obra(data_return)
-
-        elif int(user_message) == int(self.Opciones.OptimizacionCostos):
-            data_return = ChatController.optimizacion_costos(id_obra)
-            # Construir el mensaje de respuesta
-            response_message = f"Aquí tienes sugerencias para optimizar costos en la obra '{data_return['nombre_obra']}':\n"
-            response_message += f"- Presupuesto total actual: {data_return['total_presupuesto']}.\n"
-            if data_return['sugerencias']['materiales']:
-                response_message += "\nSugerencias para materiales:\n"
-                for sugerencia in data_return['sugerencias']['materiales']:
-                    response_message += f"  * {sugerencia}\n"
-            else:
-                response_message += "\nNo se encontraron sugerencias para materiales.\n"
-            if data_return['sugerencias']['servicios']:
-                response_message += "\nSugerencias para servicios:\n"
-                for sugerencia in data_return['sugerencias']['servicios']:
-                    response_message += f"  * {sugerencia}\n"
-            else:
-                response_message += "\nNo se encontraron sugerencias para servicios.\n"
-
-        elif int(user_message) == int(self.Opciones.AnalisisCostos):
-            data_return = ChatController.analiza_costos(id_obra)
-            # Construir una respuesta más detallada
-            response_message = f"""
-                El análisis de costos para la obra *{data_return['nombre_obra']}* (ID: {data_return['obra_id']}) es el siguiente:
+        if modo == 'presupuesto':
+            if int(user_message) == int(self.OpcionesPresupuesto.RecomendacionesPresupuesto):
+                data_return = ChatController.generador_presupuesto(id_obra)
+                response_message = self.format_generador_presupuesto(data_return)
+            elif int(user_message) == int(self.OpcionesPresupuesto.RecomendacionesMateriales):
+                data_return = ChatController.recomendaciones_materiales(id_cliente)
+                response_message = self.format_recomendaciones_materiales(data_return)
+            elif int(user_message) == int(self.OpcionesPresupuesto.OfertasVigentes):
+                data_return = ChatController.ofertas_especiales()
+                response_message = self.format_ofertas_especiales(data_return)
+            elif int(user_message) == int(self.OpcionesPresupuesto.OptimizacionCostos):
+                data_return = ChatController.optimizacion_costos(id_obra)
+                # Construir el mensaje de respuesta
+                response_message = f"Aquí tienes sugerencias para optimizar costos en la obra '{data_return['nombre_obra']}':\n"
+                response_message += f"- Presupuesto total actual: {data_return['total_presupuesto']}.\n"
+                if data_return['sugerencias']['materiales']:
+                    response_message += "\nSugerencias para materiales:\n"
+                    for sugerencia in data_return['sugerencias']['materiales']:
+                        response_message += f"  * {sugerencia}\n"
+                else:
+                    response_message += "\nNo se encontraron sugerencias para materiales.\n"
+                if data_return['sugerencias']['servicios']:
+                    response_message += "\nSugerencias para servicios:\n"
+                    for sugerencia in data_return['sugerencias']['servicios']:
+                        response_message += f"  * {sugerencia}\n"
+                else:
+                    response_message += "\nNo se encontraron sugerencias para servicios.\n"
+        elif modo == 'seguimiento':
+            if int(user_message) == int(self.OpcionesSeguimiento.SeguimientoObra):
+                data_return = ChatController.seguimiento_avance_obra(id_obra)
+                response_message = self.format_seguimiento_avance_obra(data_return)
+            elif int(user_message) == int(self.OpcionesSeguimiento.AnalisisCostos):
+                data_return = ChatController.analiza_costos(id_obra)
+                # Construir una respuesta más detallada
+                response_message = f"""
+                    El análisis de costos para la obra *{data_return['nombre_obra']}* (ID: {data_return['obra_id']}) es el siguiente:
             
-                * **Comparativa de materiales**:
+                    * **Comparativa de materiales**:
                 """
-            for comp in data_return['comparativa_materiales']:
-                response_message += f"      - En la obra '{comp['obra']}': Costo promedio de materiales {comp['costo_material']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
-            response_message += f"""           
-                * **Comparativa de subcontrataciones**:
-                """
-            for comp in data_return['comparativa_subcontratacion']:
-                response_message += f"      - En la obra '{comp['obra']}': Costo promedio de subcontrataciones {comp['costo_subcontratacion']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
-            response_message += f"""           
-                * **Recomendaciones**:
-                  - Materiales: {data_return['recomendaciones']['materiales']}
-                  - Subcontrataciones: {data_return['recomendaciones']['subcontrataciones']}
-                """
+                for comp in data_return['comparativa_materiales']:
+                    response_message += f"      - En la obra '{comp['obra']}': Costo promedio de materiales {comp['costo_material']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
+                response_message += f"""
+                    * **Comparativa de subcontrataciones**:
+                    """
+                for comp in data_return['comparativa_subcontratacion']:
+                    response_message += f"      - En la obra '{comp['obra']}': Costo promedio de subcontrataciones {comp['costo_subcontratacion']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
+                response_message += f"""
+                    * **Recomendaciones**:
+                      - Materiales: {data_return['recomendaciones']['materiales']}
+                      - Subcontrataciones: {data_return['recomendaciones']['subcontrataciones']}
+                    """
 
         return JsonResponse({'message': response_message, 'data_return': data_return})
 
     def get(self, request):
+        params = request.GET
+        modo = params.get('modo', 'presupuesto')  # retrocompatibilidad con el frontend viejo
+        clase_opciones = self.OpcionesPresupuesto if modo == 'presupuesto' else self.OpcionesSeguimiento
         lineas = [
             "¡Hola! Soy tu asistente virtual, ¿en qué puedo ayudarte?",
             "",
             "Ingresá la opción deseada:",
-            *[f'{int(opc)}. {str(opc)}' for opc in self.Opciones]
+            *[f'{int(opc)}. {str(opc)}' for opc in clase_opciones]
         ]
         mensaje = "\n".join(lineas)
         return JsonResponse({'message': mensaje})
@@ -1582,33 +1587,33 @@ class Assistant(View):
 
     def format_seguimiento_avance_obra(self, data):
         mensaje = f"Seguimiento del avance de obra:\n\n"
-        mensaje += f"📍 *Nombre de la obra*: {data['nombre_obra']} (ID: {data['obra_id']})\n"
+        mensaje += f"📍 *Nombre de la obra*: {data['nombre_obra']} (ID: {data['obra_id']})<br>\n"
         mensaje += f"📊 *Avance general*: {data['avance_general']:.2f}%\n\n"
 
         if data["tareas"]:
             mensaje += "🔨 *Tareas en progreso*:\n"
             for tarea in data["tareas"]:
-                mensaje += f"  - *Tarea ID*: {tarea['tarea_id']}\n"
-                mensaje += f"    *Descripción*: {tarea['descripcion']}\n"
-                mensaje += f"    *Avance*: {tarea['porcentaje_avance']:.2f}%\n"
+                mensaje += f"* *Tarea ID*: {tarea['tarea_id']}\n"
+                mensaje += f"  - *Descripción*: {tarea['descripcion']}\n"
+                mensaje += f"  - *Avance*: {tarea['porcentaje_avance']:.2f}%\n"
 
                 # Colaboradores
                 if tarea["colaboradores"]:
-                    mensaje += "    👷‍♂️ *Colaboradores asignados*:\n"
+                    mensaje += "  - 👷‍♂️ *Colaboradores asignados*:\n"
                     for col in tarea["colaboradores"]:
-                        mensaje += f"      - {col['nombre']} {col['apellido']} (ID: {col['id']})\n"
+                        mensaje += f"    - {col['nombre']} {col['apellido']} (ID: {col['id']})\n"
 
                 # Materiales
                 if tarea["materiales"]:
-                    mensaje += "    🧱 *Materiales utilizados*:\n"
+                    mensaje += "  - 🧱 *Materiales utilizados*:\n"
                     for mat in tarea["materiales"]:
-                        mensaje += f"      - {mat['nombre']} (ID: {mat['id']})\n"
+                        mensaje += f"    - {mat['nombre']} (ID: {mat['id']}). Cantidad utilizada: {mat['cantidad']}\n"
 
                 # Herramientas
                 if tarea["herramientas"]:
-                    mensaje += "    🔧 *Herramientas utilizadas*:\n"
+                    mensaje += "  - 🔧 *Herramientas utilizadas*:\n"
                     for her in tarea["herramientas"]:
-                        mensaje += f"      - {her['nombre']} (ID: {her['id']})\n"
+                        mensaje += f"    - {her['nombre']} (ID: {her['id']})\n"
                 mensaje += "\n"
         else:
             mensaje += "No hay tareas asociadas a esta obra.\n"
