@@ -1180,7 +1180,7 @@ class ChatController:
         obras_previas = Obra.objects.exclude(id=obra_id)  # Excluir la obra actual
 
         # Cálculos para encontrar el costo promedio de materiales y subcontratistas
-        costo_material_promedio = compras.aggregate(Sum('monto_total'))['monto_total__sum'] / len(
+        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
             compras) if compras else 0
         costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))[
                                              'monto_contratacion__sum'] / len(
