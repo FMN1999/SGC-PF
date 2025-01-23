@@ -1484,12 +1484,12 @@ class Assistant(View):
                     * **Comparativa de materiales**:
                 """
                 for comp in data_return['comparativa_materiales']:
-                    response_message += f"      - En la obra '{comp['obra']}': Costo promedio de materiales {comp['costo_material']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
+                    response_message += f"  - En la obra '{comp['obra']}': Costo promedio de materiales {comp['costo_material']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
                 response_message += f"""
                     * **Comparativa de subcontrataciones**:
                     """
                 for comp in data_return['comparativa_subcontratacion']:
-                    response_message += f"      - En la obra '{comp['obra']}': Costo promedio de subcontrataciones {comp['costo_subcontratacion']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
+                    response_message += f"  - En la obra '{comp['obra']}': Costo promedio de subcontrataciones {comp['costo_subcontratacion']:.2f}. Diferencia: {comp['diferencia']:.2f}.\n"
                 response_message += f"""
                     * **Recomendaciones**:
                       - Materiales: {data_return['recomendaciones']['materiales']}
