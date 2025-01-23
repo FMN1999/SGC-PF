@@ -7,6 +7,7 @@ import {HeaderComponent} from '../header/header.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { Title } from '@angular/platform-browser';
+import { ChatComponent } from '../chat/chat.component'
 
 @Component({
   selector: 'app-obra',
@@ -18,7 +19,8 @@ import { Title } from '@angular/platform-browser';
     DatePipe,
     RouterLink,
     HeaderComponent,
-    CurrencyPipe
+    CurrencyPipe,
+    ChatComponent
   ],
   standalone: true,
   styleUrls: ['./obra.component.scss']
@@ -44,7 +46,7 @@ export class ObraComponent implements OnInit {
   isLoggedIn: boolean = false;
   empresa_id: number = 0;
   empresa_obra: number | undefined;
-  cliente_id: number | undefined;
+  cliente_id!: number;
 
   constructor(
     private fb: FormBuilder,
@@ -163,6 +165,8 @@ export class ObraComponent implements OnInit {
       this.obra = obra;
       this.empresa_obra = obra.empresa.id;
       this.cliente_id = obra.cliente.id_cliente;
+      this.dataShare.setObraId(this.obra_id);
+      this.dataShare.setClienteId(this.cliente_id);
 
       if (this.empresa_id !== this.empresa_obra){
         this.router.navigate(['/no-permissions']);
@@ -377,4 +381,7 @@ export class ObraComponent implements OnInit {
     this.router.navigate(['/pagos-cobros', this.obra_id]);
   }
 
+  showChat() {
+    this.dataShare.showChat();
+  }
 }

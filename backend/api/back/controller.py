@@ -1031,7 +1031,7 @@ class ChatController:
                 "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre,
                                    "apellido": col.id_colaborador.id_usuario.apellido} for col in
                                   colaboradores],
-                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.descripcion} for mat in materiales],
+                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.descripcion, "cantidad": mat.cant_utilizada} for mat in materiales],
                 "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for
                                  her in
                                  herramientas]
@@ -1180,7 +1180,7 @@ class ChatController:
         obras_previas = Obra.objects.exclude(id=obra_id)  # Excluir la obra actual
 
         # Cálculos para encontrar el costo promedio de materiales y subcontratistas
-        costo_material_promedio = compras.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
+        costo_material_promedio = compras.aggregate(Sum('monto_total'))['monto_total__sum'] / len(
             compras) if compras else 0
         costo_subcontratacion_promedio = subcontrataciones.aggregate(Sum('monto_contratacion'))[
                                              'monto_contratacion__sum'] / len(
@@ -1190,7 +1190,7 @@ class ChatController:
         comparativa_materiales = []
         for obra_prev in obras_previas:
             compras_previas = Compra.objects.filter(id_obra=obra_prev.id)
-            costo_material_prev = compras_previas.aggregate(Sum('precio_total'))['precio_total__sum'] / len(
+            costo_material_prev = compras_previas.aggregate(Sum('monto_total'))['monto_total__sum'] / len(
                 compras_previas) if compras_previas else 0
             comparativa_materiales.append({
                 'obra': obra_prev.direccion,
