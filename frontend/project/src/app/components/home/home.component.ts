@@ -1,6 +1,6 @@
 import { Component, HostListener, Renderer2 } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
-import { NgIf, NgClass, NgOptimizedImage } from '@angular/common';
+import {NgIf, NgClass, NgOptimizedImage, NgForOf, DatePipe} from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import {DataShareService} from "../../services/data-share/data-share.service";
@@ -8,7 +8,7 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass, NgOptimizedImage],
+  imports: [RouterModule, RouterOutlet, NgIf, CarouselModule, NgClass, NgOptimizedImage, NgForOf, DatePipe],
   templateUrl: './home.component.html',
   standalone: true,
   styleUrls: ['./home.component.scss']
@@ -22,6 +22,8 @@ export class HomeComponent {
   esColaborador :string;
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
   protected userMenuVisible: boolean = false;
+  stats: any;
+  tareasProximas: any[] = []; // Almacena las tareas próximas
 
   constructor(private authService: AuthService, private router: Router, protected dataShare: DataShareService,
               private renderer: Renderer2, private titleService: Title) {
@@ -38,6 +40,15 @@ export class HomeComponent {
     // @ts-ignore
     this.esColaborador = sessionStorage.getItem('tipo');
     this.authService.cargarPermisos(id_user);
+    this.authService.cargarAdicionales().subscribe({
+      next: (data) => {
+        this.stats = data; // Guardamos las estadísticas generales
+        this.tareasProximas = data.tareas_proximas; // Guardamos las tareas próximas
+      },
+      error: (error) => {
+        console.error('Error al cargar estadísticas:', error);
+      }
+    });
   }
 
   @HostListener('window:resize', ['$event'])

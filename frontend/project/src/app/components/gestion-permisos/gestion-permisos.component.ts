@@ -83,25 +83,35 @@ export class GestionPermisosComponent implements OnInit {
 
   agregarPermiso(): void {
     if (this.nuevoPermisoId) {
-      this.permisosService
-        .asignarPermiso(this.idUsuario, this.nuevoPermisoId)
-        .subscribe({
-          next: () => {
-            this.cargarPermisos(); // Recargar permisos
+      this.permisosService.asignarPermiso(this.idUsuario, this.nuevoPermisoId).subscribe({
+        next: (response) => {
+          // Analizar el mensaje devuelto por el backend
+          this.mensaje = response.message;
+
+          if (response.message.includes('ya está asignado')) {
+            // Caso de error: Permiso ya asignado
+            this.mensaje = 'Error: ' + response.message;
+          } else {
+            // Caso de éxito
+            this.cargarPermisos();
             this.nuevoPermisoId = null; // Resetear selección
-            this.mensaje = 'Permiso agregado exitosamente.'; // Establecer el mensaje
-            setTimeout(() => {
-              this.mensaje = ''; // Limpiar el mensaje después de unos segundos
-            }, 10000);
-          },
-          error: (error) => {
-            console.error('Error al asignar permiso:', error);
-            this.mensaje = 'Error al asignar el permiso.';
-            setTimeout(() => {
-              this.mensaje = '';
-            }, 10000);
-          },
-        });
+          }
+
+          // Limpiar el mensaje después de unos segundos
+          setTimeout(() => {
+            this.mensaje = '';
+          }, 10000);
+        },
+        error: (error) => {
+          console.error('Error al asignar permiso:', error);
+          this.mensaje = 'Error al asignar el permiso.';
+          setTimeout(() => {
+            this.mensaje = '';
+          }, 10000);
+        },
+      });
+    } else {
+      console.warn('No se seleccionó un permiso para agregar.');
     }
   }
 

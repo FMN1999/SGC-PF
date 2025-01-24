@@ -977,6 +977,8 @@ class CompraView(View):
             compra.estado = "Pedido"
         if estado_get == "A recibir":
             compra.estado = "A recibir"
+        if estado_get == "Recibido":
+            compra.estado = "Recibido"
 
         compra.id_aprobador = Usuario.objects.get(id=data.get('id_usuario'))
         compra.save()
@@ -1952,19 +1954,37 @@ class PermisosView(View):
         return JsonResponse(data, safe=False)
 
     def post(self, request, id_usuario):
-        data = json.loads(request.body)
-        permiso = Permiso.objects.get(id=data["id_permiso"])
-        usuario = Usuario.objects.get(id=id_usuario)
-        Permiso_Usuario.objects.create(id_usuario=usuario, id_permiso=permiso)
-        return JsonResponse({"message": "Permiso asignado correctamente"}, status=201)
+        try:
+            data = json.loads(request.body)
+            id_permiso = data["id_permiso"]
+
+            # Verificar si los objetos existen
+            permiso = Permiso.objects.get(id=id_permiso)
+            usuario = Usuario.objects.get(id=id_usuario)
+
+            # Verificar si el permiso ya está asignado
+            existe = Permiso_Usuario.objects.filter(id_usuario=id_usuario, id_permiso=id_permiso).exists()
+
+            if existe:
+                return JsonResponse({"message": "El permiso ya está asignado a este usuario."}, status=200)
+
+            # Si no existe, asignar el permiso
+            Permiso_Usuario.objects.create(id_usuario=usuario, id_permiso=permiso)
+            return JsonResponse({"message": "Permiso asignado exitosamente."}, status=201)
+
+        except Exception as e:
+            return JsonResponse({"message": f"Error: {str(e)}"}, status=500)
 
     def delete(self, request, id_usuario, id_permiso):
         # Eliminar permiso del usuario
         try:
-            permiso_usuario = Permiso_Usuario.objects.get(id_usuario=id_usuario, id_permiso=id_permiso)
+            user = Usuario.objects.get(id=id_usuario)
+            permiso = Permiso.objects.get(id=id_permiso)
+            permiso_usuario = Permiso_Usuario.objects.get(id_usuario=user, id_permiso=permiso)
             permiso_usuario.delete()
             return JsonResponse({"message": "Permiso eliminado correctamente"}, status=200)
-        except Permiso_Usuario.DoesNotExist:
+        except Exception as e:
+            print(e)
             return JsonResponse({"error": "Relación no encontrada"}, status=400)
 
 
@@ -2059,3 +2079,26 @@ class PermisosUsuarioView(View):
         permisos_usuario = Permiso_Usuario.objects.filter(id_usuario=id_usuario)
         permisos = [permiso.id_permiso.id for permiso in permisos_usuario]  # IDs de los permisos
         return JsonResponse({'permisos': permisos}, safe=False)
+
+
+class HomeView(View):
+    def get(self, request):
+        # Cantidades generales
+        cant_users = Usuario.objects.all().count()
+        cant_empresas = Empresa.objects.all().count()
+        fecha_actual = datetime.now().date()
+
+        # Estadísticas
+        pagos_pendientes = Pago.objects.filter(fecha_pago__gt=fecha_actual).count()
+        obras_actuales = Obra.objects.exclude(estado='Finalizado').count()
+
+        # Tareas próximas
+        tareas_proximas = Tarea.objects.filter(fecha_inicio__gte=fecha_actual).values('fecha_inicio', 'titulo')
+
+        return JsonResponse({
+            'cant_users': cant_users,
+            'cant_empresas': cant_empresas,
+            'pagos_pendientes': pagos_pendientes,
+            'obras_actuales': obras_actuales,
+            'tareas_proximas': list(tareas_proximas)  # Convertimos el QuerySet a una lista
+        }, safe=False)

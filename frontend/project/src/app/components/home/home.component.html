@@ -61,6 +61,8 @@
 
     </section>
 
+    <h1 *ngIf="!isLoggedIn"> Bienvenido a SGC Construcciones</h1>
+    <p *ngIf="!isLoggedIn"> Comience a gestionar sus obras y proyectos...</p>
     <!-- Otros contenidos del Home -->
     <section *ngIf="isLoggedIn" class="services">
       <div class="service" (click)="navigateTo('/obras', idEmpresa)">
@@ -84,24 +86,25 @@
 
 </section>
 
-<section *ngIf="isLoggedIn" class="stats">
-  <div class="stat">
-    <h3>120</h3>
+<section *ngIf="isLoggedIn && stats" class="stats">
+  <div class="stat" *ngIf="stats.cant_users !== undefined">
+    <h3>{{ stats.cant_users }}</h3>
     <p>Usuarios activos</p>
   </div>
-  <div class="stat">
-    <h3>$45,000</h3>
-    <p>Ingresos del mes</p>
+  <div class="stat" *ngIf="stats.cant_empresas !== undefined">
+    <h3>{{ stats.cant_empresas }}</h3>
+    <p>Cantidad de Empresas</p>
   </div>
-  <div class="stat">
-    <h3>15</h3>
+  <div class="stat" *ngIf="stats.pagos_pendientes !== undefined">
+    <h3>{{ stats.pagos_pendientes }}</h3>
     <p>Pagos pendientes</p>
   </div>
-  <div class="stat">
-    <h3>8</h3>
-    <p>Proyectos en curso</p>
+  <div class="stat" *ngIf="stats.obras_actuales !== undefined">
+    <h3>{{ stats.obras_actuales }}</h3>
+    <p>Obras en curso</p>
   </div>
 </section>
+
 
 <section class="news">
   <h2>Próximas actualizaciones</h2>
@@ -120,21 +123,12 @@
 <section *ngIf="isLoggedIn" class="calendar">
   <h2>Eventos próximos</h2>
   <ul>
-    <li>
-      <span class="date">30 Dic</span>
-      <span class="event">Reunión con proveedores</span>
-    </li>
-    <li>
-      <span class="date">05 Ene</span>
-      <span class="event">Entrega de materiales</span>
-    </li>
-    <li>
-      <span class="date">10 Ene</span>
-      <span class="event">Revisión de proyectos</span>
+    <li *ngFor="let tarea of tareasProximas">
+      <span class="date">{{ tarea.fecha_inicio | date:'dd MMM' }}</span>
+      <span class="event">{{ tarea.titulo }}</span>
     </li>
   </ul>
 </section>
-
 <section *ngIf="!isLoggedIn" class="testimonials">
   <h2>Lo que dicen nuestros clientes</h2>
   <div class="testimonial">
