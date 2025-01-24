@@ -25,7 +25,7 @@
 
   <div class="acciones">
     <button class="btn-accion"
-            [disabled]="!generarIngresoHabilitado || estadoActual === 'Pendiente' || estadoActual === 'Cancelado' || estadoActual === 'Rechazado' || estadoActual === 'Cerrado' || !dataShare.permiso15" (click)="abrirFormularioIngreso()"> Generar Ingreso
+            [disabled]="estadoActual !== 'A recibir' || !dataShare.permiso15" (click)="abrirFormularioIngreso()"> Generar Ingreso
     </button>
 
     <button

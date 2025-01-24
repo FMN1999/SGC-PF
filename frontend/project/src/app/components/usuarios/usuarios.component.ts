@@ -58,6 +58,7 @@ export class UsuariosComponent implements OnInit {
         console.error('No se pudo obtener la información de los usuarios.');
       }
     });
+
   }
 
   filtrarEntidades(): void {
