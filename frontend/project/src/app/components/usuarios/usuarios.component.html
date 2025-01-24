@@ -31,7 +31,7 @@
             {{ cliente.nombre }} {{ cliente.apellido }}
           </div>
           <button
-            *ngIf="cliente.fecha_baja === null"
+            *ngIf="cliente.fecha_baja === null && this.tipo==='CO'"
             class="btn btn-danger btn-small"
             (click)="darDeBajaCliente(cliente.id, cliente.nombre, cliente.apellido); $event.stopPropagation()"
           >

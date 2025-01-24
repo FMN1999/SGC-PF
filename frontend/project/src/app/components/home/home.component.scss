@@ -179,7 +179,6 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   min-height: calc(100vh - $header-height); /* Asegura que el contenido no se superponga con el header */
   padding-top: 20px; /* Asegura que el contenido no se oculte debajo del header fijo */
-
   // Se elimina el ajuste dinámico de margen basado en la visibilidad del sidebar
   margin-left: 0; /* El margen siempre será constante */
 

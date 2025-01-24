@@ -4,7 +4,7 @@
 
   <form [formGroup]="almacenForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="descripcion">Descripción:</label>
+      <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>
       <input id="descripcion" formControlName="descripcion" />
       <div class="error" *ngIf="almacenForm.get('descripcion')?.invalid && almacenForm.get('descripcion')?.touched">
         La descripción es obligatoria.
@@ -12,7 +12,7 @@
     </div>
 
     <div class="form-group">
-      <label for="direccion">Dirección:</label>
+      <label for="direccion">Dirección: <span class="required-asterisk">*</span></label>
       <input id="direccion" formControlName="direccion" />
       <div class="error" *ngIf="almacenForm.get('direccion')?.invalid && almacenForm.get('direccion')?.touched">
         La dirección es obligatoria.
@@ -20,7 +20,7 @@
     </div>
 
     <div class="form-group">
-      <label for="contacto">Contacto:</label>
+      <label for="contacto">Contacto: <span class="required-asterisk">*</span></label>
       <input id="contacto" formControlName="contacto" />
       <div class="error" *ngIf="almacenForm.get('contacto')?.invalid && almacenForm.get('contacto')?.touched">
         El contacto es obligatorio.
@@ -28,7 +28,7 @@
     </div>
 
     <div class="form-group">
-      <label for="ciudad">Ciudad:</label>
+      <label for="ciudad">Ciudad: <span class="required-asterisk">*</span></label>
       <input id="ciudad" formControlName="ciudad" />
       <div class="error" *ngIf="almacenForm.get('ciudad')?.invalid && almacenForm.get('ciudad')?.touched">
         La ciudad es obligatoria.
@@ -36,7 +36,7 @@
     </div>
 
     <div class="form-group">
-      <label for="provincia">Provincia:</label>
+      <label for="provincia">Provincia: <span class="required-asterisk">*</span></label>
       <input id="provincia" formControlName="provincia" />
       <div class="error" *ngIf="almacenForm.get('provincia')?.invalid && almacenForm.get('provincia')?.touched">
         La provincia es obligatoria.

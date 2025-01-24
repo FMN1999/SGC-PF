@@ -23,6 +23,11 @@
       display: flex;
       flex-direction: column;
 
+      .required-asterisk {
+        color: red;
+        font-weight: bold;
+      }
+
       label {
         font-weight: bold;
         margin-bottom: 5px;
