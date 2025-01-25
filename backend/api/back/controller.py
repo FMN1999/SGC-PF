@@ -608,6 +608,10 @@ class PresupuestoController:
         return PresupuestoData.get_presupuesto_detalles(id_presupuesto)
 
     @staticmethod
+    def get_materiales_by_empresa(id_empresa):
+        return PresupuestoData.get_materiales_by_empresa(id_empresa)
+
+    @staticmethod
     def update_presupuesto(id_presupuesto, data):
         try:
             # Actualizar los datos del presupuesto
@@ -668,7 +672,6 @@ class PresupuestoController:
         return servicios
 
 
-# controller.py
 class CompraController:
     @staticmethod
     def crear_solicitud_compra(data):

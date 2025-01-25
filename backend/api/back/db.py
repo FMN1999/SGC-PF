@@ -654,6 +654,17 @@ class PresupuestoData:
             raise
 
     @staticmethod
+    def get_materiales_by_empresa(id_empresa):
+        try:
+            materiales =  Presupuesto_Material.objects.filter(id_presupuesto__id_obra__id_empresa=id_empresa).values_list(
+                'desc_material'
+            ).distinct()
+            return [mat[0] for mat in materiales]
+        except Exception as e:
+            print(f"Error al obtener materiales: {str(e)}")
+            raise
+
+    @staticmethod
     def update(id_presupuesto, data):
         presupuesto = Presupuesto.objects.get(id=id_presupuesto)
         presupuesto.total = data.get('total', presupuesto.total)

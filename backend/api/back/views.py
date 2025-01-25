@@ -659,6 +659,28 @@ class MaterialesPorEmpresa(View):
         return JsonResponse(data, safe=False)
 
 
+class MaterialesConocidosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        materiales = MaterialController.get_by_empresa(id_empresa)
+        materiales_presupuestos = PresupuestoController.get_materiales_by_empresa(id_empresa)
+        data = set()
+
+        for material in materiales:
+            es_material = True
+            if (
+                Herramienta.objects.filter(id_material=material).exists() or
+                Vehiculo.objects.filter(id_material=material).exists() or
+                'camion' in material.tipo_material.lower() or 'camión' in material.tipo_material.lower()
+               ):
+                es_material = False
+            if es_material:
+                data.add(material.tipo_material)  # Nombre del material
+
+        data.update(materiales_presupuestos)
+
+        return JsonResponse(sorted(data), safe=False)
+
+
 class ServiciosPorEmpresa(View):
     def get(self, request, id_empresa):
         servicios = ServicioController.get_by_empresa(id_empresa)
