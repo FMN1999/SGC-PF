@@ -4,6 +4,8 @@ import { PresupuestoService } from '../../services/presupuesto/presupuesto.servi
 import { ObraService } from '../../services/obra/obra.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { MaterialesConocidosService } from '../../services/materiales-conocidos/materiales-conocidos.service';
+import { ServiciosConocidosService } from '../../services/servicios-conocidos/servicios-conocidos.service';
+import { PuestosConocidosService } from '../../services/puestos-conocidos/puestos-conocidos.service';
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
 import { ChatComponent } from '../chat/chat.component'
@@ -38,12 +40,16 @@ export class CrearPresupuestoComponent implements OnInit {
   mensajeExito: string='';
   isLoggedIn: boolean=false;
   materialesConocidos: string[] = [];
+  serviciosConocidos: string[] = [];
+  puestosConocidos: string[] = [];
 
   constructor(
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
     private obraService: ObraService,
     private materialesConocidosService: MaterialesConocidosService,
+    private serviciosConocidosService: ServiciosConocidosService,
+    private puestosConocidosService: PuestosConocidosService,
     private route: ActivatedRoute,
     private dataShareService: DataShareService,
     private authService: AuthService,
@@ -91,6 +97,14 @@ export class CrearPresupuestoComponent implements OnInit {
 
     this.materialesConocidosService.getLista(this.id_empresa).subscribe((lista: string[]) => {
       this.materialesConocidos = lista;
+    });
+
+    this.serviciosConocidosService.getLista(this.id_empresa).subscribe((lista: string[]) => {
+      this.serviciosConocidos = lista;
+    });
+
+    this.puestosConocidosService.getLista(this.id_empresa).subscribe((lista: string[]) => {
+      this.puestosConocidos = lista;
     });
   }
 

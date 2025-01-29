@@ -612,6 +612,14 @@ class PresupuestoController:
         return PresupuestoData.get_materiales_by_empresa(id_empresa)
 
     @staticmethod
+    def get_servicios_by_empresa(id_empresa):
+        return PresupuestoData.get_servicios_by_empresa(id_empresa)
+
+    @staticmethod
+    def get_puestos_by_empresa(id_empresa):
+        return PresupuestoData.get_puestos_by_empresa(id_empresa)
+
+    @staticmethod
     def update_presupuesto(id_presupuesto, data):
         try:
             # Actualizar los datos del presupuesto

@@ -656,10 +656,32 @@ class PresupuestoData:
     @staticmethod
     def get_materiales_by_empresa(id_empresa):
         try:
-            materiales =  Presupuesto_Material.objects.filter(id_presupuesto__id_obra__id_empresa=id_empresa).values_list(
+            materiales = Presupuesto_Material.objects.filter(id_presupuesto__id_obra__id_empresa=id_empresa).values_list(
                 'desc_material'
             ).distinct()
-            return [mat[0] for mat in materiales]
+            return [mat[0] for mat in materiales if mat[0].strip()]
+        except Exception as e:
+            print(f"Error al obtener materiales: {str(e)}")
+            raise
+
+    @staticmethod
+    def get_servicios_by_empresa(id_empresa):
+        try:
+            servicios = Presupuesto_Servicio.objects.filter(id_presupuesto__id_obra__id_empresa=id_empresa).values_list(
+                'desc_servicio'
+            ).distinct()
+            return [svc[0] for svc in servicios if svc[0].strip()]
+        except Exception as e:
+            print(f"Error al obtener materiales: {str(e)}")
+            raise
+
+    @staticmethod
+    def get_puestos_by_empresa(id_empresa):
+        try:
+            puestos = Presupuesto_Trabajador.objects.filter(id_presupuesto__id_obra__id_empresa=id_empresa).values_list(
+                'puesto'
+            ).distinct()
+            return [puesto[0] for puesto in puestos if puesto[0].strip()]
         except Exception as e:
             print(f"Error al obtener materiales: {str(e)}")
             raise

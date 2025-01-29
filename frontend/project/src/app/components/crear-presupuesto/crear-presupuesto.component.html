@@ -63,7 +63,13 @@
         </thead>
         <tbody formArrayName="servicios">
           <tr *ngFor="let servicio of serviciosFormArray.controls; let i = index" [formGroupName]="i">
-            <td><input formControlName="desc_servicio" type="text" required /></td>
+            <td>
+              <app-input-autocompletar
+                [formControlName]="'desc_servicio'"
+                [required]="true"
+                [opciones]="serviciosConocidos"
+              />
+            </td>
             <td><input formControlName="precio_x_hora" type="number" required /></td>
             <td><input formControlName="horas" type="number" required/></td>
             <td><input formControlName="moneda" type="text" required /></td>
@@ -97,7 +103,13 @@
         </thead>
         <tbody formArrayName="trabajadores">
           <tr *ngFor="let trabajador of trabajadoresFormArray.controls; let i = index" [formGroupName]="i">
-            <td><input formControlName="puesto" type="text" required /></td>
+            <td>
+              <app-input-autocompletar
+                [formControlName]="'puesto'"
+                [required]="true"
+                [opciones]="puestosConocidos"
+              />
+            </td>
             <td><input formControlName="horas" type="number" required /></td>
             <td><input formControlName="precio_x_hora" type="number" required /></td>
             <td><input formControlName="moneda" type="text" required /></td>

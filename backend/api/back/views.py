@@ -681,6 +681,27 @@ class MaterialesConocidosPorEmpresa(View):
         return JsonResponse(sorted(data), safe=False)
 
 
+class ServiciosConocidosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        servicios = ServicioController.get_by_empresa(id_empresa)
+        servicios_presupuestos = PresupuestoController.get_servicios_by_empresa(id_empresa)
+        data = set()
+
+        for servicio in servicios:
+            data.add(servicio.descripcion)  # Nombre del servicio
+
+        data.update(servicios_presupuestos)
+
+        return JsonResponse(sorted(data), safe=False)
+
+
+class PuestosConocidosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        puestos = PresupuestoController.get_puestos_by_empresa(id_empresa)
+
+        return JsonResponse(sorted(puestos), safe=False)
+
+
 class ServiciosPorEmpresa(View):
     def get(self, request, id_empresa):
         servicios = ServicioController.get_by_empresa(id_empresa)
