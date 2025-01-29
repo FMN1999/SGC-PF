@@ -1,0 +1,21 @@
+<div class="caja-busqueda-container">
+  <ng-container [formGroup]="formGroup">
+    <input
+      formControlName="{{formControlName}}"
+      type="text"
+      [required]="required"
+      [appAutocomplete]="autocomplete"
+      placeholder="Ingresar o buscar"
+    />
+    <app-autocomplete #autocomplete="appAutocomplete">
+      <ng-template appAutocompleteContent>
+        <!-- Filtrar opciones en base a la entrada del usuario -->
+        <ng-container *ngIf="(opciones | filter: control.value) as opcionesFiltradas">
+          <app-option *ngFor="let opcion of opcionesFiltradas" [value]="opcion">
+            {{ opcion }}
+          </app-option>
+        </ng-container>
+      </ng-template>
+    </app-autocomplete>
+  </ng-container>
+</div>

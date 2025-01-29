@@ -23,7 +23,13 @@
         </thead>
         <tbody formArrayName="materiales">
           <tr *ngFor="let material of materialesFormArray.controls; let i = index" [formGroupName]="i">
-            <td><input formControlName="desc_material" type="text" required/></td>
+            <td>
+              <app-input-autocompletar
+                [formControlName]="'desc_material'"
+                [required]="true"
+                [opciones]="materialesConocidos"
+              />
+            </td>
             <td><input formControlName="cantidad" type="number" required/></td>
             <td><input formControlName="precio_x_unidad_medida" type="number" required/></td>
             <td><input formControlName="unidad_medida" type="text" required/></td>
