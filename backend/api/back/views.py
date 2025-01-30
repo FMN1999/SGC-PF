@@ -1472,7 +1472,8 @@ class Assistant(View):
         RecomendacionesPresupuesto = 1, 'Recomendaciones para presupuesto'
         RecomendacionesMateriales = aenum.auto(), 'Materiales frecuentes para cliente'
         OfertasVigentes = aenum.auto(), 'Ofertas vigentes'
-        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos'
+        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos',
+        CotizacionesDolar = aenum.auto(), 'Consultar cotizaciones del dólar'
 
     class OpcionesSeguimiento(Opciones):
         SeguimientoObra = 1, 'Seguimiento de obra'
@@ -1516,6 +1517,9 @@ class Assistant(View):
                         response_message += f"  * {sugerencia}\n"
                 else:
                     response_message += "\nNo se encontraron sugerencias para servicios.\n"
+            elif int(user_message) == int(self.OpcionesPresupuesto.CotizacionesDolar):
+                data_return = ChatController.cotizaciones_dolar()
+                response_message = self.format_cotizaciones_dolar(data_return)
         elif modo == 'seguimiento':
             if int(user_message) == int(self.OpcionesSeguimiento.SeguimientoObra):
                 data_return = ChatController.seguimiento_avance_obra(id_obra)
@@ -1662,6 +1666,29 @@ class Assistant(View):
                 mensaje += "\n"
         else:
             mensaje += "No hay tareas asociadas a esta obra.\n"
+
+        return mensaje
+
+    @staticmethod
+    def format_cotizaciones_dolar(data):
+        if not data:
+            return "No se pudieron obtener las cotizaciones"
+        mensaje = "Las cotizaciones disponibles del dólar son:\n\n"
+
+        if 'referencia_bcra' in data:
+            mensaje += f"Tipo de cambio de referencia minorista del BCRA para la venta: ${data['referencia_bcra']['valor']} (actualizado al {data['referencia_bcra']['fecha']})\n\n"
+
+        dolar_hoy = {k.removesuffix('_dolar_hoy'): v for k, v in data.items() if k.endswith('_dolar_hoy')}
+        if dolar_hoy:
+            mensaje += "Cotizaciones según DolarHoy.com:\n"
+            if 'oficial' in dolar_hoy:
+                mensaje += f"* Oficial: ${dolar_hoy['oficial']['valor']} (actualizado al {dolar_hoy['oficial']['fecha']})\n"
+            if 'blue' in dolar_hoy:
+                mensaje += f"* Blue: ${dolar_hoy['blue']['valor']} (actualizado al {dolar_hoy['blue']['fecha']})\n"
+            if 'bolsa' in dolar_hoy:
+                mensaje += f"* Bolsa (MEP): ${dolar_hoy['bolsa']['valor']} (actualizado al {dolar_hoy['bolsa']['fecha']})\n"
+            if 'ccl' in dolar_hoy:
+                mensaje += f"* Contado con liquidación: ${dolar_hoy['ccl']['valor']} (actualizado al {dolar_hoy['ccl']['fecha']})\n"
 
         return mensaje
 

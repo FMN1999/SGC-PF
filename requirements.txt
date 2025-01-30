@@ -10,6 +10,10 @@ asgiref==3.8.1
     # via
     #   django
     #   django-cors-headers
+certifi==2024.12.14
+    # via requests
+charset-normalizer==3.4.1
+    # via requests
 dj-database-url==2.3.0
     # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
 django==5.1.4
@@ -25,9 +29,13 @@ geopy==2.4.1
     # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
 gunicorn==23.0.0
     # via -r requirements.in
+idna==3.10
+    # via requests
 packaging==24.2
     # via gunicorn
 psycopg==3.2.3
+    # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
+requests==2.32.3
     # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
 sqlparse==0.5.3
     # via django
@@ -35,3 +43,5 @@ typing-extensions==4.12.2
     # via
     #   dj-database-url
     #   psycopg
+urllib3==2.3.0
+    # via requests

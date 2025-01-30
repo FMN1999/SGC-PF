@@ -4,6 +4,7 @@ from django.db.models import F, Sum, Q
 from django.utils import timezone
 from geopy.distance import geodesic  # Para calcular distancias geográficas
 from .db import *
+from .services import *
 from django.core.exceptions import ValidationError
 
 
@@ -1243,6 +1244,20 @@ class ChatController:
             "recomendaciones": recomendaciones,
         }
         return data_return
+
+    @staticmethod
+    def cotizaciones_dolar():
+        cotizaciones = {
+            'oficial_dolar_hoy': DolarAPICom.get_oficial(),
+            'blue_dolar_hoy': DolarAPICom.get_blue(),
+            'ccl_dolar_hoy': DolarAPICom.get_ccl(),
+            'bolsa_dolar_hoy': DolarAPICom.get_bolsa(),
+            'referencia_bcra': ReferenciaBCRA.get(),
+        }
+        for key in cotizaciones:
+            if cotizaciones[key] is None:
+                cotizaciones.pop(key)
+        return cotizaciones
 
     @staticmethod
     def _generar_query(palabras_clave, campos):
