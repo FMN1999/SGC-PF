@@ -6,6 +6,7 @@ from geopy.distance import geodesic  # Para calcular distancias geográficas
 from .db import *
 from .services import *
 from django.core.exceptions import ValidationError
+from .utilmateriales import estimar_cantidad_material_paredes
 
 
 class UsuarioController:
@@ -908,6 +909,11 @@ class ChatController:
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
         }
+        for mat in response_data['materiales']:
+            if 'ladrillo' in mat['descripcion'].lower():
+                estimacion = estimar_cantidad_material_paredes(mat['descripcion'], dimensiones, obra.pisos)
+                if estimacion is not None:
+                    mat['cantidad_para_paredes'] = estimacion
 
         # Responde con los datos en formato JSON
         return response_data

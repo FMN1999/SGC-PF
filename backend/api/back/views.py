@@ -1598,7 +1598,9 @@ class Assistant(View):
         response += f"- **Total estimado:** {data['total']} {data['moneda']}\n"
         response += f"- **Materiales incluidos:**\n"
         for material in data['materiales']:
-            response += f"  - {material['descripcion']} ( con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
+            response += f"  - {material['descripcion']} (con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
+            if 'cantidad_para_paredes' in material:
+                response += f"    - Cantidad estimada para las paredes: {material['cantidad_para_paredes']}\n"
         response += f"- **Servicios estimados:**\n"
         for servicio in data['servicios']:
             response += f"  - {servicio['descripcion']} (con precio de {servicio['precio_x_unidad']} {servicio['moneda']}/{servicio['unidad_medida']})\n"

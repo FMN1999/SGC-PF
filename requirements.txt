@@ -23,6 +23,10 @@ django==5.1.4
     #   django-cors-headers
 django-cors-headers==4.6.0
     # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
+flexcache==0.3
+    # via pint
+flexparser==0.4
+    # via pint
 geographiclib==2.0
     # via geopy
 geopy==2.4.1
@@ -33,7 +37,13 @@ idna==3.10
     # via requests
 packaging==24.2
     # via gunicorn
+pint==0.24.4
+    # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
+platformdirs==4.3.6
+    # via pint
 psycopg==3.2.3
+    # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
+pyicu==2.14
     # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
 requests==2.32.3
     # via -r /home/marce_geek/UTN/5/ProyectoFinal/repo/requirements-common.in
@@ -42,6 +52,9 @@ sqlparse==0.5.3
 typing-extensions==4.12.2
     # via
     #   dj-database-url
+    #   flexcache
+    #   flexparser
+    #   pint
     #   psycopg
 urllib3==2.3.0
     # via requests
