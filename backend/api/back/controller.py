@@ -857,25 +857,25 @@ class ChatController:
     @classmethod
     def generador_presupuesto(cls, id_obra):
         obra = ObraData.get_by_id(id_obra)
-        tipo_obra = obra.tipo_obra if obra.tipo_obra is not None else ''
+        tipo_obra = obra.tipo_obra.strip() if obra.tipo_obra is not None else ''
         PALABRAS_EXCLUIDAS = {'de', 'con', 'para', 'el', 'la', 'los', 'las', 'y', 'en', 'a', 'un', 'una'}
+        if not tipo_obra:
+            return None
 
         palabras_clave = [
             palabra for palabra in tipo_obra.split()
             if palabra.lower() not in PALABRAS_EXCLUIDAS
         ]
 
-        # Crear un Q object dinámico para materiales
-        query_materiales = cls._generar_query(palabras_clave, ['tipo_material', 'descripcion'])
-
         # Buscar materiales que coincidan con las palabras clave
-        materiales = Material.objects.filter(query_materiales)
-
-        # Crear un Q object dinámico para servicios
-        query_servicios = cls._generar_query(palabras_clave, ['descripcion', 'unidad_medida'])
+        materiales = cls._filtrar(Material, palabras_clave, ['tipo_material', 'descripcion'])
 
         # Buscar servicios que coincidan con las palabras clave
-        servicios = Servicio.objects.filter(query_servicios)
+        servicios = cls._filtrar(Servicio, palabras_clave, ['descripcion', 'unidad_medida'])
+
+        # No se encontró nada para recomendar
+        if not materiales and not servicios:
+            return None
 
         # Calcula costos estimados sumando precios de materiales y servicios
         total_materiales = materiales.aggregate(total=Sum(F('precio') + F('impuestos_total') + F('otros_gastos')))
@@ -1237,6 +1237,11 @@ class ChatController:
             "recomendaciones": recomendaciones,
         }
         return data_return
+
+    @classmethod
+    def _filtrar(cls, modelo, palabras_clave, campos):
+        query = cls._generar_query(palabras_clave, campos)
+        return modelo.objects.filter(query)
 
     @staticmethod
     def _generar_query(palabras_clave, campos):
