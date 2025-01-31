@@ -868,11 +868,10 @@ class PagoController:
 
 class ChatController:
     @classmethod
-    def generador_presupuesto(cls, data):
+    def generador_presupuesto(cls, id_obra):
+        obra = ObraData.get_by_id(id_obra)
+        tipo_obra = obra.tipo_obra if obra.tipo_obra is not None else ''
         PALABRAS_EXCLUIDAS = {'de', 'con', 'para', 'el', 'la', 'los', 'las', 'y', 'en', 'a', 'un', 'una'}
-        obra = ObraData.get_by_id(data)
-        dimensiones = obra.dimensiones
-        tipo_obra = obra.tipo_obra
 
         palabras_clave = [
             palabra for palabra in tipo_obra.split()
@@ -911,9 +910,14 @@ class ChatController:
         }
         for mat in response_data['materiales']:
             if 'ladrillo' in mat['descripcion'].lower():
-                estimacion = estimar_cantidad_material_paredes(mat['descripcion'], dimensiones, obra.pisos)
+                estimacion = estimar_cantidad_material_paredes(mat['descripcion'], obra.dimensiones, obra.pisos)
                 if estimacion is not None:
                     mat['cantidad_para_paredes'] = estimacion
+            if mat['moneda'] is None:
+                mat['moneda'] = obra.moneda
+        for svc in response_data['servicios']:
+            if svc['moneda'] is None:
+                svc['moneda'] = obra.moneda
 
         # Responde con los datos en formato JSON
         return response_data
