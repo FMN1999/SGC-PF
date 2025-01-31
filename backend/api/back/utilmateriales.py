@@ -65,6 +65,13 @@ def procesar_cantidad(texto):
         return resultado if None not in resultado else None
 
 
+# función para simplificar el manejo de strings
+def convertir_string(s):
+    s = s.strip()
+    tl = icu.Transliterator.createInstance('Latin-ASCII')
+    return tl.transliterate(s).lower()
+
+
 class Material:
     def __init__(self, nombre, nombres_alternativos, unidad_medida, cantidad_m2, discreto=True):
         self.nombre = nombre
@@ -93,59 +100,52 @@ class Material:
 
 
 class RepositorioMateriales:
-    # materiales hardcodeados para el sistema de recomendación
-    MATERIALES = [
-        Material(
-            'Ladrillo común',
-            ('ladrillo comun', 'ladrillo comu', 'ladrillo'),
-            'un',
-            60,
-        ),
-        Material(
-            'Ladrillón',
-            ('ladrillon', 'ladrillo grande'),
-            'un',
-            40,
-        ),
-        Material(
-            'Arena',
-            ('arena',),
-            'kg',
-            10,
-            discreto=False,
-        ),
-    ]
+    def __init__(self):
+        # materiales hardcodeados para el sistema de recomendación
+        self.MATERIALES = [
+            Material(
+                'Ladrillo común',
+                ('ladrillo comun', 'ladrillo comu', 'ladrillo'),
+                'un',
+                60,
+            ),
+            Material(
+                'Ladrillón',
+                ('ladrillon', 'ladrillo grande'),
+                'un',
+                40,
+            ),
+            Material(
+                'Arena',
+                ('arena',),
+                'kg',
+                10,
+                discreto=False,
+            ),
+        ]
 
-    @classmethod
-    def get(cls, idx):
-        if len(cls.MATERIALES) <= idx:
-            return None
-        return cls.MATERIALES[idx]
-
-    @classmethod
-    def buscar(cls, nombre):
+    def buscar(self, nombre):
         nombre = convertir_string(nombre)
-        for idx_mat in range(len(cls.MATERIALES)):
-            mat = cls.MATERIALES[idx_mat]
+        for idx_mat in range(len(self.MATERIALES)):
+            mat = self.MATERIALES[idx_mat]
             nombres = [convertir_string(nom) for nom in [mat.nombre, *mat.nombres_alternativos]]
             if mat.coincide(nombre):
                 return idx_mat
         return None
 
+    def __getitem__(self, index):
+        return self.MATERIALES[index]
 
-# función para simplificar el manejo de strings
-def convertir_string(s):
-    s = s.strip()
-    tl = icu.Transliterator.createInstance('Latin-ASCII')
-    return tl.transliterate(s).lower()
+    def __setitem__(self, index, value):
+        self.MATERIALES[index] = value
 
+    def __len__(self):
+        return len(self.MATERIALES)
 
-def get_material(nombre):
-    nombre = convertir_string(nombre)
-    for mat in MATERIALES:
-        if nombre in MATERIALES[mat]['nombres']:
-            return mat, MATERIALES[mat]
-    return None
+    def __iter__(self):
+        return iter(self.MATERIALES)
+
+repo_materiales = RepositorioMateriales()
 
 
 # modelo matemático simplificado
@@ -177,10 +177,10 @@ def estimar_area_total_paredes(area_edificada, pisos, altura_piso=2.4, paredes_i
 
 def estimar_cantidad_material_paredes(material, area_edificada, pisos, altura_piso=2.4, paredes_internas_promedio=1.5):
     if isinstance(material, str):
-        idx = RepositorioMateriales.buscar(material)
+        idx = repo_materiales.buscar(material)
         if idx is None:
             return None
-        material = RepositorioMateriales.get(idx)
+        material = repo_materiales[idx]
     area_paredes = estimar_area_total_paredes(
         area_edificada, pisos, altura_piso=altura_piso,
         paredes_internas_promedio=paredes_internas_promedio
