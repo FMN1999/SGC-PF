@@ -873,6 +873,10 @@ class ChatController:
         # Buscar servicios que coincidan con las palabras clave
         servicios = cls._filtrar(Servicio, palabras_clave, ['descripcion', 'unidad_medida'])
 
+        # No se encontró nada para recomendar
+        if not materiales and not servicios:
+            return None
+
         # Calcula costos estimados sumando precios de materiales y servicios
         total_materiales = materiales.aggregate(total=Sum(F('precio') + F('impuestos_total') + F('otros_gastos')))
         total_servicios = servicios.aggregate(
