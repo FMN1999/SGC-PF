@@ -107,31 +107,44 @@ class RepositorioMateriales:
                 'Ladrillo común',
                 ('ladrillo comun', 'ladrillo comu', 'ladrillo'),
                 'un',
-                60,
+                40,
             ),
             Material(
                 'Ladrillón',
                 ('ladrillon', 'ladrillo grande'),
                 'un',
-                40,
+                30,
+            ),
+            Material(
+                'Cemento',
+                ('cemento',),
+                'kg',
+                5,
+                discreto=False,
+            ),
+            Material(
+                'Agua',
+                ('agua',),
+                'l',
+                5,
+                discreto=False,
             ),
             Material(
                 'Arena',
                 ('arena',),
                 'kg',
-                10,
+                20,
                 discreto=False,
             ),
         ]
+        # Índice de búsqueda rápida
+        self._indice = {}
+        for idx, mat in enumerate(self.MATERIALES):
+            for nombre in [mat.nombre, *mat.nombres_alternativos]:
+                self._indice[convertir_string(nombre)] = idx
 
     def buscar(self, nombre):
-        nombre = convertir_string(nombre)
-        for idx_mat in range(len(self.MATERIALES)):
-            mat = self.MATERIALES[idx_mat]
-            nombres = [convertir_string(nom) for nom in [mat.nombre, *mat.nombres_alternativos]]
-            if mat.coincide(nombre):
-                return idx_mat
-        return None
+        return self._indice.get(convertir_string(nombre), -1)
 
     def __getitem__(self, index):
         return self.MATERIALES[index]
