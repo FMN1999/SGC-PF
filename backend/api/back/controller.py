@@ -870,7 +870,7 @@ class ChatController:
     @classmethod
     def generador_presupuesto(cls, id_obra):
         obra = ObraData.get_by_id(id_obra)
-        tipo_obra = obra.tipo_obra.strip() if obra.tipo_obra is not None else ''
+        tipo_obra = (obra.tipo_obra or '').strip()
         PALABRAS_EXCLUIDAS = {'de', 'con', 'para', 'el', 'la', 'los', 'las', 'y', 'en', 'a', 'un', 'una'}
         if not tipo_obra:
             return None
@@ -908,16 +908,15 @@ class ChatController:
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
         }
+        moneda_fallback = obra.moneda or 'ARS'
         for mat in response_data['materiales']:
+            mat['moneda'] = mat['moneda'] or moneda_fallback
             if 'ladrillo' in mat['descripcion'].lower():
                 estimacion = estimar_cantidad_material_paredes(mat['descripcion'], obra.dimensiones, obra.pisos)
                 if estimacion is not None:
                     mat['cantidad_para_paredes'] = estimacion
-            if mat['moneda'] is None:
-                mat['moneda'] = obra.moneda
         for svc in response_data['servicios']:
-            if svc['moneda'] is None:
-                svc['moneda'] = obra.moneda
+            svc['moneda'] = svc['moneda'] or moneda_fallback
 
         # Responde con los datos en formato JSON
         return response_data
