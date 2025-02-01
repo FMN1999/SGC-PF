@@ -870,10 +870,8 @@ class ChatController:
     @classmethod
     def generador_presupuesto(cls, id_obra):
         obra = ObraData.get_by_id(id_obra)
-        tipo_obra = (obra.tipo_obra or '').strip()
+        tipo_obra = (obra.tipo_obra or '').strip() or 'casa de ladrillo'
         PALABRAS_EXCLUIDAS = {'de', 'con', 'para', 'el', 'la', 'los', 'las', 'y', 'en', 'a', 'un', 'una'}
-        if not tipo_obra:
-            return None
 
         palabras_clave = [
             palabra for palabra in tipo_obra.split()
