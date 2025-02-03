@@ -55,7 +55,7 @@ export class MaterialComponent implements OnInit {
   ) {
     // Definir el formulario reactivo
     this.materialForm = this.fb.group({
-      tipo_material: ['', Validators.required], // Tipo de material
+      nombre: ['', Validators.required], // Nombre del material
       descripcion: ['', Validators.required],
       marca: ['', Validators.required],
       precio: [''],

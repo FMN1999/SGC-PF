@@ -3,9 +3,13 @@ import {FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule} from
 import { PresupuestoService } from '../../services/presupuesto/presupuesto.service';
 import { ObraService } from '../../services/obra/obra.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { MaterialesConocidosService } from '../../services/materiales-conocidos/materiales-conocidos.service';
+import { ServiciosConocidosService } from '../../services/servicios-conocidos/servicios-conocidos.service';
+import { PuestosConocidosService } from '../../services/puestos-conocidos/puestos-conocidos.service';
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
 import { ChatComponent } from '../chat/chat.component'
+import { InputAutocompletarComponent } from '../input-autocompletar/input-autocompletar.component';
 import {DataShareService} from "../../services/data-share/data-share.service";
 import { HeaderComponent } from '../header/header.component';
 import { Title } from '@angular/platform-browser';
@@ -18,6 +22,7 @@ import { Title } from '@angular/platform-browser';
     ReactiveFormsModule,
     NgForOf,
     ChatComponent,
+    InputAutocompletarComponent,
     HeaderComponent,
     NgIf
   ],
@@ -34,11 +39,17 @@ export class CrearPresupuestoComponent implements OnInit {
   clienteId!:number;
   mensajeExito: string='';
   isLoggedIn: boolean=false;
+  materialesConocidos: string[] = [];
+  serviciosConocidos: string[] = [];
+  puestosConocidos: string[] = [];
 
   constructor(
     private fb: FormBuilder,
     private presupuestoService: PresupuestoService,
     private obraService: ObraService,
+    private materialesConocidosService: MaterialesConocidosService,
+    private serviciosConocidosService: ServiciosConocidosService,
+    private puestosConocidosService: PuestosConocidosService,
     private route: ActivatedRoute,
     private dataShareService: DataShareService,
     private authService: AuthService,
@@ -82,6 +93,18 @@ export class CrearPresupuestoComponent implements OnInit {
 
     this.obraService.obtenerAreasPorObra(this.obraId).subscribe((data:any[]) =>{
       this.areas = data
+    });
+
+    this.materialesConocidosService.getLista(this.id_empresa).subscribe((lista: string[]) => {
+      this.materialesConocidos = lista;
+    });
+
+    this.serviciosConocidosService.getLista(this.id_empresa).subscribe((lista: string[]) => {
+      this.serviciosConocidos = lista;
+    });
+
+    this.puestosConocidosService.getLista(this.id_empresa).subscribe((lista: string[]) => {
+      this.puestosConocidos = lista;
     });
   }
 

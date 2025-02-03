@@ -47,8 +47,7 @@ export class FinanzasObraComponent implements OnInit {
     }
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    // @ts-ignore
-    const id_emp = +sessionStorage.getItem('id_empresa');
+
     this.authService.cargarPermisos(id_user);
 
     this.idObra = +this.route.snapshot.params['id'];
@@ -56,7 +55,7 @@ export class FinanzasObraComponent implements OnInit {
       this.cargarPagosYCobros();
     }
 
-    if (!this.dataShare.permiso10 || this.id_cliente !== id_user ||this.id_empresa!==id_emp) {
+    if (!this.dataShare.permiso10) {
       this.router.navigate(['/no-permissions']);
     }
   }
@@ -68,7 +67,12 @@ export class FinanzasObraComponent implements OnInit {
         this.cobros = data.cobros;
         this.id_cliente = data.id_cliente;
         this.id_empresa=data.id_empresa;
-      },
+        // @ts-ignore
+        const id_emp = +sessionStorage.getItem('id_empresa');
+        if (this.id_empresa !== id_emp){
+          this.router.navigate(['/no-permissions']);
+        }
+        },
       error: (err) => console.error('Error al cargar pagos y cobros:', err)
     });
   }

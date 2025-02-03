@@ -5,7 +5,7 @@
 
   <!-- Modo de visualización -->
   <div *ngIf="!editMode" class="material-details">
-    <p><strong>Nombre:</strong> {{ material.tipo_material }}</p>
+    <p><strong>Nombre:</strong> {{ material.nombre }}</p>
     <p><strong>Descripcion:</strong> {{ material.descripcion }}</p>
     <p><strong>Marca:</strong> {{ material.marca }}</p>
     <p><strong>Precio:</strong> {{ material.precio }} {{ material.moneda }}</p>
@@ -42,8 +42,8 @@
   <!-- Modo de edición -->
   <form [formGroup]="materialForm" *ngIf="editMode" (ngSubmit)="onSubmit()" class="material-form">
     <div class="form-group">
-      <label for="tipo_material">Nombre: <span class="required-asterisk">*</span></label>
-      <input id="tipo_material" formControlName="tipo_material" type="text" required/>
+      <label for="nombre">Nombre: <span class="required-asterisk">*</span></label>
+      <input id="nombre" formControlName="nombre" type="text" required/>
     </div>
     <div class="form-group">
       <label for="descripcion">Descripción: <span class="required-asterisk">*</span></label>

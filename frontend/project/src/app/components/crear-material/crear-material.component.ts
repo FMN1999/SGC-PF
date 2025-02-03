@@ -52,7 +52,7 @@ export class CrearMaterialComponent implements OnInit{
   ) {
       this.id_proveedor = this.route.snapshot.params['id'];
       this.materialForm = this.fb.group({
-        tipo_material: ['', Validators.required],
+        nombre: ['', Validators.required],
         unidad_medida: ['', Validators.required],
         descripcion: ['', Validators.required],
         precio: [0],

@@ -78,6 +78,7 @@ class Material(models.Model):
     id_proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, db_column='id_proveedor')
     tipo_material = models.CharField()
     unidad_medida = models.CharField()
+    nombre = models.CharField()
     descripcion = models.CharField()
     marca = models.CharField()
     precio = models.FloatField()

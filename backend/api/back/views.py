@@ -353,6 +353,7 @@ class MaterialView(View):
                 id_proveedor=proveedor,
                 tipo_material=data.get('tipo_material'),
                 unidad_medida=data.get('unidad_medida'),
+                nombre=data.get('nombre', data.get('tipo_material')),
                 descripcion=data.get('descripcion'),
                 marca=data.get('marca'),
                 precio=data.get('precio'),
@@ -376,12 +377,16 @@ class MaterialView(View):
                     moneda=data.get('moneda'),
                     id_almacen_id=data.get('id_almacen')
                 )
+                material.tipo_material = 'vehiculo'
             elif data.get('tipo_asociacion') == 'herramienta':
                 Herramienta.objects.create(
                     id_material=material,
                     id_almacen_id=data.get('id_almacen'),
                     ubicacion=data.get('ubicacion')
                 )
+                material.tipo_material = 'herramienta'
+            else:
+                material.tipo_material = 'material'
 
             return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
         except Exception as e:
@@ -397,6 +402,7 @@ class MaterialView(View):
                 'id_proveedor': material.id_proveedor.id,
                 'tipo_material': material.tipo_material,
                 'unidad_medida': material.unidad_medida,
+                'nombre': material.nombre,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
                 'precio': material.precio,
@@ -649,7 +655,8 @@ class MaterialesPorEmpresa(View):
                 'id': material.id,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
-                'tipo_material': material.tipo_material,  # Nombre del material
+                'tipo_material': material.tipo_material,  # Tipo del material
+                'nombre': material.nombre,  # Nombre del material
                 'precio': material.precio,
                 'moneda': material.moneda,
                 'tipo': tipo,  # Añadimos el tipo
@@ -657,6 +664,49 @@ class MaterialesPorEmpresa(View):
             })
 
         return JsonResponse(data, safe=False)
+
+
+class MaterialesConocidosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        materiales = MaterialController.get_by_empresa(id_empresa)
+        materiales_presupuestos = PresupuestoController.get_materiales_by_empresa(id_empresa)
+        data = set()
+
+        for material in materiales:
+            es_material = True
+            if (
+                Herramienta.objects.filter(id_material=material).exists() or
+                Vehiculo.objects.filter(id_material=material).exists() or
+                material.tipo_material in ['herramienta', 'vehiculo']
+               ):
+                es_material = False
+            if es_material:
+                data.add(material.nombre)  # Nombre del material
+
+        data.update(materiales_presupuestos)
+
+        return JsonResponse(sorted(data), safe=False)
+
+
+class ServiciosConocidosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        servicios = ServicioController.get_by_empresa(id_empresa)
+        servicios_presupuestos = PresupuestoController.get_servicios_by_empresa(id_empresa)
+        data = set()
+
+        for servicio in servicios:
+            data.add(servicio.descripcion)  # Nombre del servicio
+
+        data.update(servicios_presupuestos)
+
+        return JsonResponse(sorted(data), safe=False)
+
+
+class PuestosConocidosPorEmpresa(View):
+    def get(self, request, id_empresa):
+        puestos = PresupuestoController.get_puestos_by_empresa(id_empresa)
+
+        return JsonResponse(sorted(puestos), safe=False)
 
 
 class ServiciosPorEmpresa(View):
@@ -1429,7 +1479,8 @@ class Assistant(View):
         RecomendacionesPresupuesto = 1, 'Recomendaciones para presupuesto'
         RecomendacionesMateriales = aenum.auto(), 'Materiales frecuentes para cliente'
         OfertasVigentes = aenum.auto(), 'Ofertas vigentes'
-        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos'
+        OptimizacionCostos = aenum.auto(), 'Sugerencias de optimización de costos',
+        CotizacionesDolar = aenum.auto(), 'Consultar cotizaciones del dólar'
 
     class OpcionesSeguimiento(Opciones):
         SeguimientoObra = 1, 'Seguimiento de obra'
@@ -1473,6 +1524,9 @@ class Assistant(View):
                         response_message += f"  * {sugerencia}\n"
                 else:
                     response_message += "\nNo se encontraron sugerencias para servicios.\n"
+            elif int(user_message) == int(self.OpcionesPresupuesto.CotizacionesDolar):
+                data_return = ChatController.cotizaciones_dolar()
+                response_message = self.format_cotizaciones_dolar(data_return)
         elif modo == 'seguimiento':
             if int(user_message) == int(self.OpcionesSeguimiento.SeguimientoObra):
                 data_return = ChatController.seguimiento_avance_obra(id_obra)
@@ -1549,12 +1603,18 @@ class Assistant(View):
 
         response = f"Presupuesto generado para la obra *{data['direccion']}*: \n"
         response += f"- **Total estimado:** {data['total']} {data['moneda']}\n"
-        response += f"- **Materiales incluidos:**\n"
-        for material in data['materiales']:
-            response += f"  - {material['descripcion']} ( con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
-        response += f"- **Servicios estimados:**\n"
-        for servicio in data['servicios']:
-            response += f"  - {servicio['descripcion']} (con precio de {servicio['precio_x_unidad']} {servicio['moneda']}/{servicio['unidad_medida']})\n"
+        if data['materiales']:
+            response += f"- **Materiales incluidos:**\n"
+            for material in data['materiales']:
+                response += f"  - {material['nombre']} (con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
+        else:
+            response += f"\nNo se incluyeron materiales en esta estimación.\n\n"
+        if data['servicios']:
+            response += f"- **Servicios estimados:**\n"
+            for servicio in data['servicios']:
+                response += f"  - {servicio['descripcion']} (con precio de {servicio['precio_x_unidad']} {servicio['moneda']}/{servicio['unidad_medida']})\n"
+        else:
+            response += f"\nNo se incluyeron servicios en esta estimación.\n\n"
         return response
 
     @staticmethod
@@ -1619,6 +1679,29 @@ class Assistant(View):
                 mensaje += "\n"
         else:
             mensaje += "No hay tareas asociadas a esta obra.\n"
+
+        return mensaje
+
+    @staticmethod
+    def format_cotizaciones_dolar(data):
+        if not data:
+            return "No se pudieron obtener las cotizaciones"
+        mensaje = "Las cotizaciones disponibles del dólar son:\n\n"
+
+        if 'referencia_bcra' in data:
+            mensaje += f"Tipo de cambio de referencia minorista del BCRA para la venta: ${data['referencia_bcra']['valor']} (actualizado al {data['referencia_bcra']['fecha']})\n\n"
+
+        dolar_hoy = {k.removesuffix('_dolar_hoy'): v for k, v in data.items() if k.endswith('_dolar_hoy')}
+        if dolar_hoy:
+            mensaje += "Cotizaciones según DolarHoy.com:\n"
+            if 'oficial' in dolar_hoy:
+                mensaje += f"* Oficial: ${dolar_hoy['oficial']['valor']} (actualizado al {dolar_hoy['oficial']['fecha']})\n"
+            if 'blue' in dolar_hoy:
+                mensaje += f"* Blue: ${dolar_hoy['blue']['valor']} (actualizado al {dolar_hoy['blue']['fecha']})\n"
+            if 'bolsa' in dolar_hoy:
+                mensaje += f"* Bolsa (MEP): ${dolar_hoy['bolsa']['valor']} (actualizado al {dolar_hoy['bolsa']['fecha']})\n"
+            if 'ccl' in dolar_hoy:
+                mensaje += f"* Contado con liquidación: ${dolar_hoy['ccl']['valor']} (actualizado al {dolar_hoy['ccl']['fecha']})\n"
 
         return mensaje
 
@@ -1738,7 +1821,7 @@ class AlmacenesPorEmpresaView(View):
                         'fecha': ingreso.fecha,
                         'material': {
                             'id': ingreso.id_material.id,
-                            'nombre': ingreso.id_material.tipo_material
+                            'nombre': ingreso.id_material.nombre
                         },
                         'unidad_medida': ingreso.unidad_medida,
                         'id_compra': ingreso.id_compra.id,
@@ -1757,7 +1840,7 @@ class AlmacenesPorEmpresaView(View):
                         'id': herramienta.id,
                         'material': {
                             'id': herramienta.id_material.id,
-                            'nombre': herramienta.id_material.tipo_material
+                            'nombre': herramienta.id_material.nombre
                         },
                         'ubicacion': herramienta.ubicacion,
                         'marca': herramienta.id_material.marca,
@@ -1773,7 +1856,7 @@ class AlmacenesPorEmpresaView(View):
                         'id': v.id,
                         'material': {
                             'id': v.id_material.id,
-                            'nombre': v.id_material.tipo_material
+                            'nombre': v.id_material.nombre
                         },
                         'patente': v.patente,
                         'marca': v.id_material.marca,
@@ -2002,7 +2085,7 @@ class TareasView(View):
                 area = None
 
             try:
-                vehiculo = t.id_vehiculo.id_material.tipo_material if t.id_vehiculo else None
+                vehiculo = t.id_vehiculo.id_material.nombre if t.id_vehiculo else None
                 tipo_vehiculo = t.id_vehiculo.tipo if t.id_vehiculo else None
                 modelo_vehiculo = t.id_vehiculo.modelo if t.id_vehiculo else None
             except Tarea.id_vehiculo.RelatedObjectDoesNotExist:

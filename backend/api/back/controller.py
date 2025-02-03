@@ -4,6 +4,7 @@ from django.db.models import F, Sum, Q
 from django.utils import timezone
 from geopy.distance import geodesic  # Para calcular distancias geográficas
 from .db import *
+from .services import *
 from django.core.exceptions import ValidationError
 
 
@@ -166,6 +167,7 @@ class ProveedorController:
                     'id': material.id,
                     'tipo_material': material.tipo_material,
                     'unidad_medida': material.unidad_medida,
+                    'nombre': material.nombre,
                     'descripcion': material.descripcion,
                     'marca': material.marca,
                     'precio': material.precio,
@@ -608,6 +610,18 @@ class PresupuestoController:
         return PresupuestoData.get_presupuesto_detalles(id_presupuesto)
 
     @staticmethod
+    def get_materiales_by_empresa(id_empresa):
+        return PresupuestoData.get_materiales_by_empresa(id_empresa)
+
+    @staticmethod
+    def get_servicios_by_empresa(id_empresa):
+        return PresupuestoData.get_servicios_by_empresa(id_empresa)
+
+    @staticmethod
+    def get_puestos_by_empresa(id_empresa):
+        return PresupuestoData.get_puestos_by_empresa(id_empresa)
+
+    @staticmethod
     def update_presupuesto(id_presupuesto, data):
         try:
             # Actualizar los datos del presupuesto
@@ -668,7 +682,6 @@ class PresupuestoController:
         return servicios
 
 
-# controller.py
 class CompraController:
     @staticmethod
     def crear_solicitud_compra(data):
@@ -789,7 +802,7 @@ class CompraController:
                 # Contar las líneas de material y obtener los nombres de los materiales
                 lineas = LineaCompra.objects.filter(id_compra=compra.id)
                 cantidad_lineas = lineas.count()
-                nombres_materiales = [linea.id_material.tipo_material.split()[0] for linea in lineas[:3]]
+                nombres_materiales = [linea.id_material.nombre.split()[0] for linea in lineas[:3]]
 
                 # Preparar los detalles de la compra
                 compras_pendientes.append({
@@ -866,7 +879,7 @@ class ChatController:
         ]
 
         # Buscar materiales que coincidan con las palabras clave
-        materiales = cls._filtrar(Material, palabras_clave, ['tipo_material', 'descripcion'])
+        materiales = cls._filtrar(Material, palabras_clave, ['nombre', 'descripcion'])
 
         # Buscar servicios que coincidan con las palabras clave
         servicios = cls._filtrar(Servicio, palabras_clave, ['descripcion', 'unidad_medida'])
@@ -883,21 +896,22 @@ class ChatController:
         # Calcula un total general
         total_estimado = (total_materiales['total'] or 0) + (total_servicios['total'] or 0)
 
+        moneda_obra = (obra.moneda or '').strip() or 'ARS'
+
         # Organiza los datos de respuesta
         response_data = {
             "direccion": obra.direccion,
             "total": obra.monto_total_est,
-            "moneda": obra.moneda,
-            "materiales": list(materiales.values('id', 'descripcion', 'unidad_medida', 'marca', 'precio', 'moneda')),
+            "moneda": moneda_obra,
+            "materiales": list(materiales.values('id', 'nombre', 'unidad_medida', 'marca', 'precio', 'moneda')),
             "servicios": list(
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
         }
-        moneda_fallback = obra.moneda or 'ARS'
         for mat in response_data['materiales']:
-            mat['moneda'] = mat['moneda'] or moneda_fallback
+            mat['moneda'] = mat['moneda'] or moneda_obra
         for svc in response_data['servicios']:
-            svc['moneda'] = svc['moneda'] or moneda_fallback
+            svc['moneda'] = svc['moneda'] or moneda_obra
 
         # Responde con los datos en formato JSON
         return response_data
@@ -1239,6 +1253,20 @@ class ChatController:
     def _filtrar(cls, modelo, palabras_clave, campos):
         query = cls._generar_query(palabras_clave, campos)
         return modelo.objects.filter(query)
+
+    @staticmethod
+    def cotizaciones_dolar():
+        cotizaciones = {
+            'oficial_dolar_hoy': DolarAPICom.get_oficial(),
+            'blue_dolar_hoy': DolarAPICom.get_blue(),
+            'ccl_dolar_hoy': DolarAPICom.get_ccl(),
+            'bolsa_dolar_hoy': DolarAPICom.get_bolsa(),
+            'referencia_bcra': ReferenciaBCRA.get(),
+        }
+        for key in cotizaciones:
+            if cotizaciones[key] is None:
+                cotizaciones.pop(key)
+        return cotizaciones
 
     @staticmethod
     def _generar_query(palabras_clave, campos):
