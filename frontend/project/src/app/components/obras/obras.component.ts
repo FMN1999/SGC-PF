@@ -8,6 +8,8 @@ import {CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-obras-empresa',
   templateUrl: './obras.component.html',
@@ -85,12 +87,11 @@ export class ObrasComponent implements OnInit {
   }
 
   aplicarFiltros(): void {
+    const busqueda = transliterate(this.filtroBusqueda).toLowerCase().trim();
     this.obrasFiltradas = this.obras.filter(obra => {
-      const coincideBusqueda =
-        obra.direccion.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        `${obra.cliente_nombre} ${obra.cliente_apellido}`
-          .toLowerCase()
-          .includes(this.filtroBusqueda.toLowerCase());
+      const direccion = transliterate(obra.direccion).toLowerCase();
+      const cliente = transliterate(`${obra.cliente_nombre} ${obra.cliente_apellido}`).toLowerCase();
+      const coincideBusqueda = direccion.includes(busqueda) || cliente.includes(busqueda);
 
       const coincideEstado =
         this.filtroEstado === '' || obra.estado === this.filtroEstado;

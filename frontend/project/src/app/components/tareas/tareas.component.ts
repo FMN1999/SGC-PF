@@ -8,6 +8,8 @@ import { NgForOf, NgIf, CurrencyPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 interface Tarea {
   id: number;
   tarea: string;
@@ -102,10 +104,11 @@ export class TareasComponent implements OnInit {
   }
 
   aplicarFiltros(): void {
+    const busqueda = transliterate(this.filtroBusqueda).toLowerCase().trim();
     this.tareasFiltradas = this.tareas.filter(tarea => {
-      const coincideBusqueda =
-        tarea.tarea?.toLowerCase().includes(this.filtroBusqueda.toLowerCase()) ||
-        tarea.descripcion?.toLowerCase().includes(this.filtroBusqueda.toLowerCase());
+      const nombreTarea = transliterate(tarea.tarea ? tarea.tarea : '').toLowerCase();
+      const descripcion = transliterate(tarea.descripcion ? tarea.descripcion : '').toLowerCase();
+      const coincideBusqueda = nombreTarea.includes(busqueda) || descripcion.includes(busqueda);
 
       const coincideEstado =
         this.filtroEstado === '' || tarea.estado === this.filtroEstado;

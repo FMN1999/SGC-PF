@@ -7,6 +7,8 @@ import {NgForOf, NgIf} from "@angular/common";
 import { AuthService } from '../../services/auth/auth.service';
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-materiales',
   templateUrl: './materiales.component.html',
@@ -70,15 +72,18 @@ export class MaterialesComponent implements OnInit {
   }
 
   aplicarFiltros(): void {
-    // Convertimos los valores a minúsculas para una búsqueda insensible a mayúsculas
-    const busqueda = this.filtroBusqueda.toLowerCase();
+    // Convertimos los valores a minúsculas, eliminamos acentos y espacios para una búsqueda insensible a mayúsculas, acentos y espacios
+    const busqueda = transliterate(this.filtroBusqueda).toLowerCase().trim();
     const tipoFiltro = this.filtroTipo;
 
     // Filtrar los materiales
     this.materialesFiltrados = this.materiales.filter((material) => {
-      const coincideTexto = material.descripcion.toLowerCase().includes(busqueda);
+      const nombre = transliterate(material.nombre).toLowerCase();
+      const descripcion = transliterate(material.descripcion).toLowerCase();
+      const coincideTexto = nombre.includes(busqueda) || descripcion.includes(busqueda);
       const coincideTipo =
-        tipoFiltro === '' || (tipoFiltro === 'herramienta' && material.tipo === 'herramienta') ||
+        tipoFiltro === '' || (tipoFiltro === 'material' && material.tipo === 'material') ||
+        (tipoFiltro === 'herramienta' && material.tipo === 'herramienta') ||
         (tipoFiltro === 'vehiculo' && material.tipo === 'vehículo');
       return coincideTexto && coincideTipo;
     });

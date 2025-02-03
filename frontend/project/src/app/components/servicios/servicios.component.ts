@@ -7,6 +7,8 @@ import { HeaderComponent } from '../header/header.component';
 import {AuthService} from "../../services/auth/auth.service";
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-servicios',
   templateUrl: './servicios.component.html',
@@ -67,9 +69,9 @@ export class ServiciosComponent implements OnInit {
   }
 
   aplicarFiltros(): void {
-    const busqueda = this.filtroBusqueda.toLowerCase();
+    const busqueda = transliterate(this.filtroBusqueda).toLowerCase().trim();
     this.serviciosFiltrados = this.servicios.filter((servicio) =>
-      servicio.descripcion.toLowerCase().includes(busqueda)
+      transliterate(servicio.descripcion).toLowerCase().includes(busqueda)
     );
   }
 

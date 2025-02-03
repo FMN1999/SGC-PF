@@ -8,6 +8,7 @@
     <input type="text" placeholder="Buscar materiales..." [(ngModel)]="filtroBusqueda" (input)="aplicarFiltros()" class="busqueda" />
     <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()" class="tipo-filtro">
       <option value="">Todos</option>
+      <option value="material">Materiales</option>
       <option value="herramienta">Herramientas</option>
       <option value="vehiculo">Vehículos</option>
     </select>
