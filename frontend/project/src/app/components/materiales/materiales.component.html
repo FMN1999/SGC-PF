@@ -18,9 +18,9 @@
     <table class="tabla-materiales">
       <thead>
         <tr>
+          <th>Nombre</th>
           <th>Descripción</th>
           <th>Marca</th>
-          <th>Nombre</th>
           <th>Precio</th>
           <th>Moneda</th>
           <th>Tipo</th>
@@ -28,9 +28,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let material of materialesFiltrados" (click)="verDetalleMaterial(material.id)">
+          <td>{{ material.nombre }}</td>
           <td>{{ material.descripcion }}</td>
           <td>{{ material.marca }}</td>
-          <td>{{ material.tipo_material }}</td>
           <td>{{ material.precio }}</td>
           <td>{{ material.moneda }}</td>
           <td>{{ material.tipo }}</td>

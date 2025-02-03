@@ -167,6 +167,7 @@ class ProveedorController:
                     'id': material.id,
                     'tipo_material': material.tipo_material,
                     'unidad_medida': material.unidad_medida,
+                    'nombre': material.nombre,
                     'descripcion': material.descripcion,
                     'marca': material.marca,
                     'precio': material.precio,
@@ -801,7 +802,7 @@ class CompraController:
                 # Contar las líneas de material y obtener los nombres de los materiales
                 lineas = LineaCompra.objects.filter(id_compra=compra.id)
                 cantidad_lineas = lineas.count()
-                nombres_materiales = [linea.id_material.tipo_material.split()[0] for linea in lineas[:3]]
+                nombres_materiales = [linea.id_material.nombre.split()[0] for linea in lineas[:3]]
 
                 # Preparar los detalles de la compra
                 compras_pendientes.append({
@@ -878,7 +879,7 @@ class ChatController:
         ]
 
         # Buscar materiales que coincidan con las palabras clave
-        materiales = cls._filtrar(Material, palabras_clave, ['tipo_material', 'descripcion'])
+        materiales = cls._filtrar(Material, palabras_clave, ['nombre', 'descripcion'])
 
         # Buscar servicios que coincidan con las palabras clave
         servicios = cls._filtrar(Servicio, palabras_clave, ['descripcion', 'unidad_medida'])
@@ -902,7 +903,7 @@ class ChatController:
             "direccion": obra.direccion,
             "total": obra.monto_total_est,
             "moneda": moneda_obra,
-            "materiales": list(materiales.values('id', 'descripcion', 'unidad_medida', 'marca', 'precio', 'moneda')),
+            "materiales": list(materiales.values('id', 'nombre', 'unidad_medida', 'marca', 'precio', 'moneda')),
             "servicios": list(
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,

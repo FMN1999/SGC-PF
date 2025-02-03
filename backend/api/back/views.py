@@ -353,6 +353,7 @@ class MaterialView(View):
                 id_proveedor=proveedor,
                 tipo_material=data.get('tipo_material'),
                 unidad_medida=data.get('unidad_medida'),
+                nombre=data.get('nombre', data.get('tipo_material')),
                 descripcion=data.get('descripcion'),
                 marca=data.get('marca'),
                 precio=data.get('precio'),
@@ -376,12 +377,16 @@ class MaterialView(View):
                     moneda=data.get('moneda'),
                     id_almacen_id=data.get('id_almacen')
                 )
+                material.tipo_material = 'vehiculo'
             elif data.get('tipo_asociacion') == 'herramienta':
                 Herramienta.objects.create(
                     id_material=material,
                     id_almacen_id=data.get('id_almacen'),
                     ubicacion=data.get('ubicacion')
                 )
+                material.tipo_material = 'herramienta'
+            else:
+                material.tipo_material = 'material'
 
             return JsonResponse({'message': 'Material creado con éxito', 'material_id': material.id})
         except Exception as e:
@@ -397,6 +402,7 @@ class MaterialView(View):
                 'id_proveedor': material.id_proveedor.id,
                 'tipo_material': material.tipo_material,
                 'unidad_medida': material.unidad_medida,
+                'nombre': material.nombre,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
                 'precio': material.precio,
@@ -649,7 +655,8 @@ class MaterialesPorEmpresa(View):
                 'id': material.id,
                 'descripcion': material.descripcion,
                 'marca': material.marca,
-                'tipo_material': material.tipo_material,  # Nombre del material
+                'tipo_material': material.tipo_material,  # Tipo del material
+                'nombre': material.nombre,  # Nombre del material
                 'precio': material.precio,
                 'moneda': material.moneda,
                 'tipo': tipo,  # Añadimos el tipo
@@ -670,11 +677,11 @@ class MaterialesConocidosPorEmpresa(View):
             if (
                 Herramienta.objects.filter(id_material=material).exists() or
                 Vehiculo.objects.filter(id_material=material).exists() or
-                'camion' in material.tipo_material.lower() or 'camión' in material.tipo_material.lower()
+                material.tipo_material in ['herramienta', 'vehiculo']
                ):
                 es_material = False
             if es_material:
-                data.add(material.tipo_material)  # Nombre del material
+                data.add(material.nombre)  # Nombre del material
 
         data.update(materiales_presupuestos)
 
@@ -1596,12 +1603,18 @@ class Assistant(View):
 
         response = f"Presupuesto generado para la obra *{data['direccion']}*: \n"
         response += f"- **Total estimado:** {data['total']} {data['moneda']}\n"
-        response += f"- **Materiales incluidos:**\n"
-        for material in data['materiales']:
-            response += f"  - {material['descripcion']} ( con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
-        response += f"- **Servicios estimados:**\n"
-        for servicio in data['servicios']:
-            response += f"  - {servicio['descripcion']} (con precio de {servicio['precio_x_unidad']} {servicio['moneda']}/{servicio['unidad_medida']})\n"
+        if data['materiales']:
+            response += f"- **Materiales incluidos:**\n"
+            for material in data['materiales']:
+                response += f"  - {material['nombre']} (con precio de {material['precio']} {material['moneda']}/{material['unidad_medida']})\n"
+        else:
+            response += f"\nNo se incluyeron materiales en esta estimación.\n\n"
+        if data['servicios']:
+            response += f"- **Servicios estimados:**\n"
+            for servicio in data['servicios']:
+                response += f"  - {servicio['descripcion']} (con precio de {servicio['precio_x_unidad']} {servicio['moneda']}/{servicio['unidad_medida']})\n"
+        else:
+            response += f"\nNo se incluyeron servicios en esta estimación.\n\n"
         return response
 
     @staticmethod
@@ -1808,7 +1821,7 @@ class AlmacenesPorEmpresaView(View):
                         'fecha': ingreso.fecha,
                         'material': {
                             'id': ingreso.id_material.id,
-                            'nombre': ingreso.id_material.tipo_material
+                            'nombre': ingreso.id_material.nombre
                         },
                         'unidad_medida': ingreso.unidad_medida,
                         'id_compra': ingreso.id_compra.id,
@@ -1827,7 +1840,7 @@ class AlmacenesPorEmpresaView(View):
                         'id': herramienta.id,
                         'material': {
                             'id': herramienta.id_material.id,
-                            'nombre': herramienta.id_material.tipo_material
+                            'nombre': herramienta.id_material.nombre
                         },
                         'ubicacion': herramienta.ubicacion,
                         'marca': herramienta.id_material.marca,
@@ -1843,7 +1856,7 @@ class AlmacenesPorEmpresaView(View):
                         'id': v.id,
                         'material': {
                             'id': v.id_material.id,
-                            'nombre': v.id_material.tipo_material
+                            'nombre': v.id_material.nombre
                         },
                         'patente': v.patente,
                         'marca': v.id_material.marca,
@@ -2072,7 +2085,7 @@ class TareasView(View):
                 area = None
 
             try:
-                vehiculo = t.id_vehiculo.id_material.tipo_material if t.id_vehiculo else None
+                vehiculo = t.id_vehiculo.id_material.nombre if t.id_vehiculo else None
                 tipo_vehiculo = t.id_vehiculo.tipo if t.id_vehiculo else None
                 modelo_vehiculo = t.id_vehiculo.modelo if t.id_vehiculo else None
             except Tarea.id_vehiculo.RelatedObjectDoesNotExist:

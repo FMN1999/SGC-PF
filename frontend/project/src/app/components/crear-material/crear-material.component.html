@@ -3,8 +3,8 @@
   <h1>Crear Material</h1>
   <form [formGroup]="materialForm" (ngSubmit)="crearMaterial()">
     <div class="form-group">
-      <label for="tipo_material">Denominación: <span class="required-asterisk">*</span></label>
-      <input id="tipo_material" formControlName="tipo_material" required />
+      <label for="nombre">Denominación: <span class="required-asterisk">*</span></label>
+      <input id="nombre" formControlName="nombre" required />
     </div>
 
     <div class="form-group">
