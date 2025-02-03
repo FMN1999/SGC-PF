@@ -50,7 +50,7 @@ export class ServicioComponent implements OnInit {
       this.router.navigate(['/no-permissions']);
     }
     const id_user = +sessionStorage.getItem('id_usuario')!;
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     const servicioId = this.route.snapshot.params['id'];
     this.proveedorService.getServicioById(servicioId).subscribe({

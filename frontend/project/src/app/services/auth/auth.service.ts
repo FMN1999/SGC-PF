@@ -36,7 +36,7 @@ export class AuthService {
         sessionStorage.setItem('rol', response.rol);
         sessionStorage.setItem('id_empresa', response.id_emp)
         this.loggedIn.next(true); // Notifica que el usuario se ha logueado
-        this.cargarPermisos(response.user_id); // Cargar permisos después del login
+        this.cargarPermisos(response.user_id).subscribe({}); // Cargar permisos después del login
       })
     );
   }

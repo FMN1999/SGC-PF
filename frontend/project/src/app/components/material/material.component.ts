@@ -88,7 +88,7 @@ export class MaterialComponent implements OnInit {
     }
 
     const id_user = +sessionStorage.getItem('id_usuario')!;
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     this.empresaId = +sessionStorage.getItem('id_empresa')!;
     this.materialId = +this.route.snapshot.params['id'];

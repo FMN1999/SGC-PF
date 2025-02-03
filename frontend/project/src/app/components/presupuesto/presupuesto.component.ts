@@ -57,7 +57,7 @@ export class PresupuestoComponent implements OnInit {
   initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     this.idPresupuesto = +this.route.snapshot.paramMap.get('id')!;
     this.initForm();

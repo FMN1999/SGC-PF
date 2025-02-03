@@ -47,7 +47,7 @@ export class MaterialesComponent implements OnInit {
   initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     // @ts-ignore
     const idEmpresa = +sessionStorage.getItem('id_empresa');

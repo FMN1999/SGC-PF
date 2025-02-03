@@ -99,7 +99,7 @@ export class ObraComponent implements OnInit {
     });
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     this.obra_id = +this.route.snapshot.paramMap.get('id')!;
     // @ts-ignore

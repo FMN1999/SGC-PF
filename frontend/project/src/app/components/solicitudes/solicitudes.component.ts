@@ -50,7 +50,7 @@ export class SolicitudesComponent implements OnInit {
   initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
     this.cargarSolicitudesPendientes();
   }
 
