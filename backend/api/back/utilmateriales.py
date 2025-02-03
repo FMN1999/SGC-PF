@@ -90,13 +90,193 @@ class Material:
             area = procesar_cantidad(area)
         elif not isinstance(area, ureg.Quantity):
             return None
-        if not area.is_compatible_with(procesar_cantidad('m2')):
+        if not area.is_compatible_with(ureg.m**2):
             return None
         area_m2 = area.to(ureg.m**2)
-        cantidad = (area_m2 * self.cantidad_m2).magnitude * 1.05
+        cantidad = area_m2.magnitude * self.cantidad_m2 * 1.05
         if self.discreto:
             return int(math.ceil(cantidad))
         return cantidad * self.unidad_medida
+
+
+class Ladrillo:
+    def __init__(self, nombre='Ladrillo común', largo=23*ureg.cm, alto=5*ureg.cm, ancho=11*ureg.cm):
+        self.nombre = nombre
+        self.largo = largo
+        self.alto = alto
+        self.ancho = ancho
+
+    def cantidad_m2(self, espesor_mortero=1.5*ureg.cm):
+        return math.ceil(ureg.m**2/((self.largo + espesor_mortero) * (self.alto + espesor_mortero)))
+
+    def cantidad_mortero_m2(self, espesor_mortero=1.5*ureg.cm):
+        volumen_pared_m2 = ureg.m**2 * self.ancho
+        volumen_ladrillos = self.cantidad_m2(espesor_mortero) * (self.largo * self.alto * self.ancho)
+        return ((volumen_pared_m2 - volumen_ladrillos)/ureg.m**2).to_base_units()
+
+
+class Ladrillon(Ladrillo):
+    def __init__(self):
+        super().__init__(nombre='Ladrillón', largo=30*ureg.cm, alto=10*ureg.cm, ancho=15*ureg.cm)
+
+
+class Pared:
+    def __init__(self, ladrillo, mortero, espesor_mortero=1.5*ureg.cm):
+        self.ladrillo = ladrillo
+        self.mortero = mortero
+        self.espesor_mortero = espesor_mortero
+
+    def calcular_cantidad_ladrillos(self, area):
+        return area * self.ladrillo.cantidad_m2(self.espesor_mortero)
+
+    def calcular_cantidad_mortero(self, area):
+        return area * self.ladrillo.cantidad_mortero_m2(self.espesor_mortero)
+
+    def calcular_materiales_mortero(self, area):
+        cantidad_mortero = self.calcular_cantidad_mortero()
+        return self.mortero.calcular_cantidades(cantidad_mortero)
+
+
+class Contrapiso:
+    def __init__(self, mortero, espesor):
+        self.mortero = mortero
+        self.espesor = espesor
+
+    def calcular_cantidad_mortero(self, area):
+        return area * self.espesor
+
+
+"""items_estimables = {
+    'piso': {
+        'contrapiso': None,  # --> mortero?
+        'carpeta': None  # --> mortero?
+    },
+    'pared': {
+        'ladrillo': None,  # --> mortero
+        'revoque': {
+            'grueso': None, # --> mortero
+            'fino': None # --> mortero
+        }
+    },
+    'techo': {
+    }
+}"""
+
+# coeficientes y otros items basados en https://www.frro.utn.edu.ar/repositorio/catedras/civil/1_anio/civil1/files/IC%20I-Morteros%20y%20hormigones.pdf
+
+class MaterialCompuesto:
+    def __init__(self, nombre, composicion):
+        self.nombre = nombre
+        self.composicion = list(composicion)  # iterable de tuplas (MaterialComponente, cantidad)
+        self.densidad = None
+        self._volumen_real_mezcla = None
+        self._masa_total_mezcla = None
+        self._inicializar_parametros()
+
+    def calcular_cantidades(self, cantidad_mezcla):
+        if cantidad_mezcla.is_compatible_with(ureg.kg):  # es masa
+            cantidad_mezcla /= self.densidad  # convertir a unidades de volumen
+        if cantidad_mezcla.is_compatible_with(ureg.m**3):  # es volumen
+            cantidades = []
+            for mat, cant in self.composicion:
+                cantidades.append((mat, cant * cantidad_mezcla))
+            return cantidades
+        else:
+            raise Exception('cantidad de material no es volumen ni masa')
+
+    def _calcular_volumen_material(self, material, cantidad):
+        mat.volumen_aparente(cant)
+
+    def _inicializar_parametros(self):
+        volumen_real_mezcla = 0
+        masa_total_mezcla = 0
+        for mat, cant in self.composicion:
+            volumen_real_mezcla += mat.volumen_real(cant)
+            masa_total_mezcla += mat.masa(cant)
+        self.densidad = (masa_total_mezcla/volumen_real_mezcla).to_base_units()
+        for i in range(len(self.composicion)):  # convertir cantidades a las necesarias por m3
+            mat, cant = self.composicion[i]
+            cant = (mat.volumen_aparente(cant)/volumen_real_mezcla).to_base_units()
+            self.composicion[i] = mat, cant
+
+
+class MaterialComponente:
+    def __init__(self, nombre, densidad, aporte, unidad_medida):
+        self.nombre = nombre
+        self.aporte = aporte  # se usa para calcular el aporte al volumen real de una mezcla
+        self.densidad = densidad  # para materiales en polvo es su densidad aparente
+        self.unidad_medida = unidad_medida  # unidad de medida natural
+
+    def masa(self, cantidad):
+        if cantidad.is_compatible_with(ureg.kg):  # ya es masa:
+            return cantidad
+        elif cantidad.is_compatible_with(ureg.m**3):  # es volumen:
+            return cantidad * self.densidad
+        raise Exception('cantidad de material no es masa ni volumen')
+
+    def volumen_aparente(self, cantidad):
+        if cantidad.is_compatible_with(ureg.m**3):  # ya es volumen
+            return cantidad
+        elif cantidad.is_compatible_with(ureg.kg):  # es masa:
+            return cantidad/self.densidad
+        raise Exception('cantidad de material no es volumen ni masa')
+
+    def volumen_real(self, cantidad):
+        return self.volumen_aparente(cantidad) * self.aporte
+
+    def cantidad_unidad_medida(self, cantidad):
+        if cantidad.is_compatible_with(self.unidad_medida):
+            return cantidad.to(self.unidad_medida)
+        if self.unidad_medida.is_compatible_with(ureg.kg):  # se mide como masa
+            return self.masa(cantidad).to(self.unidad_medida)
+        elif self.unidad_medida.is_compatible_with(ureg.m**3):  # se mide volumen
+            return self.volumen_aparente(cantidad).to(self.unidad_medida)
+        raise Exception('cantidad de material incompatible')
+
+
+arena_gruesa = MaterialComponente('Arena gruesa', 1600*ureg.kg/ureg.m**3, 0.63, ureg.m**3)
+arena_mediana = MaterialComponente('Arena mediana', 1500*ureg.kg/ureg.m**3, 0.60, ureg.m**3)
+arena_fina = MaterialComponente('Arena fina', 1400*ureg.kg/ureg.m**3, 0.54, ureg.m**3)
+cal = MaterialComponente('Cal hidratada en polvo', 500*ureg.kg/ureg.m**3, 0.45, ureg.kg)
+cascote = MaterialComponente('Cascote de ladrillo', 1300*ureg.kg/ureg.m**3, 0.60, ureg.kg)
+cemento = MaterialComponente('Cemento Portland', 1300*ureg.kg/ureg.m**3, 0.47, ureg.kg)
+#yeso = MaterialComponente('Yeso', 1200*ureg.kg/ureg.m**3, 1.40, ureg.kg)
+agua = MaterialComponente('Agua', 1000*ureg.kg/ureg.m**3, 1.0, ureg.L)
+
+mortero_ladrillo = MaterialCompuesto('Mortero 1:1/2:3', (
+    (cal, 1*ureg.m**3),
+    (cemento, 0.5*ureg.m**3),
+    (arena_gruesa, 3*ureg.m**3),
+    (agua, 4.5*0.09*ureg.m**3),
+))
+mortero_contrapiso = MaterialCompuesto('Mortero 1:1/8:4:8', (
+    (cal, 1*ureg.m**3),
+    (cemento, 0.5*ureg.m**3),
+    (arena_gruesa, 4*ureg.m**3),
+    (cascote, 8*ureg.m**3),
+    (agua, 13.5*0.09*ureg.m**3),
+))
+mortero_carpeta = MaterialCompuesto('Mortero 1:3', (
+    (cemento, 1*ureg.m**3),
+    (arena_fina, 3*ureg.m**3),
+    (agua, 4*0.09*ureg.m**3),
+))
+revoque_grueso = MaterialCompuesto('Revoque grueso', (
+    (cal, 1*ureg.m**3),
+    (cemento, 0.25*ureg.m**3),
+    (arena_mediana, 3*ureg.m**3),
+    (agua, 4.25*0.09*ureg.m**3),
+))
+revoque_fino = MaterialCompuesto('Revoque fino', (
+    (cal, 1*ureg.m**3),
+    (cemento, 0.125*ureg.m**3),
+    (arena_fina, 2*ureg.m**3),
+    (agua, 3.125*0.09*ureg.m**3),
+))
+
+
+# Puertas por piso -> 5 (averiguar dimensiones aproximadas)
+# Ventanas por piso -> 3 (averiguar dimensiones aproximadas)
 
 
 class RepositorioMateriales:
@@ -107,7 +287,7 @@ class RepositorioMateriales:
                 'Ladrillo común',
                 ('ladrillo comun', 'ladrillo comu', 'ladrillo'),
                 'un',
-                40,
+                60,
             ),
             Material(
                 'Ladrillón',
