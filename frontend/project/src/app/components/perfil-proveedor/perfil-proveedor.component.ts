@@ -66,7 +66,7 @@ export class PerfilProveedorComponent implements OnInit {
 
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     const id = this.route.snapshot.params['id'];
     this.proveedorService.obtenerProveedor(id).subscribe({

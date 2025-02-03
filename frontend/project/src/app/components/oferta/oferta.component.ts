@@ -53,7 +53,7 @@ export class OfertaComponent implements OnInit {
     const id_user = +sessionStorage.getItem('id_usuario');
     // @ts-ignore
     const tipo_usuario = sessionStorage.getItem('tipo');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     if (tipo_usuario ==='CL'){
       this.router.navigate(['/no-permissions']);

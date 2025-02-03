@@ -52,7 +52,7 @@ export class ObrasComponent implements OnInit {
       const id_user = +sessionStorage.getItem('id_usuario');
       // @ts-ignore
       const tipo_usuario = sessionStorage.getItem('tipo');
-      this.authService.cargarPermisos(id_user);
+      this.authService.cargarPermisos(id_user).subscribe({});
 
       // @ts-ignore
       const empresa_id = +sessionStorage.getItem('id_empresa');

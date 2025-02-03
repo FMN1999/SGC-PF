@@ -55,7 +55,7 @@ export class RegistrarPagoComponent implements OnInit {
   initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     // @ts-ignore
     this.id_empresa = +sessionStorage.getItem('id_empresa');

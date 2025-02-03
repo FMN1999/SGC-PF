@@ -62,7 +62,7 @@ export class TareasComponent implements OnInit {
     // Recuperar datos del usuario
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
     // @ts-ignore
     const tipo_usuario = sessionStorage.getItem('tipo');
 

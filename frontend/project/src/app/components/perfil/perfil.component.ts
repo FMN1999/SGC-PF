@@ -87,7 +87,7 @@ export class PerfilComponent implements OnInit {
       });
       // @ts-ignore
       const id_user = +sessionStorage.getItem('id_usuario');
-      this.authService.cargarPermisos(id_user);
+      this.authService.cargarPermisos(id_user).subscribe({});
 
       this.perfilService.tareasPorUsuario(parseInt(this.perfilIdUrl)).subscribe((data: any)=>{
         this.tareas = data;

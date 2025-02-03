@@ -84,7 +84,7 @@ export class TareaComponent implements OnInit {
   initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe({});
 
     this.tareaId = +this.route.snapshot.paramMap.get('id')!;
     this.empresaId = sessionStorage.getItem('id_empresa') || '';

@@ -38,7 +38,7 @@ export class HomeComponent {
       const id_user = +sessionStorage.getItem('id_usuario');
       // @ts-ignore
       this.esColaborador = sessionStorage.getItem('tipo');
-      this.authService.cargarPermisos(id_user);
+      this.authService.cargarPermisos(id_user).subscribe({});
       this.authService.cargarAdicionales().subscribe({
         next: (data) => {
           this.stats = data; // Guardamos las estadísticas generales
