@@ -628,15 +628,15 @@ class PresupuestoController:
             presupuesto_actualizado = PresupuestoData.update(id_presupuesto, data)
 
             # Actualizar Materiales
-            materiales_data = data.get("materiales", [])
+            materiales_data = data.get("materiales")  # si no se especifican materiales da None: sin cambios
             PresupuestoData.update_materiales(id_presupuesto, materiales_data)
 
             # Actualizar Servicios
-            servicios_data = data.get("servicios", [])
+            servicios_data = data.get("servicios")  # si no se especifican servicios da None: sin cambios
             PresupuestoData.update_servicios(id_presupuesto, servicios_data)
 
             # Actualizar Trabajadores
-            trabajadores_data = data.get("trabajadores", [])
+            trabajadores_data = data.get("trabajadores")  # si no se especifican trabajadores da None: sin cambios
             PresupuestoData.update_trabajadores(id_presupuesto, trabajadores_data)
 
             return presupuesto_actualizado

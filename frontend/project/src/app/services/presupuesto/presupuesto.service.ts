@@ -15,12 +15,13 @@ export class PresupuestoService {
   crearPresupuesto(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/crear-presupuesto/`, data);
   }
+
   getPresupuestoDetalles(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/presupuesto/${id}/`);
   }
 
   actualizarPresupuesto(idPresupuesto: number, presupuestoData: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/presupuestos/${idPresupuesto}/actualizar/`, presupuestoData);
+    return this.http.patch<any>(`${this.apiUrl}/presupuestos/${idPresupuesto}/actualizar/`, presupuestoData);
   }
 
   eliminarMaterial(id: number): Observable<void> {
@@ -45,9 +46,5 @@ export class PresupuestoService {
 
   getTareas(idPresupuesto: number) {
     return this.http.get<any[]>(`tareas-presupuesto/${idPresupuesto}/`);
-  }
-
-  actualizaPresupuesto(id: number, payload: any) {
-    return this.http.patch(`${this.apiUrl}/actualizar-presupuesto/${id}/`, payload);
   }
 }
