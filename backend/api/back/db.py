@@ -111,7 +111,7 @@ class EmpresaData:
             vehiculos_return = [
                 {
                     'id':v.id,
-                    'descripcion': v.id_material.tipo_material,
+                    'descripcion': v.id_material.nombre,
                     'tipo':v.tipo,
                     'marca':v.id_material.marca,
                     'modelo': v.modelo,
@@ -368,6 +368,7 @@ class MaterialData:
             material = Material(
                 tipo_material=material_data.get('tipo_material'),
                 unidad_medida=material_data.get('unidad_medida'),
+                nombre = material_data.get('nombre', material_data.get('tipo_material')),
                 descripcion=material_data.get('descripcion'),
                 marca=material_data.get('marca'),
                 precio=material_data.get('precio'),
@@ -399,6 +400,7 @@ class MaterialData:
         almacen = None
 
         # Actualizar los campos comunes del material
+        material.nombre = data.get('nombre', data.get('tipo_material', material.nombre))
         material.descripcion = data.get('descripcion', material.descripcion)
         material.marca = data.get('marca', material.marca)
         material.precio = data.get('precio', material.precio)
