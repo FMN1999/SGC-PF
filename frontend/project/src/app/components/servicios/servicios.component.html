@@ -15,7 +15,7 @@
   </div>
 
   <!-- Tabla de servicios -->
-  <div class="tabla-container" *ngIf="serviciosFiltrados.length > 0; else noServicios">
+  <div class="tabla-container" *ngIf="serviciosFiltrados.length > 0">
     <table class="tabla-servicios">
       <thead>
         <tr>
@@ -36,8 +36,5 @@
     </table>
   </div>
 
-  <ng-template #noServicios>
-    <p class="no-servicios-message">Cargando...</p>
-  </ng-template>
 </div>
 
