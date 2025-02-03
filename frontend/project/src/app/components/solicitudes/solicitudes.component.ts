@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth/auth.service';
 import { DataShareService } from '../../services/data-share/data-share.service';
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-solicitudes',
   templateUrl: './solicitudes.component.html',
@@ -59,7 +61,7 @@ export class SolicitudesComponent implements OnInit {
   }
 
   aplicarFiltros(): void {
-    const busqueda = this.filtroBusqueda.toLowerCase();
+    const busqueda = transliterate(this.filtroBusqueda).toLowerCase().trim();
     this.solicitudesFiltradas = {};
 
     this.estadosFiltrados = this.estadosCompras.filter((estado) =>
@@ -70,7 +72,7 @@ export class SolicitudesComponent implements OnInit {
       this.solicitudesFiltradas[estado] = this.solicitudesPorEstado[estado].filter((solicitud) =>
         solicitud.id.toString().includes(busqueda) ||
         solicitud.fecha.toLowerCase().includes(busqueda) ||
-        solicitud.proveedor.toLowerCase().includes(busqueda)
+        transliterate(solicitud.proveedor).toLowerCase().includes(busqueda)
       );
     });
   }
