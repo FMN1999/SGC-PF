@@ -919,22 +919,16 @@ class PresupuestoView(View):
         try:
             data = json.loads(request.body)
             # Llamar al controlador para actualizar el presupuesto
-            resultado = PresupuestoController.update_presupuesto(id_presupuesto, data)
+            PresupuestoController.update_presupuesto(id_presupuesto, data)
             return JsonResponse({"mensaje": "Presupuesto actualizado correctamente"}, status=200)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    def patch(self, request, pk):
+    def patch(self, request, id_presupuesto):
         try:
             data = json.loads(request.body)
-            presupuesto = Presupuesto.objects.get(pk=pk)
-            estado = data.get('estado')
-            aprobado = data.get('aprobado')
-
-            presupuesto.estado = estado
-            presupuesto.aprobado = aprobado
-            presupuesto.save()
-
+            # Llamar al controlador para actualizar el presupuesto
+            PresupuestoController.update_presupuesto(id_presupuesto, data)
             return JsonResponse({"message": "Presupuesto actualizado correctamente"}, status=200)
         except Presupuesto.DoesNotExist:
             return JsonResponse({"error": "Presupuesto no encontrado"}, status=400)

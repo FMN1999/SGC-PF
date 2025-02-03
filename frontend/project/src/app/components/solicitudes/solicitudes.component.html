@@ -23,7 +23,7 @@
   <!-- Sección de solicitudes por estado -->
   <div *ngIf="tieneSolicitudesFiltradas(); else noSolicitudes">
     <div *ngFor="let estado of estadosFiltrados" class="estado-section">
-      <h2 class="titulo">Compras: {{ estado }}s</h2>
+      <h2 class="titulo">Compras: {{ estado }}{{ 'aeiou'.includes(estado[estado.length - 1]) ? 's' : '' }}</h2>
       <ul class="lista-solicitudes">
         <li *ngFor="let solicitud of solicitudesFiltradas[estado]" class="solicitud-item">
           <a [routerLink]="['/compra', solicitud.id]" class="solicitud-link">

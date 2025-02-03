@@ -695,11 +695,15 @@ class PresupuestoData:
         presupuesto.moneda = data.get('moneda', presupuesto.moneda)
         presupuesto.observaciones = data.get('observaciones', presupuesto.observaciones)
         presupuesto.porc_inflacion = data.get('porc_inflacion', presupuesto.porc_inflacion)
+        presupuesto.estado = data.get('estado', presupuesto.estado)
+        presupuesto.aprobado = data.get('aprobado', presupuesto.aprobado)
         presupuesto.save()
         return presupuesto
 
     @staticmethod
     def update_materiales(id_presupuesto, materiales_data):
+        if materiales_data is None:  # no modificar materiales
+            return
         try:
             # Eliminar materiales que ya no están en el presupuesto
             existing_material_ids = [m['id'] for m in materiales_data if 'id' in m]
@@ -734,6 +738,8 @@ class PresupuestoData:
 
     @staticmethod
     def update_servicios(id_presupuesto, servicios_data):
+        if servicios_data is None:  # no modificar servicios
+            return
         existing_service_ids = [s['id'] for s in servicios_data if 'id' in s]
         Presupuesto_Servicio.objects.filter(id_presupuesto=id_presupuesto).exclude(id__in=existing_service_ids).delete()
 
@@ -759,6 +765,8 @@ class PresupuestoData:
 
     @staticmethod
     def update_trabajadores(id_presupuesto, trabajadores_data):
+        if trabajadores_data is None:  # no modificar trabajadores
+            return
         existing_worker_ids = [t['id'] for t in trabajadores_data if 'id' in t]
         Presupuesto_Trabajador.objects.filter(id_presupuesto=id_presupuesto).exclude(
             id__in=existing_worker_ids).delete()

@@ -240,7 +240,7 @@ export class PresupuestoComponent implements OnInit {
     this.presupuestoService.actualizarPresupuesto(this.presupuesto.id, updatedPresupuesto)
       .subscribe((response: any) => {
         console.log('Presupuesto actualizado:', response);
-        // Realiza cualquier acción adicional tras la actualización
+        window.location.reload();
       });
   }
   solicitarMateriales() {
@@ -267,7 +267,7 @@ export class PresupuestoComponent implements OnInit {
 
   rechazarPresupuesto() {
     const payload = { estado: 'Rechazado', aprobado: false };
-    this.presupuestoService.actualizaPresupuesto(this.idPresupuesto, payload)
+    this.presupuestoService.actualizarPresupuesto(this.idPresupuesto, payload)
       .subscribe(() => {
         this.presupuesto.estado = 'Rechazado';
         this.presupuesto.aprobado = false;
