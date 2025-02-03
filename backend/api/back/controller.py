@@ -883,21 +883,22 @@ class ChatController:
         # Calcula un total general
         total_estimado = (total_materiales['total'] or 0) + (total_servicios['total'] or 0)
 
+        moneda_obra = (obra.moneda or '').strip() or 'ARS'
+
         # Organiza los datos de respuesta
         response_data = {
             "direccion": obra.direccion,
             "total": obra.monto_total_est,
-            "moneda": obra.moneda,
+            "moneda": moneda_obra,
             "materiales": list(materiales.values('id', 'descripcion', 'unidad_medida', 'marca', 'precio', 'moneda')),
             "servicios": list(
                 servicios.values('id', 'descripcion', 'precio_x_unidad', 'moneda', 'unidad_medida')),
             "total_estimado": total_estimado,
         }
-        moneda_fallback = obra.moneda or 'ARS'
         for mat in response_data['materiales']:
-            mat['moneda'] = mat['moneda'] or moneda_fallback
+            mat['moneda'] = mat['moneda'] or moneda_obra
         for svc in response_data['servicios']:
-            svc['moneda'] = svc['moneda'] or moneda_fallback
+            svc['moneda'] = svc['moneda'] or moneda_obra
 
         # Responde con los datos en formato JSON
         return response_data
