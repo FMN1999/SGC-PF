@@ -301,7 +301,8 @@ class OfertaDetalleView(View):
             materiales_serializados = [
                 {
                     'id': material.id,
-                    'descripcion': material.id_material.descripcion,
+                    'nombre': material.id_material.nombre,
+                    'descripcion': material.id_material.nombre,
                     'marca': material.id_material.marca,
                     'cantidad_of': material.cantidad_of,
                     'unidad_of': material.unidad_of,
@@ -1404,7 +1405,7 @@ class TareaHerramientaView(View):
             {
                 'id': h.id,
                 'id_herramienta': h.id_herramienta.id,
-                'herramienta': h.id_herramienta.id_material.descripcion,
+                'herramienta': h.id_herramienta.id_material.nombre,
                 'uso_desde': h.uso_desde,
                 'uso_hasta': h.uso_hasta,
             } for h in herramientas
@@ -1452,7 +1453,7 @@ class TareaMaterialView(View):
             {
                 'id': m.id,
                 'id_material': m.id_material.id,
-                'material': m.id_material.descripcion,
+                'material': m.id_material.nombre,
                 'cant_utilizada': m.cant_utilizada,
                 'cant_no_utilizada': m.cant_no_utilizada,
             } for m in materiales

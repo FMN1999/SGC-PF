@@ -771,7 +771,7 @@ class CompraController:
                     'nro_serie': linea.nro_serie,
                     'precio_total': linea.precio_total,
                     'id_material': linea.id_material.id,
-                    'material': linea.id_material.descripcion,
+                    'material': linea.id_material.nombre,
                     'unidad_medida': linea.unidad_medida
                 } for linea in lineas
             ]
@@ -942,7 +942,7 @@ class ChatController:
                             ofertas]
             recomendaciones.append({
                 "material_id": material.id,
-                "descripcion": material.id_material.descripcion,
+                "nombre": material.id_material.nombre,
                 "marca": material.id_material.marca,
                 "precio": material.id_material.precio + material.id_material.impuestos_total + material.id_material.otros_gastos,
                 "moneda": material.id_material.moneda,
@@ -972,7 +972,7 @@ class ChatController:
         for oferta_material in ofertas_materiales:
             ofertas["materiales"].append({
                 "material_id": oferta_material.id_material.id,
-                "descripcion_material": oferta_material.id_material.descripcion,
+                "nombre_material": oferta_material.id_material.nombre,
                 "marca": oferta_material.id_material.marca,
                 "descuento": oferta_material.porc_desc,
                 "descripcion_oferta": oferta_material.id_oferta.descripcion,
@@ -1055,8 +1055,8 @@ class ChatController:
                 "colaboradores": [{"id": col.id_colaborador.id, "nombre": col.id_colaborador.id_usuario.nombre,
                                    "apellido": col.id_colaborador.id_usuario.apellido} for col in
                                   colaboradores],
-                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.descripcion, "cantidad": mat.cant_utilizada} for mat in materiales],
-                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.descripcion} for
+                "materiales": [{"id": mat.id_material.id, "nombre": mat.id_material.nombre, "cantidad": mat.cant_utilizada} for mat in materiales],
+                "herramientas": [{"id": her.id_herramienta.id, "nombre": her.id_herramienta.id_material.nombre} for
                                  her in
                                  herramientas]
             })
@@ -1331,7 +1331,7 @@ class ReporteObra:
             "total_contratacion": total_contratacion,
             "total_compras": total_compras,
             "diferencia_compras_presupuesto": diferencia_compras_presupuesto,
-            "materiales_no_usados": [{"id": mat.id_material.id, "descripcion": mat.id_material.descripcion,
+            "materiales_no_usados": [{"id": mat.id_material.id, "nombre": mat.id_material.nombre,
                                       "comprado": True, "usado": mat.id_material.id not in materiales_no_usados_ids,
                                       "costo": mat.precio_total, "moneda": mat.id_material.moneda} for mat in compras],
             "contrataciones": [{"id": cont.id_servicio.id, "descripcion": cont.id_servicio.descripcion,

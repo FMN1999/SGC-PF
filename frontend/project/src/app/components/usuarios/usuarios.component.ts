@@ -9,6 +9,8 @@ import {RouterLink, Router} from "@angular/router";
 import { Title } from '@angular/platform-browser';
 import Swal from "sweetalert2";
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-usuarios',
   standalone: true,
@@ -62,15 +64,17 @@ export class UsuariosComponent implements OnInit {
   }
 
   filtrarEntidades(): void {
-    const term = this.searchTerm.toLowerCase();
-    this.clientesFiltrados = this.clientes.filter(cliente =>
-      (`${cliente.nombre} ${cliente.apellido}`).toLowerCase().includes(term)
-    );
-    this.colaboradoresFiltrados = this.colaboradores.filter(colaborador =>
-      (`${colaborador.nombre} ${colaborador.apellido}`).toLowerCase().includes(term)
-    );
+    const term = transliterate(this.searchTerm).toLowerCase().trim();
+    this.clientesFiltrados = this.clientes.filter((cliente) => {
+      const nombre = transliterate(`${cliente.nombre} ${cliente.apellido}`).toLowerCase();
+      return nombre.includes(term);
+    });
+    this.colaboradoresFiltrados = this.colaboradores.filter((colaborador) => {
+      const nombre = transliterate(`${colaborador.nombre} ${colaborador.apellido}`).toLowerCase();
+      return nombre.toLowerCase().includes(term);
+    });
     this.proveedoresFiltrados = this.proveedores.filter(proveedor =>
-      proveedor.denominacion.toLowerCase().includes(term)
+      transliterate(proveedor.denominacion).toLowerCase().includes(term)
     );
   }
 

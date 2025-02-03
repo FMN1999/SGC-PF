@@ -54,7 +54,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let material of reporte.materiales_no_usados">
-            <td>{{ material.descripcion }}</td>
+            <td>{{ material.nombre }}</td>
             <td>{{ material.usado }}</td>
             <td>{{ material.costo | currency }} {{material.moneda}}</td>
           </tr>

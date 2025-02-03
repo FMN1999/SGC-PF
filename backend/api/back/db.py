@@ -150,7 +150,7 @@ class EmpresaData:
             herramientas_return = [
                 {
                     'id': h.id,
-                    'descripcion': h.id_material.descripcion,
+                    'descripcion': h.id_material.nombre,
                     'marca': h.id_material.marca,
                     'id_almacen': h.id_almacen.id if h.id_almacen else None,
                     'almacen': h.id_almacen.descripcion if h.id_almacen else None,

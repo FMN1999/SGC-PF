@@ -9,6 +9,8 @@ import {NgxPaginationModule} from "ngx-pagination";
 import {FormsModule} from "@angular/forms";
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-listado-empresas',
   templateUrl: './empresas.component.html',
@@ -76,9 +78,10 @@ export class EmpresasComponent implements OnInit {
   }
 
   applyFilters(): void {
+    const busqueda = transliterate(this.searchTerm).toLowerCase().trim();
     this.filteredEmpresas = this.empresas.filter((empresa) => {
       const matchesSearch =
-        empresa.denominacion.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        transliterate(empresa.denominacion).toLowerCase().includes(busqueda) ||
         empresa.cuit.includes(this.searchTerm);
 
       const matchesFilter =

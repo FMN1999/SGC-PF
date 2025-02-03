@@ -17,7 +17,7 @@
         <div class="form-group">
           <label for="material-{{ i }}">Material: <span class="required-asterisk">*</span></label>
           <select id="material-{{ i }}" formControlName="id_material" required>
-            <option *ngFor="let material of materiales_data" [value]="material.id">{{ material.descripcion }}</option>
+            <option *ngFor="let material of materiales_data" [value]="material.id">{{ material.nombre }}</option>
           </select>
         </div>
 

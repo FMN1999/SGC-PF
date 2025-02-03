@@ -59,7 +59,7 @@
     <ul *ngIf="showMateriales">
       <li *ngFor="let material of filteredMateriales()" (click)="navigateToMaterial(material.id)">
         <div class="item-content">
-          {{ material.descripcion }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
+          {{ material.nombre }} - {{ material.marca }} ({{ material.precio }} {{ material.moneda }})
         </div>
         <button class="btn-eliminar" (click)="eliminarMaterial(material.id); $event.stopPropagation()" [disabled]="!dataShare.permiso5">Eliminar</button>
       </li>

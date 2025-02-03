@@ -17,7 +17,7 @@
     <ul *ngIf="materiales.length > 0; else noMateriales">
       <li *ngFor="let material of materiales">
         <a [routerLink]="['/material', material.id]" class="material-link">
-          {{ material.descripcion }} ({{ material.marca }}), {{ material.cantidad_of }} {{ material.unidad_of }} -
+          {{ material.nombre }} ({{ material.marca }}), {{ material.cantidad_of }} {{ material.unidad_of }} -
           {{ material.monto | currency: material.moneda }} ({{ material.porc_desc }}% descuento)
         </a>
       </li>

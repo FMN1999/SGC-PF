@@ -105,7 +105,7 @@
       <div class="form-group">
         <label for="materialSeleccionado">Material <span class="required-asterisk">*</span></label>
         <select id="materialSeleccionado" [(ngModel)]="materialSeleccionado" name="materialSeleccionado">
-          <option *ngFor="let material of materiales" [value]="material.id">{{ material.descripcion }}</option>
+          <option *ngFor="let material of materiales" [value]="material.id">{{ material.nombre }}</option>
         </select>
         <div class="d-flex">
           <label for="cantidadUtilizada">Cantidad utilizada</label>

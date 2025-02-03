@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms'; // Importar FormsModule para ngMod
 import {HeaderComponent} from '../header/header.component';
 import { Title } from '@angular/platform-browser';
 
+import { transliterate } from 'transliteration'; // Para eliminar los acentos
+
 @Component({
   selector: 'app-perfil-proveedor',
   templateUrl: './perfil-proveedor.component.html',
@@ -155,15 +157,22 @@ export class PerfilProveedorComponent implements OnInit {
   }
     // Métodos de búsqueda
   filteredMateriales() {
-    return this.materiales.filter(m => m.descripcion.toLowerCase().includes(this.searchMateriales.toLowerCase()));
+    const busqueda = transliterate(this.searchMateriales).toLowerCase().trim();
+    return this.materiales.filter(m => transliterate(m.nombre).toLowerCase().includes(busqueda));
   }
 
   filteredServicios() {
-    return this.servicios.filter(s => s.descripcion.toLowerCase().includes(this.searchServicios.toLowerCase()));
+    const busqueda = transliterate(this.searchServicios).toLowerCase().trim();
+    return this.servicios.filter(s =>
+      transliterate(s.descripcion).toLowerCase().includes(this.searchServicios.toLowerCase())
+    );
   }
 
   filteredOfertas() {
-    return this.ofertas.filter(o => o.descripcion.toLowerCase().includes(this.searchOfertas.toLowerCase()));
+    const busqueda = transliterate(this.searchOfertas).toLowerCase().trim();
+    return this.ofertas.filter(o =>
+      transliterate(o.descripcion).toLowerCase().includes(this.searchOfertas.toLowerCase())
+    );
   }
 
   // Alternar visibilidad de secciones
