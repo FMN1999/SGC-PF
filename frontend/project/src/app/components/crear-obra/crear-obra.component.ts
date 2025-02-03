@@ -49,18 +49,21 @@ export class CrearObraComponent implements OnInit {
     this.titleService.setTitle('Crear Obra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
-
-    if (!this.dataShare.permiso11) {
-      this.router.navigate(['/no-permissions']);
-    }
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso11) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     const id_empresa = sessionStorage.getItem('id_empresa');
     if (id_empresa) {

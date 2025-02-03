@@ -43,18 +43,22 @@ export class GestionPermisosComponent implements OnInit {
     this.titleService.setTitle('Gestión de permisos de Usuario');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
+    });
+  }
+
+  initLogueado(): void {
+    // @ts-ignore
+    const id_user = +sessionStorage.getItem('id_usuario');
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso10) {
+        this.router.navigate(['/no-permissions']);
+      }
     });
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
-        // @ts-ignore
-    const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
-
-    if (!this.dataShare.permiso10) {
-      this.router.navigate(['/no-permissions']);
-    }
     this.idUsuario = +this.route.snapshot.paramMap.get('id')!;
     this.cargarPermisos();
   }

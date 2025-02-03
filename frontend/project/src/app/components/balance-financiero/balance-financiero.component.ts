@@ -62,21 +62,26 @@ export class BalanceFinancieroComponent implements OnInit {
     this.titleService.setTitle('Balance Anual'); // Ajusta el nombre dinámicamente
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  }
+
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
 
     this.empresaId = +this.route.snapshot.params['id'];
 
     // @ts-ignore
     const empresa_id = +sessionStorage.getItem('id_empresa');
-    if (this.empresaId !== empresa_id || !this.dataShare.permiso10) {
-      this.router.navigate(['/no-permissions']);
-    }
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (this.empresaId !== empresa_id || !this.dataShare.permiso10) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     this.obtenerBalance();
   }

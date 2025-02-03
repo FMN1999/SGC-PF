@@ -49,22 +49,25 @@ export class AlmacenesComponent implements OnInit {
 
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
     // @ts-ignore
     this.idEmpresa = +this.route.snapshot.paramMap.get('id');
     // @ts-ignore
     const empresa_id = +sessionStorage.getItem('id_empresa');
-    if (this.idEmpresa !== empresa_id || !this.dataShare.permiso15) {
-      this.router.navigate(['/no-permissions']);
-    }
-
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (this.idEmpresa !== empresa_id || !this.dataShare.permiso15) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     if (this.idEmpresa) {
       this.cargarAlmacenes();

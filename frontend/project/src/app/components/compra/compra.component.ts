@@ -42,14 +42,15 @@ export class CompraComponent implements OnInit {
     this.titleService.setTitle('Gestión de compra'); // Ajusta el nombre dinámicamente
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
 
     // @ts-ignore
     this.id_usuario = sessionStorage.getItem('id_usuario');
@@ -59,13 +60,14 @@ export class CompraComponent implements OnInit {
     const idEmpresa = this.compra.id_empresa;
     // @ts-ignore
     const empresa_id = +sessionStorage.getItem('id_empresa');
-    if (idEmpresa === empresa_id && (this.dataShare.permiso12 || this.dataShare.permiso15|| this.dataShare.permiso13 || this.dataShare.permiso3 || this.dataShare.permiso2)) {
-      this.verificarIngresos(compraId);
-    }
-    else{
-      this.router.navigate(['/no-permissions']);
-    }
-
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (idEmpresa === empresa_id && (this.dataShare.permiso12 || this.dataShare.permiso15|| this.dataShare.permiso13 || this.dataShare.permiso3 || this.dataShare.permiso2)) {
+        this.verificarIngresos(compraId);
+      }
+      else {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
   }
 
   obtenerCompra(compraId: number): void {

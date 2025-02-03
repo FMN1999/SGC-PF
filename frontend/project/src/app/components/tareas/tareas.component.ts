@@ -51,13 +51,14 @@ export class TareasComponent implements OnInit {
     this.titleService.setTitle('Tareas');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-      return;
-    }
-
+  initLogueado(): void {
     // Recuperar datos del usuario
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');

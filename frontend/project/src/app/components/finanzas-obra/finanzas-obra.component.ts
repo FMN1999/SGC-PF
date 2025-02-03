@@ -40,23 +40,26 @@ export class FinanzasObraComponent implements OnInit {
     this.titleService.setTitle('Pagos y Cobros de Obra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
 
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso10) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     this.idObra = +this.route.snapshot.params['id'];
     if (this.idObra) {
       this.cargarPagosYCobros();
-    }
-
-    if (!this.dataShare.permiso10) {
-      this.router.navigate(['/no-permissions']);
     }
   }
 

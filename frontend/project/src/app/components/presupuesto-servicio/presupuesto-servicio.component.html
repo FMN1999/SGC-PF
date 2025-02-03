@@ -14,7 +14,7 @@
         <div class="form-group">
 
           <label>Descripción de material: <span class="required-asterisk">*</span></label>
-          <select formControlName="id_presupuesto material" required>
+          <select formControlName="id_servicio" required>
             <option *ngFor="let servicio of servicios_data" [value]="servicio.id">{{ servicio.descripcion }}</option>
           </select>
         </div>
