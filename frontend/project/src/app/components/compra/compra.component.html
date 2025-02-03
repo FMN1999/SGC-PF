@@ -17,7 +17,7 @@
   <div class="cambiar-estado">
     <h3>Cambiar Estado</h3>
     <div class="botones-estado">
-      <button class="btn-estado" *ngFor="let estado of obtenerBotones()" (click)="cambiarEstado(estado)" [disabled]="compra.id_aprobador !== Number(id_usuario)">
+      <button class="btn-estado" *ngFor="let estado of obtenerBotones()" (click)="cambiarEstado(estado)" [disabled]="!dataShare.permiso3">
         {{ estado }}
       </button>
     </div>
