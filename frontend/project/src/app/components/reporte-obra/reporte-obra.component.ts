@@ -82,19 +82,21 @@ export class ReporteObraComponent implements OnInit {
     this.titleService.setTitle('Reporte de Obra');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
-
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
-
-    if (!this.dataShare.permiso10) {
-      this.router.navigate(['/no-permissions']);
-    }
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso10) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
     // @ts-ignore
     this.id_obra = +this.route.snapshot.paramMap.get('id');
     this.obtenerReporte();

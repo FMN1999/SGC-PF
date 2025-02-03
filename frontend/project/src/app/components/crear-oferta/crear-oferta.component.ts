@@ -50,18 +50,21 @@ export class CrearOfertaComponent implements OnInit {
     this.titleService.setTitle('Crear Oferta');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
-
-    if (!this.dataShare.permiso7) {
-      this.router.navigate(['/no-permissions']);
-    }
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso7) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     this.id_proveedor = this.route.snapshot.params['id'];
 

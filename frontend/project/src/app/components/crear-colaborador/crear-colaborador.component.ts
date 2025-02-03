@@ -56,18 +56,21 @@ export class CrearColaboradorComponent implements OnInit {
     this.titleService.setTitle('Crear Colaborador'); // Ajusta el nombre dinámicamente
     this.colaboradorService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.colaboradorService.cargarPermisos(id_user);
-
-    if (!this.dataShare.permiso8) {
-      this.router.navigate(['/no-permissions']);
-    }
+    this.colaboradorService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso8) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
   }
 
   onSubmit() {

@@ -46,11 +46,13 @@ export class AuthService {
     return this.http.get<any>(url); // Añadimos `<any>` para tipar correctamente
   }
 
-  cargarPermisos(idUsuario: number): void {
-    this.http.get(`${this.apiUrl}/permisos/${idUsuario}/`).subscribe((response: any) => {
-      const permisos = response.permisos || [];
-      this.actualizarPermisos(permisos);
-    });
+  cargarPermisos(idUsuario: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/permisos/${idUsuario}/`).pipe(
+      tap((response: any) => {
+        const permisos = response.permisos || [];
+        this.actualizarPermisos(permisos);
+      })
+    );
   }
 
   actualizarPermisos(permisos: number[]): void {

@@ -87,18 +87,22 @@ export class CrearMaterialComponent implements OnInit{
     this.titleService.setTitle('Crear Material');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso5) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
-    if (!this.dataShare.permiso5) {
-      this.router.navigate(['/no-permissions']);
-    }
     // @ts-ignore
     this.idEmpresa = +sessionStorage.getItem('id_empresa');
     this.usuariosService.obtenerUsuariosPorEmpresa(this.idEmpresa).subscribe({

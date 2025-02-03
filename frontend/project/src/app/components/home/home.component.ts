@@ -19,7 +19,7 @@ export class HomeComponent {
   isLoggedIn: boolean = false;
   isDesktop: boolean = true;
   sidebarVisible: boolean = false;
-  esColaborador :string;
+  esColaborador: string = '';
   usuarioActualId: string | null = sessionStorage.getItem('id_usuario');  // Obtener el ID del usuario
   protected userMenuVisible: boolean = false;
   stats: any;
@@ -33,21 +33,21 @@ export class HomeComponent {
     // Suscribirse al estado de autenticación
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
-    });
 
-    // @ts-ignore
-    const id_user = +sessionStorage.getItem('id_usuario');
-    // @ts-ignore
-    this.esColaborador = sessionStorage.getItem('tipo');
-    this.authService.cargarPermisos(id_user);
-    this.authService.cargarAdicionales().subscribe({
-      next: (data) => {
-        this.stats = data; // Guardamos las estadísticas generales
-        this.tareasProximas = data.tareas_proximas; // Guardamos las tareas próximas
-      },
-      error: (error) => {
-        console.error('Error al cargar estadísticas:', error);
-      }
+      // @ts-ignore
+      const id_user = +sessionStorage.getItem('id_usuario');
+      // @ts-ignore
+      this.esColaborador = sessionStorage.getItem('tipo');
+      this.authService.cargarPermisos(id_user);
+      this.authService.cargarAdicionales().subscribe({
+        next: (data) => {
+          this.stats = data; // Guardamos las estadísticas generales
+          this.tareasProximas = data.tareas_proximas; // Guardamos las tareas próximas
+        },
+        error: (error) => {
+          console.error('Error al cargar estadísticas:', error);
+        }
+      });
     });
   }
 

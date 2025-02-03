@@ -52,18 +52,21 @@ export class PresupuestoServicioComponent implements OnInit {
     this.titleService.setTitle('Registrar Contratación');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
-
-    if (!this.dataShare.permiso3) {
-      this.router.navigate(['/no-permissions']);
-    }
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso3) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
     this.idPresupuesto = +this.route.snapshot.paramMap.get('idPresupuesto')!;
     this.idObra = +this.route.snapshot.paramMap.get('idObra')!;

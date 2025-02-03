@@ -58,18 +58,22 @@ export class CrearServicioComponent implements OnInit {
     this.titleService.setTitle('Crear Servicio');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     // @ts-ignore
     const id_user = +sessionStorage.getItem('id_usuario');
-    this.authService.cargarPermisos(id_user);
+    this.authService.cargarPermisos(id_user).subscribe(() => {
+      if (!this.dataShare.permiso6) {
+        this.router.navigate(['/no-permissions']);
+      }
+    });
 
-    if (!this.dataShare.permiso6) {
-      this.router.navigate(['/no-permissions']);
-    }
     // Obtenemos el ID del proveedor desde la ruta
     this.id_proveedor = +this.route.snapshot.params['id'];
   }

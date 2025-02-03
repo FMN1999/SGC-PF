@@ -15,7 +15,7 @@ import { Title } from '@angular/platform-browser';
   imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor] // Importamos los módulos que necesitamos
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
+  registerForm: any;
   empresas: any[] = [];  // Para almacenar la lista de empresas
   mensajeSuccess: string = '';
   mensajeError: string = '';
@@ -27,11 +27,14 @@ export class RegisterComponent implements OnInit {
     this.titleService.setTitle('Registrarse como Cliente');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
+  initLogueado(): void {
     this.registerForm = this.fb.group({
       // Campos del usuario
       nombre_usuario: ['', Validators.required],

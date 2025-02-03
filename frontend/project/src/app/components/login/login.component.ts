@@ -39,11 +39,10 @@ export class LoginComponent implements OnInit {
     this.titleService.setTitle('Iniciar Sesión');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (this.isLoggedIn) {
+        this.router.navigate(['/home']);
+      }
     });
-
-    if (this.isLoggedIn) {
-      this.router.navigate(['/home']);
-    }
   }
 }
 

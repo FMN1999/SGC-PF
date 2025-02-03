@@ -34,12 +34,14 @@ export class ServiciosComponent implements OnInit {
     this.titleService.setTitle('Servicios');
     this.authService.isLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/no-permissions']);
+      }
+      this.initLogueado();
     });
+  }
 
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/no-permissions']);
-    }
-
+  initLogueado(): void {
     const es_cliente = sessionStorage.getItem('tipo');
     if(es_cliente==='CL'){
       this.router.navigate(['/no-permissions']);
