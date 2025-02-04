@@ -1620,11 +1620,15 @@ class Assistant(View):
         if ofertas["materiales"]:
             response += "🏗️ **Ofertas de Materiales:**\n"
             for material in ofertas["materiales"]:
-                response += (
-                    f"- **{material['descripcion_material']}** (Marca: {material['marca']})\n"
-                    f"  Oferta: {material['descripcion_oferta']}\n"
-                    f"  Descuento: {material['descuento']}% hasta {material['fecha_hasta']}\n\n"
-                )
+                add_response = [
+                    f"- **{material['nombre_material']}** (Marca: {material['marca']})\n",
+                    f"  Oferta: {material['descripcion_oferta']}\n",
+                ]
+                if material['descuento']:
+                    add_response.append(
+                      f"  Descuento: {material['descuento']}% hasta {material['fecha_hasta']}\n"
+                    )
+                response += "".join(add_response) + "\n"
         else:
             response += "No hay ofertas disponibles para materiales.\n\n"
 

@@ -1098,13 +1098,13 @@ class ChatController:
         costos_materiales = {}
         for compra in compras_obra:
             material = compra.id_material
-            costos_materiales[material.id] = costos_materiales.get(material.id, 0) + compra.precio_total
+            costos_materiales[material.id] = costos_materiales.get(material.id, 0) + (compra.precio_total or 0)
 
         # Calcular costos de servicios
         costos_servicios = {}
         for sub in subcontrataciones_previas:
             servicio = sub.id_servicio
-            costos_servicios[servicio.id] = costos_servicios.get(servicio.id, 0) + sub.monto_contratacion
+            costos_servicios[servicio.id] = costos_servicios.get(servicio.id, 0) + (sub.monto_contratacion or 0)
 
         # Calcular el presupuesto total actual
         total_presupuesto = sum([p.total for p in presupuesto_actual])
