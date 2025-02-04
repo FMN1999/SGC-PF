@@ -46,6 +46,7 @@ export class CompraComponent implements OnInit {
         this.router.navigate(['/no-permissions']);
       }
     });
+    this.initLogueado();
   }
 
   initLogueado(): void {
